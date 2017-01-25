@@ -1,0 +1,191 @@
+// ********************************************************
+
+////
+/// Color picker dialog component config
+/// ---
+/// @since 1.4.0
+/// @type Map
+/// @access public
+/// @group core.components.color-picker
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/color-picker-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function to-rem,
+                                                function extend,
+                                                function length,
+                                                function map-keys,
+                                                function shade-of);
+//
+// ********************************************************
+
+
+///
+/// Configuration for each "pane" shown within a Wdesk color picker - a swatches pane and a pane with a custom color picker.
+/// ---
+/// @requires {function} to-rem
+/// @requires {function} get-deep
+/// @requires {function} extend
+/// @requires {variable} $btn-config
+/// @requires {variable} $default-slide-speed
+/// ---
+/// @prop {Number} padding                      [1.2rem]    - Amount of padding within each pane
+/// @prop {Number} width                        [19.6rem]   - Width of each pane
+/// @prop {Number} height-with-custom-colors    [29rem]     - Height of each pane when custom colors are enabled using the `color-picker--with-custom-colors` CSS class
+///
+/// @prop {Number} custom-color-footer-height               [6rem]      - Height of the `.cp__custom-swatches` element that is a "footer" when the standard swatch pane is shown, and is a "header" when the custom swatch pane is shown
+/// @prop {Number} custom-color-footer-btn-vertical-padding [.4rem]     - Vertical padding within the `.cp__custom-swatches__toggle-btn` element
+/// @prop {Number} custom-color-picker-pane-height          [22.6rem]   - Height of the `.cp__pane--custom` element - calculated by subtracting `custom-color-footer-height` from `height-with-custom-colors`
+/// @prop {Number} custom-color-picker-pane-spacing-top     [2rem]      - Amount of white-space that should appear between it and the bottom of the row of custom color swatches within the `.cp__custom-swatches` elem
+///
+/// @prop {Arglist} transition [transform .3s ease-out 0s] - Param value passed to the `transition()` mixin on the `.cp__panes` container that wraps around both `.cp__pane` elements.
+///
+$cp-pane-config: (
+    'padding': 1.2rem,
+    'width': 19.6rem,
+    'height-with-custom-colors': 29rem,
+    'custom-color-footer-height': 6rem,
+    'custom-color-footer-btn-vertical-padding': to-rem(get-deep($btn-config, 'padding.xs.vertical')),
+    'custom-color-picker-pane-height': null, // Calculated value added via `@extend`
+    'custom-color-picker-pane-spacing-top': 2rem,
+    'transition': transform $default-slide-speed ease-out 0s
+) !default;
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $cp-pane-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $cp-pane-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $cp-pane-height-wcc: get($cp-pane-config, 'height-with-custom-colors');
+        $cp-pane-cc-ft-height: get($cp-pane-config, 'custom-color-footer-height');
+        $cp-pane-cc-ft-btn-padding-vertical: get($cp-pane-config, 'custom-color-footer-btn-vertical-padding');
+        $cp-pane-picker-height: $cp-pane-height-wcc - $cp-pane-cc-ft-height - $cp-pane-cc-ft-btn-padding-vertical;
+
+        // ----- EXTEND cp pane config with calc'd values ----- //
+        $cp-pane-config: extend($cp-pane-config,
+            (
+                'custom-color-picker-pane-height': $cp-pane-picker-height
+            )
+        );
+
+
+///
+/// Configuration for a `.cp__swatch-menu` that displays a grid of color swatches.
+/// ---
+/// @requires {variable} $cp-pane-config
+/// @requires {function} get
+/// ---
+/// @prop {Number} divided-row-spacing-vertical [.6rem]   - Amount of vertical space that should be used to divide disparate rows within the menu, like the last row of highlight swatches - for example.
+/// @prop {Number} width                        [17.2rem] - Width of the menu / swatch "grid"
+///
+$cp-swatch-menu-config: (
+    'divided-row-spacing-vertical': .6rem,
+    'width': get($cp-pane-config, 'width') - (get($cp-pane-config, 'padding') * 2)
+) !default;
+
+
+///
+/// Configuration for the `.cp__custom-color-selector__viewer` element and it's children.
+///
+/// Houses custom color selection tools like a color wheel, tint range input, hex color inputs, etc.
+/// ---
+/// @requires {function} to-rem
+/// @requires {function} get-deep
+/// @requires {variable} $form-control-config
+/// ---
+/// @prop {Number} wheel-outer-width    [10.6rem] - Width of the `.cp__custom-color-selector__wheel-outer` element
+/// @prop {Number} wheel-outer-height   [10.6rem] - Height of the `.cp__custom-color-selector__wheel-outer` element
+/// @prop {Number} wheel-outer-padding  [.2rem]   - Padding of the `.cp__custom-color-selector__wheel-outer` element
+///
+/// @prop {Number} color-box-width              [5rem]      - Width of the `.cp__custom-color-selector__compare-colors` element
+/// @prop {Number} color-box-height             [2.4rem]    - Height of each `.cp__compare-colors__box` element within the `.cp__custom-color-selector__compare-colors` element
+/// @prop {Number} color-box-bd-radius          [.2rem]     - Border radius of each `.cp__compare-colors__box` element
+/// @prop {Number} color-box-label-font-size    [1.2rem]    - Font size for the label of each `.cp__compare-colors__box` element
+///
+/// @prop {Number} hex-input-spacing-top    [1.6rem]    - Amount of vertical space above the `.cp__custom-color-selector__hex-input` element
+/// @prop {Number} hex-input-width          [6.2rem]    - Width of the `.cp__custom-color-selector__hex-input` element
+///
+$cp-selection-tools-config: (
+    'wheel-outer-width': 10.6rem,
+    'wheel-outer-height': 10.6rem,
+    'wheel-outer-padding': .2rem,
+    'color-box-width': 5rem,
+    'color-box-height': 2.4rem,
+    'color-box-bd-radius': to-rem(get-deep($form-control-config, 'bd-radius.xs')),
+    'color-box-label-font-size': 1.2rem,
+    'hex-input-spacing-top': 1.6rem,
+    'hex-input-width': 6.2rem
+) !default;
+
+
+///
+/// Configuration for each `.cp__swatch` within the `.cp__swatch-menu`.
+/// ---
+/// @requires {function} shade-of
+/// @requires {variable} $white
+/// @requires {variable} $zc-gray-90
+/// @requires {variable} $zc-gray-70
+/// @requires {variable} $zc-blue-120
+/// ---
+/// @prop {Number} width                [1.8rem]        - Width of each swatch
+/// @prop {Number} height               [1.8rem]        - Height of each swatch
+/// @prop {Number} margin               [.4rem]         - Amount of negative space between unselected swatches
+/// @prop {Number} bd-width             [.1rem]         - Amount of inset border for a swatch
+/// @prop {Color}  bd-color             [#b2b2b2]       - Inset border color for a swatch
+/// @prop {Color}  has-color-bd-color   [transparent]   - Inset border color for a swatch that has a color applied - `.cp__swatch--has-color`
+/// @prop {Color}  white-bd-color       [#b2b2b2]       - Inset border color for a swatch with a background color that matches the background color of the menu
+///
+/// @prop {Number} hover-bd-width       [.2rem]     - Amount of inset border for a hovered / focused swatch
+/// @prop {Number} hover-outline-width  [.2rem]     - Amount of outset border for a hovered / focused swatch
+/// @prop {Color}  hover-bd-color       [#ffffff]   - Inset border color for a hovered / focused swatch
+/// @prop {Color}  hover-outline-color  [#949494]   - Outset border color for a hovered / focused swatch
+///
+/// @prop {Number} press-bd-width       [.2rem]     - Amount of inset border for a pressed swatch
+/// @prop {Number} press-outline-width  [.1rem]     - Amount of outset border for a pressed swatch
+/// @prop {Color}  press-bd-color       [#ffffff]   - Inset border color for a pressed swatch
+/// @prop {Color}  press-outline-color  [#707070]   - Outset border color for a pressed swatch
+///
+/// @prop {Number} press-bd-width           [.2rem]     - Amount of inset border for a selected swatch
+/// @prop {Number} selected-outline-width   [.1rem]     - Amount of outset border for a selected swatch
+/// @prop {Color}  selected-bd-color        [#ffffff]   - Inset border color for a selected swatch
+/// @prop {Color}  selected-outline-color   [#4192da]   - Outset border color for a selected swatch
+///
+$cp-swatch-config: (
+    'width': 1.8rem,
+    'height': 1.8rem,
+    'margin': .4rem,
+    'bd-width': .1rem,
+    'bd-color': $zc-gray-70,
+    'has-color-bd-color': transparent,
+    'white-bd-color': $zc-gray-70,
+    //
+    'hover-bd-width': .2rem,
+    'hover-outline-width': .2rem,
+    'hover-bd-color': $white,
+    'hover-outline-color': shade-of($zc-gray-90, 75%),
+    //
+    'press-bd-width': .2rem,
+    'press-outline-width': .1rem,
+    'press-bd-color': $white,
+    'press-outline-color': $zc-gray-90,
+    //
+    'selected-bd-width': .2rem,
+    'selected-outline-width': .1rem,
+    'selected-bd-color': $white,
+    'selected-outline-color': shade-of($zc-blue-120, 75%)
+) !default;

@@ -1,0 +1,55 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-typography';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.ws-example-type {
+    // We use "fake" class-based headings in the typography section
+    @include generate-headings($selector: class, $important: true);
+
+    $headings_: comma-list(map-keys($headings-config));
+    $fake-headings_: ();
+    @each $heading in $headings_ {
+        $fake-headings_: append($fake-headings_, '.#{$heading}', comma);
+    }
+
+    #{$headings_},
+    #{$fake-headings_} {
+        margin: 0 !important;
+        // Reproduce UIP-1234
+        @include truncate-text();
+    }
+
+    .table {
+        td {
+            padding: to-rem($docs-spacing-base) 0;
+            border-color: #eee;
+            color: #999;
+            vertical-align: middle;
+        }
+
+        th {
+            padding: to-rem($docs-spacing-base) 0;
+            border-color: #eee;
+        }
+
+        tr:first-child {
+            td,
+            th {
+                border-top: 0;
+            }
+        }
+    }
+
+    .lato-row {
+        td,
+        th {
+            padding: to-rem($docs-spacing-base) 0;
+        }
+    }
+}

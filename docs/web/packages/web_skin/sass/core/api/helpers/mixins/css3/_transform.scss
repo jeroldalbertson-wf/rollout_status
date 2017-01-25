@@ -1,0 +1,596 @@
+// ********************************************************
+
+////
+/// Helper mixins pertaining to [CSS3 transforms](http://dev.w3.org/csswg/css-transforms-1/)
+/// ---
+/// @since 1.1.0
+/// @access public
+/// @group core.utils.css3
+/// @link http://dev.w3.org/csswg/css-transforms-1/ CSS3 Transform Spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/css3/transform';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, mixin experimental,
+                                                mixin prefixed-properties,
+                                                function get,
+                                                function compact,
+                                                function remove-unit);
+//
+// ********************************************************
+
+
+///
+/// Defaults used by CSS3 Transform helpers
+/// ---
+/// @type Map
+/// ---
+/// @prop {Number} origin-x     [50%]
+/// @prop {Number} origin-y     [50%]
+/// @prop {Number} origin-z     [50%]
+/// @prop {Number} scale-x      [1.25]
+/// @prop {Number} scale-y      [1.25]
+/// @prop {Number} scale-z      [1.25]
+/// @prop {Number} rotate       [45deg]
+/// @prop {Number} vector-x     [1]
+/// @prop {Number} vector-y     [1]
+/// @prop {Number} vector-z     [1]
+/// @prop {Number} translate-x  [1em]
+/// @prop {Number} translate-y  [1em]
+/// @prop {Number} translate-z  [1em]
+/// @prop {Number} skew-x       [5deg]
+/// @prop {Number} skew-y       [5deg]
+///
+$transform-defaults: (
+    'origin-x': 50%,
+    'origin-y': 50%,
+    'origin-z': 50%,
+    'scale-x': 1.25,
+    'scale-y': 1.25,
+    'scale-z': 1.25,
+    'rotate': 45deg,
+    'vector-x': 1,
+    'vector-y': 1,
+    'vector-z': 1,
+    'translate-x': 1em,
+    'translate-y': 1em,
+    'translate-z': 1em,
+    'skew-x': 5deg,
+    'skew-y': 5deg
+) !default;
+
+
+
+// ********************************************************
+//
+//   TRANSFORM HELPERS
+//
+// ********************************************************
+    ///
+    /// CSS3 `transform-origin` sent as a single space separated list
+    /// ---
+    /// @access private
+    /// @group core.internals.utils.css3
+    /// ---
+    /// @param {List} $origin - Should contain x, y, z coordinates in percentages, absolute or relative units
+    ///
+    @mixin apply-origin($origin) {
+        $origin-length: length($origin);
+
+        @if $origin-length < 1 {
+            @error "`apply-origin` mixin expecting at least 1 `$origin`.";
+        } @elseif $origin-length > 3 {
+            @error "`apply-origin` mixin expecting no more than 3 `$origin`s. Was #{$origin-length}";
+        } @else {
+            @include experimental(transform-origin, $origin);
+        }
+    }
+
+    ///
+    /// CSS3 `transform-origin` sent as individual arguments
+    /// ---
+    /// @requires {function} get
+    /// ---
+    /// @param {Number|Boolean} $origin-x [50%]
+    /// @param {Number|Boolean} $origin-y [50%]
+    /// @param {Number|Boolean} $origin-z [false]
+    ///
+    @mixin transform-origin(
+        $origin-x: get($transform-defaults, 'origin-x'),
+        $origin-y: get($transform-defaults, 'origin-y'),
+        $origin-z: false
+    ) {
+        @if $origin-x or $origin-y or $origin-z {
+            @include apply-origin(compact($origin-x, $origin-y, $origin-z));
+        } @else {
+            @error "`transform-origin` mixin expecting at least one of the parameters to be truthy.";
+        }
+    }
+
+    ///
+    /// Transform sent as a complete string:
+    /// ---
+    /// @param {List} $transforms - Space separated list of all the transforms to be applied.
+    ///
+    @mixin transform($transforms) {
+        @include prefixed-properties((transform: $transforms), $exclusions: (ms), $property-type: transform);
+    }
+
+    ///
+    /// Set the perspective of 3D transforms on the children of an element
+    /// ---
+    /// @param {Number} $p - A unitless number representing the depth of the z-axis. The higher the perspective, the more exaggerated the foreshortening. Values from 500 to 1000 are more-or-less "normal" - a good starting-point.
+    ///
+    @mixin perspective($p) {
+        @include experimental(perspective, remove-unit($p));
+    }
+
+    ///
+    /// Set the origin position for the perspective
+    /// ---
+    /// @param {Number|Arglist} $origin [50%] - Single value denotes identical origin for both `x` and `y`, two space-separated numbers will result in unique `x` / `y` coordinates
+    ///
+    @mixin perspective-origin($origin: 50%) {
+        @include experimental(perspective-origin, $origin);
+    }
+
+    ///
+    /// Determine whether a 3D objects children also live in the given 3D space.
+    /// ---
+    /// @param {String} $style [preserve-3d] - Browsers default to `flat`, we default to `preserve-3d`.
+    /// @throws if `$style` param is not valid
+    ///
+    @mixin transform-style($style: preserve-3d) {
+        $valid-styles: flat, preserve-3d;
+
+        @if not is($style, $valid-styles) {
+            @error "`transform-style` mixin expecting `$style` param value to be one of (#{$valid-styles}). Was #{$style}";
+        } @else {
+            @include experimental(transform-style, $style);
+        }
+    }
+
+    ///
+    /// Determine the visibility of an element when it's back is turned.
+    /// ---
+    /// @param {String} $visibility [hidden] - Browsers default to `visible`, we default to `hidden`.
+    /// @throws if `$visibility` param is not valid
+    ///
+    @mixin backface-visibility($visibility: hidden) {
+        $valid-visibility: visible, hidden;
+
+        @if not is($visibility, $valid-visibility) {
+            @error "`transform-style` mixin expecting `$style` param value to be one of (#{$valid-visibility}). Was #{$visibility}";
+        } @else {
+            @include experimental(backface-visibility, $visibility);
+        }
+    }
+
+
+
+// ********************************************************
+//
+//   TRANSFORM PARTIALS
+//   -> These work well on their own, but they don't
+//      add to each other, they override.
+//   -> Use along with transform parameter mixins to
+//      adjust origin, perspective and style
+//
+// ********************************************************
+
+    // ----------------------------------------------------
+    //   SCALE
+    // ----------------------------------------------------
+        ///
+        /// Scale an object along the `x` and `y` axis.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// ---
+        /// @see {mixin} scaleX
+        /// @see {mixin} scaleY
+        /// @see {mixin} perspective
+        /// ---
+        /// @param {Number}     $scale-x        [1.25]  - Unitless multiplier of the `x` dimension
+        /// @param {Number}     $scale-y        [1.25]  - Unitless multiplier of the `y` dimension
+        /// @param {Boolean}    $perspective    [false] - Works the same as the standalone `perspective()` mixin but applies to the individual element, multiplied with any parent perspective
+        ///
+        @mixin scale(
+            $scale-x: get($transform-defaults, 'scale-x'),
+            $scale-y: get($transform-defaults, 'scale-y'),
+            $perspective: false
+        ) {
+            $transform: scale($scale-x, $scale-y);
+            @if $perspective {
+                $transform: perspective($perspective) $transform;
+            }
+
+            @include transform($transform);
+        }
+
+        ///
+        /// Scale an object along the `x` axis.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// ---
+        /// @see {mixin} scale
+        /// @see {mixin} scaleY
+        /// @see {mixin} perspective
+        /// ---
+        /// @param {Number}     $scale          [1.25]  - Unitless multiplier of the `x` dimension
+        /// @param {Boolean}    $perspective    [false] - Works the same as the standalone `perspective()` mixin but applies to the individual element, multiplied with any parent perspective
+        ///
+        @mixin scaleX(
+            $scale: get($transform-defaults, 'scale-x'),
+            $perspective: false
+        ) {
+            $transform: scaleX($scale);
+            @if $perspective {
+                $transform: perspective($perspective) $transform;
+            }
+
+            @include transform($transform);
+        }
+
+        ///
+        /// Scale an object along the `y` axis.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// ---
+        /// @see {mixin} scale
+        /// @see {mixin} scaleX
+        /// @see {mixin} perspective
+        /// ---
+        /// @param {Number}     $scale          [1.25]  - Unitless multiplier of the `y` dimension
+        /// @param {Boolean}    $perspective    [false] - Works the same as the standalone `perspective()` mixin but applies to the individual element, multiplied with any parent perspective
+        ///
+        @mixin scaleY(
+            $scale: get($transform-defaults, 'scale-y'),
+            $perspective: false
+        ) {
+            $transform: scaleY($scale);
+            @if $perspective {
+                $transform: perspective($perspective) $transform;
+            }
+
+            @include transform($transform);
+        }
+
+        ///
+        /// Scale an object along the `z` axis.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// ---
+        /// @see {mixin} scale3d
+        /// @see {mixin} perspective
+        /// ---
+        /// @param {Number}     $scale          [1.25]  - Unitless multiplier of the `z` dimension
+        /// @param {Boolean}    $perspective    [false] - Works the same as the standalone `perspective()` mixin but applies to the individual element, multiplied with any parent perspective
+        ///
+        @mixin scaleZ(
+            $scale: get($transform-defaults, 'scale-z'),
+            $perspective: false
+        ) {
+            $transform: scaleZ($scale);
+            @if $perspective {
+                $transform: perspective($perspective) $transform;
+            }
+
+            @include transform($transform);
+        }
+
+        ///
+        /// Scale an object along the all three axis.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// ---
+        /// @see {mixin} scaleZ
+        /// @see {mixin} perspective
+        /// ---
+        /// @param {Number}     $scale-x        [1.25]  - Unitless multiplier of the `x` dimension
+        /// @param {Number}     $scale-y        [1.25]  - Unitless multiplier of the `y` dimension
+        /// @param {Number}     $scale-z        [1.25]  - Unitless multiplier of the `z` dimension
+        /// @param {Boolean}    $perspective    [false] - Works the same as the standalone `perspective()` mixin but applies to the individual element, multiplied with any parent perspective
+        ///
+        @mixin scale3d(
+            $scale-x: get($transform-defaults, 'scale-x'),
+            $scale-y: get($transform-defaults, 'scale-y'),
+            $scale-z: get($transform-defaults, 'scale-z'),
+            $perspective: false
+        ) {
+            $transform: scale3d($scale-x, $scale-y, $scale-z);
+            @if $perspective {
+                $transform: perspective($perspective) $transform;
+            }
+
+            @include transform($transform);
+        }
+
+
+    // ----------------------------------------------------
+    //   ROTATE
+    // ----------------------------------------------------
+        ///
+        /// Rotate an object around the __2D__ `z` axis.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// @see {mixin} perspective
+        /// ---
+        /// @param {Number}     $rotate         [45deg] - Angle set in degrees `deg` or radian `rad` units
+        /// @param {Boolean}    $perspective    [false] - Works the same as the standalone `perspective()` mixin but applies to the individual element, multiplied with any parent perspective
+        ///
+        @mixin rotate(
+            $rotate: get($transform-defaults, 'rotate'),
+            $perspective: false
+        ) {
+            $transform: rotate($rotate);
+            @if $perspective {
+                $transform: perspective($perspective) $transform;
+            }
+
+            @include transform($transform);
+        }
+
+        ///
+        /// Rotate an object around the __3D__ `x` axis.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// @see {mixin} perspective
+        /// ---
+        /// @param {Number}     $rotate         [45deg] - Angle set in degrees `deg` or radian `rad` units
+        /// @param {Boolean}    $perspective    [false] - Works the same as the standalone `perspective()` mixin but applies to the individual element, multiplied with any parent perspective
+        ///
+        @mixin rotateX(
+            $rotate: get($transform-defaults, 'rotate'),
+            $perspective: false
+        ) {
+            $transform: rotateX($rotate);
+            @if $perspective {
+                $transform: perspective($perspective) $transform;
+            }
+
+            @include transform($transform);
+        }
+
+        ///
+        /// Rotate an object around the __3D__ `y` axis.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// @see {mixin} perspective
+        /// ---
+        /// @param {Number}     $rotate         [45deg] - Angle set in degrees `deg` or radian `rad` units
+        /// @param {Boolean}    $perspective    [false] - Works the same as the standalone `perspective()` mixin but applies to the individual element, multiplied with any parent perspective
+        ///
+        @mixin rotateY(
+            $rotate: get($transform-defaults, 'rotate'),
+            $perspective: false
+        ) {
+            $transform: rotateY($rotate);
+            @if $perspective {
+                $transform: perspective($perspective) $transform;
+            }
+
+            @include transform($transform);
+        }
+
+        ///
+        /// Rotate an object around an arbitrary __3D__ axis.
+        /// The `$vector-` parameters are not important on their own, but in relation to one another they create an axis from your transform-origin, along the axis of `Xx = Yy = Zz`.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// @see {mixin} perspective
+        /// ---
+        /// @param {Number}     $vector-x       [1]     - Unitless number used in-combination with the other vectors to form an origin
+        /// @param {Number}     $vector-y       [1]     - Unitless number used in-combination with the other vectors to form an origin
+        /// @param {Number}     $vector-z       [1]     - Unitless number used in-combination with the other vectors to form an origin
+        /// @param {Number}     $rotate         [45deg] - Angle set in degrees `deg` or radian `rad` units
+        /// @param {Boolean}    $perspective    [false] - Works the same as the standalone `perspective()` mixin but applies to the individual element, multiplied with any parent perspective
+        ///
+        @mixin rotate3d(
+            $vector-x: get($transform-defaults, 'vector-x'),
+            $vector-y: get($transform-defaults, 'vector-y'),
+            $vector-z: get($transform-defaults, 'vector-z'),
+            $rotate:   get($transform-defaults, 'rotate'),
+            $perspective: false
+        ) {
+            $transform: rotate3d($vector-x, $vector-y, $vector-z, $rotate);
+            @if $perspective {
+                $transform: perspective($perspective) $transform;
+            }
+
+            @include transform($transform);
+        }
+
+
+    // ----------------------------------------------------
+    //   TRANSLATE
+    // ----------------------------------------------------
+        ///
+        /// Move an object along the `x` and `y` axis.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// ---
+        /// @see {mixin} translateX
+        /// @see {mixin} translateY
+        /// @see {mixin} perspective
+        /// ---
+        /// @param {Number}     $translate-x    [1em]   - Unitless multiplier of the `x` dimension
+        /// @param {Number}     $translate-y    [1em]   - Unitless multiplier of the `y` dimension
+        /// @param {Boolean}    $perspective    [false] - Works the same as the standalone `perspective()` mixin but applies to the individual element, multiplied with any parent perspective
+        ///
+        @mixin translate(
+            $translate-x: get($transform-defaults, 'translate-x'),
+            $translate-y: get($transform-defaults, 'translate-y'),
+            $perspective: false
+        ) {
+            $transform: translate($translate-x, $translate-y);
+            @if $perspective {
+                $transform: perspective($perspective) $transform;
+            }
+
+            @include transform($transform);
+        }
+
+        ///
+        /// Move an object along the `x` axis.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// ---
+        /// @see {mixin} translate
+        /// @see {mixin} translateY
+        /// @see {mixin} perspective
+        /// ---
+        /// @param {Number}     $translate      [1em]   - Unitless multiplier of the `x` dimension
+        /// @param {Boolean}    $perspective    [false] - Works the same as the standalone `perspective()` mixin but applies to the individual element, multiplied with any parent perspective
+        ///
+        @mixin translateX(
+            $translate: get($transform-defaults, 'translate-x'),
+            $perspective: false
+        ) {
+            $transform: translateX($translate);
+            @if $perspective {
+                $transform: perspective($perspective) $transform;
+            }
+
+            @include transform($transform);
+        }
+
+        ///
+        /// Move an object along the `y` axis.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// ---
+        /// @see {mixin} translate
+        /// @see {mixin} translateX
+        /// @see {mixin} perspective
+        /// ---
+        /// @param {Number}     $translate      [1em]   - Unitless multiplier of the `y` dimension
+        /// @param {Boolean}    $perspective    [false] - Works the same as the standalone `perspective()` mixin but applies to the individual element, multiplied with any parent perspective
+        ///
+        @mixin translateY(
+            $translate: get($transform-defaults, 'translate-y'),
+            $perspective: false
+        ) {
+            $transform: translateY($translate);
+            @if $perspective {
+                $transform: perspective($perspective) $transform;
+            }
+
+            @include transform($transform);
+        }
+
+        ///
+        /// Move an object along the `z` axis.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// ---
+        /// @see {mixin} translate3d
+        /// @see {mixin} perspective
+        /// ---
+        /// @param {Number}     $translate      [1em]   - Unitless multiplier of the `z` dimension
+        /// @param {Boolean}    $perspective    [false] - Works the same as the standalone `perspective()` mixin but applies to the individual element, multiplied with any parent perspective
+        ///
+        @mixin translateZ(
+            $translate: get($transform-defaults, 'translate-z'),
+            $perspective: false
+        ) {
+            $transform: translateZ($translate);
+            @if $perspective {
+                $transform: perspective($perspective) $transform;
+            }
+
+            @include transform($transform);
+        }
+
+        ///
+        /// Move an object along the all three axis.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// ---
+        /// @see {mixin} translateZ
+        /// @see {mixin} perspective
+        /// ---
+        /// @param {Number}     $translate-x    [1em]   - Unitless multiplier of the `x` dimension
+        /// @param {Number}     $translate-y    [1em]   - Unitless multiplier of the `y` dimension
+        /// @param {Number}     $translate-z    [1em]   - Unitless multiplier of the `z` dimension
+        /// @param {Boolean}    $perspective    [false] - Works the same as the standalone `perspective()` mixin but applies to the individual element, multiplied with any parent perspective
+        ///
+        @mixin translate3d(
+            $translate-x: get($transform-defaults, 'translate-x'),
+            $translate-y: get($transform-defaults, 'translate-y'),
+            $translate-z: get($transform-defaults, 'translate-z'),
+            $perspective: false
+        ) {
+            $transform: translate3d($translate-x, $translate-y, $translate-z);
+            @if $perspective {
+                $transform: perspective($perspective) $transform;
+            }
+
+            @include transform($transform);
+        }
+
+
+    // ----------------------------------------------------
+    //   SKEW
+    // ----------------------------------------------------
+        ///
+        /// Skew an object.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// ---
+        /// @param {Number}     $skew           [5deg]  - Angle set in degrees `deg` or radian `rad` units
+        ///
+        @mixin skew(
+            $skew-x: get($transform-defaults, 'skew-x'),
+            $skew-y: get($transform-defaults, 'skew-y')
+        ) {
+            @include transform(skew($skew-x, $skew-y));
+        }
+
+        ///
+        /// Skew an object along the `x` axis.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// ---
+        /// @param {Number}     $skew           [5deg]  - Angle set in degrees `deg` or radian `rad` units
+        ///
+        @mixin skewX(
+            $skew: get($transform-defaults, 'skew-x')
+        ) {
+            @include transform(skewX($skew));
+        }
+
+        ///
+        /// Skew an object along the `y` axis.
+        /// __NOTE:__ This mixin cannot be combined with other transform mixins.
+        /// ---
+        /// @requires {function} get
+        /// ---
+        /// @param {Number}     $skew           [5deg]  - Angle set in degrees `deg` or radian `rad` units
+        ///
+        @mixin skewY(
+            $skew: get($transform-defaults, 'skew-y')
+        ) {
+            @include transform(skewY($skew));
+        }

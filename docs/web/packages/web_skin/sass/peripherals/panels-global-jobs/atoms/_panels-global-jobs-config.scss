@@ -1,0 +1,73 @@
+// ********************************************************
+//
+    $module: 'peripherals/panels-global-jobs/atoms/panels-global-jobs-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get-deep,
+                                                function extend);
+//
+// ********************************************************
+
+    ///
+    /// Global configuration for `.global-jobs-panel` components, along with the various elems nested within them.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @access public
+    /// @group peripherals.components.jobs-panel
+    /// @link http://bit.ly/webskin-global-jobs-panel Global jobs panel component spec
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {function} extend
+    /// @requires {variable} $panel-config
+    /// @requires {variable} $screen-widths
+    /// @requires {variable} $icon-size-config
+    /// ---
+    /// @prop {Number} width                [480px] - Default width of a `.global-jobs-panel` when viewport width is `768px` or higher
+    /// @prop {Number} spacing-horizontal   [36px]  - Default amount of horizontal spacing to the left and right of a `.global-jobs-panel`
+    ///
+    /// @prop {Number} heading-icon-size            [16px]  - Default size of `.icon` components nested within the `.panel-heading` of a `.global-jobs-panel`
+    /// @prop {Number} heading-icon-offset-vertical [5px]   - Default vertical offset of `.icon` components to center them within the `.panel-heading` of a `.global-jobs-panel`. _Added via `@extend`_
+    /// @prop {Number} heading-close-btn-width      [26px]  - Default width of `.close` buttons nested within the `.panel-heading` of a `.global-jobs-panel`
+    ///
+    /// @prop {Number} item-padding             [8px]   - Default padding of a list item within a `.global-jobs-panel`
+    /// @prop {Number} item-height              [48px]  - Default height of a list item within a `.global-jobs-panel`
+    /// @prop {Number} item-progress-bar-width  [140px] - Default width of a `.progress` elem nested within a list item within a `.global-jobs-panel`
+    ///
+    $job-panel-config: (
+        'width': get-deep($screen-widths, 'xs.min'),
+        'spacing-horizontal': 36px,
+        //
+        'heading-icon-size': get-deep($icon-size-config, 'base16.base'),
+        'heading-icon-offset-vertical': null, // actual calculated value inserted via @extend
+        'heading-close-btn-width': get-deep($panel-config, 'sm.header-height'),
+        //
+        'item-padding': get-deep($panel-config, 'sm.body-padding'),
+        'item-height': 48px,
+        'item-progress-bar-width': 140px
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $job-panel-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $job-panel-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $job-panel-heading-icon-offset-vertical: floor((get-deep($panel-config, 'sm.header-height') - get($job-panel-config, 'heading-icon-size')) / 2);
+
+        // ----- EXTEND job panel config with calc'd values ----- //
+        $job-panel-config: extend($job-panel-config,
+            (
+                'heading-icon-offset-vertical': $job-panel-heading-icon-offset-vertical
+            )
+        );

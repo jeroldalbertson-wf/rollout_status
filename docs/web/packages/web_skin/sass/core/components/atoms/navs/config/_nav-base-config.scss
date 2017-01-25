@@ -1,0 +1,226 @@
+// ********************************************************
+
+////
+/// Nav component base configuration
+/// ---
+/// @group core.components.navs
+/// @link http://bit.ly/webskin-navs Nav components spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/config/nav-base-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function calc-nav-divider-margin,
+                                                function z,
+                                                function get,
+                                                function extend,
+                                                function component-height,
+                                                function disabled-color);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE NAV
+//
+// ********************************************************
+    ///
+    /// Base configuration for `.nav` components.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {function} extend
+    /// @requires {function} calc-nav-divider-margin
+    /// @requires {variable} $body-bg
+    /// @requires {variable} $zc-gray-70
+    /// @requires {variable} $global-component-bd-width
+    /// @requires {variable} $global-component-size-config
+    /// ---
+    /// @prop {Color}  bg          [#ffffff]   - Default background color
+    /// @prop {Color}  bd-color    [#b2b2b2]   - Default border color
+    /// @prop {Number} bd-width    [1px]       - Default border width
+    /// @prop {Number} bd-radius   [4px]       - Default border radius
+    ///
+    /// @prop {Number} vertical-divider-height [2px]        - Default height of `.divider` elems nested within vertically-stacked `.nav`s. _Added via `@extend`_
+    /// @prop {List}   vertical-divider-margin [4px 0 3px]  - Default margin around `.divider` elems nested within vertically-stacked `.nav`s. _Added via `@extend`_
+    ///
+    $nav-base-config: (
+        'bg': $body-bg,
+        'bd-color': $zc-gray-70,
+        'bd-width': $global-component-bd-width,
+        'bd-radius': get-deep($global-component-size-config, 'bd-radius.base'),
+        //
+        'vertical-divider-height': null, // actual calculated value inserted via @extend
+        'vertical-divider-margin': null // actual calculated value inserted via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $nav-base-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $nav-base-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $nav-vertical-divider-height: if($nav-box-sizing-default == content-box,
+                                         get($nav-base-config, 'bd-width') * 2,
+                                         get($nav-base-config, 'bd-width')
+                                        );
+        $nav-vertical-divider-margin: calc-nav-divider-margin(get($nav-base-config, 'bd-radius'),
+                                                              get($nav-base-config, 'bd-width')
+                                                             );
+
+        // ----- EXTEND base config with calc'd values ----- //
+        $nav-base-config: extend($nav-base-config,
+            (
+                'vertical-divider-height': $nav-vertical-divider-height,
+                'vertical-divider-margin': $nav-vertical-divider-margin
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   NAV LINKS
+//
+// ********************************************************
+    ///
+    /// Configuration for `.hitarea` elems within `.nav` components.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} z
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {function} extend
+    /// @requires {function} component-height
+    /// @requires {function} disabled-color
+    /// @requires {variable} $nav-base-config
+    /// @requires {variable} $global-component-size-config
+    /// @requires {variable} $zc-gray
+    /// @requires {variable} $zc-gray-120
+    /// @requires {variable} $zc-green
+    /// @requires {variable} $zc-green-in-gamut
+    /// @requires {variable} $zc-green-120-in-gamut
+    /// @requires {variable} $spacing-base
+    /// ---
+    /// @prop {Color}  bg          [transparent]   - Default background color
+    /// @prop {Color}  bg-hover    [transparent]   - Hovered background color
+    /// @prop {Color}  bg-press    [#ffffff]       - Pressed background color
+    /// @prop {Color}  bg-active   [#ffffff]       - Active background color
+    /// @prop {Color}  bg-disabled [transparent]   - Disabled background color
+    ///
+    /// @prop {Color}  text-color          [#595959]   - Default text color
+    /// @prop {Color}  text-color-hover    [#6ebe44]   - Hovered text color
+    /// @prop {Color}  text-color-press    [#349946]   - Pressed text color
+    /// @prop {Color}  text-color-active   [#444444]   - Active text color
+    /// @prop {Color}  text-color-disabled [#cecece]   - Disabled text color
+    ///
+    /// @prop {Number} padding-vertical    [6px]    - Default vertical padding
+    /// @prop {Number} padding-horizontal  [12px]   - Default horizontal padding
+    /// @prop {List}   padding             [6px 12px] - Combination of vertical and horizontal link padding. _Added via `@extend`_
+    /// @prop {Number} font-size                    - Default font size
+    /// @prop {Number} line-height                  - Default line height
+    /// @prop {Number} line-height-px               - Default line height [in `px`]
+    /// @prop {Number} height              [34px]   - Calculated height
+    /// @prop {Number} z-index-active               - z-index value when active
+    ///
+    /// @prop {Number} platform-bd-width [4px]      - Border width of "platform" indicators which are used to indicate active state
+    /// @prop {Color}  platform-bd-color [#66cc00]  - Color of "platform" indicators which are used to indicate active state
+    ///
+    /// @prop {Number} icon-margin-horizontal           [5px]  - Calculated horizontal spacing for `.icon` elems nested within `.hitarea` elems. _Added via `@extend`_
+    /// @prop {Number} stacked-icon-container-size      [32px] - Calculated height for `.icon` elems nested within `.hitarea` elems within vertically stacked navs. _Added via `@extend`_
+    /// @prop {Number} stacked-icon-margin-horizontal   [5px]  - Horizontal spacing for `.icon` elems nested within `.hitarea` elems within vertically stacked navs.
+    ///
+    $nav-link-config: (
+        'bg': transparent,
+        'bg-hover': transparent,
+        'bg-press': get($nav-base-config, 'bg'),
+        'bg-active': get($nav-base-config, 'bg'),
+        'bg-disabled': transparent,
+        //
+        'text-color': $zc-gray,
+        'text-color-hover': get($zc-greens-in-gamut, '100'),
+        'text-color-press': get($zc-greens-in-gamut, '120'),
+        'text-color-active': $zc-gray-120,
+        'text-color-disabled': lighten(disabled-color($zc-gray), 10),
+        //
+        'padding-vertical': get-deep($global-component-size-config, 'padding.base.vertical'),
+        'padding-horizontal': get-deep($global-component-size-config, 'padding.base.horizontal'),
+        'padding': null, // actual calculated value inserted via @extend
+        //
+        'font-size': get-deep($global-component-size-config, 'font-size.base'),
+        'line-height': get-deep($global-component-size-config, 'line-height.base'),
+        'line-height-px': get-deep($global-component-size-config, 'line-height.base-px'),
+        //
+        'height': component-height('base'),
+        'z-index-active': z('dropdown') + 1,
+        //
+        'platform-bd-width': 4px,
+        'platform-bd-color': $zc-green,
+        //
+        'icon-margin-horizontal': null, // actual calculated value inserted via @extend
+        'stacked-icon-container-size': null, // actual calculated value inserted via @extend
+        'stacked-icon-margin-horizontal': $spacing-base
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $nav-link-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $nav-link-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $nav-link-padding: get($nav-link-config, 'padding-vertical') get($nav-link-config, 'padding-horizontal');
+        $nav-link-icon-margin-horizontal: round(get($nav-link-config, 'padding-horizontal') / 2);
+        $nav-stacked-link-icon-container-size: get($nav-link-config, 'height') - (get($nav-link-config, 'padding-vertical') * 2);
+
+        // ----- EXTEND base config with calc'd values ----- //
+        $nav-link-config: extend($nav-link-config,
+            (
+                'padding': $nav-link-padding,
+                'icon-margin-horizontal': $nav-link-icon-margin-horizontal,
+                'stacked-icon-container-size': $nav-stacked-link-icon-container-size
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   MISC VARS (UNDOCUMENTED)
+//
+// ********************************************************
+    $nav-disabled-selectors: '&.disabled, &[aria-disabled="true"], &[disabled]';
+
+
+
+// ********************************************************
+//
+//   JUSTIFIED NAVS (UNDOCUMENTED)
+//
+// ********************************************************
+    $nav-justified-halved-width: 47%;
+    $nav-justified-halved-margin: round(50% - ($nav-justified-halved-width)) * 2;

@@ -1,0 +1,17 @@
+// ********************************************************
+//
+$module: add-api-module('core/api/config/support/touch');
+//
+//   Import this module to compile a stylesheet
+//   for touch-only devices
+//
+// ********************************************************
+
+
+$touch-only: true;
+
+
+// ----------------------------------------------------
+//   Default support
+// ----------------------------------------------------
+@import "defaults";

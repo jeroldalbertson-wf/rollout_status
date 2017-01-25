@@ -1,0 +1,24 @@
+// ********************************************************
+//
+//   Sass API Spec Manifest
+//
+// ********************************************************
+
+// ----------------------------------------------------
+//   Core Utils
+// ----------------------------------------------------
+    @import 'utilities/lists';
+    @import 'utilities/strings';
+    @import 'utilities/numbers';
+    @import 'utilities/maps';
+    @import 'utilities/eval';
+    @import 'utilities/mutate';
+    @import 'utilities/type-conversion';
+    @import 'utilities/unit-conversion';
+
+
+// ----------------------------------------------------
+//   CSS3 Helpers
+// ----------------------------------------------------
+    @import 'css3/transition/build-transition-shorthand';
+    @import 'css3/gradient/gradient-stops';

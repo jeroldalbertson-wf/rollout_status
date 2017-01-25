@@ -1,0 +1,81 @@
+// ********************************************************
+
+////
+/// Form click to edit component config
+/// ---
+/// @group peripherals.components.form-controls
+/// @todo add a link to the component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/form-click-to-edit/atoms/form-click-to-edit-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function to-rem,
+                                                function color,
+                                                function get);
+//
+// ********************************************************
+
+
+$cte-group-config: (
+    bd-width: 0,
+    padding: 0,
+    //
+    bg-color: transparent,
+    bd-color: transparent,
+    //
+    bg-color-selected: transparent,
+    bd-color-selected: transparent,
+    //
+    edit-btn-height: 2rem,
+    edit-btn-width: 2rem,
+    //
+    //
+    inset-toolbar-btn-height: 2rem,
+    inset-toolbar-btn-width: 2rem,
+    inset-toolbar-btn-spacing-horizontal: .4rem,
+    inset-toolbar-btn-gray-bg: $zc-gray-60,
+    //
+    class-single-click-enabled: '.cte-group--single-click-enabled',
+    class-selected: '.is-selected',
+    class-editable: '.is-editable',
+    //
+    transition-duration: $default-fade-speed,
+    transition-fn: ease
+);
+
+$cte-hover-control-bd: get-deep($form-control-config, 'colors.bd-fallback');
+$cte-hover-control-bd-rgba-color: get-deep($form-control-config, 'colors.bd-rgba-color');
+$cte-hover-control-bd-rgba: rgba($cte-hover-control-bd-rgba-color, get-deep($form-control-config, 'colors.bd-rgba-alpha'));
+$cte-selected-control-bd: $zc-blue-120;
+$cte-hover-edit-btn-bg-hover: shade-of($cte-selected-control-bd, 80%);
+$cte-hover-edit-btn-bg-press: darken($cte-selected-control-bd, $elem-pressed-bg-darken-amount-default);
+$cte-selected-edit-btn-bg-hover: $cte-hover-edit-btn-bg-hover;
+$cte-selected-edit-btn-bg-press: $cte-hover-edit-btn-bg-press;
+
+
+$cte-state-colors: (
+    hover: (
+        label: shade-of($zc-gray, 55%),
+        control-bd: $cte-hover-control-bd,
+        control-bd-rgba: $cte-hover-control-bd-rgba,
+        edit-btn-bg: $cte-hover-control-bd,
+        edit-btn-bg-hover: $cte-hover-edit-btn-bg-hover,
+        edit-btn-bg-press: $cte-hover-edit-btn-bg-press,
+        edit-btn-icon: get($form-control-colors, 'bg'),
+        edit-btn-icon-hover: get($form-control-colors, 'bg')
+    ),
+    selected: (
+        label: $cte-selected-control-bd,
+        control-bd: $cte-selected-control-bd,
+        edit-btn-bg: $cte-selected-control-bd,
+        edit-btn-bg-hover: $cte-hover-edit-btn-bg-hover,
+        edit-btn-bg-press: $cte-selected-edit-btn-bg-press,
+        edit-btn-icon: get($form-control-colors, 'bg')
+    )
+);

@@ -1,0 +1,234 @@
+// ********************************************************
+//
+//   Configuration for Web Skin "Chosen" Select Components
+//
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/forms/config/form-chosen-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function component-height,
+                                                function component-text-height,
+                                                function component-padding-vertical,
+                                                function component-padding-horizontal,
+                                                function close-button-padding-bottom,
+                                                function get,
+                                                function get-deep,
+                                                function extend,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+$select-caret-size: $caret-width;
+
+
+
+// ********************************************************
+//
+//   CHOSEN ELEMENT COLORS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   SEARCH CHOICE
+    // ----------------------------------------------------
+    $chsn-search-choice-bg: $zc-gray-20;
+    $chsn-search-choice-bd-color: $chsn-search-choice-bg;
+    $chsn-search-choice-text-color: $zc-gray; // No longer used, inherits from `.btn-default` class
+
+    $chsn-search-choice-bg-hover: $zc-gray-30;
+    $chsn-search-choice-bd-color-hover: $chsn-search-choice-bg-hover;
+    $chsn-search-choice-bd-right-color-hover: $zc-blue-40;
+    $chsn-search-choice-text-color-hover: #333333; // No longer used, inherits from `.btn-default` class
+
+    $chsn-search-choice-hover-platform: ':after';
+    $chsn-search-choice-selected-platform: ':before';
+
+    $chsn-search-choice-bg-selected: $chsn-search-choice-bd-right-color-hover;
+    $chsn-search-choice-bd-color-selected: $chsn-search-choice-bg-selected;
+
+    $chsn-search-choice-text-color-staged: $zc-gray-70;
+
+    $chsn-search-choice-bg-disabled: $chsn-search-choice-bg;
+    $chsn-search-choice-bd-color-disabled: $chsn-search-choice-bg-disabled;
+    $chsn-search-choice-text-color-disabled: $chsn-search-choice-text-color; // No longer used, inherits from `.btn-default` class
+
+
+// ********************************************************
+//
+//   CHOSEN SIZE VARIATIONS
+//
+//   -> Mimic standard .input-xx size variation effects
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   BASE SIZE
+    // ----------------------------------------------------
+        // ----- SEARCH FIELD ----- //
+        $chsn-search-field-size-name: 'base';
+        $chsn-search-field-font-size: get-deep($form-control-config, 'font-size.#{$chsn-search-field-size-name}');
+        $chsn-search-field-line-height: get-deep($form-control-config, 'height.#{$chsn-search-field-size-name}');
+        $chsn-search-field-height: $chsn-search-field-line-height;
+        $chsn-search-field-min-width: 12rem;
+
+        // ----- SEARCH CHOICE ----- //
+        $chsn-search-choice-btn-size-name: 'xs';
+        $chsn-search-choice-bd-radius: to-rem(get($global-component-bd-radius-config, $chsn-search-choice-btn-size-name));
+        $chsn-search-choice-bd-right-width-hover: $global-component-platform-bd-width;
+        $chsn-search-choice-btn-height: component-height($chsn-search-choice-btn-size-name);
+        $chsn-search-choice-btn-text-height: component-text-height($chsn-search-choice-btn-size-name);
+
+        $chsn-search-choice-close-width: $chsn-search-choice-btn-height; // its a square
+        $chsn-search-choice-close-line-height: $chsn-search-choice-btn-height - close-button-padding-bottom() - 2px;
+        $chsn-search-choice-close-font-size: get($close-btn-config, 'font-size');
+
+        $chsn-search-choice-spacing-default: ceil((get-deep($form-control-config, 'height.base') - $chsn-search-choice-btn-height) / 2);
+        $chsn-search-choice-spacing: if($chsn-search-choice-spacing-default == 0, 1px, $chsn-search-choice-spacing-default);
+
+        $chsn-search-choice-btn-padding-right: $chsn-search-choice-close-width + $chsn-search-choice-spacing;
+
+
+    // ----------------------------------------------------
+    //   LARGE SIZE
+    // ----------------------------------------------------
+        // ----- SEARCH FIELD ----- //
+        $chsn-lg-search-field-size-name: 'lg';
+        $chsn-lg-search-field-font-size: get-deep($form-control-config, 'font-size.#{$chsn-search-field-size-name}');
+        $chsn-lg-search-field-line-height: get-deep($form-control-config, 'height.#{$chsn-lg-search-field-size-name}');
+        $chsn-lg-search-field-height: $chsn-lg-search-field-line-height;
+        $chsn-lg-search-field-min-width: 16rem;
+
+        // ----- SEARCH CHOICE ----- //
+        $chsn-lg-search-choice-btn-size-name: 'base';
+        $chsn-lg-search-choice-bd-right-width-hover: $chsn-search-choice-bd-right-width-hover;
+        $chsn-lg-search-choice-btn-height: component-height($chsn-lg-search-choice-btn-size-name);
+        $chsn-lg-search-choice-btn-text-height: component-text-height($chsn-lg-search-choice-btn-size-name);
+
+        $chsn-lg-search-choice-close-width: $chsn-lg-search-choice-btn-height; // its a square
+        $chsn-lg-search-choice-close-line-height: $chsn-lg-search-choice-btn-height - close-button-padding-bottom() - 2px;
+        $chsn-lg-search-choice-close-font-size: get($close-btn-config, 'font-size-lg');
+
+        $chsn-lg-search-choice-spacing: round((get-deep($form-control-config, 'height.lg') - $chsn-lg-search-choice-btn-height) / 2);
+
+        $chsn-lg-search-choice-btn-padding-right: $chsn-lg-search-choice-close-width + $chsn-lg-search-choice-spacing;
+
+
+    // ----------------------------------------------------
+    //   SMALL SIZE
+    // ----------------------------------------------------
+        // ----- SEARCH FIELD ----- //
+        $chsn-sm-search-field-size-name: 'sm';
+        $chsn-sm-search-field-font-size: get-deep($form-control-config, 'font-size.#{$chsn-search-field-size-name}');
+        $chsn-sm-search-field-line-height: get-deep($form-control-config, 'height.#{$chsn-sm-search-field-size-name}');
+        $chsn-sm-search-field-height: $chsn-sm-search-field-line-height - (get($form-control-config, 'bd-width') * 2);
+        $chsn-sm-search-field-min-width: 11rem;
+
+        // ----- SEARCH CHOICE ----- //
+        $chsn-sm-search-choice-btn-size-name: 'xs';
+        $chsn-sm-search-choice-bd-right-width-hover: $chsn-search-choice-bd-right-width-hover;
+        $chsn-sm-search-choice-btn-height: component-height($chsn-sm-search-choice-btn-size-name);
+        $chsn-sm-search-choice-btn-text-height: component-text-height($chsn-sm-search-choice-btn-size-name);
+
+        $chsn-sm-search-choice-close-width: $chsn-sm-search-choice-btn-height; // its a square
+        $chsn-sm-search-choice-close-line-height: $chsn-sm-search-choice-btn-height - close-button-padding-bottom() - 2px;
+        $chsn-sm-search-choice-close-font-size: get($close-btn-config, 'font-size');
+
+        $chsn-sm-search-choice-spacing: round((get-deep($form-control-config, 'height.sm') - $chsn-sm-search-choice-btn-height) / 2);
+
+        $chsn-sm-search-choice-btn-padding-right: $chsn-sm-search-choice-close-width + $chsn-sm-search-choice-spacing;
+
+
+    // ----------------------------------------------------
+    //   EXTRA SMALL SIZE
+    //   -> At this size, a `.btn-xs` won't even fit
+    //      so we need to mimic the xxsmall variation
+    //      of a button.
+    // ----------------------------------------------------
+        // ----- SEARCH FIELD ----- //
+        $chsn-xs-search-field-size-name: 'xs';
+        $chsn-xs-search-choice-bd-right-width-hover: $chsn-search-choice-bd-right-width-hover - .1rem;
+        $chsn-xs-search-field-font-size: get-deep($form-control-config, 'font-size.#{$chsn-search-field-size-name}');
+        $chsn-xs-search-field-line-height: get-deep($form-control-config, 'height.#{$chsn-xs-search-field-size-name}');
+        $chsn-xs-search-field-height: $chsn-xs-search-field-line-height;
+        $chsn-xs-search-field-min-width: 9rem;
+
+        // ----- SEARCH CHOICE ----- //
+        $chsn-xs-search-choice-btn-size-name: 'xxs';
+        $chsn-xs-search-choice-btn-height-reduction: 8px; // how much smaller than a regular .btn-xs
+        $chsn-xs-search-choice-btn-height: $chsn-xs-search-field-height - $chsn-xs-search-choice-btn-height-reduction;
+        $chsn-xs-search-choice-btn-text-height: $chsn-xs-search-field-height - $chsn-xs-search-choice-btn-height-reduction;
+
+        $chsn-xs-search-choice-close-width: $chsn-xs-search-choice-btn-height; // its a square
+        $chsn-xs-search-choice-close-line-height: .4;
+        $chsn-xs-search-choice-close-font-size: get($close-btn-config, 'font-size-sm');
+
+        $chsn-xs-search-choice-spacing: round((get-deep($form-control-config, 'height.#{$chsn-xs-search-field-size-name}') - $chsn-xs-search-choice-btn-height) / 2);
+
+        $chsn-xs-search-choice-btn-padding-right: $chsn-xs-search-choice-close-width + $chsn-xs-search-choice-spacing;
+
+
+    // ----------------------------------------------------
+    //   SIZE VARIATION MAP CONFIG
+    // ----------------------------------------------------
+        ///
+        /// Convenience collection of config values for chosen's `.search-field` and `.search-choice` elements within each size variation of the `.chosen` component
+        /// ---
+        /// @access private
+        /// @type Map
+        /// @since 1.0.0
+        /// @group core.internals.components.form-controls
+        /// ---
+        /// @prop {Map} lg   - Configuration map for `.search-field` and `.search-choice` elements nested within a `.chosen-container.input-lg` size variation
+        /// @prop {Map} sm   - Configuration map for `.search-field` and `.search-choice` elements nested within a `.chosen-container.input-sm` size variation
+        /// @prop {Map} xs   - Configuration map for `.search-field` and `.search-choice` elements nested within a `.chosen-container.input-xs` size variation
+        ///
+        $chsn-search-size-variations: (
+            'lg': (
+                'field-height': $chsn-lg-search-field-height,
+                'field-line-height': $chsn-lg-search-field-line-height,
+                'field-font-size': $chsn-lg-search-field-font-size,
+                'field-min-width': $chsn-lg-search-field-min-width,
+                'choice-spacing': $chsn-lg-search-choice-spacing,
+                'choice-btn-size-name': $chsn-lg-search-choice-btn-size-name,
+                'choice-btn-right-width-hover': $chsn-lg-search-choice-bd-right-width-hover,
+                'choice-btn-height': $chsn-lg-search-choice-btn-height,
+                'choice-btn-padding-right': $chsn-lg-search-choice-btn-padding-right,
+                'choice-btn-padding-vertical': false,
+                'choice-close-width': $chsn-lg-search-choice-close-width,
+                'choice-close-line-height': $chsn-lg-search-choice-close-line-height,
+                'choice-close-font-size': $chsn-lg-search-choice-close-font-size
+            ),
+            'sm': (
+                'field-height': $chsn-sm-search-field-height,
+                'field-line-height': $chsn-sm-search-field-line-height,
+                'field-font-size': $chsn-sm-search-field-font-size,
+                'field-min-width': $chsn-sm-search-field-min-width,
+                'choice-spacing': $chsn-sm-search-choice-spacing,
+                'choice-btn-size-name': $chsn-sm-search-choice-btn-size-name,
+                'choice-btn-right-width-hover': $chsn-sm-search-choice-bd-right-width-hover,
+                'choice-btn-height': $chsn-sm-search-choice-btn-height,
+                'choice-btn-padding-right': $chsn-sm-search-choice-btn-padding-right,
+                'choice-btn-padding-vertical': false,
+                'choice-close-width': $chsn-sm-search-choice-close-width,
+                'choice-close-line-height': $chsn-sm-search-choice-close-line-height,
+                'choice-close-font-size': $chsn-sm-search-choice-close-font-size
+            ),
+            'xs': (
+                'field-height': $chsn-xs-search-field-height,
+                'field-line-height': $chsn-xs-search-field-line-height,
+                'field-font-size': $chsn-xs-search-field-font-size,
+                'field-min-width': $chsn-xs-search-field-min-width,
+                'choice-spacing': $chsn-xs-search-choice-spacing,
+                'choice-btn-size-name': $chsn-xs-search-choice-btn-size-name,
+                'choice-btn-right-width-hover': $chsn-xs-search-choice-bd-right-width-hover,
+                'choice-btn-height': $chsn-xs-search-choice-btn-height,
+                'choice-btn-padding-right': $chsn-xs-search-choice-btn-padding-right,
+                'choice-btn-padding-vertical': .1rem, // NOTE: This is the vertical padding value of `btn-xxs`, but is not stored as a var anywhere yet.
+                'choice-close-width': $chsn-xs-search-choice-close-width,
+                'choice-close-line-height': $chsn-xs-search-choice-close-line-height,
+                'choice-close-font-size': $chsn-xs-search-choice-close-font-size
+            )
+        );

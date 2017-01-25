@@ -1,0 +1,96 @@
+// ********************************************************
+//
+$module: 'core/module-components';
+//
+//   Web Skin Core Components
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Shared
+// ----------------------------------------------------
+@import "components/carets";
+@import "components/labels";
+@import "components/badges";
+@import "components/avatars";
+@import "components/tables";
+
+
+// ----------------------------------------------------
+//   Forms
+// ----------------------------------------------------
+@import "components/forms/forms";
+@import "components/forms/form-cbox-radio";
+@import "components/forms/input-groups";
+@import "components/forms/form-search";
+
+
+// ----------------------------------------------------
+//   Buttons
+// ----------------------------------------------------
+@import "components/buttons/buttons";
+@import "components/buttons/button-groups";
+@import "components/buttons/buttons-close";
+
+
+// ----------------------------------------------------
+//   Navigation
+// ----------------------------------------------------
+@import "components/navs/dropdowns";
+@import "components/navs/navs";
+@import "components/navs/nav-tabs";
+@import "components/navs/nav-pills";
+@import "components/navs/nav-justified";
+@import "components/navs/navbars";
+@import "components/navs/pagination";
+@import "components/navs/pager";
+@import "components/navs/page-indicators";
+
+
+// ----------------------------------------------------
+//   Custom Form Components
+//
+//   -> More specific than basic button / dropdown styles
+// ----------------------------------------------------
+@import "components/forms/form-chosen";
+@import "components/forms/form-dropdown-select";
+@import "components/forms/form-number";
+@import "components/forms/form-file-browser";
+
+
+// ----------------------------------------------------
+//   Dialogs
+// ----------------------------------------------------
+@import "components/dialogs/dialogs-shared";
+@import "components/dialogs/alerts";
+@import "components/dialogs/modals";
+@import "components/dialogs/modals-contained";
+@import "components/dialogs/floating-dialogs";
+@import "components/dialogs/lightbox";
+@import "components/dialogs/tooltips";
+@import "components/dialogs/tooltips-navs"; // TODO: Should this be part of the comments peripheral?
+@import "components/dialogs/popovers";
+@import "components/dialogs/popovers-datepicker";
+@import "components/dialogs/color-picker";
+@import "components/dialogs/hints";
+@import "components/dialogs/dialogs-shared-utilities";
+
+
+// ----------------------------------------------------
+//   Miscellaneous
+// ----------------------------------------------------
+@import "components/breadcrumbs";
+@import "components/wells";
+@import "components/list-groups";
+@import "components/panels";
+@import "components/cards/index";
+@import "components/thumbnails";
+@import "components/media";
+@import "components/responsive-embed";
+@import "components/progress/progress-bars";
+@import "components/progress/progress-app-loading"; // todo: is this a peripheral?
+@import "components/progress/progress-spinners";
+@import "components/carousels";
+@import "components/empty-view";
+@import "components/shared/xxs-component-size";

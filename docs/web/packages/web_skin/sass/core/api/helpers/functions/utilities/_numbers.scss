@@ -1,0 +1,321 @@
+// ********************************************************
+
+////
+/// Global functions to help with manipulation of numbers
+/// ---
+/// @access public
+/// @since 1.0.0
+/// @group core.utils.numbers
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/functions/utilities/numbers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function is-number,
+                                                function is-rem);
+//
+// ********************************************************
+
+
+///
+/// Removes unit from a number.
+/// ---
+/// @param {Number} $number
+/// @returns {Number} - unitless number
+///
+@function remove-unit($number) {
+    $dependencies-met: dependencies-met(for remove-unit, is-number);
+    @if not is-number($number) {
+        @error "`remove-unit` function expecting a number; #{type-of($number)} given.";
+    }
+
+    @if unitless($number) {
+        @return $number;
+    } @else {
+        @return $number / ($number * 0 + 1);
+    }
+}
+
+///
+/// Raises `$number` to the power of `$exponent`.
+/// ---
+/// @since 1.5.0
+/// ---
+/// @param {Number} $number
+/// @param {Number} $exponent
+/// ---
+/// @returns {Number} - `$number` raised to the power of `$exponent`
+///
+@function pow($number, $exponent) {
+    // ----- BEGIN ERROR CHECKING ----- //
+    @if not is-number($number) {
+        @error "pow() function expecting `$number` param value to be a number. Was #{$number} (#{type-of($number)}).";
+    }
+
+    @if not is-number($exponent) {
+        @error "pow() function expecting `$exponent` param value to be a number. Was #{$number} (#{type-of($number)}).";
+    }
+    // ----- END ERROR CHECKING ----- //
+
+    @if $exponent == 0 {
+        @return 1;
+    }
+
+    // Initialize the value that we will return
+    $value: $number;
+    // If the provided number is negative, the return value should also be negative
+    $preserve-negative: if($value < 0, -1, 1);
+
+    // Multiply when `$exponent` is positive
+    @if $exponent > 1 {
+        @for $i from 2 through $exponent {
+            $value: $value * $number;
+        }
+
+        $value: abs($value) * $preserve-negative;
+    }
+
+    // Divide when `$exponent` is negative
+    @if $exponent < 1 {
+        @for $i from 0 through -$exponent {
+            $value: $value / $number;
+        }
+
+        $value: abs($value) * $preserve-negative;
+    }
+
+    @return $value;
+}
+
+///
+/// Computes the sum of a list of numbers.
+/// ---
+/// @param {List} $list
+/// @returns {Number}
+///
+@function sum($list) {
+    $result: 0;
+    $common-unit: null;
+
+    @each $number in $list {
+        @if not is-number($number) {
+            @error "`sum` function expecting a number; #{type-of($number)} given.";
+        }
+        @if not unitless($number) {
+            @if $common-unit == null {
+                $common-unit: unit($number);
+            } @else {
+                @if $common-unit != unit($number) {
+                    // non-matching units found in the same list
+                    @warn "List passed to the `sum` function contains numbers with two different units. (`#{$common-unit}` and `#{unit($number)}`. All units are removed before computing the sum, but mixing units will likely produce unexpected results.)";
+                }
+            }
+        }
+
+        $result: $result + remove-unit($number);
+    }
+
+    @return $result;
+}
+
+///
+/// Computes the average of a list of numbers.
+/// ---
+/// @param {List} $list
+/// @returns {Number}
+///
+@function average($list) {
+  @return sum($list) / length($list);
+}
+
+///
+/// Computes the average of a list of numbers.
+/// @alias average
+///
+@function avg($list) {
+    @return average($list);
+}
+
+///
+/// Round a `$number` to specified `$digits`.
+/// ---
+/// @since 1.5.0
+/// ---
+/// @param  {Number} $number            - A number to round
+/// @param  {Number} $digits [1]        - Digits to output
+/// @param  {String} $mode   [round]    - How to round the `$number`. Can be `round`, `ceil` or `floor`.
+///
+/// @param  {Number} $conversion-factor [1] - __DO NOT MODIFY THIS UNLESS YOU KNOW WHAT YOU ARE DOING.__ This is solely intended for use by the `rem-round()` fn.
+/// ---
+/// @returns {Number} A rounded number
+/// ---
+/// @example scss
+///   $foo: decimal-round(0.333, 0);  // 0
+///   $foo: decimal-round(0.333);     // 0.3
+///   $foo: decimal-round(0.333, 2);  // 0.33
+///   $foo: decimal-round(0.666, 0);  // 1
+///   $foo: decimal-round(0.666);     // 0.7
+///   $foo: decimal-round(0.666, 2);  // 0.67
+///
+@function decimal-round($number, $digits: 1, $mode: round, $conversion-factor: 1) {
+    // ----- BEGIN ERROR CHECKING ----- //
+    @if not is-number($number) {
+        @error "decimal-round() function expecting `$number` param value to be a number. Was #{$number} (#{type-of($number)}).";
+    }
+
+    @if not is-number($digits) {
+        @error "decimal-round() function expecting `$digits` param value to be a number. Was #{$digits} (#{type-of($digits)}).";
+    } @else if not unitless($digits) {
+        @error "decimal-round() function expecting `$digits` param value to be a unitless number. Was #{unit($digits)}.";
+    }
+
+    @if not is($mode, round ceil floor) {
+        @error "decimal-round() function expecting `$mode` param value to be one of (round, ceil, floor). Was #{$mode}.";
+    }
+
+    @if not is-number($conversion-factor) {
+        @error "decimal-round() function expecting `$conversion-factor` param value to be a number. Was #{$conversion-factor} (#{type-of($conversion-factor)}).";
+    } @else if not unitless($conversion-factor) {
+        @error "decimal-round() function expecting `$conversion-factor` param value to be a unitless number. Was #{unit($conversion-factor)}.";
+    }
+
+    @if not is-rem($number) and $conversion-factor != 1 {
+        @warn "decimal-round() function should not have a `$conversion-factor` of anything other than `1` when `$number` does not have a unit of `rem`. Unit was `#{unit($number)}`. PROCEED WITH CAUTION.";
+    }
+    // ----- END ERROR CHECKING ----- //
+
+    //
+    // Fancy conversion math
+    // Only useful if $conversion-factor is something other than 10 (for rounding rems, for instance).
+    // See: specs/utilities/numbers => "[rem-round] when [html-font-size-px] is altered and [decimal] is something other than one"
+    //
+    $converted-number: $number * $conversion-factor;
+    // Shift decimal place to the right so that when `round` / `ceil` / `floor` is called,
+    // the number of decimal places the consumer wants is preserved.
+    $shifted-decimal-helper: $converted-number * pow(10, $digits);
+    $rounded-shifted-decimal-number: call($mode, $shifted-decimal-helper);
+    $rounded-converted-number: $rounded-shifted-decimal-number / pow(10, $digits);
+    $rounded-number: $rounded-converted-number / $conversion-factor;
+
+    @return $rounded-number;
+}
+
+///
+/// Ceil _(round up)_ a `$number` to specified `$digits`.
+/// ---
+/// @since 1.5.0
+/// ---
+/// @param  {Number} $number        - A number to round up
+/// @param  {Number} $digits [1]    - Digits to output
+/// ---
+/// @returns {Number} A ceiled number
+/// ---
+/// @example scss
+///   $foo: decimal-ceil(0.333, 0);  // 1
+///   $foo: decimal-ceil(0.333);     // 0.4
+///   $foo: decimal-ceil(0.333, 2);  // 0.34
+///   $foo: decimal-ceil(0.666, 0);  // 1
+///   $foo: decimal-ceil(0.666);     // 0.7
+///   $foo: decimal-ceil(0.666, 2);  // 0.67
+///
+@function decimal-ceil($number, $digits: 1) {
+    @return decimal-round($number, $digits, ceil);
+}
+
+///
+/// Floor _(round down)_ a `$number` to specified `$digits`.
+/// ---
+/// @since 1.5.0
+/// ---
+/// @param  {Number} $number        - A number to round down
+/// @param  {Number} $digits [1]    - Digits to output
+/// ---
+/// @returns {Number} A floored number
+/// ---
+/// @example scss
+///   $foo: decimal-floor(0.333, 0);  // 0
+///   $foo: decimal-floor(0.333);     // 0.3
+///   $foo: decimal-floor(0.333, 2);  // 0.33
+///   $foo: decimal-floor(0.666, 0);  // 0
+///   $foo: decimal-floor(0.666);     // 0.6
+///   $foo: decimal-floor(0.666, 2);  // 0.66
+///
+@function decimal-floor($number, $digits: 1) {
+    @return decimal-round($number, $digits, floor);
+}
+
+///
+/// Round a `$number` that has a unit of `rem` to a number that renders in the browser as a whole pixel value.
+/// ---
+/// @since 1.5.0
+/// ---
+/// @param  {Number} $number            - A `rem` number to round
+/// @param  {Number} $px-digits [0]     - Pixel decimal places to output before converting back to `rem`
+/// @param  {String} $mode      [round] - How to round the `$number`. Can be `round`, `ceil` or `floor`.
+/// ---
+/// @returns {Number} A rounded whole pixel value, converted to `rem`s
+/// ---
+/// @example scss
+///   $foo: rem-round(0.3333rem);    // 0.3rem
+///   $foo: rem-round(0.3333rem, 1); // 0.33rem
+///   $foo: rem-round(0.3333rem, 2); // 0.333rem
+///   $foo: rem-round(0.6666rem);    // 0.7rem
+///   $foo: rem-round(0.6666rem, 1); // 0.67rem
+///   $foo: rem-round(0.6666rem, 2); // 0.667rem
+///
+@function rem-round($number, $px-digits: 0, $mode: round) {
+    @if not is-rem($number) {
+        @error "rem-round() function expecting the unit of `$number` to be `rem`. Was `#{unit($number)}`.";
+    }
+
+    @return decimal-round($number: $number, $digits: $px-digits, $mode: $mode, $conversion-factor: remove-unit($html-font-size-px));
+}
+
+///
+/// Ceil _(round up)_ a `$number` that has a unit of `rem` to a number that renders in the browser as a whole pixel value.
+/// ---
+/// @since 1.5.0
+/// ---
+/// @param  {Number} $number            - A `rem` number to round
+/// @param  {Number} $px-digits [0]     - Pixel decimal places to output before converting back to `rem`
+/// ---
+/// @returns {Number} A ceiled whole pixel value, converted to `rem`s
+/// ---
+/// @example scss
+///   $foo: rem-ceil(0.3333rem);     // 0.4rem
+///   $foo: rem-ceil(0.3333rem, 1);  // 0.34rem
+///   $foo: rem-ceil(0.3333rem, 2);  // 0.334rem
+///   $foo: rem-ceil(0.6666rem);     // 0.7rem
+///   $foo: rem-ceil(0.6666rem, 1);  // 0.67rem
+///   $foo: rem-ceil(0.6666rem, 2);  // 0.667rem
+///
+@function rem-ceil($number, $px-digits: 0) {
+    @return rem-round($number: $number, $px-digits: $px-digits, $mode: ceil);
+}
+
+///
+/// Floor _(round down)_ a `$number` that has a unit of `rem` to a number that renders in the browser as a whole pixel value.
+/// ---
+/// @since 1.5.0
+/// ---
+/// @param  {Number} $number            - A `rem` number to round
+/// @param  {Number} $px-digits [0]     - Pixel decimal places to output before converting back to `rem`
+/// ---
+/// @returns {Number} A ceiled whole pixel value, converted to `rem`s
+/// ---
+/// @example scss
+///   $foo: rem-floor(0.3333rem);    // 0.3rem
+///   $foo: rem-floor(0.3333rem, 1); // 0.33rem
+///   $foo: rem-floor(0.3333rem, 2); // 0.333rem
+///   $foo: rem-floor(0.6666rem);    // 0.6rem
+///   $foo: rem-floor(0.6666rem, 1); // 0.66rem
+///   $foo: rem-floor(0.6666rem, 2); // 0.666rem
+///
+@function rem-floor($number, $px-digits: 0) {
+    @return rem-round($number: $number, $px-digits: $px-digits, $mode: floor);
+}

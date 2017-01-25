@@ -1,0 +1,168 @@
+// ********************************************************
+
+////
+/// Form control component color configuration
+/// ---
+/// @access public
+/// @group core.components.form-controls
+/// @link http://bit.ly/webskin-form-controls Form control component spec
+/// @link http://bit.ly/webskin-form-control-focused Focused form control text input spec
+/// @link http://bit.ly/webskin-form-control-disabled Disabled form control component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/forms/config/controls/form-control-color-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function color,
+                                                function extend,
+                                                function darkness,
+                                                function to-decimal);
+// ********************************************************
+
+
+// ********************************************************
+//
+//   GLOBAL COLORS
+//
+// ********************************************************
+    ///
+    /// Collection of default colors for `.form-control` components.
+    /// ---
+    /// @since 1.0.0
+    /// @type Map
+    /// @todo Write a unit test that asserts that form control bd matches btn-default bd
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {function} extend
+    /// @requires {function} color
+    /// @requires {function} darkness
+    /// @requires {function} to-decimal
+    ///
+    /// @requires {variable} $zc-gray
+    /// @requires {variable} $zc-gray-90
+    /// @requires {variable} $zc-gray-80
+    /// @requires {variable} $zc-gray-70
+    /// @requires {variable} $zc-gray-50
+    /// @requires {variable} $zc-blue-80
+    /// @requires {variable} $white
+    /// @requires {variable} $black
+    /// @requires {variable} $form-control-inset-shadow-config
+    /// ---
+    /// @prop {Color}  placeholder-text-base [#b2b2b2] - Default `::placeholder` text color
+    /// @prop {Color}  placeholder-text-base [rgba(#b2b2b2, .45)] - `::placeholder` text color when disabled. _Added via `@extend`_
+    ///
+    /// @prop {Color}  text-base      [#7d7d7d]  - Default `.form-control` text color
+    /// @prop {Color}  text-focus     [#595959]  - Default `.form-control` text color when focused
+    /// @prop {Color}  text-disabled  [#cbcbcb]  - Default `.form-control` text color when disabled. _Added via `@extend`_
+    ///
+    /// @prop {Color}  bg             [#ffffff]  - Default `.form-control` background color
+    /// @prop {Color}  bg-disabled    [rgba(#ffffff, .45)]  - Default `.form-control` background color when disabled
+    ///
+    /// @prop {Color}  bd-fallback    [#d8d8d8]  - Default `.form-control` border color for browsers that do not support `rgba` color
+    /// @prop {Color}  bd-rgba-color  [#000000]  - Default `.form-control` border color used-in-combination with `bd-rgba-alpha` for browsers that support `rgba` color
+    /// @prop {Number} bd-rgba-alpha  [.16]      - Default `.form-control` border opacity used-in-combination with `bd-rgba-color` for browsers that support `rgba` color. _Added via `@extend`_
+    /// @prop {String} bd-focus-key   ['blue']   - __Deprecated.__ Will be removed in the `2.0.0` release.
+    /// @prop {Color}  bd-focus       [#33a9ff]  - Default `.form-control` border color when focused
+    /// @prop {Color}  bd-disabled    [rgba(#000000, .072)]  - Default `.form-control` border color when disabled. _Added via `@extend`_
+    ///
+    $form-control-colors: (
+        // placeholder text
+        'placeholder-text-base': $zc-gray-70,
+        'placeholder-text-disabled': null, // actual calculated value inserted via @extend
+        // input text
+        'text-base':  mix($zc-gray-90, $zc-gray-80, 50%),
+        'text-focus': $zc-gray,
+        'text-disabled': null, // actual calculated value inserted via @extend
+        // input background
+        'bg': $white,
+        'bg-disabled': rgba($white, $disabled-alpha-default),
+        // input border
+        'bd-fallback': $zc-gray-50,
+        'bd-rgba-color': $black,
+        'bd-rgba-alpha': null, // actual calculated value inserted via @extend
+        'bd-focus-key': 'blue', // deprecated. TODO: Remove in the Web Skin 2.0.0 release.
+        'bd-focus': $zc-blue-80,
+        'bd-disabled': null // actual calculated value inserted via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $form-control-colors
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $form-control-colors
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $input-bd-alpha-rgba: to-decimal(ceil(darkness(get($form-control-colors, 'bd-fallback'))));
+        $input-bd-disabled: rgba(get($form-control-colors, 'bd-rgba-color'), ($input-bd-alpha-rgba * $disabled-alpha-default));
+        $input-text-color-disabled: rgba(get($form-control-colors, 'text-base'), $disabled-alpha-default);
+        $input-placeholder-color-disabled: rgba(get($form-control-colors, 'placeholder-text-base'), $disabled-alpha-default);
+
+        // ----- EXTEND color config with calc'd values ----- //
+        $form-control-colors: extend($form-control-colors,
+            (
+                'placeholder-text-disabled': $input-placeholder-color-disabled,
+                'text-disabled': $input-text-color-disabled,
+                'bd-rgba-alpha': $input-bd-alpha-rgba,
+                'bd-disabled': $input-bd-disabled
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   INNER SHADOW
+//
+// ********************************************************
+    ///
+    /// Collection of properties used to create the inset shadow within `<input>` and `<textarea>` elements.
+    /// ---
+    /// @since 1.0.0
+    /// @type Map
+    /// @deprecated `in 1.3.6`
+    /// @todo remove in `2.0.0`
+    /// ---
+    /// @requires {function} extend
+    /// @requires {variable} $shadow-default-config
+    /// ---
+    /// @prop {Bool}   inset     [true]
+    /// @prop {Number} offset-x  [0]        - _inherited from `$shadow-default-config`_
+    /// @prop {Number} offset-y  [0]
+    /// @prop {Number} blur      [0]
+    /// @prop {Number} spread    [0]        - _inherited from `$shadow-default-config`_
+    /// @prop {Color}  color     [#000000]  - _inherited from `$shadow-default-config`_
+    /// @prop {Number} alpha     [0]
+    ///
+    $form-control-inset-shadow-config: extend($shadow-default-config,
+        (
+            'inset': true,
+            'offset-y': 0,
+            'blur': 0,
+            'alpha': 0
+        )
+    ) !default;
+
+    ///
+    /// Default inset `box-shadow` value for `<input>` and `<textarea>` elements.
+    /// ---
+    /// @type List
+    /// @deprecated `in 1.3.6`
+    /// @todo remove in `2.0.0`
+    /// ---
+    /// @requires {function} build-box-shadow
+    /// @requires {variable} $form-control-inset-shadow-config
+    ///
+    $form-control-inset-shadow: none !default;

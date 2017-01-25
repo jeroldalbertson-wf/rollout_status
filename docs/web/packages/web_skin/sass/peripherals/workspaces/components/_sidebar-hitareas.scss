@@ -1,0 +1,197 @@
+// ********************************************************
+//
+//   WORKSPACE SIDEBAR HITAREA COMPONENT STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/components/sidebar-hitareas';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $wksp-module-config:  'peripherals/workspaces/atoms/workspaces-config';
+    $wksp-module-helpers: 'peripherals/workspaces/atoms/workspaces-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $wksp-module-config,
+                                          $wksp-module-helpers);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   SIDEBAR HITAREA SIZE / PLACEMENT / TRANSITIONS
+//
+//   [1] Override default `.btn` / `.nav-item .hitarea`
+//       horizontal padding in a maximized sidebar state
+//       to match padding shown in comps.
+//
+//   [2] Padding for a hitarea with a 24px icon in a
+//       minimized sidebar state (default).
+//
+//   [3] Padding for a hitarea with a 16px icon in a
+//       minimized sidebar state.
+//
+//   [4] Mimic the margin of a `no-text` CSS class when
+//       a hitarea is displayed within a minimized
+//       sidebar since the label is completely hidden.
+//
+// ----------------------------------------------------
+.wksp-sidebar {
+    .nav > .nav-item > .hitarea,
+    .btn {
+        @include wksp-sidebar-hitarea-transitions('min-to-max');
+
+        min-height: to-rem(get($wksp-sidebar-hitarea-config, 'height'));
+        height: to-rem(get($wksp-sidebar-hitarea-config, 'height')); // override default button height
+        min-width: to-rem(get($wksp-sidebar-hitarea-config, 'min-width'));
+        padding: get($wksp-sidebar-hitarea-config, 'padding-vertical') get($wksp-sidebar-hitarea-config, 'padding-horizontal');
+
+        // Override `.btn.no-text` default width
+        &.no-text {
+            width: to-rem(get($wksp-sidebar-hitarea-config, 'min-width'));
+        }
+    }
+
+    .nav-item > .hitarea > .icon {
+        vertical-align: middle;
+    }
+
+
+    // ----- MINIMIZED SIDEBAR ----- //
+    @at-root .wksp-sidebar-minimized {
+        .nav > .nav-item > .hitarea,
+        .btn {
+            @include wksp-sidebar-hitarea-transitions('max-to-min');
+
+            padding: wksp-sidebar-minimized-hitarea-padding(); // [2]
+
+            // ----- [3] ----- //
+            &.hitarea-16 {
+                padding-right: wksp-sidebar-minimized-hitarea-padding($icon-size: icon-size-base-16());
+                padding-left:  wksp-sidebar-minimized-hitarea-padding($icon-size: icon-size-base-16());
+            }
+        }
+
+        // ----- [4] ----- //
+        .hitarea,
+        .btn {
+            .icon {
+                margin-right: 0;
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   ADJACENT STACKED NAV-ITEM HITAREA SPACING
+//
+//   -> Increase the amount of space between adjacent
+//      stacked hitareas according to the spec.
+//
+// ----------------------------------------------------
+.wksp-sidebar {
+    .nav-stacked .nav-item + .nav-item > .hitarea {
+        margin-top: to-rem(get($wksp-sidebar-config, 'stacked-nav-item-spacing-vertical'));
+    }
+}
+
+
+// ----------------------------------------------------
+//   SIDEBAR PILL TEXT ALIGNMENT
+// ----------------------------------------------------
+.wksp-nav-pills.nav-stacked {
+    > .nav-item > .hitarea {
+        text-align: left; // Override default .nav-pill .nav-item text-align center
+    }
+}
+
+
+// ----------------------------------------------------
+//   HITAREA LABEL CLIPPING
+//
+//   [1] Use a relatively positioned label when the
+//       sidebar is maximized so that we can truncate
+//       labels that overflow the width of their hitareas.
+//
+//   [2] Use an absolutely positioned label when the
+//       sidebar is minimized so that the width of the
+//       sidebar determines the width of the hitarea.
+//
+//   [3] Restore the spacing between the icon and the
+//       label using left offset since the right margin
+//       the icon has no effect on the absolutely
+//       positioned label. Even though the label is
+//       hidden in this minimized state, we still need
+//       to preserve the spacing to prevent the label
+//       text from "jumping" when the minimize
+//       transition begins.
+//
+//   [4] Vertically center label text
+//
+//   [5] Prevent focus outline from appearing around
+//       the label. Be sure to add `aria-disabled="true"`
+//       to the element as well to correctly disabled
+//       focus outlines in all browsers.
+//
+//   [6] Prevent browsers that don't support `pointer-events: none`
+//       from showing the `cursor: not-allowed` cursor
+//       when the hitarea is hovered.
+//
+// ----------------------------------------------------
+.wksp-sidebar {
+    $label-height: to-rem(get($wksp-sidebar-hitarea-config, 'height-text'));
+    $abs-vertical-center: to-rem(get($wksp-sidebar-hitarea-config, 'height') - $global-component-bd-width) - $label-height;
+
+    .wksp-hitarea-label {
+        @include wksp-min-to-max-sidebar-secondary-transitions(clip opacity);
+        @include truncate-text();  // [1]
+
+        position: relative; // [1]
+        top: to-rem($global-component-bd-width * 2); // [4]
+        clip: rect(0, 100rem, $label-height, 0);
+        pointer-events: none; // [5]
+        cursor: inherit !important; // [6]
+    }
+
+
+    // ----- MINIMIZED SIDEBAR ----- //
+    @at-root .wksp-sidebar-minimized .wksp-hitarea-label {
+        @include wksp-max-to-min-sidebar-secondary-transitions(clip opacity);
+
+        opacity: 0;
+        position: absolute; // [2]
+        top: $abs-vertical-center; // [4]
+        clip: rect(0, 0, $label-height, 0); // [2]
+        margin-left: to-rem(get-deep($btn-config, 'icon.base.margin-horizontal') + 4px); // [3]
+    }
+
+    .hitarea-16 .wksp-hitarea-label {
+        top: 0;
+    }
+
+    @at-root .wksp-sidebar-minimized .hitarea-16 .wksp-hitarea-label {
+        top: $abs-vertical-center - .1rem;
+    }
+
+
+    // ----- HITAREA WITH 16px ICON INSIDE A GRID-BLOCK ----- //
+    .hitarea-16 .grid-block .wksp-hitarea-label {
+        line-height: to-rem(icon-size-base-16());
+    }
+}
+
+
+// ----------------------------------------------------
+//   HITAREAS THAT ARE CIRCLES WHEN MINIMIZED
+// ----------------------------------------------------
+.wksp-sidebar-minimized {
+    .nav > .nav-item > .hitarea,
+    .btn {
+        &.wksp-hitarea-circle {
+            border-radius: 50%;
+        }
+    }
+}

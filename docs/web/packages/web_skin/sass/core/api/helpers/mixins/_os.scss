@@ -1,0 +1,121 @@
+// ********************************************************
+
+////
+/// Helper mixins pertaining to operating system support levels
+/// ---
+/// @access private
+/// @group core.internals.support.os
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/os';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function generate-target-version-selectors,
+                                                function is-true);
+//
+// ********************************************************
+
+
+///
+/// Target Mac OSX using extra CSS selector specificity applied to the `<html>` element.
+/// ---
+/// @see {mixin} ie-support
+/// ---
+/// @requires {js}       js/core/libs       <https://github.com/WebFilings/web-skin/blob/master/dist/js/core/libs.js>
+/// @requires {external} SassScript/unquote <http://bit.ly/sass_unquote>
+/// ---
+/// @param {Number | String} $ver    [all]  - The Mac OSX version or version range you want to target
+/// @param {Boolean}         $append [true] - Whether or not to use the `&` operand when building the selector string
+///
+@mixin macosx-support($ver: all, $append: true) {
+    @if $macosx-support {
+        $selector: generate-target-version-selectors(os, mac, $min-macosx-supported, $ver, $append);
+        $selector: if($selector != false, unquote($selector), $selector);
+
+        @if is-true($selector) {
+            #{$selector} {
+                @content;
+            }
+        }
+    }
+}
+
+
+///
+/// Target Windows using extra CSS selector specificity applied to the `<html>` element.
+/// ---
+/// @see {mixin} ie-support
+/// ---
+/// @requires {js}       js/core/libs       <https://github.com/WebFilings/web-skin/blob/master/dist/js/core/libs.js>
+/// @requires {external} SassScript/unquote <http://bit.ly/sass_unquote>
+/// ---
+/// @param {Number | String} $ver    [all]  - The Windows version or version range you want to target
+/// @param {Boolean}         $append [true] - Whether or not to use the `&` operand when building the selector string
+///
+@mixin windows-support($ver: all, $append: true) {
+    @if $win-support {
+        $selector: generate-target-version-selectors(os, windows, $min-win-supported, $ver, $append);
+        $selector: if($selector != false, unquote($selector), $selector);
+
+        @if is-true($selector) {
+            #{$selector} {
+                @content;
+            }
+        }
+    }
+}
+
+
+///
+/// Target iOS using extra CSS selector specificity applied to the `<html>` element.
+/// ---
+/// @see {mixin} ie-support
+/// ---
+/// @requires {js}       js/core/libs       <https://github.com/WebFilings/web-skin/blob/master/dist/js/core/libs.js>
+/// @requires {external} SassScript/unquote <http://bit.ly/sass_unquote>
+/// ---
+/// @param {Number | String} $ver    [all]  - The iOS version or version range you want to target
+/// @param {Boolean}         $append [true] - Whether or not to use the `&` operand when building the selector string
+///
+@mixin ios-support($ver: all, $append: true) {
+    @if $ios-support {
+        $selector: generate-target-version-selectors(os, ios, $min-ios-supported, $ver, $append);
+        $selector: if($selector != false, unquote($selector), $selector);
+
+        @if is-true($selector) {
+            #{$selector} {
+                @content;
+            }
+        }
+    }
+}
+
+
+///
+/// Target Android using extra CSS selector specificity applied to the `<html>` element.
+/// ---
+/// @see {mixin} ie-support
+/// ---
+/// @requires {js}       js/core/libs       <https://github.com/WebFilings/web-skin/blob/master/dist/js/core/libs.js>
+/// @requires {external} SassScript/unquote <http://bit.ly/sass_unquote>
+/// ---
+/// @param {Number | String} $ver    [all]  - The Android version or version range you want to target
+/// @param {Boolean}         $append [true] - Whether or not to use the `&` operand when building the selector string
+///
+@mixin android-support($ver: all, $append: true) {
+    @if $droid-support {
+        $selector: generate-target-version-selectors(os, android, $min-droid-supported, $ver, $append);
+        $selector: if($selector != false, unquote($selector), $selector);
+
+        @if is-true($selector) {
+            #{$selector} {
+                @content;
+            }
+        }
+    }
+}

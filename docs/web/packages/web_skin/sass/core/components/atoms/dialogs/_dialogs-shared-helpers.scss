@@ -1,0 +1,213 @@
+// ********************************************************
+
+////
+/// Shared dialog component helpers
+/// ---
+/// @access public
+/// @group core.components.shared
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/dialogs-shared-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function darkness,
+                                                function is-number,
+                                                function is-px,
+                                                function z);
+//
+// ********************************************************
+
+
+///
+/// Adjusts the border color of a dialog based on how dark the "surface" behind it is. For example, the border color of `.modal` dialogs must be darkened because they always have a dark backdrop behind them.
+/// ---
+/// @since 1.0.0
+/// ---
+/// @param {Color}  $bd-color       [#b2b2b2]
+/// @param {Color}  $backdrop-bg    [#595959]
+/// @param {Number} $backdrop-alpha [.4]
+/// ---
+/// @returns {Color} - Border color darkened to match the amount of contrast between the default dialog border color and the default white backround
+///
+@function dialog-with-backdrop-bd-color($bd-color: $dialog-bd-color,
+                                        $backdrop-bg: $dialog-backdrop-bg,
+                                        $backdrop-alpha: $dialog-backdrop-alpha
+                                       )
+{
+    // color that results from the $dialog-backdrop-color having
+    // the $dialog-backdrop-alpha opacity applied above a white background
+    $backdrop-true-bg: mix($body-bg, $backdrop-bg, percentage($backdrop-alpha));
+    $backdrop-bg-darkness: darkness($backdrop-true-bg);
+    $bd-color-darkness: darkness($bd-color);
+    $darken-amount-to-match-contrast: $backdrop-bg-darkness - $bd-color-darkness;
+
+    @return darken($bd-color, $darken-amount-to-match-contrast);
+}
+
+///
+/// Base styling for dialog `.backdrop` elems
+/// ---
+/// @since 0.4.0
+/// ---
+/// @param {String} $position    [fixed]
+/// @param {Color}  $bg          [transparent]
+/// @param {Color}  $fallback-bg [transparent]
+///
+@mixin dialog-backdrop-default($position: fixed, $bg: transparent, $fallback-bg: transparent) {
+    position: $position;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    @if $fallback-bg != $bg {
+        background-color: $fallback-bg; // fallback
+    }
+    background-color: $bg;
+}
+
+///
+/// Generate unique skin colors for `.popover` and `.tooltip` components.
+/// ---
+/// @since 1.0.0
+/// ---
+/// @param {Color}              $bg-color                       - Background color
+/// @param {Color}              $bd-color            [inherit]  - Border color _will inherit value of `$bg-color` unless set explicitly_
+/// @param {Color | Boolean}    $text-color          [false]    - Text color _optional_
+/// @param {Color | Boolean}    $title-color         [false]    - Title color _optional_, for popovers only
+/// @param {Boolean}            $arrow-only          [false]    - Set to `true` if you only want to change the colors of the `.arrow` within the component
+/// @param {Boolean}            $force-arrow-bg      [false]    - Whether or not to force the creation of styles for the `.arrow:after` pseudo-element
+/// @param {Boolean}            $darken-arrow-border [false]    - Set to `true` if your border color is a shade of gray to ensure that monitors render it correctly despite its rotated nature
+/// @param {Number | Boolean}   $transition-speed    [false]    - Set equal to a number if you need the colors of the `.arrow` to change along with the transition of another element
+/// @param {Number | Boolean}   $new-max-width       [false]    - Optionally set the max width of the `.inner` elem.
+///
+@mixin popover-tooltip-skin($bg-color,
+                            $bd-color: inherit,
+                            $text-color: false,
+                            $title-color: false,
+                            $arrow-only: false,
+                            $force-arrow-bg: false,
+                            $darken-arrow-border: false,
+                            $transition-speed: false,
+                            $new-max-width: false
+                           )
+{
+    $bd-color: if($bd-color == inherit, $bg-color, $bd-color);
+
+    @if not $arrow-only {
+        border-color: $bd-color !important;
+        background-color: $bg-color !important;
+
+        @if $text-color {
+            color: $text-color;
+        }
+
+        @if $title-color {
+            .title {
+                color: $title-color;
+            }
+        }
+
+        .inner {
+            background-color: $bg-color !important;
+
+            @if $new-max-width {
+                @if is-number($new-max-width) {
+                    $new-max-width: if(is-px($new-max-width), to-rem($new-max-width), $new-max-width);
+                }
+
+                max-width: $new-max-width;
+            }
+        }
+    }
+
+    //
+    // ADJUST ARROW COLORS
+    //
+    // .arrow        => outer (border color)
+    // .arrow:after  => inner (bg color)
+    //
+    @each $direction in $triangle-directions {
+        $bd-color-adjusted: if($darken-arrow-border, darken($bd-color, $rotated-elem-bd-darken-amount), $bd-color);
+        //
+        // for popovers and tooltips, the "direction" CSS class of the component
+        // is currently the reverse of the "side" we want the arrow to appear on
+        // when the arrow is displayed on the left or right side.
+        //
+        $arrow-direction: $direction;
+        @if unquote($direction) == left {
+            $arrow-direction: right;
+        }
+        @if unquote($direction) == right {
+            $arrow-direction: left;
+        }
+
+        &.#{$direction} .arrow {
+            @include triangle-direction($direction: '#{$arrow-direction}',
+                                        $color: $bd-color-adjusted,
+                                        $width: false,
+                                        $transition-speed: $transition-speed);
+
+            @if ($bd-color != $bg-color) or $force-arrow-bg {
+                &:after {
+                    @include triangle-direction($direction: '#{$arrow-direction}',
+                                                $color: $bg-color,
+                                                $width: false,
+                                                $transition-speed: $transition-speed);
+                }
+            }
+        }
+    }
+}
+
+// @private
+// Styles shared between `.tooltip .inner` elems and pure-css `.has-tip::after` pseudo-elements
+@mixin _shared-tooltip-content-styles() {
+    padding: to-rem(get($tooltip-config, 'content-padding'));
+    background-color: get($tooltip-config, 'bg');
+    text-align: center;
+}
+
+///
+/// Reusable base styling for Web Skin tooltips.
+/// ---
+/// @since 1.6.0
+/// ---
+/// @param {Bool} $has-separate-inner-element [true] - Whether the rendered tooltip uses a nested `<div class="inner">` element. This is the default for Web Skin `.tooltip` elements, but not our pure CSS tooltips that utilize the `::before` and `::after` psuedo elements of a '.has-hint' element.
+///
+@mixin tooltip-base($has-separate-inner-element: true) {
+    font-size: to-rem(get($tooltip-config, 'font-size'));
+    font-weight: normal;
+    line-height: to-rem(get($tooltip-config, 'line-height')); // instead of padding
+    color: get($tooltip-config, 'text-color');
+    border: to-rem(get($tooltip-config, 'bd-width')) solid get($tooltip-config, 'bd-color');
+    border-radius: to-rem(get($tooltip-config, 'bd-radius'));
+
+    @if not $has-separate-inner-element {
+        // Styling for pure-css `.has-hint` pseudo elements
+        @include _shared-tooltip-content-styles();
+    } @else {
+        // Styling unique to `.tooltip` elements
+        @include background-clip(padding-box);
+        position: absolute;
+        z-index: z('tooltip');
+        display: block;
+        opacity: 0; // js will reveal by adding the `in` CSS class
+
+        // .tooltip "content" wrapper
+        .inner {
+            @include _shared-tooltip-content-styles();
+
+            position: relative;
+            z-index: 2; // reset for tooltip content layering / keep above .arrow
+            width: 100%;
+            max-width: to-rem(get($tooltip-config, 'max-width'));
+            white-space: normal;
+        }
+    }
+}

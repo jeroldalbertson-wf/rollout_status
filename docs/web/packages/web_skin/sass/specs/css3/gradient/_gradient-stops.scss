@@ -1,0 +1,21 @@
+@include describe('[gradient-stops]') {
+    @include describe('when all stops have a color and location') {
+        @include it('should return a valid comma-separated list') {
+            $stops: white 25%, black 50%, white 75%, black 100%;
+            $actual: gradient-stops($stops...);
+
+            @include should(expect( inspect($actual) ), to(be( inspect($stops) )));
+        }
+    }
+
+    // Regression test for UIP-1200
+    // Verify that the fn does not convert a stop without a location to `($color,)`
+    @include describe('when one or more stops only have a color') {
+        @include it('should return a valid comma-separated list') {
+            $stops: white 25%, black 50%, white 75%, black;
+            $actual: gradient-stops($stops...);
+
+            @include should(expect( inspect($actual) ), to(be( inspect($stops) )));
+        }
+    }
+}

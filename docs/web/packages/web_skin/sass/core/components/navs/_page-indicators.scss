@@ -1,0 +1,71 @@
+// ********************************************************
+//
+//   PAGE INDICATOR NAVIGATION STYLE MODULE
+//   http://bit.ly/webskin-navs-page-indicators
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/navs/page-indicators';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $navs-page-indicators-module-config:  'core/components/atoms/navs/config/nav-pagination-config';
+    $navs-page-indicators-module-helpers: 'core/components/atoms/navs/navs-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $navs-page-indicators-module-config,
+                                          $navs-page-indicators-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE PAGE INDICATOR CONTAINER
+//
+// ********************************************************
+.page-indicators {
+    display: block;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    list-style: none;
+    @include disable-user-select();
+    cursor: default;
+}
+
+
+// ********************************************************
+//
+//   PAGE INDICATORS
+//
+// ********************************************************
+.page-indicators > .nav-item {
+    @include make-circle();
+    @include opacity(get($page-indicator-config, 'alpha'));
+    @include transition(opacity $default-fade-speed ease);
+
+    display: inline-block;
+    width:  to-rem(get($page-indicator-config, 'diameter'));
+    height: to-rem(get($page-indicator-config, 'diameter'));
+    margin: 0;
+    padding: 0;
+    text-indent: -99rem;
+    cursor: pointer;
+    background-color: get($page-indicator-config, 'bg');
+
+    &.active {
+        @include opacity(get($page-indicator-config, 'alpha-active'));
+    }
+}
+
+
+// ********************************************************
+//
+//   INVERSE PAGE INDICATORS (WHITE)
+//
+// ********************************************************
+.page-indicators-inverse > .nav-item {
+    background-color: get($page-indicator-config, 'bg-inverse');
+}

@@ -1,0 +1,221 @@
+// ********************************************************
+
+////
+/// Helper mixins pertaining to browser support levels
+/// ---
+/// @access private
+/// @group core.internals.support.browser
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/browsers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function generate-target-version-selectors,
+                                                function is-true);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   MSIE
+//
+// ********************************************************
+    ///
+    /// Target MSIE using extra CSS selector specificity applied to the `<html>` element.
+    /// ---
+    /// @example scss - Single version number
+    ///   .unsupported-browser-alert {
+    ///       display: none;
+    ///
+    ///       @include ie-support(8) {
+    ///           display: block;
+    ///       }
+    ///   }
+    /// ---
+    /// @example scss - Version range
+    ///   $shadow: rgba($shadow-color, $shadow-alpha);
+    ///   $shadow-fallback: mix($shadow-color, $body-bg, percentage($shadow-alpha));
+    ///
+    ///   .divider-shadow {
+    ///       box-shadow: 0 0 2px 1px $shadow;
+    ///
+    ///        @include ie-support('&lt;9') {
+    ///            // no box-shadow support,
+    ///            // degrade gracefully to a
+    ///            // border instead
+    ///
+    ///            border-bottom: 1px solid $shadow-fallback;
+    ///        }
+    ///   }
+    /// ---
+    /// @example css - Resulting CSS
+    ///   .unsupported-browser-alert {
+    ///       display: none;
+    ///   }
+    ///       .ua-ie8 .unsupported-browser-alert {
+    ///           display: block;
+    ///       }
+    ///
+    ///   .divider-shadow {
+    ///       box-shadow: 0 0 2px 1px rgba(0,0,0,.2);
+    ///   }
+    ///       .ua-lt-ie9 .divider-shadow {
+    ///           border-bottom: 1px solid #ccc;
+    ///       }
+    /// ---
+    /// @requires {js}       js/core/libs       <https://github.com/WebFilings/web-skin/blob/master/dist/js/core/libs.js>
+    /// @requires {external} SassScript/unquote <http://bit.ly/sass_unquote>
+    /// ---
+    /// @param {Number | String} $ver    [all]  - The MSIE version or version range you want to target
+    /// @param {Boolean}         $append [true] - Whether or not to use the `&` operand when building the selector string
+    ///
+    @mixin ie-support($ver: all, $append: true) {
+        @if $ie-support {
+            $selector: generate-target-version-selectors(ua, ie, $min-ie-supported, $ver, $append);
+            $selector: if($selector != false, unquote($selector), $selector);
+
+            @if is-true($selector) {
+                #{$selector} {
+                    @content;
+                }
+            }
+        }
+    }
+
+
+
+// ********************************************************
+//
+//   BETTER BROWSERS
+//
+// ********************************************************
+    ///
+    /// Target Firefox using extra CSS selector specificity applied to the `<html>` element.
+    /// ---
+    /// @see {mixin} ie-support
+    /// ---
+    /// @requires {js}       js/core/libs       <https://github.com/WebFilings/web-skin/blob/master/dist/js/core/libs.js>
+    /// @requires {external} SassScript/unquote <http://bit.ly/sass_unquote>
+    /// ---
+    /// @param {Number | String} $ver    [all]   - The Firefox version or version range you want to target
+    /// @param {Boolean}         $append [true]  - Whether or not to use the `&` operand when building the selector string
+    ///
+    @mixin firefox-support($ver: all, $append: true) {
+        @if $firefox-support {
+            $selector: generate-target-version-selectors(ua, firefox, $min-firefox-supported, $ver, $append);
+            $selector: if($selector != false, unquote($selector), $selector);
+
+            @if is-true($selector) {
+                #{$selector} {
+                    @content;
+                }
+            }
+        }
+    }
+        ///
+        /// Target Firefox using extra CSS selector specificity applied to the `<html>` element.
+        /// @alias firefox-support
+        ///
+        @mixin mozilla-support($ver: all, $append: true) {
+            @include firefox-support($ver, $append);
+        }
+
+
+    ///
+    /// Target Opera using extra CSS selector specificity applied to the `<html>` element.
+    /// ---
+    /// @see {mixin} ie-support
+    /// ---
+    /// @requires {js}       js/core/libs       <https://github.com/WebFilings/web-skin/blob/master/dist/js/core/libs.js>
+    /// @requires {external} SassScript/unquote <http://bit.ly/sass_unquote>
+    /// ---
+    /// @param {Number | String} $ver    [all]  - The Opera version or version range you want to target
+    /// @param {Boolean}         $append [true] - Whether or not to use the `&` operand when building the selector string
+    ///
+    @mixin opera-support($ver: all, $append: true) {
+        @if $opera-support {
+            $selector: generate-target-version-selectors(ua, opera, $min-opera-supported, $ver, $append);
+            $selector: if($selector != false, unquote($selector), $selector);
+
+            @if is-true($selector) {
+                #{$selector} {
+                    @content;
+                }
+            }
+        }
+    }
+
+
+    ///
+    /// Target Safari using extra CSS selector specificity applied to the `<html>` element.
+    /// ---
+    /// @see {mixin} ie-support
+    /// ---
+    /// @requires {js}       js/core/libs       <https://github.com/WebFilings/web-skin/blob/master/dist/js/core/libs.js>
+    /// @requires {external} SassScript/unquote <http://bit.ly/sass_unquote>
+    /// ---
+    /// @param {Number | String} $ver    [all]  - The Safari version or version range you want to target
+    /// @param {Boolean}         $append [true] - Whether or not to use the `&` operand when building the selector string
+    ///
+    @mixin safari-support($ver: all, $append: true) {
+        @if $safari-support {
+            $selector: generate-target-version-selectors(ua, safari, $min-safari-supported, $ver, $append);
+            $selector: if($selector != false, unquote($selector), $selector);
+
+            @if is-true($selector) {
+                #{$selector} {
+                    @content;
+                }
+            }
+        }
+    }
+
+
+    ///
+    /// Target Chrome using extra CSS selector specificity applied to the `<html>` element.
+    /// ---
+    /// @see {mixin} ie-support
+    /// ---
+    /// @requires {js}       js/core/libs       <https://github.com/WebFilings/web-skin/blob/master/dist/js/core/libs.js>
+    /// @requires {external} SassScript/unquote <http://bit.ly/sass_unquote>
+    /// ---
+    /// @param {Number | String} $ver    [all]  - The Chrome version or version range you want to target
+    /// @param {Boolean}         $append [true] - Whether or not to use the `&` operand when building the selector string
+    ///
+    @mixin chrome-support($ver: all, $append: true) {
+        @if $chrome-support {
+            $selector: generate-target-version-selectors(ua, chrome, $min-chrome-supported, $ver, $append);
+            $selector: if($selector != false, unquote($selector), $selector);
+
+            @if is-true($selector) {
+                #{$selector} {
+                    @content;
+                }
+            }
+        }
+    }
+
+
+    ///
+    /// Target all Webkit browsers using extra CSS selector specificity applied to the `<html>` element.
+    /// ---
+    /// @see {mixin} ie-support
+    /// @requires {js} js/core/libs <https://github.com/WebFilings/web-skin/blob/master/dist/js/core/libs.js>
+    /// @param {Boolean} $append [true] - Whether or not to use the `&` operand when building the selector string
+    ///
+    @mixin webkit-support($append: true) {
+        @if $webkit-support {
+            @include safari-support($ver: all, $append: $append) {
+                @content;
+            }
+            @include chrome-support($ver: all, $append: $append) {
+                @content;
+            }
+        }
+    }

@@ -1,0 +1,48 @@
+@include describe('[to-list]') {
+    @include describe('when separator argument is') {
+        $separator: null;
+        $expected: null;
+
+        @include describe('comma') {
+            $separator: comma;
+            $expected: a, b, c;
+
+            @include it('should convert a space-separated list') {
+                $actual: to-list(a b c, $separator);
+
+                @include should(expect( $actual ), to(be( $expected )));
+                @include should(expect( $actual ), have-type-of('list'));
+                @include should(expect( $actual ), have-length-of(3));
+            }
+        }
+
+        @include describe('space') {
+            $separator: space;
+            $expected: a b c;
+
+            @include it('should convert a comma-separated list') {
+                $actual: to-list((a, b, c), $separator);
+
+                @include should(expect( $actual ), to(be( $expected )));
+                @include should(expect( $actual ), have-type-of('list'));
+                @include should(expect( $actual ), have-length-of(3));
+            }
+        }
+    }
+}
+
+@include describe('[arglists-to-list]') {
+    @include it('should create a list with the correct length') {
+        $actual: arglists-to-list('opacity .3s ease,background 1s linear');
+
+        @include should(expect( $actual ), to(have-type-of( 'list' )));
+        @include should(expect( $actual ), to(have-length-of( 2 )));
+    }
+
+    @include it('should create a list with the correct values') {
+        $actual: arglists-to-list('opacity .3s ease,background 1s linear');
+
+        @include should(expect( nth($actual, 1) ), to(equal( 'opacity .3s ease' )));
+        @include should(expect( nth($actual, 2) ), to(equal( 'background 1s linear' )));
+    }
+}

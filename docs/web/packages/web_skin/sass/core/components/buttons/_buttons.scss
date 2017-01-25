@@ -1,0 +1,262 @@
+// ********************************************************
+//
+//   BUTTON COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-buttons
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/buttons/buttons';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $buttons-module-config:  'core/components/atoms/buttons/buttons-config';
+    $buttons-module-helpers: 'core/components/atoms/buttons/buttons-helpers';
+    $buttons-module-skins: 'core/components/atoms/buttons/buttons-skins';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $buttons-module-config,
+                                          $buttons-module-helpers,
+                                          $buttons-module-skins);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE STRUCTURE (UNSKINNED)
+//
+// ********************************************************
+.btn {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    border: to-rem($btn-bd-width) solid transparent;
+    color: $btn-text-base;
+    white-space: nowrap;
+    font-family: get($btn-config, "font-family");
+    font-weight: get($btn-config, "font-weight");
+
+    @include btn-size('base', $global: true);
+    @include base-btn-punch-effect();
+    @include disable-user-select();
+
+    // ----- HOVER / FOCUS ----- //
+    #{$btn-hover-focus-selectors} {
+        text-decoration: none;
+        color: $btn-text-hover;
+    }
+
+    // ----- FOCUS ONLY ----- //
+    #{$btn-focus-only-selectors} {
+        outline: 0;
+
+        //
+        // Prevent double focus border on toggle buttons
+        // @see UIP-1155
+        //
+        &:not(.btn-toggle) {
+            //
+            // Remove focus indicator on mousepress for buttons
+            // @see #1422 / UIP-1240
+            //
+            &:not(:active) {
+                //
+                // Use an outset box-shadow for the focus effect instead of outline
+                // so the color of the stroke is rounded with our corner radius
+                //
+                @include focus-shadow();
+            }
+        }
+    }
+
+    // ----- DISABLED ----- //
+    #{$btn-disabled-selectors} {
+        @include btn-disabled($global: true);
+    }
+}
+
+
+
+// ********************************************************
+//
+//   NESTED ELEMS WITHIN BUTTONS
+//
+//   [1] Nested "non-text" element vertical/horizontal spacing (e.g. carets, spinners, icons)
+//   [2] Any btn's child elem should not be selectable
+//
+// ********************************************************
+.btn {
+    @include btn-symbol-alignment('base'); // [1]
+
+    * { // [2]
+        @include disable-user-select();
+    }
+}
+
+
+
+// ********************************************************
+//
+//   TOGGLE BUTTONS
+//
+//   Base styling for buttons that don't have a specific
+//   skin declared, but need distinct styling in hover,
+//   press and active states.
+//
+//   Note that the styling of a "toggle" button for skinned
+//   buttons is handled simply by adding the `active` CSS
+//   class.
+//
+//   Typically nested within a `<div class="btn-toggle-group">`
+//
+// ********************************************************
+@include btn-toggle-skins();
+
+
+// ********************************************************
+//
+//   STANDARD BUTTON SKINS
+//
+// ********************************************************
+@include btn-skins();
+
+
+
+// ********************************************************
+//
+//   SIZE VARIATIONS
+//
+// ********************************************************
+    .btn-lg {
+        @include btn-size(lg, $global: true);
+    }
+
+    .btn-sm {
+        @include btn-size(sm, $global: true);
+    }
+
+    .btn-xs {
+        @include btn-size(xs, $global: true);
+    }
+
+
+
+// ********************************************************
+//
+//   FLAT / OUTLINE VARIATIONS (no "punch" effect)
+//
+// ********************************************************
+.btn-flat,
+.btn-outline {
+    @include remove-btn-punch-effect();
+}
+
+
+// ********************************************************
+//
+//   COMPONENT VARIATIONS
+//   -> Variations that involve structure AND skin changes
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   CALLOUT VARIATION
+    // ----------------------------------------------------
+    .btn-callout {
+        text-transform: uppercase;
+        font-weight: bold !important;
+    }
+
+
+    // ----------------------------------------------------
+    //   BLOCK VARIATION
+    //   -> Span 100% of the container width
+    // ----------------------------------------------------
+    .btn-block {
+        display: block;
+        width: 100%;
+
+        // Vertical spacing
+        + .btn-block {
+            margin-top: to-rem($spacing-base);
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   VERTICAL VARIATION
+    //   -> Icons stacked above small text
+    //      Used primarily in Ribbon subnavs
+    //
+    //   [1] So we can position carets without shifting
+    //       vertical alignment of icon/text
+    //
+    //   [2] Override default rythym so that we can easily
+    //       use prescribed values from the UX spec for
+    //       vertical spacing between the `.icon` and
+    //       `.btn-label-sm` elements.
+    //
+    //   [3] Make the amount of space above the icon match
+    //       the amount of space between it's `.btn-label-sm`
+    //       sibling beneath.
+    //
+    //   [4] Vertically center with the adjacent `.btn-label-sm`
+    //       element.
+    //
+    //   [5] Fix a very strange vertical alignment difference when
+    //       the parent `.btn-vertical` is a proper `<button>` element.
+    //       @see UIP-642
+    //
+    //   [6.1] The selector that pre-dates UIP-1635.
+    //         TODO: Remove in 2.0.0
+    //
+    //   [6.2] The selector that fixes UIP-1635 for consumers
+    //         of the WSD `DropdownButton` component before
+    //         UIP-1634 can be implemented.
+    //         TODO: Remove in 2.0.0
+    //
+    //   [6.3] The long-term fix for UIP-1635 once UIP-1634
+    //         is implemented and Web Skin 2.0.0 is released.
+    //
+    // ----------------------------------------------------
+    .btn-vertical {
+        position: relative; // [1]
+        text-align: center;
+        line-height: 0; // [2]
+
+        @at-root {
+            .btn-vertical > .icon, // [6.1]
+            .btn-vertical > span > .icon, // [6.2]
+            .btn-vertical__content .icon // [6.3]
+            {
+                display: block;
+                padding: 0 !important;
+                margin: 0 auto !important;
+                top: $btn-vertical-icon-top-offset; // [3]
+            }
+        }
+
+        .btn-label-sm {
+            @include small-action-area-label-text();
+
+            margin-top: $btn-vertical-label-top-offset; // [3]
+            margin-bottom: abs($btn-vertical-icon-top-offset); // [5]
+        }
+
+        // Non-split vertical dropdown buttons
+        :not(.btn-group-split) &.dropdown-toggle {
+            .caret {
+                position: absolute;
+                top: auto;
+                bottom: $btn-vertical-caret-bottom-offset; // [4]
+                right: to-rem(get-deep($btn-config, 'padding.base.horizontal'));
+                margin: 0 !important;
+            }
+
+            .btn-label-sm {
+                // Make room for the absolutely positioned caret
+                padding-right: to-rem($caret-sm-width + get($btn-config, 'vertical-dd-caret-margin-left'));
+            }
+        }
+    }

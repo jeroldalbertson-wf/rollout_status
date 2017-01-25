@@ -1,0 +1,168 @@
+// ********************************************************
+
+////
+/// Component state color calculation configs
+/// ---
+/// @access public
+/// @group core.color.state
+/// @since 1.0.0
+////
+
+    $module: 'core/api/config/defaults/color/states/state-colors-calc';
+    $module: add-api-module($module);
+
+// ********************************************************
+
+
+// ********************************************************
+//
+//   COMPONENT STATE VARIATION CALC CONFIGS
+//
+//   -> When we create state color variations
+//      (for things like form inputs or alerts)
+//      what % should the `lightness()` fn
+//      return when evaluating the color?
+//
+// ********************************************************
+    ///
+    /// Component state color constants used to calculate various text, background and border colors.
+    /// ---
+    /// @type Map
+    /// @see {function} state-variation-text
+    /// @see {function} state-variation-bg
+    /// @see {function} state-variation-bd
+    /// ---
+    /// @prop {Number} target-bg-lightness  [98%] - The percentage we want the `lightness()` function to return when evaluating a component's state variation background color
+    /// @prop {Number} target-bd-lightness  [78%] - The percentage we want the `lightness()` function to return when evaluating a component's state variation border color
+    /// @prop {Number} text-desaturate      [10%] - Base text desaturation amount to provide for use within the `state-variation-text()` function
+    /// @prop {Number} text-darken          [10%] - Base text darken amount to provide for use within the `state-variation-text()` function
+    /// @prop {Number} bg-desaturate        [10%] - Base background desaturation amount to provide for use within the `state-variation-bg()` function
+    /// @prop {Number} bd-hue-adjustment    [-5]  - Base border hue adjustment amount to provide for use within the `state-variation-bd()` function
+    ///
+    $global-state-variation-defaults: (
+        'target-bg-lightness': 98%,
+        'target-bd-lightness': 78%,
+        'text-desaturate': 10%,
+        'text-darken': 10%,
+        'bg-desaturate': 10%,
+        'bd-hue-adjustment': -5
+    ) !default;
+
+    ///
+    /// Component state color variation configuration used to calculate various text, background and border colors.
+    /// ---
+    /// @type Map
+    /// ---
+    /// @requires {variable} $global-state-variation-defaults
+    /// ---
+    /// @prop {Map} default
+    /// @prop {Number} text-desaturate [0]
+    /// @prop {Number} text-darken [20%]
+    /// @prop {Number} bg-desaturate [0]
+    /// @prop {Number} bd-adjust-hue [-5]
+    /// @prop {Number} bd-darken-offset [-5%]
+    ///
+    /// @prop {Map} primary
+    /// @prop {Number} text-desaturate [10%]
+    /// @prop {Number} text-darken [10%]
+    /// @prop {Number} bg-desaturate [10%]
+    /// @prop {Number} bd-adjust-hue [-7]
+    /// @prop {Number} bd-darken-offset [30%]
+    ///
+    /// @prop {Map} alt
+    /// @prop {Number} text-desaturate [10%]
+    /// @prop {Number} text-darken [5%]
+    /// @prop {Number} bg-desaturate [5%]
+    /// @prop {Number} bd-adjust-hue [-5]
+    /// @prop {Number} bd-darken-offset [0]
+    ///
+    /// @prop {Map} success
+    /// @prop {Number} text-desaturate [10%]
+    /// @prop {Number} text-darken [10%]
+    /// @prop {Number} bg-desaturate [10%]
+    /// @prop {Number} bd-adjust-hue [-7]
+    /// @prop {Number} bd-darken-offset [30%]
+    ///
+    /// @prop {Map} warning
+    /// @prop {Number} text-desaturate [10%]
+    /// @prop {Number} text-darken [10%]
+    /// @prop {Number} bg-desaturate [5%]
+    /// @prop {Number} bd-adjust-hue [-5]
+    /// @prop {Number} bd-darken-offset [0]
+    ///
+    /// @prop {Map} danger
+    /// @prop {Number} text-desaturate [10%]
+    /// @prop {Number} text-darken [10%]
+    /// @prop {Number} bg-desaturate [5%]
+    /// @prop {Number} bd-adjust-hue [-5]
+    /// @prop {Number} bd-darken-offset [-5%]
+    ///
+    $global-state-variation-config: (
+        'default': (
+            'text-desaturate': 0,
+            'text-darken': get($global-state-variation-defaults, 'text-darken') * 2,
+            'bg-desaturate': 0,
+            'bd-adjust-hue': get($global-state-variation-defaults, 'bd-hue-adjustment'),
+            'bd-darken-offset': -5%
+        ),
+        'primary': (
+            'text-desaturate': get($global-state-variation-defaults, 'text-desaturate'),
+            'text-darken': get($global-state-variation-defaults, 'text-darken'),
+            'bg-desaturate': get($global-state-variation-defaults, 'bg-desaturate'),
+            'bd-adjust-hue': get($global-state-variation-defaults, 'bd-hue-adjustment') - 2,
+            'bd-darken-offset': 30%
+        ),
+        'alt': (
+            'text-desaturate': get($global-state-variation-defaults, 'text-desaturate'),
+            'text-darken': get($global-state-variation-defaults, 'text-darken') / 2,
+            'bg-desaturate': get($global-state-variation-defaults, 'bg-desaturate') / 2,
+            'bd-adjust-hue': get($global-state-variation-defaults, 'bd-hue-adjustment'),
+            'bd-darken-offset': 0
+        ),
+        'success': (
+            'text-desaturate': get($global-state-variation-defaults, 'text-desaturate'),
+            'text-darken': get($global-state-variation-defaults, 'text-darken'),
+            'bg-desaturate': get($global-state-variation-defaults, 'bg-desaturate'),
+            'bd-adjust-hue': get($global-state-variation-defaults, 'bd-hue-adjustment') - 2,
+            'bd-darken-offset': 30%
+        ),
+        'warning': (
+            'text-desaturate': get($global-state-variation-defaults, 'text-desaturate'),
+            'text-darken': get($global-state-variation-defaults, 'text-darken'),
+            'bg-desaturate': get($global-state-variation-defaults, 'bg-desaturate') / 2,
+            'bd-adjust-hue': get($global-state-variation-defaults, 'bd-hue-adjustment'),
+            'bd-darken-offset': 0
+        ),
+        'danger': (
+            'text-desaturate': get($global-state-variation-defaults, 'text-desaturate'),
+            'text-darken': get($global-state-variation-defaults, 'text-darken'),
+            'bg-desaturate': get($global-state-variation-defaults, 'bg-desaturate') / 2,
+            'bd-adjust-hue': get($global-state-variation-defaults, 'bd-hue-adjustment'),
+            'bd-darken-offset': -5%
+        )
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   COMPONENT STATE VARIATION CONFIG
+//
+//   -> The variations are slight deviations from what
+//      most components use to create their color variations
+//
+// ********************************************************
+    ///
+    /// Component state color variation configuration. These values determine how much deviation alerts, panels, tables and list-group-item components have compared to the global state colors.
+    /// The variations are uniform across all the states, so the keys in this map represent the various parameters for the helper functions that are used to create the color variations for _every_ state, not _each_ state.
+    /// ---
+    /// @type Map
+    /// @link http://bit.ly/webskin-alert-color-variations Alert Component Color Variation Spec
+    /// ---
+    /// @prop {Number} bg-darken-amount      [2%]       - How much darker the alert component's background color is compared to the default.
+    /// @prop {Number} bd-mix-amount         [25%]      - How much of the alert component's state text color will be mixed with the background color to produce the border color.
+    ///
+    $component-state-variation-config: (
+        'bg-darken-amount': 2%,
+        'bd-mix-amount': 25%
+    ) !default;

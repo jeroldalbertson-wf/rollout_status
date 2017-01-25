@@ -1,0 +1,84 @@
+// ********************************************************
+
+////
+/// Lightbox modal dialog component configuration
+/// ---
+/// @access public
+/// @group core.components.modals
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/lightbox-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend,
+                                                function darkness,
+                                                function build-box-shadow,
+                                                function dialog-with-backdrop-bd-color);
+//
+// ********************************************************
+
+
+///
+/// Global collection of configurations for `.modal--lightbox` components.
+///
+/// Extends `$modal-config`.
+/// ---
+/// @type Map
+/// @since 1.9.0
+/// ---
+/// @requires {function} get
+/// @requires {function} get-deep
+/// @requires {function} extend
+/// @requires {function} to-rem
+/// @requires {variable} $modal-config
+/// @requires {variable} $zc-gray-120
+/// @requires {variable} $white
+/// @requires {variable} $font-size-md
+/// @requires {variable} $screen-widths
+/// @requires {variable} $global-component-size-config
+/// ---
+/// @prop {Number} backdrop-alpha [.9] - Alpha transparency value for the `.modal--lightbox-backdrop` element
+///
+///
+$lightbox-config: extend(map-remove($modal-config, 'base' 'sm'),
+    (
+        backdrop-alpha: .9,
+        backdrop-bg: $zc-gray-120,
+        header-text-color: $white,
+        header-height: to-rem(get-deep($global-component-size-config, 'height.xs')),
+        header-padding-horizontal: to-rem(get-deep($global-component-size-config, 'height.xs') / 2),
+        header-padding-vertical: 0,
+        header-title-font-size: to-rem($font-size-md),
+        header-action-btn-alpha: .8,
+        header-action-btn-alpha-hover: 1,
+        breakpoints: (
+            default: (
+                break-at: null,
+                max-width: 85%,
+                max-height: 85%,
+            ),
+            md: (
+                break-at: get-deep($screen-widths, 'md.min'),
+                max-width: 80%,
+                max-height: 80%,
+            ),
+            lg: (
+                break-at: 1500px,
+                max-width: 75%,
+                max-height: 75%,
+            ),
+            xl: (
+                break-at: 1920px,
+                max-width: 60%,
+                max-height: 60%,
+            )
+        )
+    )
+) !default;

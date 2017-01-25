@@ -1,0 +1,11 @@
+@if $debug-api-module-imports {
+    @if $dupe-api-modules > 0 {
+        @debug "";
+        @debug "";
+        @debug "";
+        @warn "#{$dupe-api-modules} duplicate api modules found.";
+        @debug "";
+        @debug "";
+        @debug "";
+    }
+}

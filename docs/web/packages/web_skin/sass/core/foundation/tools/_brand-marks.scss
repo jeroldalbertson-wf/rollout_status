@@ -1,0 +1,36 @@
+// ********************************************************
+//
+    $module: 'core/foundation/tools/brand-marks';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.w-symbol {
+    @include img-w-symbol();
+}
+
+.wdesk-logo {
+    @include img-wdesk-logo();
+}
+
+.wdesk-logo-lg {
+    @include img-wdesk-logo-lg();
+}
+
+// The "box" that sits pinned in the top left corner of the
+// Wdesk app shell (even on global error pages)
+.w-box {
+    @include border-bottom-right-radius(get($w-box-config, 'radius'));
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: get($w-box-config, 'height');
+    width: get($w-box-config, 'width');
+    background-color: get($w-box-config, 'bg');
+    background-image: image-url('#{$wdesk-logo-dir}w-symbol_white.svg');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: auto get($w-box-config, 'symbol-size');
+}

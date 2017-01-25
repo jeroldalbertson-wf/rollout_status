@@ -1,0 +1,117 @@
+// ********************************************************
+
+////
+/// Form checkbox / radio button control configuration
+/// ---
+/// @group core.components.form-controls
+/// @link http://bit.ly/webskin-forms-cbox-radio Checkbox + Radio Button Spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/forms/config/form-cbox-radio-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function to-em,
+                                                function get,
+                                                function get-deep,
+                                                function extend);
+//
+// ********************************************************
+
+
+///
+/// Configuration for `.checkbox` and `.radio` elements within a `<form>`.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {function} get-deep
+/// @requires {function} to-em
+/// @requires {variable} $form-config
+/// @requires {variable} $form-control-colors
+/// @requires {variable} $font-size-base
+/// @requires {variable} $line-height-base-px
+/// @requires {variable} $base-elem-margin-vertical
+/// @requires {variable} $link-color
+/// ---
+/// @prop {Number} height-px            [16px]          - Ideal height in `px`
+/// @prop {Number} width-px             [16px]          - Ideal width in `px`
+/// @prop {Number} height               [1.14285em]     - Ideal height in `em`. _Added via `@extend`_
+/// @prop {Number} width                [1.14285em]     - Ideal width in `em`. _Added via `@extend`_
+/// @prop {Number} spacing-horizontal   [20px]          - Amount of horizontal space between adjacent elems
+/// @prop {Number} margin-top           [4px]           - Amount of top margin. _Added via `@extend`_
+/// @prop {Number} inline-margin-top    [10px]          - Amount of top margin when nested within a `.form-inline` component. _Added via `@extend`_
+///
+/// @prop {Number} indicator-offset-top [.13285em]      - Amount of top offset in `em` to ensure that the "indicator" within a `.checkbox` or `.radio` component is vertically centered. _Added via `@extend`_
+/// @prop {Color}  bd-color             [#d7d7d7]       - Default border color
+/// @prop {Color}  bd-color-focus       [#33a9ff]       - Default focused border color
+/// @prop {Color}  bg-checked           [#026dce]       - Background color of the "indicator" within a checked `.checkbox` or `.radio` component
+///
+/// @prop {Number} radio-indicator-size-px      [8px]       - Size of the "indicator" in `px` within a checked `.radio` component. _Added via `@extend`_
+/// @prop {Number} radio-indicator-size         [.57142em]  - Size of the "indicator" in `em` within a checked `.radio` component. _Added via `@extend`_
+/// @prop {Number} radio-indicator-offset-left  [.29071em]  - Left offset to horizontally center the "indicator" within a checked `.radio` component. _Added via `@extend`_
+/// @prop {Number} radio-indicator-offset-top   [.42857em]  - Top offset to horizontally center the "indicator" within a checked `.radio` component. _Added via `@extend`_
+///
+$cbox-radio-config: (
+    // screen AND print checkboxes / radio buttons
+    'height-px': $font-size-base + 2,
+    'width-px':  $font-size-base + 2,
+    'height': null, // actual calculated value inserted via @extend
+    'width': null, // actual calculated value inserted via @extend
+    'spacing-horizontal': $line-height-base-px,
+    'margin-top': null, // actual calculated value inserted via @extend
+    'inline-margin-top': null, // actual calculated value inserted via @extend
+    // screen-only checkboxes
+    'indicator-offset-top': null, // actual calculated value inserted via @extend
+    'bd-color': get($form-control-colors, 'bd-fallback'),
+    'bd-color-focus': get($form-control-colors, 'bd-focus'),
+    'bg-checked': $link-color,
+    // screen-only radio buttons
+    'radio-indicator-size-px': null, // actual calculated value inserted via @extend
+    'radio-indicator-size': null, // actual calculated value inserted via @extend
+    'radio-indicator-offset-left': null, // actual calculated value inserted via @extend
+    'radio-indicator-offset-top': null  // actual calculated value inserted via @extend
+) !default;
+
+
+// ----------------------------------------------------
+//   CALCULATED VALUES
+//   -> based on $cbox-radio-config
+//
+//   -> cannot be included in initial map declaration
+//      because the calculations depend on values
+//      within the map, and Sass has no ability to
+//      reference a key in a map from within that map.
+//
+//   -> documented as props of $cbox-radio-config
+//      because they are added via extend() below.
+// ----------------------------------------------------
+    $cbox-radio-height: to-em(get($cbox-radio-config, 'height-px'), $font-size-base);
+    $cbox-radio-width: $cbox-radio-height;
+    $cbox-radio-margin-top: get($form-config, 'label-line-height-px') - get($cbox-radio-config, 'height-px');
+    $cbox-radio-inline-margin-top: round((get-deep($form-control-config, 'height.base') - get($form-config, 'label-line-height-px')) / 2);
+    $cbox-radio-indicator-offset-top: $cbox-radio-height - 1.01;
+    $radio-indicator-size-px: round(get($cbox-radio-config, 'height-px') / 2);
+    $radio-indicator-size: to-em($radio-indicator-size-px, $font-size-base);
+    $radio-indicator-offset-left: ($radio-indicator-size / 2) + .005;
+    $radio-indicator-offset-top: $cbox-radio-indicator-offset-top + $radio-indicator-offset-left;
+
+    // ----- EXTEND cbox/radio config with calc'd values ----- //
+    $cbox-radio-config: extend($cbox-radio-config,
+        (
+            'height': $cbox-radio-height,
+            'width': $cbox-radio-width,
+            'margin-top': $cbox-radio-margin-top,
+            'inline-margin-top': $cbox-radio-inline-margin-top,
+            'indicator-offset-top': $cbox-radio-indicator-offset-top,
+            'radio-indicator-size-px': $radio-indicator-size-px,
+            'radio-indicator-size': $radio-indicator-size,
+            'radio-indicator-offset-left': $radio-indicator-offset-left,
+            'radio-indicator-offset-top': $radio-indicator-offset-top
+        )
+    );

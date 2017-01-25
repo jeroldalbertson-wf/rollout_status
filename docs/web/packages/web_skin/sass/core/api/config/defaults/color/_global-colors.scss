@@ -1,0 +1,922 @@
+// ********************************************************
+
+////
+/// Global Web Skin Color Palette Configs
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// @group core.color.base
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/global-colors';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function extend,
+                                                function get);
+//
+// ********************************************************
+
+
+
+// ********************************************************
+//
+//   BASE ZESTY CRAYON COLOR CONFIG MAPS
+//
+// ********************************************************
+    ///
+    /// Gray colors found within the [Zesty Crayon Color Palette](http://bit.ly/web-skin-color-palette).
+    /// ---
+    /// @group core.color.zesty
+    /// @see {variable} almost-white
+    /// ---
+    /// @prop {Color} 100   [#595959] - Can be referenced directly via the `$zc-gray-100` or `$zc-gray` variables
+    /// @prop {Color} 120   [#444444] - Can be referenced directly via the `$zc-gray-120` variable
+    /// @prop {Color} 90    [#707070] - Can be referenced directly via the `$zc-gray-90` variable
+    /// @prop {Color} 80    [#8a8a8a] - Can be referenced directly via the `$zc-gray-80` variable
+    /// @prop {Color} 70    [#b2b2b2] - Can be referenced directly via the `$zc-gray-70` variable
+    /// @prop {Color} 60    [#cbcbcb] - Can be referenced directly via the `$zc-gray-60` variable
+    /// @prop {Color} 50    [#d8d8d8] - Can be referenced directly via the `$zc-gray-50` variable
+    /// @prop {Color} 40    [#e3e3e3] - Can be referenced directly via the `$zc-gray-40` variable
+    /// @prop {Color} 30    [#eaeaea] - Can be referenced directly via the `$zc-gray-30` variable
+    /// @prop {Color} 20    [#f3f3f3] - Can be referenced directly via the `$zc-gray-20` variable
+    /// ---
+    /// @prop {Color} base       [#595959] - __DEPRECATED.__ Use `100` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} darker     [#444444] - __DEPRECATED.__ Use `120` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} lighter    [#707070] - __DEPRECATED.__ Use `90` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} lighter2   [#8a8a8a] - __DEPRECATED.__ Use `80` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} pastel1    [#b2b2b2] - __DEPRECATED.__ Use `70` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} lighter4   [#cbcbcb] - __DEPRECATED.__ Use `60` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} pastel2    [#e3e3e3] - __DEPRECATED.__ Use `40` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} lighter6   [#f3f3f3] - __DEPRECATED.__ Use `20` instead. Will be removed completely in the `2.0.0` release.
+    ///
+    $zc-grays: (
+        '100':  #595959,
+        '120':  #444444,
+        '90':   #707070,
+        '80':   #8a8a8a,
+        '70':   #b2b2b2,
+        '60':   #cbcbcb,
+        '50':   #d8d8d8,
+        '40':   #e3e3e3,
+        '30':   #eaeaea,
+        '20':   #f3f3f3
+    );
+        // ----------------------------------------------------
+        //  DEPRECATED COLOR CONFIG KEYS
+        //
+        //  TODO: Delete these keys in 2.0.0
+        // ----------------------------------------------------
+        $zc-grays: extend($zc-grays, (
+            'base':     get($zc-grays, '100'),
+            'darker':   get($zc-grays, '120'),
+            'lighter':  get($zc-grays, '90'),
+            'lighter2': get($zc-grays, '80'),
+            'pastel1':  get($zc-grays, '70'),
+            'lighter4': get($zc-grays, '60'),
+            'pastel2':  get($zc-grays, '40'),
+            'lighter6': get($zc-grays, '20')
+        ));
+
+    ///
+    /// Green colors found within the [Zesty Crayon Color Palette](http://bit.ly/web-skin-color-palette).
+    /// ---
+    /// @group core.color.zesty
+    /// ---
+    /// @prop {Color} 100   [#66cc00] - Can be referenced directly via the `$zc-green-100` or `$zc-green` variables
+    /// @prop {Color} 120   [#339900] - Can be referenced directly via the `$zc-green-120` variable
+    /// @prop {Color} 80    [#85d633] - Can be referenced directly via the `$zc-green-80` variable
+    /// @prop {Color} 60    [#a3e066] - Can be referenced directly via the `$zc-green-60` variable
+    /// @prop {Color} 40    [#c2eb99] - Can be referenced directly via the `$zc-green-40` variable
+    /// ---
+    /// @prop {Color} base       [#66cc00] - __DEPRECATED.__ Use `100` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} darker     [#339900] - __DEPRECATED.__ Use `120` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} lighter    [#85d633] - __DEPRECATED.__ Use `80` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} pastel1    [#a3e066] - __DEPRECATED.__ Use `60` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} pastel2    [#c2eb99] - __DEPRECATED.__ Use `40` instead. Will be removed completely in the `2.0.0` release.
+    ///
+    $zc-greens: (
+        '100':  #66cc00,
+        '120':  #339900,
+        '80':   #85d633,
+        '60':   #a3e066,
+        '40':   #c2eb99
+    );
+        // ----------------------------------------------------
+        //  DEPRECATED COLOR CONFIG KEYS
+        //
+        //  TODO: Delete these keys in 2.0.0
+        // ----------------------------------------------------
+        $zc-greens: extend($zc-greens, (
+            'base':     get($zc-greens, '100'),
+            'darker':   get($zc-greens, '120'),
+            'lighter':  get($zc-greens, '80'),
+            'pastel1':  get($zc-greens, '60'),
+            'pastel2':  get($zc-greens, '40')
+        ));
+
+    ///
+    /// "In Gamut" variations of the green colors found within the [Zesty Crayon Color Palette](http://bit.ly/web-skin-color-palette).
+    /// ---
+    /// @group core.color.zesty
+    /// ---
+    /// @prop {Color} 100   [#6ebe44] - Can be referenced directly via the `$zc-green-100-in-gamut` or `$zc-green-in-gamut` variables
+    /// @prop {Color} 120   [#349946] - Can be referenced directly via the `$zc-green-120-in-gamut` variable
+    /// @prop {Color} 80    [#9dcc40] - Can be referenced directly via the `$zc-green-80-in-gamut` variable
+    /// @prop {Color} 60    [#c0db79] - Can be referenced directly via the `$zc-green-60-in-gamut` variable
+    /// @prop {Color} 40    [#dceab6] - Can be referenced directly via the `$zc-green-40-in-gamut` variable
+    /// ---
+    /// @prop {Color} base       [#6ebe44] - __DEPRECATED.__ Use `100` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} darker     [#349946] - __DEPRECATED.__ Use `120` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} lighter    [#9dcc40] - __DEPRECATED.__ Use `80` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} pastel1    [#c0db79] - __DEPRECATED.__ Use `60` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} pastel2    [#dceab6] - __DEPRECATED.__ Use `40` instead. Will be removed completely in the `2.0.0` release.
+    ///
+    $zc-greens-in-gamut: (
+        '100':  #6ebe44,
+        '120':  #349946,
+        '80':   #9dcc40,
+        '60':   #c0db79,
+        '40':   #dceab6
+    );
+        // ----------------------------------------------------
+        //  DEPRECATED COLOR CONFIG KEYS
+        //
+        //  TODO: Delete these keys in 2.0.0
+        // ----------------------------------------------------
+        $zc-greens-in-gamut: extend($zc-greens-in-gamut, (
+            'base':     get($zc-greens-in-gamut, '100'),
+            'darker':   get($zc-greens-in-gamut, '120'),
+            'lighter':  get($zc-greens-in-gamut, '80'),
+            'pastel1':  get($zc-greens-in-gamut, '60'),
+            'pastel2':  get($zc-greens-in-gamut, '40')
+        ));
+
+    ///
+    /// Green "B" colors found within the [Zesty Crayon Color Palette](http://bit.ly/web-skin-color-palette).
+    /// ---
+    /// @group core.color.zesty
+    /// @since 1.6.0
+    /// ---
+    /// @prop {Color} 100   [#42ad48] - Can be referenced directly via the `$zc-green-b-100` or `$zc-green-b` variables
+    /// @prop {Color} 120   [#2b7237] - Can be referenced directly via the `$zc-green-b-120` variable
+    /// @prop {Color} 80    [#68bd6d] - Can be referenced directly via the `$zc-green-b-80` variable
+    /// @prop {Color} 60    [#8ece91] - Can be referenced directly via the `$zc-green-b-60` variable
+    /// @prop {Color} 40    [#b3deb6] - Can be referenced directly via the `$zc-green-b-40` variable
+    ///
+    $zc-greens-b: (
+        '100':  #42ad48,
+        '120':  #2b7237,
+        '80':   #68bd6d,
+        '60':   #8ece91,
+        '40':   #b3deb6
+    );
+
+    ///
+    /// Green "C" colors found within the [Zesty Crayon Color Palette](http://bit.ly/web-skin-color-palette).
+    /// ---
+    /// @group core.color.zesty
+    /// @since 1.6.0
+    /// ---
+    /// @prop {Color} 100   [#0f7f40] - Can be referenced directly via the `$zc-green-c-100` or `$zc-green-c` variables
+    /// @prop {Color} 120   [#175123] - Can be referenced directly via the `$zc-green-c-120` variable
+    /// @prop {Color} 80    [#3f9966] - Can be referenced directly via the `$zc-green-c-80` variable
+    /// @prop {Color} 60    [#6fb28c] - Can be referenced directly via the `$zc-green-c-60` variable
+    /// @prop {Color} 40    [#9fccb3] - Can be referenced directly via the `$zc-green-c-40` variable
+    ///
+    $zc-greens-c: (
+        '100':  #0f7f40,
+        '120':  #175123,
+        '80':   #3f9966,
+        '60':   #6fb28c,
+        '40':   #9fccb3
+    );
+
+    ///
+    /// Blue colors found within the [Zesty Crayon Color Palette](http://bit.ly/web-skin-color-palette).
+    /// ---
+    /// @group core.color.zesty
+    /// ---
+    /// @prop {Color} 100   [#0094ff] - Can be referenced directly via the `$zc-blue-100` or `$zc-blue` variables
+    /// @prop {Color} 120   [#026dce] - Can be referenced directly via the `$zc-blue-120` variable
+    /// @prop {Color} 80    [#33a9ff] - Can be referenced directly via the `$zc-blue-80` variable
+    /// @prop {Color} 60    [#66bfff] - Can be referenced directly via the `$zc-blue-60` variable
+    /// @prop {Color} 40    [#99d4ff] - Can be referenced directly via the `$zc-blue-40` variable
+    /// ---
+    /// @prop {Color} base       [#0094ff] - __DEPRECATED.__ Use `100` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} darker     [#026dce] - __DEPRECATED.__ Use `120` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} lighter    [#33a9ff] - __DEPRECATED.__ Use `80` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} pastel1    [#66bfff] - __DEPRECATED.__ Use `60` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} pastel2    [#99d4ff] - __DEPRECATED.__ Use `40` instead. Will be removed completely in the `2.0.0` release.
+    ///
+    $zc-blues: (
+        '100':  #0094ff,
+        '120':  #026dce,
+        '80':   #33a9ff,
+        '60':   #66bfff,
+        '40':   #99d4ff
+    );
+        // ----------------------------------------------------
+        //  DEPRECATED COLOR CONFIG KEYS
+        //
+        //  TODO: Delete these keys in 2.0.0
+        // ----------------------------------------------------
+        $zc-blues: extend($zc-blues, (
+            'base':     get($zc-blues, '100'),
+            'darker':   get($zc-blues, '120'),
+            'lighter':  get($zc-blues, '80'),
+            'pastel1':  get($zc-blues, '60'),
+            'pastel2':  get($zc-blues, '40')
+        ));
+
+    ///
+    /// Orange colors found within the [Zesty Crayon Color Palette](http://bit.ly/web-skin-color-palette).
+    /// ---
+    /// @group core.color.zesty
+    /// ---
+    /// @prop {Color} 100   [#fbad17] - Can be referenced directly via the `$zc-orange-100` or `$zc-orange` variables
+    /// @prop {Color} 120   [#f26c21] - Can be referenced directly via the `$zc-orange-120` variable
+    /// @prop {Color} 80    [#fcbd45] - Can be referenced directly via the `$zc-orange-80` variable
+    /// @prop {Color} 60    [#fdce74] - Can be referenced directly via the `$zc-orange-60` variable
+    /// @prop {Color} 40    [#fddea2] - Can be referenced directly via the `$zc-orange-40` variable
+    /// ---
+    /// @prop {Color} base       [#fbad17] - __DEPRECATED.__ Use `100` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} darker     [#f26c21] - __DEPRECATED.__ Use `120` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} lighter    [#fcbd45] - __DEPRECATED.__ Use `80` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} pastel1    [#fdce74] - __DEPRECATED.__ Use `60` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} pastel2    [#fddea2] - __DEPRECATED.__ Use `40` instead. Will be removed completely in the `2.0.0` release.
+    ///
+    $zc-oranges: (
+        '100':  #fbad17,
+        '120':  #f26c21,
+        '80':   #fcbd45,
+        '60':   #fdce74,
+        '40':   #fddea2
+    );
+        // ----------------------------------------------------
+        //  DEPRECATED COLOR CONFIG KEYS
+        //
+        //  TODO: Delete these keys in 2.0.0
+        // ----------------------------------------------------
+        $zc-oranges: extend($zc-oranges, (
+            'base':     get($zc-oranges, '100'),
+            'darker':   get($zc-oranges, '120'),
+            'lighter':  get($zc-oranges, '80'),
+            'pastel1':  get($zc-oranges, '60'),
+            'pastel2':  get($zc-oranges, '40')
+        ));
+
+    ///
+    /// Purple colors found within the [Zesty Crayon Color Palette](http://bit.ly/web-skin-color-palette).
+    /// ---
+    /// @group core.color.zesty
+    /// ---
+    /// @prop {Color} 100   [#813296] - Can be referenced directly via the `$zc-purple-100` or `$zc-purple` variables
+    /// @prop {Color} 120   [#491f60] - Can be referenced directly via the `$zc-purple-120` variable
+    /// @prop {Color} 80    [#9a5bab] - Can be referenced directly via the `$zc-purple-80` variable
+    /// @prop {Color} 60    [#b384c0] - Can be referenced directly via the `$zc-purple-60` variable
+    /// @prop {Color} 40    [#cdadd5] - Can be referenced directly via the `$zc-purple-40` variable
+    /// ---
+    /// @prop {Color} base       [#813296] - __DEPRECATED.__ Use `100` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} darker     [#491f60] - __DEPRECATED.__ Use `120` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} lighter    [#9a5bab] - __DEPRECATED.__ Use `80` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} pastel1    [#b384c0] - __DEPRECATED.__ Use `60` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} pastel2    [#cdadd5] - __DEPRECATED.__ Use `40` instead. Will be removed completely in the `2.0.0` release.
+    ///
+    $zc-purples: (
+        '100':  #813296,
+        '120':  #491f60,
+        '80':   #9a5bab,
+        '60':   #b384c0,
+        '40':   #cdadd5
+    );
+        // ----------------------------------------------------
+        //  DEPRECATED COLOR CONFIG KEYS
+        //
+        //  TODO: Delete these keys in 2.0.0
+        // ----------------------------------------------------
+        $zc-purples: extend($zc-purples, (
+            'base':     get($zc-purples, '100'),
+            'darker':   get($zc-purples, '120'),
+            'lighter':  get($zc-purples, '80'),
+            'pastel1':  get($zc-purples, '60'),
+            'pastel2':  get($zc-purples, '40')
+        ));
+
+    ///
+    /// Red colors found within the [Zesty Crayon Color Palette](http://bit.ly/web-skin-color-palette).
+    /// ---
+    /// @group core.color.zesty
+    /// ---
+    /// @prop {Color} 100   [#ee2724] - Can be referenced directly via the `$zc-red-100` or `$zc-red` variables
+    /// @prop {Color} 120   [#a71819] - Can be referenced directly via the `$zc-red-120` variable
+    /// @prop {Color} 80    [#f15250] - Can be referenced directly via the `$zc-red-80` variable
+    /// @prop {Color} 60    [#f57d7c] - Can be referenced directly via the `$zc-red-60` variable
+    /// @prop {Color} 40    [#f8a9a7] - Can be referenced directly via the `$zc-red-40` variable
+    /// ---
+    /// @prop {Color} base       [#ee2724] - __DEPRECATED.__ Use `100` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} darker     [#a71819] - __DEPRECATED.__ Use `120` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} lighter    [#f15250] - __DEPRECATED.__ Use `80` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} pastel1    [#f57d7c] - __DEPRECATED.__ Use `60` instead. Will be removed completely in the `2.0.0` release.
+    /// @prop {Color} pastel2    [#f8a9a7] - __DEPRECATED.__ Use `40` instead. Will be removed completely in the `2.0.0` release.
+    ///
+    $zc-reds: (
+        '100':  #ee2724,
+        '120':  #a71b19,
+        '80':   #f15250,
+        '60':   #f57d7c,
+        '40':   #f8a9a7
+    );
+        // ----------------------------------------------------
+        //  DEPRECATED COLOR CONFIG KEYS
+        //
+        //  TODO: Delete these keys in 2.0.0
+        // ----------------------------------------------------
+        $zc-reds: extend($zc-reds, (
+            'base':     get($zc-reds, '100'),
+            'darker':   get($zc-reds, '120'),
+            'lighter':  get($zc-reds, '80'),
+            'pastel1':  get($zc-reds, '60'),
+            'pastel2':  get($zc-reds, '40')
+        ));
+
+
+
+// ********************************************************
+//
+//   DERIVED COLOR CONFIG MAPS
+//
+//   -> Colors that are derived from the colors defined
+//      in the base zesty crayon color config maps
+//
+// ********************************************************
+    ///
+    /// Color configuration map for global application state colors derived from / calculated using colors found in `$colors-zc`.
+    /// ---
+    /// @group core.color.grouped
+    /// @see {variable} colors-zc
+    /// @link http://bit.ly/web-skin-color-palette Color Palette Meanings
+    /// ---
+    /// @requires {variable} $zc-gray-70
+    /// @requires {variable} $zc-green
+    /// @requires {variable} $zc-blue
+    /// @requires {variable} $zc-orange
+    /// @requires {variable} $zc-red
+    /// ---
+    /// @prop {Color} default    [#b2b2b2]  - Default __'non-emphasized'__ color according to our color meanings.
+    /// @prop {Color} primary    [#66cc00]  - Default __'creation action'__ color according to our color meanings.
+    /// @prop {Color} alt        [#0094ff]  - Default __'secondary-emphasis / informative'__ color according to our color meanings.
+    /// @prop {Color} success    [#66cc00]  - Default __'success'__ color according to our color meanings.
+    /// @prop {Color} warning    [#fbad17]  - Default __'caution / destructive action'__ color according to our color meanings.
+    /// @prop {Color} danger     [#ee2724]  - Default __'danger / irreversible action'__ color according to our color meanings.
+    ///
+    $colors-global-states: (
+        'default': get($zc-grays, '70'),
+        'primary': get($zc-greens, '100'),
+        'alt':     get($zc-blues, '100'),
+        'success': get($zc-greens, '100'),
+        'warning': get($zc-oranges, '100'),
+        'danger':  get($zc-reds, '100')
+    );
+
+    ///
+    /// Color configuration map for all doctype colors derived from / calculated using colors found in `$colors-zc`.
+    /// ---
+    /// @group core.color.grouped
+    /// @see {variable} colors-zc
+    /// ---
+    /// @requires {variable} $zc-gray-80
+    /// @requires {variable} $zc-green
+    /// @requires {variable} $zc-green-c
+    /// @requires {variable} $zc-green-c-80
+    /// @requires {variable} $zc-orange
+    /// @requires {variable} $zc-red
+    /// @requires {variable} $zc-red-80
+    /// @requires {variable} $zc-purple-80
+    /// @requires {variable} $zc-blue
+    /// @requires {variable} $zc-blue-120
+    /// @requires {variable} $zc-blue-80
+    /// ---
+    /// @prop {Map}   wfml-doc
+    /// @prop {Color} wfml-doc.gray.base         [#8a8a8a]   - Base color for the [gray doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    /// @prop {Color} wfml-doc.gray.hover        [#a1a1a1]   - Hover color for the [gray doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    /// @prop {Color} wfml-doc.green.base        [#3f9966]   - Base color for the [green doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    /// @prop {Color} wfml-doc.green.hover       [#93cf8a]   - Hover color for the [green doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    /// @prop {Color} wfml-doc.orange.base       [#fbad17]   - Base color for the [orange doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    /// @prop {Color} wfml-doc.orange.hover      [#fcc356]   - Hover color for the [orange doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    /// @prop {Color} wfml-doc.red.base          [#f15250]   - Base color for the [red doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    /// @prop {Color} wfml-doc.red.hover         [#ff8379]   - Hover color for the [red doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    /// @prop {Color} wfml-doc.teal.base         [#00ceae]   - Base color for the [teal doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    /// @prop {Color} wfml-doc.teal.hover        [#46dbc4]   - Hover color for the [teal doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    /// @prop {Color} wfml-doc.purple.base       [#9a5bab]   - Base color for the [purple doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    /// @prop {Color} wfml-doc.purple.hover      [#c59bc8]   - Hover color for the [purple doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    /// @prop {Color} wfml-doc.blue.base         [#026dce]   - Base color for the [blue doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    /// @prop {Color} wfml-doc.blue.hover        [#5ea2e0]   - Hover color for the [blue doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    /// @prop {Color} wfml-doc.blue-light.base   [#33a9ff]   - Base color for the [light blue doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    /// @prop {Color} wfml-doc.blue-light.hover  [#89d0fb]   - Hover color for the [light blue doctype color-group variation](../../components/#labels-variations-doctype-color-groups)
+    ///
+    /// @prop {Map}   wfml-wb
+    /// @prop {Color} wfml-wb.base     [#66cc00]   - Base color associated with WFML workbooks
+    /// @prop {Color} wfml-wb.hover    [#0f7f40]   - Hover color associated with WFML workbooks
+    ///
+    /// @prop {Color} pdf  [#ee2724]    - Doctype icon color for any file with a `pdf` mime type.
+    /// @prop {Color} xls  [#66cc00]    - Doctype icon color for any file with a `xls` or `xlsx` mime type.
+    /// @prop {Color} ppt  [#fbad17]    - Doctype icon color for any file with a `ppt` or `pptx` mime type.
+    /// @prop {Color} doc  [#0094ff]    - Doctype icon color for any file with a `doc` or `docx` mime type.
+    ///
+    $colors-global-doctypes: (
+        'wfml-doc': (
+            'gray': (
+                'base':  get($zc-grays, '80'),
+                'hover': #a1a1a1 // shade-of($zc-gray-80, 80%)
+            ),
+            'green': (
+                'base':  get($zc-greens-c, '80'),
+                'hover': #93cf8a
+            ),
+            'orange': (
+                'base':  get($zc-oranges, '100'),
+                'hover': #fcc356
+            ),
+            'red': (
+                'base':  get($zc-reds, '80'),
+                'hover': #ff8379
+            ),
+            'teal': (
+                'base':  #00ceae,
+                'hover': #46dbc4
+            ),
+            'purple': (
+                'base':  get($zc-purples, '80'),
+                'hover': #c59bc8
+            ),
+            'blue': (
+                'base':  get($zc-blues, '120'),
+                'hover': #5ea2e0
+            ),
+            'blue-light': (
+                'base':  get($zc-blues, '80'),
+                'hover': #89d0fb
+            )
+        ),
+        'wfml-wb': (
+            'base': get($zc-greens, '100'),
+            'darker': get($zc-greens-c, '100')
+        ),
+        'pdf':  get($zc-reds, '100'),
+        'xls':  get($zc-greens, '100'),
+        'ppt':  get($zc-oranges, '100'),
+        'doc':  get($zc-blues, '100')
+    );
+
+    ///
+    /// Color configuration map for colors that indicate a 'selected' state for various entities derived from / calculated using colors found in `$colors-zc`.
+    /// ---
+    /// @group core.color.grouped
+    /// @see {variable} colors-global-highlight
+    /// @see {variable} colors-zc
+    /// @todo Add descriptions for each prop
+    /// ---
+    /// @requires {variable} $zc-blue
+    /// @requires {variable} $zc-blue-100
+    /// @requires {variable} $zc-blue-120
+    /// @requires {variable} $zc-gray-120
+    /// @requires {external} SassScript/desaturate  <http://bit.ly/sass_desaturate>
+    /// @requires {external} SassScript/mix         <http://bit.ly/sass_mix>
+    /// ---
+    /// @prop {Color} bg-base        [#bfe4ff]
+    /// @prop {Color} bg-hover       [#ebf6ff]
+    /// @prop {Color} text-hover     [#505050]
+    /// @prop {Color} bg-focus       [#e0f2ff] - Since `1.5.0`
+    /// @prop {Color} text-focus     [#4b4b4b] - Since `1.5.0`
+    /// @prop {Color} bg-press       [#e0f2ff]
+    /// @prop {Color} text-press     [#4b4b4b]
+    /// @prop {Color} bg-selected    [#e0f2ff] - Since `1.5.0`
+    /// @prop {Color} text-selected  [#4b4b4b] - Since `1.5.0`
+    /// @prop {Color} bg-active      [#d6eeff]
+    /// @prop {Color} text-active    [#474747]
+    ///
+    $colors-global-selection: (
+        'bg-base':      mix(map-get($zc-blues, '100'), #fff, 25%),
+        'bg-hover':     mix(map-get($zc-blues, '100'), #fff, 8%),
+        'text-hover':   desaturate(mix(map-get($zc-blues, '120'), map-get($zc-grays, '120'), 33%), 50),
+        'bg-focus':     mix(map-get($zc-blues, '100'), #fff, 12%),
+        'text-focus':   desaturate(mix(map-get($zc-blues, '120'), map-get($zc-grays, '120'), 19%), 50),
+        'bg-press':     mix(map-get($zc-blues, '100'), #fff, 12%),
+        'text-press':   desaturate(mix(map-get($zc-blues, '120'), map-get($zc-grays, '120'), 19%), 50),
+        'bg-selected':   mix(map-get($zc-blues, '100'), #fff, 12%),
+        'text-selected': desaturate(mix(map-get($zc-blues, '120'), map-get($zc-grays, '120'), 19%), 50),
+        'bg-active':    mix(map-get($zc-blues, '100'), #fff, 16%),
+        'text-active':  desaturate(mix(map-get($zc-blues, '120'), map-get($zc-grays, '120'), 9%), 50)
+    );
+
+    ///
+    /// Color configuration map for colors that indicate a 'highlighted' state for various entities derived from / calculated using colors found in `$colors-zc`.
+    /// ---
+    /// @group core.color.grouped
+    /// @see {variable} colors-global-selection
+    /// @see {variable} colors-zc
+    /// @requires {variable} $zc-orange
+    /// @requires {variable} $zc-orange-80
+    /// ---
+    /// @prop {Color} default [#fbad17]
+    /// @prop {Color} orange  [#fbad17]
+    /// @prop {Color} yellow  [#fdec7f]
+    ///
+    $colors-global-highlight: (
+        'default': get($zc-oranges, '100'),
+        'orange':  get($zc-oranges, '100'),
+        'yellow':  #fdec7f
+    );
+
+    ///
+    /// Color configuration map for colors shown to Wdesk users within color pickers.
+    /// ---
+    /// @since 1.4.0
+    /// @link https://github.com/Workiva/web-skin/issues/1180 Color picker UX specification
+    /// ---
+    /// @requires {variable} $zc-blue
+    /// @requires {variable} $zc-blue-120
+    /// @requires {variable} $zc-green
+    /// @requires {variable} $zc-green-120
+    /// @requires {variable} $zc-green-c
+    /// @requires {variable} $zc-red
+    /// @requires {variable} $zc-gray
+    /// @requires {variable} $zc-gray-120
+    /// @requires {variable} $zc-gray-90
+    /// @requires {variable} $zc-gray-80
+    /// @requires {variable} $zc-gray-70
+    /// @requires {variable} $zc-gray-60
+    /// @requires {variable} $white
+    /// @requires {variable} $black
+    /// ---
+    /// @prop {Map} gray - The first row of swatches in the Wdesk color picker
+    /// @prop {Color} gray.black            [#000000]
+    /// @prop {Color} gray.darker           [#444444]
+    /// @prop {Color} gray.base             [#595959]
+    /// @prop {Color} gray.lighter          [#707070]
+    /// @prop {Color} gray.lighter2         [#8a8a8a]
+    /// @prop {Color} gray.lighter3         [#b2b2b2]
+    /// @prop {Color} gray.lighter4         [#e3e3e3]
+    /// @prop {Color} gray.white            [#ffffff] - Should be stroked with `#b2b2b2` when presented as a swatch.
+    ///
+    /// @prop {Map} base - The second row of swatches in the Wdesk color picker
+    /// @prop {Color} base.purple           [#661de8]
+    /// @prop {Color} base.blue-dark        [#3051f2]
+    /// @prop {Color} base.blue             [#0094ff]
+    /// @prop {Color} base.green-dark       [#42ad48]
+    /// @prop {Color} base.green            [#66cc00]
+    /// @prop {Color} base.yellow           [#ffde0f]
+    /// @prop {Color} base.orange           [#faac16]
+    /// @prop {Color} base.red              [#ee2724]
+    ///
+    /// @prop {Map} lightest - The third row of swatches in the Wdesk color picker
+    /// @prop {Color} lightest.purple       [#d9c6f9]
+    /// @prop {Color} lightest.blue-dark    [#c0cafb]
+    /// @prop {Color} lightest.blue         [#bfe4ff]
+    /// @prop {Color} lightest.green-dark   [#aadead]
+    /// @prop {Color} lightest.green        [#def3c0]
+    /// @prop {Color} lightest.yellow       [#fff7c3]
+    /// @prop {Color} lightest.orange       [#feeac5]
+    /// @prop {Color} lightest.red          [#ffcac6]
+    ///
+    /// @prop {Map} lighter - The fourth row of swatches in the Wdesk color picker
+    /// @prop {Color} lighter.purple        [#b38ef4]
+    /// @prop {Color} lighter.blue-dark     [#90a2f8]
+    /// @prop {Color} lighter.blue          [#80c9ff]
+    /// @prop {Color} lighter.green-dark    [#85d089]
+    /// @prop {Color} lighter.green         [#bde782]
+    /// @prop {Color} lighter.yellow        [#ffef87]
+    /// @prop {Color} lighter.orange        [#fdd68b]
+    /// @prop {Color} lighter.red           [#ff968e]
+    ///
+    /// @prop {Map} light - The fifth row of swatches in the Wdesk color picker
+    /// @prop {Color} light.purple          [#8c56ee]
+    /// @prop {Color} light.blue-dark       [#546ff5]
+    /// @prop {Color} light.blue            [#40aeff]
+    /// @prop {Color} light.green-dark      [#60c265]
+    /// @prop {Color} light.green           [#9bda44]
+    /// @prop {Color} light.yellow          [#ffe64b]
+    /// @prop {Color} light.orange          [#fbc150]
+    /// @prop {Color} light.red             [#ff6155]
+    ///
+    /// @prop {Map} darker - The sixth row of swatches in the Wdesk color picker
+    /// @prop {Color} darker.purple         [#4c16ae]
+    /// @prop {Color} darker.blue-dark      [#0e32e1]
+    /// @prop {Color} darker.blue           [#026dce]
+    /// @prop {Color} darker.green-dark     [#348839]
+    /// @prop {Color} darker.green          [#339900]
+    /// @prop {Color} darker.yellow         [#bb8110]
+    /// @prop {Color} darker.orange         [#d76428]
+    /// @prop {Color} darker.red            [#bf2115]
+    ///
+    /// @prop {Map} darkest - The seventh row of swatches in the Wdesk color picker
+    /// @prop {Color} darkest.purple        [#330e74]
+    /// @prop {Color} darkest.blue-dark     [#0a2299]
+    /// @prop {Color} darkest.blue          [#00497f]
+    /// @prop {Color} darkest.green-dark    [#1f5122]
+    /// @prop {Color} darkest.green         [#226600]
+    /// @prop {Color} darkest.yellow        [#7d560b]
+    /// @prop {Color} darkest.orange        [#a54321]
+    /// @prop {Color} darkest.red           [#7f160e]
+    ///
+    /// @prop {Map} highlight - The last row of swatches in the Wdesk color picker
+    /// @prop {Color} highlight.lavender    [#deb3ff]
+    /// @prop {Color} highlight.blue        [#cceeff]
+    /// @prop {Color} highlight.cyan        [#00ffff]
+    /// @prop {Color} highlight.green-dark  [#00ff00]
+    /// @prop {Color} highlight.green       [#99ff99]
+    /// @prop {Color} highlight.yellow      [#ffff00]
+    /// @prop {Color} highlight.magenta     [#ff0090]
+    /// @prop {Color} highlight.violet      [#cc0099]
+    ///
+    $colors-global-picker-palette: (
+        'gray': (
+            'black':      $black,
+            'darker':     get($zc-grays, '120'),
+            'base':       get($zc-grays, '100'),
+            'lighter':    get($zc-grays, '90'),
+            'lighter2':   get($zc-grays, '80'),
+            'lighter3':   get($zc-grays, '70'),
+            'lighter4':   get($zc-grays, '60'),
+            'white':      $white
+        ),
+        'base': (
+            'purple':     #661de8,
+            'blue-dark':  #3051f2,
+            'blue':       get($zc-blues, '100'),
+            'green-dark': get($zc-greens-c, '100'),
+            'green':      get($zc-greens, '100'),
+            'yellow':     #ffde0f,
+            'orange':     #faac16,
+            'red':        get($zc-reds, '100')
+        ),
+        'lightest': (
+            'purple':     #d9c6f9,
+            'blue-dark':  #c0cafb,
+            'blue':       #bfe4ff,
+            'green-dark': #aadead,
+            'green':      #def3c0,
+            'yellow':     #fff7c3,
+            'orange':     #feeac5,
+            'red':        #ffcac6
+        ),
+        'lighter': (
+            'purple':     #b38ef4,
+            'blue-dark':  #90a2f8,
+            'blue':       #80c9ff,
+            'green-dark': #85d089,
+            'green':      #bde782,
+            'yellow':     #ffef87,
+            'orange':     #fdd68b,
+            'red':        #ff968e
+        ),
+        'light': (
+            'purple':     #8c56ee,
+            'blue-dark':  #546ff5,
+            'blue':       #40aeff,
+            'green-dark': #60c265,
+            'green':      #9bda44,
+            'yellow':     #ffe64b,
+            'orange':     #fbc150,
+            'red':        #ff6155
+        ),
+        'darker': (
+            'purple':     #4c16ae,
+            'blue-dark':  #0e32e1,
+            'blue':       get($zc-blues, '120'),
+            'green-dark': #348839,
+            'green':      get($zc-greens, '120'),
+            'yellow':     #bb8110,
+            'orange':     #d76428,
+            'red':        #bf2115
+        ),
+        'darkest': (
+            'purple':     #330e74,
+            'blue-dark':  #0a2299,
+            'blue':       #00497f,
+            'green-dark': #1f5122,
+            'green':      #226600,
+            'yellow':     #7d560b,
+            'orange':     #a54321,
+            'red':        #7f160e
+        ),
+        'highlight': (
+            'lavender':    #deb3ff,
+            'blue':        #cceeff,
+            'cyan':        #00ffff,
+            'green-dark':  #00ff00,
+            'green':       #99ff99,
+            'yellow':      #ffff00,
+            'magenta':     #ff0090,
+            'violet':      #cc0099
+        )
+    ) !default;
+
+    ///
+    /// Color configuration map for colors that indicate individual contributions / annotations of a specific user within a Gen 2 collaborative editing experience.
+    ///
+    /// The key names indicate the order in which the colors should be used in a document according to UX specification.
+    /// ---
+    /// @since 1.6.0
+    /// @link https://github.com/Workiva/web-skin/issues/1390 "Presence" colors UX specification
+    /// ---
+    /// @example scss Generating reusable CSS classes to use for presence colors in a Wdesk app
+    ///   @each $key, $color in $colors-presence-palette {
+    ///     .presence-bg-#{$key}   { background-color: $color; }
+    ///     .presence-bd-#{$key}   { border: .1rem solid $color; }
+    ///     .presence-text-#{$key} { color: $color; }
+    ///   }
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {variable} $zc-grays
+    /// @requires {variable} $zc-reds
+    /// @requires {variable} $zc-blues
+    /// @requires {variable} $zc-purples
+    /// @requires {variable} $zc-oranges
+    /// @requires {variable} $zc-greens
+    /// @requires {variable} $zc-greens-c
+    /// @requires {variable} $zc-greens-b
+    /// @requires {variable} $white
+    /// @requires {variable} $colors-global-picker-palette
+    /// ---
+    /// @prop {Color} 1  [#a71b19]
+    /// @prop {Color} 2  [#813296]
+    /// @prop {Color} 3  [#f26c21]
+    /// @prop {Color} 4  [#339900]
+    /// @prop {Color} 5  [#f15250]
+    /// @prop {Color} 6  [#b384c0]
+    /// @prop {Color} 7  [#fbad17]
+    /// @prop {Color} 8  [#6fb28c]
+    /// @prop {Color} 9  [#7f160e]
+    /// @prop {Color} 10 [#5b3570]
+    /// @prop {Color} 11 [#a54321]
+    /// @prop {Color} 12 [#2b7237]
+    /// @prop {Color} 13 [#c15f5e]
+    /// @prop {Color} 14 [#806290]
+    /// @prop {Color} 15 [#f69864]
+    /// @prop {Color} 16 [#68bd6d]
+    /// @prop {Color} 17 [#595959]
+    /// @prop {Color} 18 [#4e99dd]
+    /// @prop {Color} 19 [#8d8d8d]
+    /// @prop {Color} 20 [#00497f]
+    ///
+    $colors-presence-palette: (
+        '1':  get($zc-reds, '120'),
+        '2':  get($zc-purples, '100'),
+        '3':  get($zc-oranges, '120'),
+        '4':  get($zc-greens, '120'),
+        '5':  get($zc-reds, '80'),
+        '6':  get($zc-purples, '60'),
+        '7':  get($zc-oranges, '100'),
+        '8':  get($zc-greens-c, '60'),
+        '9':  get-deep($colors-global-picker-palette, 'darkest.red'),
+        '10': mix(get($zc-purples, '120'), $white, 90%),
+        '11': get-deep($colors-global-picker-palette, 'darkest.orange'),
+        '12': get($zc-greens-b, '120'),
+        '13': mix(get($zc-reds, '120'), $white, 70%),
+        '14': mix(get($zc-purples, '120'), $white, 70%),
+        '15': mix(get($zc-oranges, '120'), $white, 70%),
+        '16': get($zc-greens-b, '80'),
+        '17': get($zc-grays, '100'),
+        '18': mix(get($zc-blues, '120'), $white, 70%),
+        '19': mix(get($zc-grays, '90'), $white, 80%),
+        '20': get-deep($colors-global-picker-palette, 'darkest.blue')
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   GROUPED GLOBAL COLOR MAPS
+//
+//   -> Used to combine individual zc
+//      and individual derived maps into
+//      a single map that the `color()`
+//      function can use
+//
+// ********************************************************
+    ///
+    /// All colors found within the [Zesty Crayon Color Palette](http://bit.ly/web-skin-color-palette).
+    /// ---
+    /// @group core.color.grouped
+    /// ---
+    /// @requires {variable} $zc-grays
+    /// @requires {variable} $zc-greens
+    /// @requires {variable} $zc-greens-b
+    /// @requires {variable} $zc-greens-c
+    /// @requires {variable} $zc-blues
+    /// @requires {variable} $zc-oranges
+    /// @requires {variable} $zc-purples
+    /// @requires {variable} $zc-reds
+    /// ---
+    /// @prop {Map} gray            - `$zc-grays` map
+    /// @prop {Map} green           - `$zc-greens` map
+    /// @prop {Map} green-in-gamut  - `$zc-greens-in-gamut` map
+    /// @prop {Map} green-b         - `$zc-greens-b` map
+    /// @prop {Map} green-c         - `$zc-greens-c` map
+    /// @prop {Map} blue            - `$zc-blues` map
+    /// @prop {Map} orange          - `$zc-oranges` map
+    /// @prop {Map} purple          - `$zc-purples` map
+    /// @prop {Map} red             - `$zc-reds` map
+    /// ---
+    /// @prop {Map} green-alt       - __DEPRECATED.__ Use 'green-b' instead
+    /// @prop {Map} green-alt2      - __DEPRECATED.__ Use 'green-c' instead
+    ///
+    $colors-zc: (
+        'gray':             $zc-grays,
+        'green':            $zc-greens,
+        'green-in-gamut':   $zc-greens-in-gamut,
+        'green-b':          $zc-greens-b,
+        'green-c':          $zc-greens-c,
+        'blue':             $zc-blues,
+        'orange':           $zc-oranges,
+        'purple':           $zc-purples,
+        'red':              $zc-reds
+    );
+        // ----------------------------------------------------
+        //  DEPRECATED COLOR CONFIG KEYS
+        //
+        //  TODO: Delete these keys in 2.0.0
+        // ----------------------------------------------------
+        $colors-zc: extend($colors-zc, (
+            'green-alt':  get($colors-zc, 'green-b'),
+            'green-alt2': get($colors-zc, 'green-c')
+        ));
+
+        // place zesty crayon palette map within a key of 'global'
+        $zc-globals: ('global': $colors-zc);
+
+    ///
+    /// Color configuration map derived from / calculated using colors found in `$colors-zc`.
+    /// ---
+    /// @access Private
+    /// @group core.internals.color.grouped
+    /// @see {variable} colors-zc
+    /// ---
+    /// @requires {variable} $colors-global-states
+    /// @requires {variable} $colors-global-doctypes
+    /// @requires {variable} $colors-global-selection
+    /// @requires {variable} $colors-global-highlight
+    /// @requires {variable} $colors-global-picker-palette
+    /// @requires {variable} $colors-presence-palette
+    /// ---
+    /// @prop {Map} states    - `$colors-global-states` map
+    /// @prop {Map} doctypes  - `$colors-global-doctypes` map
+    /// @prop {Map} selection - `$colors-global-selection` map
+    /// @prop {Map} highlight - `$colors-global-highlight` map
+    /// @prop {Map} picker    - `$colors-global-picker-palette` map
+    /// @prop {Map} presence  - `$colors-presence-palette` map
+    ///
+    $colors-derived: (
+        'states':       $colors-global-states,
+        'doctypes':     $colors-global-doctypes,
+        'selection':    $colors-global-selection,
+        'highlight':    $colors-global-highlight,
+        'picker':       $colors-global-picker-palette,
+        'presence':     $colors-presence-palette
+    );
+
+    ///
+    /// Combination of the colors found in `$colors-zc` and `$colors-derived`. Values can be retrieved using the `color()` function.
+    /// ---
+    /// @group core.color.grouped
+    /// @see {function} color
+    /// @see {variable} colors-derived
+    /// @see {variable} colors-zc
+    /// ---
+    /// @example scss
+    ///   .i-want-red-text {
+    ///       color: color('global.red.base');
+    ///   }
+    ///
+    ///   .much-success {
+    ///       color: color('states.success');
+    ///   }
+    /// ---
+    /// @requires {function} extend
+    /// @requires {variable} $colors-zc
+    /// @requires {variable} $colors-derived
+    /// ---
+    /// @prop {Map} global
+    /// @prop {Map} global.gray            - `$zc-grays` map
+    /// @prop {Map} global.green           - `$zc-greens` map
+    /// @prop {Map} global.green-in-gamut  - `$zc-greens-in-gamut` map
+    /// @prop {Map} global.green-b         - `$zc-greens-b` map
+    /// @prop {Map} global.green-c         - `$zc-greens-c` map
+    /// @prop {Map} global.blue            - `$zc-blues` map
+    /// @prop {Map} global.orange          - `$zc-oranges` map
+    /// @prop {Map} global.purple          - `$zc-purples` map
+    /// @prop {Map} global.red             - `$zc-reds` map
+    ///
+    /// @prop {Map} states    - `$colors-global-states` map
+    /// @prop {Map} doctypes  - `$colors-global-doctypes` map
+    /// @prop {Map} selection - `$colors-global-selection` map
+    /// @prop {Map} highlight - `$colors-global-highlight` map
+    ///
+    $colors: extend($zc-globals, $colors-derived);

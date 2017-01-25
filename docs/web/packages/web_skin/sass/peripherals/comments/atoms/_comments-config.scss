@@ -1,0 +1,11 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/comments/atoms/comments-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+$default-comment-textarea-height:   90px !default;

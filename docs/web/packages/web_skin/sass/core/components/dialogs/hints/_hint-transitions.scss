@@ -1,0 +1,13 @@
+// ********************************************************
+//
+//  HINT TRANSITION EFFECTS
+//
+// ********************************************************
+
+// Remove both fade and slide animation from hints.
+.hint--no-animate {
+    #{$hint-arrow},
+    #{$hint-body} {
+        @include transition-duration(0s);
+    }
+}

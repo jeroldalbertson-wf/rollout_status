@@ -1,0 +1,218 @@
+// ********************************************************
+
+////
+/// Deprecated Font and WebFont configs.
+///
+/// DO NOT USE THESE!!! They were deprecated in `1.5.0` and will be removed no later than `2.0.0`.
+/// ---
+/// @access private
+/// @group core.internals.typography
+/// @deprecated Deprecated in `1.5.0`, will be removed completely in `2.0.0`. If you point to any font assets in the `helvetica/` or `gibson/` folder - you will get a 404.
+/// @todo Remove in the `2.0.0` release.
+////
+
+// NOTE:
+
+//
+// ********************************************************
+
+///
+/// CSS `text-rendering` value that prevents Gibson ligatures from disappearing
+/// ---
+/// @type String
+///
+$webfont-rendering: auto;
+
+///
+/// Difference between Gibson and Helvetica / Arial's baseline leading. Used to ensure that components using Gibson still have vertically centered text.
+/// ---
+/// @since 0.4.8
+/// @type Number
+/// @group core.internals.size.box-model
+///
+$gibson-baseline-offset: 1px;
+
+///
+/// Path where the Helvetica Webfont files live relative to projects font directory declared in `config.rb`.
+/// ---
+/// @since 0.1.0
+/// @type String
+///
+$helvetica-font-dir: "helvetica/";
+
+///
+/// Name that will be used to reference the Helvetica Webfont at the beginning of a font stack list.
+/// ---
+/// @since 0.1.0
+/// @type String
+///
+$helvetica-font-family-name: "HelveticaNeueLT";
+
+///
+/// Font stack used for the Helvetica Webfont in `font-family` rules.
+/// ---
+/// @since 0.1.0
+/// @type List
+/// ---
+/// @requires {variable} $helvetica-font-family-name
+/// @requires {variable} $font-family-base
+///
+$font-family-helvetica: $helvetica-font-family-name, $font-family-base;
+
+///
+/// Path where the Gibson Webfont files live relative to projects font directory declared in `config.rb`.
+/// ---
+/// @since 0.1.0
+/// @type String
+///
+$gibson-font-dir: "gibson/";
+
+///
+/// Name that will be used to reference the Gibson Webfont at the beginning of a font stack list.
+/// ---
+/// @since 0.1.0
+/// @type String
+///
+$gibson-font-family-name: "Gibson";
+
+///
+/// Font stack used for the Gibson Webfont in `font-family` rules.
+/// ---
+/// @since 0.1.0
+/// @type List
+/// ---
+/// @requires {variable} $gibson-font-family-name
+/// @requires {variable} $font-family-base
+///
+$font-family-gibson: $gibson-font-family-name, $font-family-base;
+
+
+///
+/// Global configuration for Helvetica Webfont used in Web Skin.
+/// ---
+/// @since 1.0.0
+/// @type Map
+/// ---
+/// @requires {variable} $helvetica-font-dir
+/// @requires {variable} $helvetica-font-family-name
+/// @requires {variable} $webfont-weight-light
+/// @requires {variable} $webfont-weight-semibold
+/// ---
+/// @prop {String}   dir           [$helvetica-font-dir]
+/// @prop {String}   family-name   [$helvetica-font-family-name]
+/// @prop {Map}      faces                                       - Map of all the font-face variations within the Helvetica family, and their properties.
+///
+$helvetica-font: (
+    'dir': $helvetica-font-dir,
+    'family-name': $helvetica-font-family-name,
+    'faces': (
+        'light': (
+            'file':   '#{$helvetica-font-dir}helvetica-light',
+            'weight': $webfont-weight-light,
+            'style':  normal
+        ),
+        'light-narrow': (
+            'file':   '#{$helvetica-font-dir}helvetica-light-narrow',
+            'weight': $webfont-weight-light,
+            'style':  normal
+        ),
+        'light-italic': (
+            'file':   '#{$helvetica-font-dir}helvetica-light',
+            'weight': $webfont-weight-light,
+            'style':  italic
+        ),
+        'regular': (
+            'file':   '#{$helvetica-font-dir}helvetica-regular',
+            'weight': normal,
+            'style':  normal
+        ),
+        'regular-italic': (
+            'file':   '#{$helvetica-font-dir}helvetica-regular-italic',
+            'weight': normal,
+            'style':  italic
+        ),
+        'semibold': (
+            'file':   '#{$helvetica-font-dir}helvetica-semibold',
+            'weight': $webfont-weight-semibold,
+            'style':  normal
+        ),
+        'semibold-italic': (
+            'file':   '#{$helvetica-font-dir}helvetica-semibold-italic',
+            'weight': $webfont-weight-semibold,
+            'style':  italic
+        ),
+        'bold': (
+            'file': '#{$helvetica-font-dir}helvetica-bold',
+            'weight': bold,
+            'style':  normal
+        ),
+        'bold-italic': (
+            'file':   '#{$helvetica-font-dir}helvetica-bold-italic',
+            'weight': bold,
+            'style':  italic
+        )
+    )
+);
+
+///
+/// Global configuration for Gibson Webfonts used in Web Skin.
+/// ---
+/// @since 1.0.0
+/// @type Map
+/// ---
+/// @requires {variable} $gibson-font-dir
+/// @requires {variable} $gibson-font-family-name
+/// @requires {variable} $webfont-weight-light
+/// @requires {variable} $webfont-weight-semibold
+/// ---
+/// @prop {String}   dir         [$gibson-font-dir]
+/// @prop {String}   family-name [$gibson-font-family-name]
+/// @prop {Map}      faces                                   - Map of all the font-face variations within the Gibson family, and their properties.
+///
+$gibson-font: (
+    'dir': $gibson-font-dir,
+    'family-name': $gibson-font-family-name,
+    'faces': (
+        'light': (
+            'file':   '#{$gibson-font-dir}Gibson-Light',
+            'weight': $webfont-weight-light,
+            'style':  normal
+        ),
+        'light-italic': (
+            'file':   '#{$gibson-font-dir}Gibson-LightItalic',
+            'weight': $webfont-weight-light,
+            'style':  italic
+        ),
+        'regular': (
+            'file':   '#{$gibson-font-dir}Gibson-Regular',
+            'weight': normal,
+            'style':  normal
+        ),
+        'regular-italic': (
+            'file':   '#{$gibson-font-dir}Gibson-Italic',
+            'weight': normal,
+            'style':  italic
+        ),
+        'semibold': (
+            'file':   '#{$gibson-font-dir}Gibson-SemiBold',
+            'weight': $webfont-weight-semibold,
+            'style':  normal
+        ),
+        'semibold-italic': (
+            'file':   '#{$gibson-font-dir}Gibson-SemiBoldItalic',
+            'weight': $webfont-weight-semibold,
+            'style':  italic
+        ),
+        // our "bold" IS semibold
+        'bold': (
+            'file':   '#{$gibson-font-dir}Gibson-SemiBold',
+            'weight': bold,
+            'style':  normal
+        ),
+        'bold-italic': (
+            'file':   '#{$gibson-font-dir}Gibson-SemiBoldItalic',
+            'weight': bold,
+            'style':  italic
+        )
+    )
+);

@@ -1,0 +1,278 @@
+// ********************************************************
+
+////
+/// Configuration for Web Skin Navbar "Ribbon" Component (a.k.a "Tabbed Toolbar")
+/// ---
+/// @access public
+/// @group core.components.navbars-ribbon
+/// @link http://bit.ly/webskin-navbars-ribbon Navbar Ribbon ("Tabbed Toolbar") component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/navbars-ribbon-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function extend,
+                                                function to-px,
+                                                function icon-size-base-24);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE 'RIBBON' NAVBAR
+//
+// ********************************************************
+    ///
+    /// Base configuration for `.ribbon-nav-container`.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $navbar-base-config
+    /// @requires {variable} $nav-link-config
+    /// @requires {variable} $zc-gray-60
+    /// ---
+    /// @prop {Color}   bg                  [#ffffff]   - Default background color
+    /// @prop {Number}  padding-vertical    [4px]       - Default vertical padding
+    /// @prop {Number}  padding-horizontal  [16px]      - Default horizontal padding
+    /// @prop {List}    padding             [3px 16px]  - Combination of vertical and horizontal padding. _Added via `@extend`_
+    /// @prop {Number}  height              [63px]      - Total height
+    ///
+    /// @prop {Number} tab-content-min-height [57px] - Calculated min height of `.tab-content` elems nested within `.ribbon-nav-container`. _Added via `@extend`_
+    ///
+    /// @prop {Number} bd-bottom-width [.1rem]
+    /// @prop {Color}  bd-bottom-color [#cbcbcb]
+    ///
+    /// @prop {Map} viewport-breakpoint-keys - Map of breakpoint size keys that represent how many different size variations there are for child components like buttons / action groups. Since `1.4.0`
+    ///
+    $nav-ribbon-base-config: (
+        'bg': get($navbar-base-config, 'bg'),
+        'padding-vertical': get($nav-link-config, 'platform-bd-width'),
+        'padding-horizontal': 16px,
+        'padding': null, // actual calculated value inserted via @extend
+        'height': 63px,
+        'tab-content-min-height': null, // actual calculated value inserted via @extend
+        'bd-bottom-width': .1rem,
+        'bd-bottom-color': $zc-gray-60,
+        'viewport-breakpoint-keys': (
+            'xs': null,
+            'sm': 'sm'
+        )
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $nav-ribbon-base-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $nav-ribbon-base-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $nav-ribbon-padding: get($nav-ribbon-base-config, 'padding-vertical') get($nav-ribbon-base-config, 'padding-horizontal');
+        $nav-ribbon-tab-content-min-height: get($nav-ribbon-base-config, 'height') - (get($nav-ribbon-base-config, 'padding-vertical') * 2);
+
+        // ----- EXTEND ribbon base config with calc'd values ----- //
+        $nav-ribbon-base-config: extend($nav-ribbon-base-config,
+            (
+                'padding': $nav-ribbon-padding,
+                'tab-content-min-height': $nav-ribbon-tab-content-min-height
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   'RIBBON' NAVBAR BUTTONS
+//
+// ********************************************************
+    ///
+    /// Configuration for `.btn-vertical` components nested within `.ribbon-nav-container`.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {function} to-px
+    /// @requires {function} icon-size-base-24
+    /// @requires {variable} $dropdown-menu-bd-width
+    /// @requires {variable} $btn-config
+    /// @requires {variable} $nav-ribbon-base-config
+    /// @requires {variable} $navbar-link-config
+    /// @requires {variable} $link-color-hover
+    /// @requires {variable} $link-color-pressed
+    /// @requires {variable} $zc-gray-70
+    /// @requires {variable} $zc-gray-80
+    /// @requires {variable} $font-family-base
+    /// @requires {variable} $dropdown-menu-bd-width
+    /// ---
+    /// @prop {Color}  text-color           [#8a8a8a]
+    /// @prop {Color}  text-color-hover     [#0094ff]
+    /// @prop {Color}  text-color-press     [#0085e6]
+    /// @prop {Color}  caret-color          [#b2b2b2]
+    ///
+    /// @prop {Number} margin-bottom        [-1px]      - Default bottom margin to ensure that top border of `.dropdown-menu` is overlapped
+    /// @prop {Number} padding-top          [6px]       - Default top padding
+    /// @prop {Number} padding-bottom       [6px]       - Default bottom padding
+    ///
+    /// @prop {Map}    padding-horizontal - Responsive horizontal padding values based on the width of the viewport
+    /// @prop {Number} padding-horizontal.xs [4px]  - Default horizontal padding value
+    /// @prop {Number} padding-horizontal.sm [6px]  - Horizontal padding value at screen sizes above the `$screen-sm` breakpoint. _a.k.a Tablets_
+    /// @prop {Number} padding-horizontal.md [6px]  - DEPRECATED. Will be removed in `2.0.0`
+    ///
+    /// @prop {List}    label-font-family            - Font family for the `<small>` "label" elem within the `.btn-vertical` component
+    /// @prop {String}  label-font-weight   [normal] - Font weight for the `<small>` "label" elem within the `.btn-vertical` component
+    /// @prop {Number}  label-font-size     [10px]   - Font size for the `<small>` "label" elem within the `.btn-vertical` component
+    /// @prop {Number}  label-line-height   [14px]   - Line height for the `<small>` "label" elem within the `.btn-vertical` component
+    ///
+    /// @prop {Number}  height              [57px]   - Calculated height for the button
+    /// @prop {Number}  height-natural      [49px]   - The height that the `.btn-vertical` element containing a 24px icon and a `.btn-label-sm` would be without the fixed `height` applied.  Used to calculate the amount of vertical offset adjustment is needed for the `.caret` element.
+    ///
+    $nav-ribbon-btn-config: (
+        'text-color': $zc-gray-80,
+        'text-color-hover': $link-color-hover,
+        'text-color-press': $link-color-pressed,
+        'caret-color': $zc-gray-70,
+        //
+        'margin-bottom': -$dropdown-menu-bd-width,
+        'padding-top': get-deep($btn-config, 'padding.base.vertical'), // TODO: Remove in 2.0.0
+        'padding-bottom': get($nav-ribbon-base-config, 'padding-vertical'), // TODO: Remove in 2.0.0
+        'padding-horizontal': (
+            'xs': 4px,
+            'sm': 6px,
+            'md': 6px // TODO: Remove in 2.0.0
+        ),
+        //
+        'label-font-family': $font-family-base, // TODO: Remove in 2.0.0
+        'label-font-weight': normal, // TODO: Remove in 2.0.0
+        'label-font-size': to-px(get($btn-config, 'vertical-label-font-size')), // TODO: Remove in 2.0.0
+        'label-line-height': to-px(get($btn-config, 'vertical-label-line-height')), // TODO: Remove in 2.0.0
+        'height': get($nav-ribbon-base-config, 'tab-content-min-height') + ($dropdown-menu-bd-width * 2),
+        'height-natural': (get-deep($btn-config, 'padding.base.vertical') * 2) + to-px(get($btn-config, 'vertical-label-line-height')) + icon-size-base-24() + to-px(abs($btn-vertical-icon-top-offset))
+    ) !default;
+
+    ///
+    /// Configuration for `.btn-group` components wrapping around multiple `.btn-vertical` components nested within `.ribbon-nav-container`.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {variable} $navbar-base-config
+    /// @requires {variable} $nav-ribbon-btn-config
+    /// @requires {variable} $btn-config
+    /// @requires {variable} $icon-size-config
+    /// ---
+    /// @prop {Color}  divider-bd-color     [#e3e3e3] - Border color of `.btn-group::after`
+    /// @prop {Number} divider-bd-width     [1px]     - Border width of `.btn-group::after`
+    /// @prop {Number} divider-height       [40px]    - Height of `.btn-group::after`
+    /// @prop {Number} divider-offset-top   [5px]     - Top offset of `.btn-group::after`
+    ///
+    $nav-ribbon-btn-group-config: (
+        'divider-bd-color': get($navbar-base-config, 'bd-color'),
+        'divider-bd-width': 1px,
+        'divider-height': 40px,
+        // Total desired spacing between the top edge of the divider and the bottom edge of
+        // the navbar is 8px, but we get some of it from the top padding of the `.ribbon-nav-container`.
+        'divider-offset-top': 8px - get($nav-ribbon-base-config, 'padding-vertical')
+    ) !default;
+
+    ///
+    /// Configuration for non-vertical buttons / button toolbars / button groups that can be
+    /// arranged in one or more rows within a `.ribbon-action-group` element.
+    /// ---
+    /// @since 1.4.0
+    /// @link https://github.com/Workiva/web-skin/issues/1241 - Multiple row / non-vertical button spacing specficiation
+    /// ---
+    /// @prop {Map}     spacing-horizontal            - Horizontal spacing amount between adjacent sibling `.ribbon-action-group__rows`, `.btn-toolbar`, `.btn-group` and `.btn` elements within a single `.ribbon-action-group` element.
+    /// @prop {Number}  spacing-horizontal.xs [.8rem] - Horizontal spacing amount at all viewport widths
+    ///
+    /// @prop {Map}     spacing-vertical            - Vertical spacing amount between adjacent sibling `.ribbon-action-group__row` elements within a single `.ribbon-action-group__rows` element.
+    /// @prop {Number}  spacing-vertical.xs [.4rem] - Vertical spacing amount at all viewport widths
+    ///
+    $nav-ribbon-action-group-row-config: (
+        // Currently there are no responsive padding amounts here based on viewport widths,
+        // but we'll implement the config as a map for future responsive considerations.
+        'spacing-horizontal': (
+            'xs': .8rem
+        ),
+        'spacing-vertical': (
+            'xs': .4rem
+        )
+    );
+
+    // Alias the horizontal / vertical spacing values for now since there are no responsive breakpoint variations
+    $nav-ribbon-action-group-rows-spacing-horizontal: get-deep($nav-ribbon-action-group-row-config, 'spacing-horizontal.xs');
+    $nav-ribbon-action-group-rows-spacing-vertical: get-deep($nav-ribbon-action-group-row-config, 'spacing-vertical.xs');
+
+
+// ********************************************************
+//
+//   'RIBBON' NAVBAR TAB LINKS
+//
+//   -> e.g. the tab name / header for each tab
+//      content area within the toolbar
+//
+// ********************************************************
+    ///
+    /// Configuration for `.nav .hitarea` elems within `.ribbon-menu-tabs`. These provide the "title" / "heading" of each `.tab-content` area within the "ribbon" navbar comopnents.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {variable} $nav-link-config
+    /// @requires {variable} $navbar-link-config
+    /// ---
+    /// @prop {Number} bd-width          [3px]
+    /// @prop {Color}  bd-color-active   [#66cc00]
+    /// @prop {Color}  bg-active         [#ffffff]
+    /// @prop {Color}  text-color-active [#444444]
+    ///
+    /// @prop {Number} padding-bottom [3px] - Calculated bottom padding amount adjusted based on the width of the bottom border. _Added via `@extend`_
+    ///
+    $nav-ribbon-tab-link-config: (
+        'bd-width': 3px,
+        'bd-color-active': get($nav-link-config, 'platform-bd-color'),
+        'bg-active': get($nav-link-config, 'bg-active'),
+        'text-color-active': get($nav-link-config, 'text-color-active'),
+        'padding-bottom': null // actual calculated value inserted via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $nav-ribbon-tab-link-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $nav-ribbon-tab-link-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $nav-ribbon-tab-link-padding-bottom: get($navbar-link-config, 'padding-vertical') - get($nav-ribbon-tab-link-config, 'bd-width');
+
+        // ----- EXTEND ribbon tab link config with calc'd values ----- //
+        $nav-ribbon-tab-link-config: extend($nav-ribbon-tab-link-config,
+            (
+                'padding-bottom': $nav-ribbon-tab-link-padding-bottom
+            )
+        );

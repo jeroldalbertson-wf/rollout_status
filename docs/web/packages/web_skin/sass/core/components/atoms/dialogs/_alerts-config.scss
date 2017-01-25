@@ -1,0 +1,256 @@
+// ********************************************************
+
+////
+/// Alert dialog component configuration
+/// ---
+/// @access public
+/// @group core.components.alerts
+/// @link http://bit.ly/webskin-alerts Alert dialog component spec
+/// @link http://bit.ly/webskin-alert-color-variations Alert dialog component color variation spec
+/// @link http://bit.ly/webskin-alerts-toast Alert dialog "toast" variation spec
+////
+
+//
+//   DEPENDENCIES:
+//
+    @import './tooltips-config';
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/alerts-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function extend,
+                                                function box-model-height,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   ALERT COLOR VARIATION CONFIGS
+//
+// ********************************************************
+    @import 'config/alert-color-config';
+
+
+
+// ********************************************************
+//
+//   GLOBAL ALERT CONFIG
+//
+// ********************************************************
+    ///
+    /// Global collection of configurations for `.alert` components.
+    /// _Extends `$dialog-size-base-config`_
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @todo Write a unit test that asserts that min-height-sm is the same as the height of a default `.btn`
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {function} extend
+    /// @requires {function} to-rem
+    /// @requires {variable} $dialog-config
+    /// @requires {variable} $dialog-size-base-config
+    /// @requires {variable} $dialog-size-sm-config
+    /// @requires {variable} $btn-config
+    /// @requires {variable} $alert-colors
+    /// @requires {variable} $base-elem-margin-vertical
+    /// @requires {variable} $padding-base-vertical
+    /// @requires {variable} $tooltip-config
+    /// @requires {variable} $global-component-platform-bd-width
+    /// ---
+    /// @prop {Number} bd-width             [0]         - Default border width
+    /// @prop {Number} bd-radius            [0]         - Default border radius
+    /// @prop {Number} platform-bd-width    [.3rem]     - Width of left edge "platform" border for inline alerts. Since `1.5.0`
+    /// @prop {Number} spacing-vertical     [10px]      - Default amount of negative space between adjacent `.alert` elems. Most commonly used in-combination with `.alert-toast`
+    /// @prop {Number} padding-vertical     [17px]      - Default vertical padding
+    /// @prop {Number} padding-horizontal   [17px]      - Default horizontal padding
+    /// @prop {Number} padding-left         [20px]      - Default left padding of an "inline" `.alert` - adjusted to account for the inset left platform border.
+    /// @prop {List}   padding              [17px 17px 17px 20px] - Combination of vertical and horizontal padding. _Added via `@extend`_
+    /// @prop {List}   padding-toast        [17px 17px] - Combination of vertical and horizontal padding for an `.alert-toast`. _Added via `@extend`_
+    /// @prop {Number} min-height           [54px]      - Calculated minimum height. _Added via `@extend`_
+    ///
+    /// @prop {Number} padding-vertical-sm      [7px]       - Vertical padding of a `.alert-sm` size variation
+    /// @prop {Number} padding-horizontal-sm    [9px]       - Horizontal padding of a `.alert-sm` size variation
+    /// @prop {Number} padding-left-sm          [12px]      - Left padding of an "inline" `.alert-sm` size variation - adjusted to account for the inset left platform border.
+    /// @prop {List}   padding-sm               [7px 9px 7px 12px]   - Combination of vertical and horizontal padding of a `.alert-sm` size variation. _Added via `@extend`_
+    /// @prop {List}   padding-sm-toast         [7px 9px]   - Combination of vertical and horizontal padding of an `.alert-toast.alert-sm` size variation. _Added via `@extend`_
+    /// @prop {Number} min-height-sm            [34px]      - Calculated minimum height of a `.alert-sm` size variation. _Added via `@extend`_
+    ///
+    /// @prop {Number} padding-vertical-xs      [.5rem]         - Vertical padding of a `.alert-xs` size variation
+    /// @prop {Number} padding-horizontal-xs    [.9rem]         - Horizontal padding of a `.alert-xs` size variation
+    /// @prop {Number} padding-left-sm          [1.2rem]        - Left padding of an "inline" `.alert-xs` size variation - adjusted to account for the inset left platform border.
+    /// @prop {List}   padding-xs               [.5rem .9rem .5rem 1.2rem]   - Combination of vertical and horizontal padding of a `.alert-xs` size variation. _Added via `@extend`_
+    /// @prop {List}   padding-xs-toast         [.5rem .9rem]   - Combination of vertical and horizontal padding of an `.alert-toast.alert-xs` size variation. _Added via `@extend`_
+    /// @prop {Number} min-height-xs            [2.4rem]        - Calculated minimum height of a `.alert-sm` size variation. _Added via `@extend`_
+    /// @prop {Number} font-size-xs             [1.2rem]        - Font size for a `.alert-xs` size variation
+    /// @prop {Number} line-height-xs           [1.2]           - Line height for a `.alert-xs` size variation
+    /// @prop {Number} bd-radius-xs             [0]             - Border radius for a `.alert-xs` size variation
+    ///
+    /// @prop {Number} close-btn-width      [42px] - Calculated width of a `.close` button nested within a `.alert-dismissible`. _Added via `@extend`_
+    /// @prop {Number} close-btn-height     [52px] - Calculated height of a `.close` button nested within a `.alert-dismissible`. _Added via `@extend`_
+    /// @prop {Number} close-btn-width-sm   [34px] - Calculated width of a `.close` button nested within a `.alert-sm.alert-dismissible`. _Added via `@extend`_
+    /// @prop {Number} close-btn-height-sm  [32px] - Calculated height of a `.close` button nested within a `.alert-sm.alert-dismissible`. _Added via `@extend`_
+    /// @prop {Number} close-btn-width-xs   [2.4rem] - Calculated width of a `.close` button nested within a `.alert-xs.alert-dismissible`. _Added via `@extend`_
+    /// @prop {Number} close-btn-height-xs  [2.2rem] - Calculated height of a `.close` button nested within a `.alert-xs.alert-dismissible`. _Added via `@extend`_
+    ///
+    /// @prop {List}   heading-margin         [0 0 16px 0]    - Margin of an `.alert-heading` elem. _Added via `@extend`_
+    /// @prop {Number} heading-font-size      [18px]          - Font size of an `.alert-heading` elem
+    /// @prop {String} heading-font-weight    [normal]        - Font weight of an `.alert-heading` elem
+    /// @prop {Number} heading-line-height    [1]             - Line height of an `.alert-heading` elem
+    /// @prop {Number} heading-padding-top    [0]             - Top padding of an `.alert-heading` elem
+    /// @prop {Number} heading-padding-bottom [0]             - Bottom padding of an `.alert-heading` elem
+    ///
+    /// @prop {Number} toast-single-width [100%]    - Default width of a "global" `.alert-toast` nested in the `<body>`
+    /// @prop {Number} toaster-max-width  [350px]   - Default width of the `.alert-toaster` used to contain multiple alerts
+    ///
+    /// @prop {Map}    colors - Color configuration map for `.alert` color variations
+    ///
+    $alert-config: (
+        'bd-width': 0,
+        'bd-radius': 0,
+        'platform-bd-width': $global-component-platform-bd-width,
+        'spacing-vertical': $base-elem-margin-vertical,
+        'padding-vertical': get($dialog-size-base-config, 'content-padding') + 1,
+        'padding-horizontal': get($dialog-size-base-config, 'content-padding') + 1,
+        'padding-left': null, // actual calculated value inserted via @extend
+        'padding': null, // actual calculated value inserted via @extend
+        'padding-toast': null, // actual calculated value inserted via @extend
+        'min-height': null, // actual calculated value inerted via @extend
+        // small size variation
+        'padding-vertical-sm': $padding-base-vertical + 1,
+        'padding-horizontal-sm': get($dialog-size-sm-config, 'content-padding') + 1,
+        'padding-left-sm': null, // actual calculated value inserted via @extend
+        'padding-sm': null, // actual calculated value inserted via @extend
+        'padding-sm-toast': null, // actual calculated value inserted via @extend
+        'min-height-sm': null, // actual calculated value inserted via @extend
+        // xs size variation
+        'padding-vertical-xs': to-rem(nth(get($tooltip-config, 'content-padding'), 1) + 1),
+        'padding-horizontal-xs': to-rem(nth(get($tooltip-config, 'content-padding'), 2) + 1),
+        'padding-left-xs': null, // actual calculated value inserted via @extend
+        'padding-xs': null, // actual calculated value inserted via @extend
+        'padding-xs-toast': null, // actual calculated value inserted via @extend
+        'min-height-xs': null, // actual calculated value inserted via @extend
+        'font-size-xs': to-rem(get($tooltip-config, 'font-size')),
+        'line-height-xs': get($tooltip-config, 'line-height'),
+        'bd-radius-xs': 0,
+        // close button
+        'close-btn-width': null, // actual calculated value inerted via @extend
+        'close-btn-height': null, // actual calculated value inerted via @extend
+        'close-btn-width-sm': null, // actual calculated value inerted via @extend
+        'close-btn-height-sm': null, // actual calculated value inerted via @extend
+        'close-btn-width-xs': null, // actual calculated value inerted via @extend
+        'close-btn-height-xs': null, // actual calculated value inerted via @extend
+        // alert-heading
+        'heading-margin': null, // actual calculated value inerted via @extend
+        'heading-font-size': get($dialog-size-base-config, 'header-font-size'),
+        'heading-font-weight': get($dialog-size-base-config, 'header-font-weight'),
+        'heading-line-height': get($dialog-size-base-config, 'header-line-height'),
+        'heading-padding-top': 0,
+        'heading-padding-bottom': 0,
+        // toast alerts
+        'toast-single-width': 100%,
+        'toaster-max-width': 350px,
+        // color config
+        'colors': $alert-colors
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $alert-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $alert-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $alert-padding-left: to-rem(get($alert-config, 'padding-horizontal')) + get($alert-config, 'platform-bd-width');
+        $alert-padding: get($alert-config, 'padding-vertical') get($alert-config, 'padding-horizontal') get($alert-config, 'padding-vertical') $alert-padding-left;
+        $alert-padding-toast: get($alert-config, 'padding-vertical') get($alert-config, 'padding-horizontal'); // No left platform border, so no need to use the adjusted left padding
+        $alert-min-height: box-model-height($padding-vertical: get($alert-config, 'padding-vertical'), $bd-width: get($alert-config, 'bd-width'));
+        $alert-close-btn-width: $alert-min-height - get($alert-config, 'padding-horizontal') + 4;
+        $alert-close-btn-height: $alert-min-height - (get($alert-config, 'bd-width') * 2);
+        $alert-sm-padding-left: to-rem(get($alert-config, 'padding-horizontal-sm')) + get($alert-config, 'platform-bd-width');
+        $alert-sm-padding: get($alert-config, 'padding-vertical-sm') get($alert-config, 'padding-horizontal-sm') get($alert-config, 'padding-vertical-sm') $alert-sm-padding-left;
+        $alert-sm-padding-toast: get($alert-config, 'padding-vertical-sm') get($alert-config, 'padding-horizontal-sm'); // No left platform border, so no need to use the adjusted left padding
+        $alert-sm-min-height: box-model-height($padding-vertical: get($alert-config, 'padding-vertical-sm'), $bd-width: get($alert-config, 'bd-width'));
+        $alert-sm-close-btn-width: $alert-sm-min-height;
+        $alert-sm-close-btn-height: $alert-sm-min-height - (get($alert-config, 'bd-width') * 2);
+        $alert-xs-padding-left: to-rem(get($alert-config, 'padding-horizontal-xs')) + get($alert-config, 'platform-bd-width');
+        $alert-xs-padding: get($alert-config, 'padding-vertical-xs') get($alert-config, 'padding-horizontal-xs') get($alert-config, 'padding-vertical-xs') $alert-xs-padding-left;
+        $alert-xs-padding-toast: get($alert-config, 'padding-vertical-xs') get($alert-config, 'padding-horizontal-xs'); // No left platform border, so no need to use the adjusted left padding
+        $alert-xs-min-height: to-rem(box-model-height(
+            $font-size: to-px(get($alert-config, 'font-size-xs')),
+            $line-height: get($alert-config, 'line-height-xs'),
+            $padding-vertical: to-px(get($alert-config, 'padding-vertical-xs')),
+            $bd-width: get($alert-config, 'bd-width')
+        ));
+        $alert-xs-close-btn-width: $alert-xs-min-height;
+        $alert-xs-close-btn-height: $alert-xs-min-height - to-rem(get($alert-config, 'bd-width') * 2);
+        $alert-heading-margin: 0 0 get($alert-config, 'padding-vertical') 0;
+
+        // ----- EXTEND alert config with calc'd values ----- //
+        $alert-config: extend($alert-config,
+            (
+                'padding': $alert-padding,
+                'padding-toast': $alert-padding-toast,
+                'min-height': $alert-min-height,
+                //
+                'padding-sm': $alert-sm-padding,
+                'padding-sm-toast': $alert-sm-padding-toast,
+                'min-height-sm': $alert-sm-min-height,
+                //
+                'padding-xs': $alert-xs-padding,
+                'padding-xs-toast': $alert-xs-padding-toast,
+                'min-height-xs': $alert-xs-min-height,
+                //
+                'close-btn-width': $alert-close-btn-width,
+                'close-btn-height': $alert-close-btn-height,
+                'close-btn-width-sm': $alert-sm-close-btn-width,
+                'close-btn-height-sm': $alert-sm-close-btn-height,
+                'close-btn-width-xs': $alert-xs-close-btn-width,
+                'close-btn-height-xs': $alert-xs-close-btn-height,
+                //
+                'heading-margin': $alert-heading-margin,
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED CONFIG ALIAS / SHORTHAND
+//
+//   -> DO NOT MODIFY THESE (modify the map config)
+//
+// ********************************************************
+    $alert-bd-radius: get($alert-config, 'bd-radius');
+    $alert-bd-width: get($alert-config, 'bd-width');
+    $alert-platform-bd-width: get($alert-config, 'platform-bd-width');
+
+    $alert-padding-vertical: get($alert-config, 'padding-vertical');
+    $alert-padding-horizontal: get($alert-config, 'padding-horizontal');
+
+    $alert-toast-margin: get($alert-config, 'spacing-vertical');
+
+    $alert-sm-padding-vertical: get($alert-config, 'padding-vertical-sm');
+    $alert-sm-padding-horizontal: get($alert-config, 'padding-horizontal-sm');
+    $alert-sm-padding: get($alert-config, 'padding-sm');
+
+    $alert-heading-font-size: get($alert-config, 'heading-font-size');
+    $alert-heading-font-weight: get($alert-config, 'heading-font-weight');
+    $alert-heading-line-height: get($alert-config, 'heading-line-height');
+    $alert-heading-padding-top: get($alert-config, 'heading-padding-top');
+    $alert-heading-padding-bottom: get($alert-config, 'heading-padding-bottom');

@@ -1,0 +1,26 @@
+// ********************************************************
+
+////
+/// Dropdown submenu (`.dropdown-submenu`) component configuration
+/// ---
+/// @since 1.0.0
+/// @group peripherals.components.dropdowns
+/// @todo add a link to the component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/dropdown-submenu/atoms/dropdown-submenu-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+$dd-submenu-size-config: $dropdown-menu-base-size-config;
+$dd-submenu-caret-align-top: floor((get($dd-submenu-size-config, 'link-height') - get-deep($caret-size-config, 'base.bd-width')) / 2) - 2;
+$dd-submenu-caret-align-right: get($dd-submenu-size-config, 'link-padding-horizontal');

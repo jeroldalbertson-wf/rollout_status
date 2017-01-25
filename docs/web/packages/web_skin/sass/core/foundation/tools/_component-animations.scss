@@ -1,0 +1,101 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/tools/component-animations';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $component-animations-module-config:  'core/api/config/defaults/animation';
+    $component-animations-module-helpers: 'core/api/helpers/animations';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $component-animations-module-config,
+                                          $component-animations-module-helpers);
+//
+// ********************************************************
+
+
+.fade {
+    @include transition(opacity $default-fade-speed linear);
+    @include activate-gpu();
+    @include opacity(0);
+
+    @at-root {
+        //
+        // The `.in` CSS class should reveal semi-opaque / hidden
+        // items in the dom, with or without the presence of the `.fade` class.
+        //
+        .in {
+            @include opacity(1);
+        }
+    }
+}
+
+#{get($collapsing-selectors, 'base')} {
+    @include collapsed();
+
+    &#{get($collapsing-selectors, 'expanded')} {
+        @include collapse-in();
+    }
+}
+
+@include collapse-table-elems-in();
+
+#{get($collapsing-selectors, 'transition')} {
+    @include collapsing();
+}
+
+
+.slide {
+    &.down {
+        @include slide-down();
+    }
+    &.up {
+        @include slide-up();
+    }
+    &.left {
+        @include slide-left();
+    }
+    &.right {
+        @include slide-right();
+    }
+
+    // Fixed variations
+    &.fixed-top {
+        @include slide-down($position: fixed);
+    }
+    &.fixed-bottom {
+        @include slide-up($position: fixed);
+    }
+}
+
+
+.spin {
+    @include activate-gpu();
+    &.active {
+        @include spin-animation($speed: 1s);
+    }
+
+    // @todo isolate these properties so they are not applied to every .spin element
+    // many times, this is used in conjunction with a refresh icon
+    // which we want to use to signify success / failure
+    @include transition-property(color);
+    @include transition-timing-function(ease-in-out);
+    @include transition-duration(1s); // for fading out
+}
+.icon.spin {
+    position: relative;
+    top: $icon-pseudo-shift-vertical;
+    margin: 0;
+    padding: 0; // make up for the icon offset since the glyph itself is not offset
+    &:before, &:after {
+        top: 0 !important;
+        left: 0 !important;
+        margin: 0 !important;
+        // make sure the progress-spinner doesn't get "off-kilter"
+        padding: 0;
+        text-align: center;
+    }
+}

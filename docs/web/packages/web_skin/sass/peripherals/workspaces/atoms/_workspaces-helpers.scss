@@ -1,0 +1,27 @@
+// ********************************************************
+
+////
+/// Workspaces component helpers
+/// ---
+/// @since 1.3.0
+/// @access public
+/// @group peripherals.components.workspaces
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/atoms/workspaces-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCIES:
+//
+    @import 'workspaces-config';
+//
+// ********************************************************
+
+
+@import 'helpers/sidebars';
+@import 'helpers/sidebar-pills';
+@import 'helpers/sidebar-hoverable-skins';
+@import 'helpers/sidebar-transitions';

@@ -1,0 +1,127 @@
+// ********************************************************
+//
+//   Custom layout in which we present
+//   all the Workiva / Wdesk brand
+//   assets like favicons, etc...
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/layout/getting-started-branding';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.brand-consistency-frame {
+    position: relative;
+
+    .img-reveal-on-hover {
+        @include img-reveal-on-hover();
+        // want the transition on hover in and hover out
+        @include transition(opacity .6s ease .1s);
+    }
+
+    // when frame is hovered - show the one that
+    // has details about all devices
+    #{$hover},
+    &.dl-row-is-hovered {
+        .img-reveal-on-hover {
+            @include opacity(1);
+        }
+    }
+
+    // the others are shown when the user hovers the
+    // row that allows them to download a set of icons
+    .img-reveal-on-dl-row-hover {
+        @include img-reveal-on-hover();
+
+        // class added via .js logic in application.js
+        // when related download row is hovered
+        &.reveal-img {
+            @include opacity(1);
+        }
+    }
+
+    //
+    // in order to ensure there is no severe flicker as
+    // the user hovers the various download table rows
+    // reduce the opacity of the main image that appears
+    // when nothing is hovered while the table is hovered
+    //
+    // -> class added via js logic in application.js
+    //
+    &.dl-row-is-hovered {
+        .img-base {
+            @include opacity(.05);
+        }
+    }
+}
+
+.branding-downloads-table .sizes {
+    .list-unstyled {
+        -moz-column-count: 2;
+        -webkit-column-count: 2;
+        column-count: 2;
+
+        -webkit-column-gap: .5em;
+        -moz-column-gap: .5em;
+        column-gap: .5em;
+
+        width: 13rem;
+        margin: 0 auto;
+
+        li {
+            // bottom margin to match up with column gap
+            line-height: 1;
+            margin-bottom: .5em;
+        }
+    }
+
+    .label {
+        display: inline-block;
+        width: 100%;
+        padding: .35em .6em; // beef up the padding a bit
+        font-weight: normal;
+        // don't reverse the text
+        color: $zc-gray;
+        background-color: mix($black, $body-bg, 10%);
+        background-color: rgba($black, .1);
+
+        #{$link-hover-focus} {
+            text-decoration: none;
+            color: $white;
+            background-color: $tooltip-bg;
+        }
+    }
+
+    a.label {
+        cursor: pointer;
+    }
+}
+
+.branding-downloads-table {
+    // make sure the tooltip for the mstile assets
+    // has a green bg so it looks like the finished product
+    [data-download="mstiles"] {
+        .tooltip .inner {
+            background-color: $zc-green;
+        }
+    }
+
+    .mock-mstile {
+        display: block;
+        width: 8rem;
+        height: 8rem;
+        position: relative;
+        background-color: $zc-green;
+
+        img {
+            top: 0;
+            left: 50%;
+            width: 7.5rem;
+            height: 7.5rem;
+            margin-left: -3.8rem;
+            position: absolute;
+        }
+    }
+}

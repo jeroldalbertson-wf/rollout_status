@@ -1,0 +1,384 @@
+// ********************************************************
+
+////
+/// Helper mixins pertaining to [CSS3 transitions](http://www.w3.org/TR/css3-transitions/)
+/// ---
+/// @since 1.1.0
+/// @access public
+/// @group core.utils.css3
+/// @link http://www.w3.org/TR/css3-transitions/ CSS3 Transitions Spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/css3/transition';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, mixin experimental,
+                                                mixin with-each-prefix,
+                                                function set-arglist-default,
+                                                function compact,
+                                                function is,
+                                                function is-time,
+                                                function is-list,
+                                                function is-arglist,
+                                                function comma-list);
+//
+// ********************************************************
+
+
+///
+/// Defaults used by CSS3 Transition helpers
+/// ---
+/// @type Map
+/// ---
+/// @prop {String}          property                        [all]                           - Default property used by the `transition-property` helper
+/// @prop {Number | Null}   duration                        [.3s]                           - Default duration used by the `transition-duration` helper
+/// @prop {String | Null}   timing-function                 [null]                          - Default timing-function used by the `transition-timing-function` helper
+/// @prop {Number | Null}   delay                           [null]                          - Default delay used by the `transition-delay` helper
+/// @prop {List}            transitionable-prefixed-values  [transform transform-origin]    - Default values to be prefixed via the `prefixed-for-transition` helper
+///
+$transition-defaults: (
+    property: all,
+    duration: .3s,
+    timing-function: null,
+    delay: null,
+    transitionable-prefixed-values: transform transform-origin
+) !default;
+
+
+// ----------------------------------------------------
+//   PRIVATE HELPERS
+// ----------------------------------------------------
+    ///
+    /// Utility fn used to generate prefixed transition properties
+    /// ---
+    /// @access private
+    /// @group core.internals.utils.css3
+    /// ---
+    /// @returns {String} - Property with the given prefix if it is found in `$transition-defaults => transitionable-prefixed-values`
+    ///
+    @function prefixed-for-transition($prefix, $property) {
+        @if not $prefix {
+            @return $property;
+        }
+
+        $transitionable-prefixed-values: get($transition-defaults, transitionable-prefixed-values);
+
+        @if is-list($property) or is-arglist($property) {
+            $new-list: comma-list();
+            @each $v in $property {
+                $new-list: append($new-list, prefixed-for-transition($prefix, $v));
+            }
+            @return $new-list;
+        } @else {
+            @if index($transitionable-prefixed-values, $property) {
+                @return #{$prefix}-#{$property};
+            } @else {
+                @return $property;
+            }
+        }
+    }
+
+    ///
+    /// Generate a map out of the keys and values used for a given transition
+    /// ---
+    /// @access private
+    /// @group core.internals.utils.css3
+    /// ---
+    /// @param {List} $transition
+    /// ---
+    /// @returns {Map} Key value pairs that map to a transition declaration
+    ///
+    @function transition-map($transition) {
+        $transition-map: ();
+
+        @if length($transition) == 1 and not is-list($transition) {
+            $transition: explode(quote($transition), ' ', comma); // convert to a comma delimited list
+        }
+
+        @each $item in $transition {
+            @if $item != '' {
+                @if is-time($item) {
+                    @if map-has-key($transition-map, duration) {
+                        $transition-map: map-merge($transition-map, (delay: $item));
+                    } @else {
+                        $transition-map: map-merge($transition-map, (duration: $item));
+                    }
+                } @else {
+                    @if map-has-key($transition-map, property) {
+                        $transition-map: map-merge($transition-map, (timing-function: $item));
+                    } @else {
+                        $transition-map: map-merge($transition-map, (property: $item));
+                    }
+                }
+            }
+        }
+
+        @return $transition-map;
+    }
+
+
+// ----------------------------------------------------
+//   PUBLIC TRANSITION API
+// ----------------------------------------------------
+    ///
+    /// One or more properties to use in a CSS3 transition
+    /// ---
+    /// @param {String...} $properties - Comma-delimited list of properties, or a single property, or `all` or `none`.
+    ///
+    @mixin transition-property($properties...) {
+        $properties: set-arglist-default($properties, get($transition-defaults, property));
+
+        @each $property in $properties {
+            @include experimental(transition-property, $property);
+        }
+    }
+
+    ///
+    /// One or more durations to use in a CSS3 transition. Durations will affect the properties in the same list position.
+    /// ---
+    /// @param {Number...} $durations - Comma-delimited list of durations, or a single duration.
+    ///
+    @mixin transition-duration($durations...) {
+        $durations: set-arglist-default($durations, get($transition-defaults, duration));
+
+        @each $duration in $durations {
+            @include experimental(transition-duration, $duration);
+        }
+    }
+
+    ///
+    /// One or more timing functions to use in a CSS3 transition. Functions will affect the properties in the same list position.
+    /// ---
+    /// @param {String...} $functions - Comma-delimited list of functions, or a single function.
+    /// ---
+    /// @throws if each `$function` within the list of `$functions` is not valid
+    ///
+    @mixin transition-timing-function($functions...) {
+        // TODO: How to add cubic-bezier() to this list?
+        $valid-functions: ease, linear, ease-in, ease-out, ease-in-out;
+        $functions: set-arglist-default($functions, get($transition-defaults, timing-function));
+
+        @each $function in $functions {
+            @if not is($function, $valid-functions) {
+                @error "`transition-timing-function` mixin expecting each `$function` in the `$functions` param to be one of (#{$valid-functions}). Was `#{$function}`";
+            }
+
+            @include experimental(transition-timing-function, $function);
+        }
+    }
+
+    ///
+    /// One or more delays to use in a CSS3 transition. Delays will affect the properties in the same list position.
+    /// ---
+    /// @param {Number...} $delays - Comma-delimited list of delays, or a single delay.
+    ///
+    @mixin transition-delay($delays...) {
+        $delays: set-arglist-default($delays, get($transition-defaults, delay));
+
+        @each $delay in $delays {
+            @include experimental(transition-delay, $delay);
+        }
+    }
+
+    ///
+    /// Builder function for CSS3 transition shorthand.
+    /// ---
+    /// @since 1.3.2
+    /// @access private
+    /// @group core.internals.utils.css3
+    /// ---
+    /// @param {String} $_current-prefix
+    /// @param {List...} $transitions - One or more comma-delimited transition property values.
+    /// ---
+    /// @returns {Map} - `has-delays`, `delays`, `transitions-without-delays`, `transitions-with-delays`
+    ///
+    @function _build-transition-shorthand($_current-prefix, $transitions...) {
+        $default: (
+            compact(get($transition-defaults, property)
+                    get($transition-defaults, duration)
+                    get($transition-defaults, timing-function)
+                    get($transition-defaults, delay)
+            )
+        );
+        $transitions: if(length($transitions) == 1 and type-of(nth($transitions, 1)) == list and list-separator(nth($transitions, 1)) == comma, nth($transitions, 1), $transitions);
+        $transitions: set-arglist-default($transitions, $default);
+
+        $delays: comma-list();
+        $transitions-without-delays: comma-list();
+        $transitions-with-delays: comma-list();
+        $has-delays: false;
+
+        // This block can be made considerably simpler at the point in time that
+        // we no longer need to deal with the differences in how delays are treated.
+        @each $transition in $transitions {
+            // Declare initial values for transition
+            $transition: transition-map($transition);
+
+            $properties: get($transition, property);
+            $duration: get($transition, duration);
+            $timing-function: get($transition, timing-function);
+            $delay: get($transition, delay);
+
+            $has-delays: $has-delays or $delay;
+
+            // Normalize for multiple transitions or transition properties
+            $delay: if($delay, $delay, 0s);
+
+            // Parse transition string to assign values into correct variables
+            @if length($properties) == 1 {
+                // Keep a list of delays in case one is specified
+                $_these-delays: $delay;
+                $_these-transitions-without-delays: prefixed-for-transition($_current-prefix, $properties) $duration $timing-function;
+                $_these-transitions-with-delays: prefixed-for-transition($_current-prefix, $properties) $duration $timing-function $delay;
+
+                @if length($transitions) == 1 {
+                    $delays: $_these-delays;
+                    $transitions-without-delays: $_these-transitions-without-delays;
+                    $transitions-with-delays: $_these-transitions-with-delays;
+                } @else {
+                    // Keep a list of delays in case one is specified
+                    $delays: append($delays, $_these-delays);
+                    $transitions-without-delays: append($transitions-without-delays, $_these-transitions-without-delays);
+                    $transitions-with-delays: append($transitions-with-delays, $_these-transitions-with-delays);
+                }
+            } @else {
+                @each $property in $properties {
+                    // Keep a list of delays in case one is specified
+                    $delays: append($delays, $delay);
+
+                    $transitions-without-delays: append($transitions-without-delays,
+                        prefixed-for-transition($_current-prefix, $property) $duration $timing-function
+                    );
+
+                    $transitions-with-delays: append($transitions-with-delays,
+                        prefixed-for-transition($_current-prefix, $property) $duration $timing-function $delay
+                    );
+                }
+            }
+        }
+
+        @return (
+            'has-delays': $has-delays,
+            'delays': $delays,
+            'transitions-without-delays': $transitions-without-delays,
+            'transitions-with-delays': $transitions-with-delays
+        );
+    }
+
+    ///
+    /// Generate one or more browser-prefixed CSS3 transitions
+    /// ---
+    /// @param {Arglist...|List...} $transitions - See examples for all the possible param values.
+    /// ---
+    /// @example scss - USAGE: Single property
+    ///   // ($property $duration [$easing] [$delay])
+    ///   @include transition(opacity .3s ease-in 0s);
+    ///
+    ///   // Compiles to:
+    ///   -webkit-transition: opacity .3s ease-in 0s;
+    ///      -moz-transition: opacity .3s ease-in 0s;
+    ///           transition: opacity .3s ease-in 0s;
+    ///
+    /// @example scss - USAGE: Multiple properties, common duration/easing/delay
+    ///   @include transition((opacity, width) .3s ease-in);
+    ///
+    ///   // Compiles to:
+    ///   -webkit-transition: opacity .3s ease-in, width .3s ease-in;
+    ///      -moz-transition: opacity .3s ease-in, width .3s ease-in;
+    ///           transition: opacity .3s ease-in, width .3s ease-in;
+    ///
+    /// @example scss - USAGE: Multiple properties, unique duration/easing/delay
+    ///   @include transition(opacity .3s ease-in, width .1s linear .5s);
+    ///
+    ///   // Compiles to:
+    ///   -webkit-transition: opacity .3s ease-in, width .1s linear .5s;
+    ///      -moz-transition: opacity .3s ease-in, width .1s linear .5s;
+    ///           transition: opacity .3s ease-in, width .1s linear .5s;
+    ///
+    /// @example scss - USAGE: Multiple properties, some common, some unique duration/easing/delay
+    ///   @include transition((opacity, width) .3s ease-in, height .1s linear .5s);
+    ///
+    ///   // Compiles to:
+    ///   -webkit-transition: opacity .3s ease-in, width .3s ease-in, height .1s linear .5s;
+    ///      -moz-transition: opacity .3s ease-in, width .3s ease-in, height .1s linear .5s;
+    ///           transition: opacity .3s ease-in, width .3s ease-in, height .1s linear .5s;
+    ///
+    /// @example scss - USAGE: Prefixable property
+    ///   //
+    ///   // We handle the prefixing of properties like `transform` for you!
+    ///   //
+    ///   // Prefixable property can be included just like any
+    ///   // other property in any of the permutations shown above.
+    ///   //
+    ///   @include transition((transform, opacity) .3s ease-in);
+    ///
+    ///   // Compiles to:
+    ///   -webkit-transition: -webkit-transform .3s ease-in, opacity .3s ease-in;
+    ///      -moz-transition: -moz-transform .3s ease-in, opacity .3s ease-in;
+    ///           transition: transform .3s ease-in, opacity .3s ease-in;
+    ///
+    @mixin transition($transitions...) {
+        @include with-each-prefix($property-type: transition) {
+
+            @if nth($transitions, 1) == none {
+                @if $current-prefix != false {
+                    @if $current-prefix != null {
+                        @include prefix-prop(transition, none);
+                    } @else {
+                        // un-prefixed
+                        transition: none;
+                    }
+                }
+            } @elseif $current-prefix != false {
+                $transition-meta: _build-transition-shorthand($current-prefix, $transitions...);
+                $has-delays: get($transition-meta, 'has-delays');
+                $delays: get($transition-meta, 'delays');
+                $transitions-without-delays: get($transition-meta, 'transitions-without-delays');
+                $transitions-with-delays: get($transition-meta, 'transitions-with-delays');
+
+                // This block can be made considerably simpler at the point in time that
+                // we no longer need to deal with the differences in how delays are treated.
+                @if $current-prefix == -webkit {
+                    @include prefix-prop(transition, $transitions-without-delays);
+                    @if $has-delays {
+                        @include prefix-prop(transition-delay, $delays);
+                    }
+                } @else if $current-prefix != null {
+                    // Its not webkit... but its also not un-prefixed
+                    // -o and -ms prefixed transitions don't exist
+                    @if is($current-prefix, -ms -o) == false {
+                        @include prefix-prop(transition, $transitions-with-delays);
+                    }
+                } @else {
+                    // un-prefixed
+                    transition: $transitions-with-delays;
+                }
+            } @else {
+                // $current-prefix was explicitly set to false... don't include prefixed property.
+            }
+        }
+    }
+
+    ///
+    /// Convenience mixin to generate a single transition with shorthand
+    /// ---
+    /// @requires {function} get
+    /// ---
+    /// @param {String} $property   [all]   - Must be a string. To transition more than one property, place multiple properties within a quotations
+    /// @param {Number} $duration   [.3s]   - Duration of transition
+    /// @param {String} $function   [null]  - Optional timing function
+    /// @param {Number} $delay      [null]  - Optional delay for transition
+    ///
+    @mixin single-transition(
+        $property: get($transition-defaults, property),
+        $duration: get($transition-defaults, duration),
+        $function: get($transition-defaults, timing-function),
+        $delay: get($transition-defaults, delay)
+    ) {
+        @include transition(compact($property $duration $function $delay));
+    }

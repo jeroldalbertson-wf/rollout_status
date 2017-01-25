@@ -1,0 +1,71 @@
+// ********************************************************
+
+////
+/// Thumbnail component configuration
+/// ---
+/// @since 0.2.0
+/// @group core.components.thumbnails
+/// @link http://bit.ly/webskin-thumbnails Thumbnail component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/thumbnails/thumbnails-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+///
+/// Configuration for `.thumbnail` components.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {variable} $spacing-base
+/// @requires {variable} $padding-lg-vertical
+/// @requires {variable} $body-bg
+/// @requires {variable} $zc-gray-40
+/// @requires {variable} $text-color
+/// @requires {variable} $global-component-bd-width
+/// ---
+/// @prop {Number} padding          [5px]
+/// @prop {Number} bd-width         [1px]
+/// @prop {Number} bd-radius        [0]
+/// @prop {Number} caption-padding  [9px]
+///
+/// @prop {Color} caption-text-color    [#595959]
+/// @prop {Color} bg                    [#ffffff]
+/// @prop {Color} bd-color              [#e3e3e3]
+///
+$thumbnail-config: (
+    'padding': $spacing-base,
+    'bd-width': $global-component-bd-width,
+    'bd-radius': 0,
+    'caption-padding': $padding-lg-vertical - 1,
+    'caption-text-color': $text-color,
+    'bg': $body-bg,
+    'bd-color': $zc-gray-40
+) !default;
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED CONFIG ALIAS / SHORTHAND
+//
+//   -> DO NOT MODIFY THESE (modify the map config)
+//
+// ********************************************************
+    $thumbnail-padding: get($thumbnail-config, 'padding');
+    $thumbnail-bg: get($thumbnail-config, 'bg');
+    $thumbnail-bd-color: get($thumbnail-config, 'bd-color');
+    $thumbnail-bd-width: get($thumbnail-config, 'bd-width');
+    $thumbnail-bd-radius: get($thumbnail-config, 'bd-radius');
+    $thumbnail-caption-color: get($thumbnail-config, 'caption-text-color');
+    $thumbnail-caption-padding: get($thumbnail-config, 'caption-padding');

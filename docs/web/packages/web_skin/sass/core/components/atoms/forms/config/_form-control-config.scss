@@ -1,0 +1,197 @@
+// ********************************************************
+
+////
+/// Form control component configuration
+/// ---
+/// @access public
+/// @group core.components.form-controls
+/// @link http://bit.ly/webskin-form-controls Form control component spec
+/// @link http://bit.ly/webskin-form-control-sizing Form control component size variation spec
+/// @link http://bit.ly/webskin-form-validation Form validation states spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/forms/config/form-control-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function reject,
+                                                function grayscale-to-rgba,
+                                                function icon-size-base-16,
+                                                function icon-size-base-24);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   INDIVIDUAL [PRIVATE] FORM CONTROL CONFIGS
+//
+// ********************************************************
+    @import 'controls/form-control-color-config';
+    @import 'controls/form-control-validation-config';
+
+
+
+// ********************************************************
+//
+//   GLOBAL [PUBLIC] FORM CONTROL CONFIG
+//
+// ********************************************************
+    ///
+    /// Collection of properties for `.form-control` components. Values provide default scaffolding for `<input>`, `<textarea>` and `<select>` form elements.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @todo Write unit test(s) that asserts that all keys within `$form-control-config` are represented here
+    /// ---
+    /// @requires {variable} $font-family-base
+    /// @requires {variable} $form-control-colors
+    /// @requires {variable} $form-group-states
+    /// @requires {variable} $form-control-inset-shadow-config
+    /// @requires {variable} $global-component-size-config
+    /// @requires {variable} $global-component-bd-width
+    /// ---
+    /// @prop {String} font-family [$font-family-base]  - Default font stack
+    /// @prop {Number} bd-width    [1px]                - Default border width
+    ///
+    /// @prop {Map}    font-size   - `$font-size-variation-config` map containing `base`, `xs`, `sm`, `md` and `lg` keys with corresponding `font-size` values
+    /// @prop {Map}    line-height - `$line-height-variation-config` map containing `base-px`, `base`, `xs`, `sm`, `md` and `lg` keys with corresponding `line-height` values
+    /// @prop {Map}    padding     - `$global-component-padding-config` map containing `base`, `xs`, `sm` and `lg` keys with corresponding maps of `vertical`, `horizontal` and `all` `padding` values
+    /// @prop {Map}    bd-radius   - `$global-component-bd-radius-config` map containing `base`, `xs`, `sm` and `lg` keys with corresponding `border-radius` values
+    /// @prop {Map}    height      - `$global-component-height-config` map containing `base`, `xs`, `sm` and `lg` keys with corresponding calculated `height` values
+    ///
+    /// @prop {Map}    colors       - `$form-control-colors` config map
+    /// @prop {Map}    state-colors - `$form-group-states` config map
+    ///
+    /// @prop {Map}    shadow       - `$form-control-inset-shadow-config` map used to create the inner shadow on text inputs
+    ///
+    /// @prop {Number} z-index-within-input-group [2] - `z-index` value applied to a `.form-control` elem when nested within an `.input-group` to ensure that it stays above appended addons / buttons
+    /// @prop {Number} icon-z-index [3] - `z-index` of the `.form-control-icon` element
+    ///
+    $form-control-config: (
+        'font-family':  $font-family-base,
+        'bd-width':     $global-component-bd-width,
+        'font-size':    get($global-component-size-config, 'font-size'),
+        'line-height':  get($global-component-size-config, 'line-height'),
+        'padding':      get($global-component-size-config, 'padding'),
+        'bd-radius':    get($global-component-size-config, 'bd-radius'),
+        'height':       get($global-component-size-config, 'height'),
+        // colors
+        'colors':       $form-control-colors,
+        'state-colors': $form-group-states,
+        // misc
+        'shadow': $form-control-inset-shadow-config,
+        'z-index-within-input-group': 2,
+        'icon-z-index': 3
+    ) !default;
+
+
+    ///
+    /// Collection of properties for `.form-control` components that have icons displayed before or after - appearing "placed" within the field itself.
+    /// ---
+    /// @type Map
+    /// @since 1.8.0
+    /// ---
+    /// @requires {function} icon-size-base-16
+    /// @requires {function} icon-size-base-24
+    /// @requires {function} to-rem
+    /// @requires {variable} $form-control-config
+    /// ---
+    /// @prop {Number} width        [2.8rem]    - The total amount of width that should be reserved for an "icon" addon, including padding.
+    /// @prop {Number} width-xs     [2.4rem]    - The total amount of width that should be reserved for an "icon" addon, including padding within an "Extra Small" form control.
+    /// @prop {Number} width-sm     [2.6rem]    - The total amount of width that should be reserved for an "icon" addon, including padding within a "Small" form control.
+    /// @prop {Number} width-lg     [3.2rem]    - The total amount of width that should be reserved for an "icon" addon, including padding within a "Large" form control.
+    ///
+    /// @prop {Number} height       [3.2rem]    - The height for an "icon" addon.
+    /// @prop {Number} height-xs    [2.2rem]    - The height for an "icon" addon within an "Extra Small" form control.
+    /// @prop {Number} height-sm    [2.8rem]    - The height for an "icon" addon within an "Small" form control.
+    /// @prop {Number} height-lg    [4.6rem]    - The height for an "icon" addon within an "Large" form control.
+    ///
+    $form-control-icon-addon-config: (
+        'width':        to-rem(icon-size-base-16() + get-deep($form-control-config, 'padding.base.horizontal')),
+        'width-xs':     to-rem(icon-size-base-16() + get-deep($form-control-config, 'padding.xs.horizontal')),
+        'width-sm':     to-rem(icon-size-base-16() + get-deep($form-control-config, 'padding.sm.horizontal')),
+        'width-lg':     to-rem(icon-size-base-16() + get-deep($form-control-config, 'padding.lg.horizontal')),
+        //
+        'height':       to-rem(get-deep($form-control-config, 'height.base') - (get($form-control-config, 'bd-width') * 2)),
+        'height-xs':    to-rem(get-deep($form-control-config, 'height.xs')   - (get($form-control-config, 'bd-width') * 2)),
+        'height-sm':    to-rem(get-deep($form-control-config, 'height.sm')   - (get($form-control-config, 'bd-width') * 2)),
+        'height-lg':    to-rem(get-deep($form-control-config, 'height.lg')   - (get($form-control-config, 'bd-width') * 2)),
+    ) !default;
+
+
+    ///
+    /// Collection of properties for `<input type="range">` elements containing the `.form-control` CSS class.
+    /// ---
+    /// @type Map
+    /// @since 1.4.0
+    /// ---
+    /// @requires {variable} $zc-gray-40
+    /// @requires {variable} $elem-hover-bg-darken-amount-default
+    /// @requires {variable} $form-control-config
+    /// ---
+    /// @prop {Number} track-height [.4rem]
+    /// @prop {Number} thumb-size [1.6rem]
+    ///
+    /// @prop {Color} thumb-bg-color [#ffffff]
+    /// @prop {Color} thumb-bd-color [#d8d8d8]
+    /// @prop {Color} thumb-bd-color-rgba [rgba(#000, .16)]
+    /// @prop {Color} thumb-bd-color-focus [#33a9ff]
+    ///
+    /// @prop {Color} track-bg-color [#e3e3e3]
+    /// @prop {Color} track-bg-color-rgba [rgba(#000, .11)]
+    /// @prop {Color} track-bg-color-focus [#d6d6d6]
+    /// @prop {Color} track-bg-color-rgba-focus [rgba(#000, .16)]
+    ///
+    $range-control-config: (
+        'track-height': .4rem,
+        'thumb-size': 1.6rem,
+        //
+        'thumb-bg-color': $white,
+        'thumb-bd-color': get-deep($form-control-config, 'colors.bd-fallback'),
+        'thumb-bd-color-rgba': rgba(get-deep($form-control-config, 'colors.bd-rgba-color'), get-deep($form-control-config, 'colors.bd-rgba-alpha')),
+        'thumb-bd-color-focus': get($form-control-colors, 'bd-focus'),
+        //
+        'track-bg-color': $zc-gray-40,
+        'track-bg-color-rgba': null, // Calculated value added via @extend
+        'track-bg-color-focus': null, // Calculated value added via @extend
+        'track-bg-color-rgba-focus': null // Calculated value added via @extend
+    ) !default;
+
+        // ----------------------------------------------------
+        //   CALCULATED VALUES
+        //   -> based on $range-control-config
+        //
+        //   -> cannot be included in initial map declaration
+        //      because the calculations depend on values
+        //      within the map, and Sass has no ability to
+        //      reference a key in a map from within that map.
+        //
+        //   -> documented as props of $range-control-config
+        //      because they are added via extend() below.
+        // ----------------------------------------------------
+        $range-control-track-bg-color-focus: darken(get($range-control-config, 'track-bg-color'), $elem-hover-bg-darken-amount-default);
+
+        $range-control-config: extend($range-control-config,
+            (
+                'track-bg-color-rgba': grayscale-to-rgba(get($range-control-config, 'track-bg-color')),
+                'track-bg-color-focus': $range-control-track-bg-color-focus,
+                'track-bg-color-rgba-focus': grayscale-to-rgba($range-control-track-bg-color-focus)
+            )
+        );
+
+
+// ********************************************************
+//
+//   INBOX (UNDOCUMENTED VARS)
+//
+// ********************************************************
+    $form-control-size-variation-names: reject(map-keys(get($form-control-config, 'height')), 'base');
+    $input-height-base: get-deep($form-control-config, 'height.base');
+    $input-height-sm:   get-deep($form-control-config, 'height.sm');
+    $input-height-xs:   get-deep($form-control-config, 'height.xs');
+    $input-height-lg:   get-deep($form-control-config, 'height.lg');

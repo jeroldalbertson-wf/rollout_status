@@ -1,0 +1,200 @@
+// ********************************************************
+
+////
+/// Modal dialog component configuration
+/// ---
+/// @access public
+/// @group core.components.modals
+/// @link http://bit.ly/webskin-modals Modal dialog component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/modals-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend,
+                                                function darkness,
+                                                function build-box-shadow,
+                                                function dialog-with-backdrop-bd-color);
+//
+// ********************************************************
+
+
+///
+/// Global collection of configurations for `.modal` components, along with the `.modal-dialog`, `.modal-content`, `.modal-header`, `.modal-body` and `.modal-footer` elems nested within them.
+/// Extends `$dialog-config`, `$dialog-size-lg-config` and `$dialog-size-sm-config`.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {function} extend
+/// @requires {function} dialog-with-backdrop-bd-color
+/// @requires {function} build-box-shadow
+/// @requires {variable} $dialog-config
+/// @requires {variable} $dialog-size-lg-config
+/// @requires {variable} $dialog-size-sm-config
+/// @requires {variable} $dialog-size-base-config
+/// @requires {variable} $btn-config
+/// @requires {variable} $shadow-on-dark-backdrop-config
+/// ---
+/// @prop {List} shadow - Drop shadow used for modal dialogs, slightly darker than the standard to account for the dark overlay / backdrop background
+/// @prop {List} shadow-no-backdrop - Drop shadow used for non-modal dialogs
+///
+/// @prop {Color}  bd-color                 [#9b9b9b]   - Border color
+/// @prop {Color}  bd-color-no-backdrop     [#b2b2b2]   - Border color for non-modal dialogs
+///
+/// @prop {Number} contained-backdrop-alpha [.9]        - Alpha transparency value for the backdrop used in a `.modal-contained` dialog variation
+/// @prop {Number} dialog-offset-mobile     [16px]      - Amount of vertical and horizontal margin around the `.modal-dialog` elem at screen sizes below `768px`.
+/// @prop {Number} dialog-offset-base       [32px]      - Amount of vertical and horizontal margin around the `.modal-dialog` elem at screen sizes `768px` and up
+/// ---
+/// @prop {Map} base - Map of config values for default `.modal` dialog. _See `$dialog-size-lg-config` for a full list of values. The values listed here are what differs from the extended map config._
+/// @prop {Number} base.width         [694px] - Width of `.modal-dialog` at screen sizes of `768px` and up
+/// @prop {Number} base.footer-height [54px]  - Calculated height of `.modal-footer` assuming a default `.btn` size is nested within it. _Added via `@extend`_
+/// ---
+/// @prop {Number} base.header-padding-right [55px] - Calculated right padding of `.modal-header`
+/// @prop {Number} base.header-padding-left  [20px] - Calculated left padding of `.modal-header`
+/// ---
+/// @prop {Number} base.callout-header-font-size              [24px]  - Font size of header within a `.modal-callout` dialog variation
+/// @prop {Number} base.callout-first-elem-margin-top         [-14px] - Top margin of the first elem nested within the body of a `.modal-callout` dialog variation
+/// @prop {Number} base.callout-first-elem-padding-horizontal [55px]  - Horizontal padding of the first elem nested within the body of a `.modal-callout` dialog variation
+/// @prop {Number} base.callout-image-margin-bottom           [21px]  - Bottom margin of an `<img>` nested within the body of a `.modal-callout` dialog variation
+/// @prop {Number} base.callout-header-margin-bottom          [21px]  - Bottom margin of the header within a `.modal-callout` dialog variation
+/// ---
+/// @prop {Map} sm - Map of config values for `.modal-sm` dialog. _See `$dialog-size-sm-config` for a full list of values. The values listed here are what differs from the extended map config._
+/// @prop {Number} sm.width           [460px] - Width of `.modal-sm .modal-dialog` at screen sizes of `768px` and up
+/// @prop {Number} sm.footer-height   [46px]  - Calculated height of `.modal-sm .modal-footer` assuming a `.btn-sm` is nested within it. _Added via `@extend`_
+/// ---
+/// @prop {Number} sm.header-padding-right [55px] - Calculated right padding of `.modal-header` within a `.modal-sm` elem
+/// @prop {Number} sm.header-padding-left  [20px] - Calculated left padding of `.modal-header` within a `.modal-sm` elem
+/// ---
+/// @prop {Number} sm.callout-header-font-size                [18px]  - Font size of header within a `.modal-sm .modal-callout` dialog variation
+/// @prop {Number} sm.callout-first-elem-margin-top           [-7px]  - Top margin of the first elem nested within the body of a `.modal-sm .modal-callout` dialog variation
+/// @prop {Number} sm.callout-first-elem-padding-horizontal   [29px]  - Horizontal padding of the first elem nested within the body of a `.modal-sm .modal-callout` dialog variation
+/// @prop {Number} sm.callout-image-margin-bottom             [15px]  - Bottom margin of an `<img>` nested within the body of a `.modal-sm .modal-callout` dialog variation
+/// @prop {Number} sm.callout-header-margin-bottom            [15px]  - Bottom margin of the header within a `.modal-sm .modal-callout` dialog variation
+/// ---
+/// @prop {Map} lg - Map of config values for `.modal-lg` dialog. _See `$dialog-size-lg-config` for a full list of values. The values listed here are what differs from the extended map config._
+/// @prop {Number} lg.width [900px] - Width of `.modal-lg .modal-dialog` at screen sizes of `992px` and up
+///
+$modal-config: extend(map-remove($dialog-config, 'xs'),
+    (
+        'shadow': build-box-shadow($shadow-on-dark-backdrop-config),
+        'shadow-no-backdrop': build-box-shadow($shadow-default-config),
+        //
+        'bd-color': dialog-with-backdrop-bd-color(),
+        'bd-color-no-backdrop': get($dialog-config, 'bd-color'),
+        //
+        'contained-backdrop-alpha': .9,
+        //
+        'dialog-offset-mobile': get($dialog-size-lg-config, 'content-padding'),
+        'dialog-offset-base': get($dialog-size-lg-config, 'content-padding') * 2,
+        //
+        'base': extend($dialog-size-lg-config,
+            (
+                'width': 694px,
+                'footer-height': null, // actual calculated value inserted via @extend
+                //
+                'header-padding-right': get($dialog-size-lg-config, 'close-btn-width'),
+                'header-padding-left': get($dialog-size-lg-config, 'header-padding-horizontal'),
+                //
+                'callout-header-font-size': get($dialog-size-lg-config, 'header-font-size'),
+                'callout-first-elem-margin-top': ceil(get($dialog-size-lg-config, 'header-min-height') * -.35),
+                'callout-first-elem-padding-horizontal': get($dialog-size-lg-config, 'close-btn-width'),
+                'callout-image-margin-bottom': round(get($dialog-size-lg-config, 'header-min-height') / 2),
+                'callout-header-margin-bottom': round(get($dialog-size-lg-config, 'header-min-height') / 2)
+            )
+        ),
+        'sm': extend($dialog-size-base-config,
+            (
+                'width': 460px,
+                'footer-height': null, // actual calculated value inserted via @extend
+                //
+                'header-padding-right': get($dialog-size-base-config, 'close-btn-width'),
+                'header-padding-left': get($dialog-size-base-config, 'header-padding-horizontal'),
+                //
+                'callout-header-font-size': get($dialog-size-base-config, 'header-font-size'),
+                'callout-first-elem-margin-top': ceil(get($dialog-size-base-config, 'header-min-height') * -.25),
+                'callout-first-elem-padding-horizontal': get($dialog-size-base-config, 'close-btn-width'),
+                'callout-image-margin-bottom': round(get($dialog-size-base-config, 'header-min-height') / 2),
+                'callout-header-margin-bottom': round(get($dialog-size-base-config, 'header-min-height') / 2)
+            )
+        ),
+        'lg': extend($dialog-size-lg-config,
+            (
+                'width': 900px
+            )
+        )
+    )
+) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $modal-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $modal-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $modal-footer-padding-top: nth(get-deep($modal-config, 'base.footer-padding'), 1);
+        $modal-footer-padding-bottom: nth(get-deep($modal-config, 'base.footer-padding'), 3);
+        $modal-footer-height: $modal-footer-padding-top + $modal-footer-padding-bottom + get-deep($btn-config, 'height.base');
+        $modal-footer-padding-top-sm: nth(get-deep($modal-config, 'sm.footer-padding'), 1);
+        $modal-footer-padding-bottom-sm: nth(get-deep($modal-config, 'sm.footer-padding'), 3);
+        $modal-footer-height-sm: $modal-footer-padding-top-sm + $modal-footer-padding-bottom-sm + get-deep($btn-config, 'height.sm');
+
+        // ----- EXTEND modal config with calc'd values ----- //
+        $modal-config: extend($modal-config,
+            (
+                'base': (
+                    'footer-height': $modal-footer-height
+                ),
+                'sm': (
+                    'footer-height': $modal-footer-height-sm
+                )
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED CONFIG ALIAS / SHORTHAND
+//
+//   -> DO NOT MODIFY THESE (modify the map config)
+//
+// ********************************************************
+    $modal-content-padding: get-deep($modal-config, 'base.content-padding');
+    $modal-sm-content-padding: get-deep($modal-config, 'sm.content-padding');
+    $modal-dialog-width: get-deep($modal-config, 'base.width');
+    $modal-dialog-lg-width: get-deep($modal-config, 'lg.width');
+    $modal-dialog-sm-width: get-deep($modal-config, 'sm.width');
+    $modal-dialog-offset-mobile: get($modal-config, 'dialog-offset-mobile');
+    $modal-dialog-offset-base: get($modal-config, 'dialog-offset-base');
+
+    // must use a fixed height if you want it vertically centered without js
+    $modal-session-timeout-height: 169px + get-deep($modal-config, 'base.header-min-height');
+
+    // callout variation properties
+    $modal-callout-header-font-size: get-deep($modal-config, 'base.callout-header-font-size');
+    $modal-callout-first-elem-margin-top: get-deep($modal-config, 'base.callout-first-elem-margin-top');
+    $modal-callout-first-elem-padding-horizontal: get-deep($modal-config, 'base.callout-first-elem-padding-horizontal');
+    $modal-callout-image-margin-bottom: get-deep($modal-config, 'base.callout-image-margin-bottom');
+    $modal-callout-header-margin-bottom: get-deep($modal-config, 'base.callout-header-margin-bottom');
+    //
+    $modal-sm-callout-header-font-size: get-deep($modal-config, 'sm.callout-header-font-size');
+    $modal-sm-callout-first-elem-margin-top: get-deep($modal-config, 'sm.callout-first-elem-margin-top');
+    $modal-sm-callout-first-elem-padding-horizontal: get-deep($modal-config, 'sm.callout-first-elem-padding-horizontal');
+    $modal-sm-callout-image-margin-bottom: get-deep($modal-config, 'sm.callout-image-margin-bottom');
+    $modal-sm-callout-header-margin-bottom: get-deep($modal-config, 'sm.callout-header-margin-bottom');

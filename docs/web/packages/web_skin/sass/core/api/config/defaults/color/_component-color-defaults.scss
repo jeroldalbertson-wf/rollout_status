@@ -1,0 +1,251 @@
+// ********************************************************
+
+////
+/// Default component color configs
+/// ---
+/// @type Color
+/// @group core.color.base
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/component-color-defaults';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+///
+/// Default background color of the `<body>` element.
+/// @color #ffffff
+/// ---
+/// @requires {variable} $white
+///
+$body-bg: $white !default;
+
+///
+/// Default color of `<body>` text.
+/// @color #595959
+/// ---
+/// @requires {variable} $zc-gray
+///
+$text-color: get($zc-grays, '100') !default;
+
+///
+/// Default hyperlink text color.
+/// @color #026dce
+/// ---
+/// @requires {variable} $zc-blue-120
+///
+$link-color: get($zc-blues, '120') !default;
+
+///
+/// Hovered hyperlink text color.
+/// @color #0094ff
+/// ---
+/// @requires {variable} $zc-blue
+///
+$link-color-hover: get($zc-blues, '100') !default;
+
+
+
+// ********************************************************
+//
+//   CALCULATED DIFFERENTIALS
+//
+// ********************************************************
+    ///
+    /// Lightness differential between hyperlink state text colors `$link-color` and `$link-color-hover`.
+    /// ---
+    /// @type Number
+    /// @since 1.0.0
+    /// @group core.internals.color.base
+    /// @access private
+    /// ---
+    /// @requires {variable} $link-color
+    /// @requires {variable} $link-color-hover
+    ///
+    $link-color-hover-darken-amount: round(lightness($link-color-hover) - lightness($link-color)) !default;
+
+    ///
+    /// How much darker a hyperlink color should be when in `:hover:active` ('pressed') state.
+    /// ---
+    /// @type Number
+    /// @since 1.0.0
+    /// @group core.internals.color.base
+    /// @access private
+    /// ---
+    /// @requires {variable} $link-color-hover-darken-amount
+    ///
+    $link-color-pressed-darken-amount: round($link-color-hover-darken-amount / 2) !default;
+
+    ///
+    /// How much darker an element background color should be when in `:hover:active` ('pressed') state.
+    /// ---
+    /// @type Number
+    /// @since 1.0.0
+    /// @group core.internals.color.base
+    /// @access private
+    /// ---
+    /// @requires {variable} $global-contrast-delta
+    ///
+    $elem-pressed-bg-darken-amount-default: round($global-contrast-delta / 2) !default;
+
+    ///
+    /// How much darker an element border color should be when in `:focus` state.
+    /// ---
+    /// @type Number
+    /// @since 1.0.0
+    /// @group core.internals.color.base
+    /// @access private
+    /// ---
+    /// @requires {variable} $global-contrast-delta
+    ///
+    $elem-focus-bd-darken-amount-default: $global-contrast-delta * 2 !default;
+
+    ///
+    /// How much darker an element background color should be when in `:hover` state.
+    /// ---
+    /// @type Number
+    /// @since 1.0.0
+    /// @group core.internals.color.base
+    /// @access private
+    /// ---
+    /// @requires {variable} $global-contrast-delta
+    ///
+    $elem-hover-bg-darken-amount-default: $global-contrast-delta !default;
+
+    ///
+    /// How much darker an element text color should be when in `:hover` state.
+    /// ---
+    /// @alias link-color-hover-darken-amount
+    /// @since 1.0.0
+    /// @group core.internals.color.base
+    /// @access private
+    ///
+    $elem-hover-text-darken-amount-default: $link-color-hover-darken-amount !default;
+
+    ///
+    /// How much darker an element text color should be when in `:hover:active` ('pressed') state.
+    /// ---
+    /// @alias link-color-pressed-darken-amount
+    /// @since 1.0.0
+    /// @group core.internals.color.base
+    /// @access private
+    ///
+    $elem-pressed-text-darken-amount-default: $link-color-pressed-darken-amount !default;
+
+    ///
+    /// The transparency alpha value of an element in a `[disabled]` state. Use in `opacity()` mixin or `rgba()` function.
+    /// ---
+    /// @type Number
+    /// @since 1.0.0
+    /// @see {mixin} opacity
+    /// @group core.color.base
+    /// ---
+    /// @example scss
+    ///   button[disabled] {
+    ///       @include opacity($disabled-alpha-default);
+    ///   }
+    ///
+    $disabled-alpha-default: .45 !default;
+
+    ///
+    /// The transparency percentage value of an element in a `[disabled]` state. Use in `mix()` function.
+    /// ---
+    /// @type Number
+    /// @since 1.0.0
+    /// @see {mixin} opacity
+    /// @group core.color.base
+    /// ---
+    /// @example scss
+    ///   // use Modernizr to ensure that browsers that do not support opacity
+    ///   // still get a faded look when an element is disabled
+    ///   button[disabled] {
+    ///       @include opacity($disabled-alpha-default);
+    ///
+    ///      .no-opacity & {
+    ///          color: mix($bg-color, $elem-text-color, $disabled-alpha-pct-default);
+    ///      }
+    ///   }
+    /// ---
+    /// @requires {variable} $disabled-alpha-default
+    ///
+    $disabled-alpha-pct-default: percentage($disabled-alpha-default) !default;
+
+
+    // ----------------------------------------------------
+    //   ROTATED ELEMS
+    // ----------------------------------------------------
+        ///
+        /// The amount of color darkening required to make a border color on a rotated element look the same as it would un-rotated. The lightening is a perceived result due to anti-aliasing.
+        /// ---
+        /// @since 0.4.9-2
+        /// @type Number
+        /// @group core.internals.color.base
+        /// @access private
+        ///
+        $rotated-elem-bd-darken-amount: 14 !default;
+
+
+
+// ********************************************************
+//
+//   COLORS THAT USE CALCULATED DIFFERENTIALS
+//
+// ********************************************************
+    ///
+    /// Default hyperlink text color in `:hover:active` ('pressed') state.
+    /// @color #0085e6
+    /// ---
+    /// @requires {variable} $link-color-hover
+    /// @requires {variable} $link-color-pressed-darken-amount
+    ///
+    $link-color-pressed: darken($link-color-hover, $link-color-pressed-darken-amount) !default;
+
+    ///
+    /// Default hyperlink text color in `[disabled]` state.
+    /// @color #595959
+    /// ---
+    /// @requires {variable} $text-color
+    ///
+    $link-color-disabled: $text-color !default;
+
+
+
+// ********************************************************
+//
+//   CHISEL COLORS
+//
+// ********************************************************
+    ///
+    /// Configuration map for creating a 'chiseled' color effect based on the background color begind the element acting as a 'chisel'.
+    /// ---
+    /// @type  Map
+    /// @since 1.0.0
+    /// @group core.internals.color.base
+    /// @access private
+    /// ---
+    /// @prop {Map} base
+    /// @prop {Number} base.darken [7.5%]
+    /// @prop {Number} base.lighten [10%]
+    ///
+    /// @prop {Map} deep
+    /// @prop {Number} deep.darken [27.5%]
+    /// @prop {Number} deep.lighten [30%]
+    ///
+    $global-chisel-config: (
+        'base': (
+            'darken': 7.5%,
+            'lighten': 10%
+        ),
+        'deep': (
+            'darken': 27.5%,
+            'lighten': 30%
+        )
+    ) !default;

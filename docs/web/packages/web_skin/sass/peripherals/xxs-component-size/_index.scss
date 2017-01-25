@@ -1,0 +1,18 @@
+// ********************************************************
+//
+//   XXS COMPONENT SIZE STYLE MODULE
+//
+//   Styles for "xxs" component size variations that have
+//   no fixed height, but adapt to the height of their
+//   surroundings assuming that the "surrounding" is a
+//   v2 grid block.
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/xxs-component-size';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+@include xxs-component-sizes();

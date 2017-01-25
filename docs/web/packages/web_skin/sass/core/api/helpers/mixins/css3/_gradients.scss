@@ -1,0 +1,182 @@
+// ********************************************************
+
+////
+/// Helper mixins pertaining to [CSS3 gradients](http://www.w3.org/TR/css3-images/#linear-gradients)
+/// ---
+/// @since 1.1.0
+/// @access public
+/// @group core.utils.css3
+/// @link http://www.w3.org/TR/css3-images/#linear-gradients CSS3 Linear Gradient Spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/css3/gradients';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function compact,
+                                                function is-string,
+                                                function is-number,
+                                                function is-color,
+                                                function is);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   PRIVATE HELPERS
+// ----------------------------------------------------
+    ///
+    /// Utility fn used to generate a comma-separated list of space-separated color/stop values for CSS gradients
+    /// ---
+    /// @access private
+    /// @group core.internals.utils.css3
+    /// ---
+    /// @param {*...} $stops - One or more colors paired with an optional location for the stop
+    /// ---
+    /// @returns {List} - Comma-separated list of space-separated color/stop values
+    ///
+    @function gradient-stops($stops...) {
+        $final-stops: ();
+        $stop-count: 0;
+
+        @each $stop in $stops {
+            $stop-location: false;
+            $stop-color: false;
+            $stop-count: $stop-count + 1;
+            $new-stop: null;
+
+            @if length($stop) > 1 {
+                $stop-color: nth($stop, 1);
+                $stop-location: nth($stop, 2);
+                $new-stop: inspect(compact($stop-color, $stop-location));
+            } @else {
+                $stop-color: $stop;
+                $new-stop: $stop-color;
+            }
+
+            @if not is-color($stop-color) {
+                @error "`gradient-stops` function expecting a Color for the first value in `$stops[#{$stop-count}]`. Was #{type-of($stop-color)}: #{$stop-color}";
+            }
+
+            @if $stop-location and not is-number($stop-location) {
+                @error "`gradient-stops` function expecting a Number for the second value in `$stops[#{$stop-count}]`. Was #{type-of($stop-location)}: #{$stop-location}";
+            }
+
+            $final-stops: join($final-stops, $new-stop, comma);
+        }
+
+        @return $final-stops;
+    }
+
+    ///
+    /// Utility mixin used to generate prefixed CSS `background` styles for gradients, both linear and radial.
+    /// ---
+    /// @access private
+    /// @group core.internals.utils.css3
+    /// ---
+    /// @param {String|Number}      $direction [vertical]   - Legal values are `vertical`, `horizontal` or `circle`
+    /// @param {String...|List...}  $stops                  - One or more colors paired with an optional location for the stop
+    ///
+    @mixin generate-gradient($direction: vertical, $stops...) {
+        $valid-directions: vertical, horizontal, circle;
+
+        @if (not is-number($direction)) and (not is($direction, $valid-directions)) {
+            @error "`generate-gradient` mixin expecting `$direction` parameter value to be one of (`#{$valid-directions}`). Was #{$direction}";
+        } @else {
+            $final-stops: gradient-stops($stops...);
+            $gradient-fn: linear;
+            $start: false;
+            $start-official: false;
+
+            @if is-string($direction) { // Vertical, Horizontal or Radial
+                $direction: unquote($direction);
+                $start: $direction;
+                $start-official: $direction;
+
+                @if $direction != circle {
+                    $start:          if($direction == vertical, top,         left);
+                    $start-official: if($direction == vertical, to bottom,   to right);
+                } @else {
+                    $gradient-fn: radial;
+                }
+            } @else { // Directional (angle or deg)
+                $start: $direction;
+                $start-official: $start;
+            }
+
+            @if $min-safari-supported <= 6 or $min-chrome-supported < 26 {
+                background-image: -webkit-#{$gradient-fn}-gradient($start, $final-stops);
+            }
+
+            @if $min-opera-supported <= 12 {
+                background-image: -o-#{$gradient-fn}-gradient($start, $final-stops);
+            }
+
+            background-image: #{$gradient-fn}-gradient($start-official, $final-stops);
+        }
+    }
+
+
+
+// ----------------------------------------------------
+//   PUBLIC API
+// ----------------------------------------------------
+    ///
+    /// Generates styles for a radial gradient, from top to bottom.
+    /// ---
+    /// @link http://www.w3.org/TR/css3-images/#radial-gradients CSS3 Radial Gradient Spec
+    /// ---
+    /// @param {String...|List...} $stops - One or more colors paired with an optional location for the stop
+    ///
+    @mixin gradient-radial($stops...) {
+        background-repeat: no-repeat;
+        @include generate-gradient(circle, $stops...);
+    }
+
+    ///
+    /// Generates styles for a horizontal linear gradient, from left to right.
+    /// ---
+    /// @param {String...|List...} $stops - One or more colors paired with an optional location for the stop
+    ///
+    @mixin gradient-horizontal($stops...) {
+        @include generate-gradient(horizontal, $stops...);
+    }
+
+    ///
+    /// Generates styles for a vertical linear gradient, from top to bottom.
+    /// ---
+    /// @param {String...|List...} $stops - One or more colors paired with an optional location for the stop
+    ///
+    @mixin gradient-vertical($stops...) {
+        @include generate-gradient(vertical, $stops...);
+    }
+
+    ///
+    /// Generates styles for a directional linear gradient in a given angle.
+    /// ---
+    /// @param {Number}             $angle [45deg]
+    /// @param {String...|List...}  $stops - One or more colors paired with an optional location for the stop
+    ///
+    @mixin gradient-directional($angle: 45deg, $stops...) {
+        @include generate-gradient($angle, $stops...);
+    }
+
+    ///
+    /// Generates styles for a directional linear gradient with a striped appearance using a given color and angle.
+    /// ---
+    /// @param {Color}  $color
+    /// @param {Number} $angle [45deg]
+    ///
+    @mixin gradient-striped($color, $angle: 45deg) {
+        $t: rgba($black, 0);
+        $w: rgba($white, .20);
+        $stops: $w 25%, $t 25%, $t 50%, $w 50%, $w 75%, $t 75%, $t;
+
+        background-color: $color;
+        background-repeat: repeat;
+        @include gradient-directional($angle, $stops...);
+    }

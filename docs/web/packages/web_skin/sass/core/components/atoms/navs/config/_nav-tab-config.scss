@@ -1,0 +1,242 @@
+// ********************************************************
+
+////
+/// Tabbed nav component configuration
+/// ---
+/// @group core.components.navs
+/// @link http://bit.ly/webskin-nav-tabs Tabbed navigation spec
+/// @link http://bit.ly/webskin-nav-tabs-alignment Tabbed navigation alignment options
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/config/nav-tab-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function component-height,
+                                                function disabled-color,
+                                                function get,
+                                                function extend,
+                                                function to-rem,
+                                                function box-model-height);
+//
+// ********************************************************
+
+
+///
+/// Base configuration for `.nav-tabs` components.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {variable} $line-height-base-px
+/// @requires {variable} $nav-base-config
+/// @requires {variable} $zc-gray-40
+/// ---
+/// @prop {Number} content-spacing  [20px]      - Default space between the edge of the tab navigation and each tab's content
+/// @prop {Number} bd-width         [1px]       - Default border width
+/// @prop {Color}  bd-color         [#e3e3e3]   - Default border color
+///
+$nav-tabs-config: (
+    'content-spacing': $line-height-base-px,
+    'bd-width': get($nav-base-config, 'bd-width'),
+    'bd-color': $zc-gray-40
+) !default;
+
+///
+/// Configuration for `.nav-tabs .hitarea` elems (individual tabs).
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {function} disabled-color
+/// @requires {variable} $nav-link-config
+/// @requires {variable} $nav-tabs-config
+/// @requires {variable} $zc-gray
+/// @requires {variable} $link-color-hover
+/// @requires {variable} $link-color-pressed
+/// @requires {variable} $global-component-platform-bd-width
+/// ---
+/// @prop {Number} bd-width             [0]             - Default border width
+/// @prop {Number} bd-radius            [0]             - Default border radius on the outer-edge of each tab
+/// @prop {Number} padding-vertical     [7px]           - Default vertical padding. __DEPRECATED in 1.7.0__. Use `padding-top` / `padding-bottom` keys instead.
+/// @prop {Number} padding-horizontal   [12px]          - Default horizontal padding
+/// @prop {Number} padding-top          [10px]          - Default top padding
+/// @prop {Number} padding-bottom       [4px]           - Default bottom padding
+/// @prop {List}   padding              [10px 12px 4px] - Combination of vertical and horizontal link padding. Vertical top / bottom padding is adjusted to achieve the `4px` of desired spacing betwen the bottom of item text and the top edge of the active "platform" indicator.
+/// @prop {Number} height               [34px]          - Calculated height
+/// @prop {Number} spacing              [0]             - Default amount of space between adjacent tabs
+///
+/// @prop {Number} stacked-min-width        [100%]      - Minimum width of each tab when vertically stacked
+/// @prop {Number} stacked-padding-vertical [6px]       - Default vertical padding for tabs within `.tabs-left` or `.tabs-right` (vertically stacked).
+///
+/// @prop {Color} bd-color              [#e3e3e3]       - Default border color
+///
+/// @prop {Color} bg                    [transparent]   - Default background color
+/// @prop {Color} bg-hover              [transparent]   - Hovered background color
+/// @prop {Color} bg-press              [transparent]   - Pressed background color
+/// @prop {Color} bg-active             [transparent]   - Active background color
+/// @prop {Color} bg-disabled           [transparent]   - Disabled background color
+///
+/// @prop {Color} text-color            [#595959]       - Default text color
+/// @prop {Color} text-color-hover      [#0094ff]       - Hovered text color
+/// @prop {Color} text-color-press      [#0085e6]       - Pressed text color
+/// @prop {Color} text-color-active     [#595959]       - Text color when active
+/// @prop {Color} text-color-disabled   [#b4b4b4]       - Text color when disabled
+///
+/// @prop {Color}  selected-platform-color          [#0085e6]   - The color of the "platform" that is displayed to indicate an active / selected tab
+/// @prop {Number} selected-platform-size           [.3rem]     - The height / _(or width in the case of a vertically stacked set of tabs)_ of the "platform" that is displayed to indicate an active / selected tab
+/// @prop {Number} selected-platform-bd-radius      [.1rem]     - The amount of corner rounding to place on the platform that indicates an active / selected tab
+/// @prop {Number} selected-platform-bd-radius-sm   [.1rem]     - The amount of corner rounding to place on the platform that indicates an active / selected tab within a `nav-tabs--sm` size variation
+///
+$nav-tabs-tab-config: (
+    'bd-width': 0,
+    'bd-radius': 0,
+    'padding-vertical': get($nav-link-config, 'padding-vertical') + 1px, // DEPRECATED
+    'padding-horizontal': get($nav-link-config, 'padding-horizontal'),
+    'padding-top': get($nav-link-config, 'padding-vertical') + 4px,
+    'padding-bottom': get($nav-link-config, 'padding-vertical') - 2px,
+    'padding': (get($nav-link-config, 'padding-vertical') + 4px) get($nav-link-config, 'padding-horizontal') (get($nav-link-config, 'padding-vertical') - 2px),
+    'height': get($nav-link-config, 'height'),
+    'spacing': 0,
+    //
+    'stacked-min-width': 100%,
+    'stacked-padding-vertical': get($nav-link-config, 'padding-vertical'),
+    //
+    'bd-color': get($nav-tabs-config, 'bd-color'),
+    //
+    'bg': transparent,
+    'bg-hover': transparent,
+    'bg-press': transparent,
+    'bg-active': transparent,
+    'bg-disabled': transparent,
+    //
+    'text-color': $zc-gray,
+    'text-color-hover': $link-color-hover,
+    'text-color-press': $link-color-pressed,
+    'text-color-active': $zc-gray,
+    'text-color-disabled': disabled-color($zc-gray),
+    //
+    'selected-platform-color': $link-color-pressed,
+    'selected-platform-size': $global-component-platform-bd-width,
+    'selected-platform-bd-radius': .1rem,
+    'selected-platform-bd-radius-sm': .1rem
+) !default;
+
+///
+/// Configuration for the `.nav-tabs--sm` tabbed navigation component variation.
+///
+/// _Extends `$nav-tabs-config`_
+/// ---
+/// @type Map
+/// @since 1.7.0
+/// ---
+/// @requires {function} get
+/// @requires {function} extend
+/// @requires {variable} $nav-tabs-config
+/// ---
+/// @prop {Number} content-spacing  [0]             - Space between the edge of the tab navigation and each tab's content
+/// @prop {Number} bd-width         [0]             - Border width
+/// @prop {Color}  bd-color         [transparent]   - Border color
+///
+$nav-tabs-sm-config: extend($nav-tabs-config, (
+    'content-spacing': 0,
+    'bd-width': 0,
+    'bd-color': transparent
+)) !default;
+
+///
+/// Configuration for `.hitarea` elems (individual tabs) within the `.nav-tabs--sm` component variation.
+/// ---
+/// @type Map
+/// @since 1.7.0
+/// ---
+/// @requires {function} get
+/// @requires {function} extend
+/// @requires {function} to-rem
+/// @requires {function} box-model-height
+/// @requires {variable} $font-size-md
+/// @requires {variable} $nav-tabs-sm-config
+/// @requires {variable} $nav-link-config
+/// @requires {variable} $global-component-platform-bd-width
+/// ---
+/// @prop {Color} bd-color [transparent]
+///
+/// @prop {Number} font-size            [1.3rem]
+/// @prop {Number} bd-width             [0]             - Default border width
+/// @prop {Number} bd-radius            [0]             - Default border radius on the outer-edge of each tab
+/// @prop {Number} padding-vertical     [.6rem]         - Default vertical padding. __DEPRECATED in 1.7.0__. Use `padding-top` / `padding-bottom` keys instead.
+/// @prop {Number} padding-horizontal   [1rem]          - Default horizontal padding
+/// @prop {Number} padding-top          [.8rem]         - Default top padding
+/// @prop {Number} padding-bottom       [.4rem]         - Default bottom padding
+/// @prop {List}   padding              [.8rem 1rem .4rem]    - Combination of top / bottom and horizontal link padding. _Added via `@extend`_
+/// @prop {Number} height               [2.6rem]        - Calculated height
+/// @prop {Number} spacing              [0]             - Default amount of space between adjacent tabs
+///
+/// @prop {Number} selected-platform-size           [.2rem]     - The height / _(or width in the case of a vertically stacked set of tabs)_ of the "platform" that is displayed to indicate an active / selected tab within a `nav-tabs--sm` size variation
+/// @prop {Number} selected-platform-bd-radius      [.1rem]     - The amount of corner rounding to place on the platform that indicates an active / selected tab within a `nav-tabs--sm` size variation
+/// @prop {Number} selected-platform-edge-offset    [.6rem]     - The amount of space between the edge of the platform, and the actual edge of the hitarea
+///
+$nav-tabs-sm-tab-config: (
+    'bd-color': get($nav-tabs-sm-config, 'bd-color'),
+    //
+    'font-size': to-rem($font-size-md),
+    'bd-width': 0,
+    'bd-radius': 0,
+    'padding-vertical': to-rem(get($nav-link-config, 'padding-vertical')),
+    'padding-horizontal': 1rem,
+    'padding-top': to-rem(get($nav-link-config, 'padding-vertical')) + .2rem,
+    'padding-bottom': to-rem(get($nav-link-config, 'padding-vertical')) - .2rem,
+    'padding': null, // actual calculated value inserted via @extend
+    'height': to-rem(box-model-height(
+        $font-size: $font-size-md,
+        $padding-vertical: get($nav-link-config, 'padding-vertical'),
+        $line-height: 1.1,
+        $bd-width: 0
+    )),
+    'spacing': 0,
+    //
+    'selected-platform-size': $global-component-platform-bd-width - .1rem,
+    'selected-platform-bd-radius': .1rem,
+    'selected-platform-edge-offset': .6rem
+) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $nav-tabs-sm-tab-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $nav-tabs-sm-tab-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $nav-tabs-sm-tab-padding: get($nav-tabs-sm-tab-config, 'padding-top') get($nav-tabs-sm-tab-config, 'padding-horizontal') get($nav-tabs-sm-tab-config, 'padding-bottom');
+
+        // ----- EXTEND tabs-sm config with calc'd values ----- //
+        $nav-tabs-sm-tab-config: extend($nav-tabs-sm-tab-config,
+            (
+                'padding': $nav-tabs-sm-tab-padding
+            )
+        );
+
+
+
+// ********************************************************
+//
+//  UNDOCUMENTED CONVENIENCE VARS
+//
+// ********************************************************
+$nav-tabs-bd-width-rem: to-rem(get($nav-tabs-config, 'bd-width'));
+$nav-tabs-content-spacing-rem: to-rem(get($nav-tabs-config, 'content-spacing'));
+$nav-tabs-tab-bd-width-rem: to-rem(get($nav-tabs-tab-config, 'bd-width'));
+$nav-tabs-tab-bd-radius-rem: to-rem(get($nav-tabs-tab-config, 'bd-radius'));
+$nav-tabs-tab-spacing-rem: to-rem(get($nav-tabs-tab-config, 'spacing'));

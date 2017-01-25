@@ -1,0 +1,210 @@
+// ********************************************************
+
+////
+/// Form "Switch" / "Toggle" checkbox components
+/// ---
+/// @access public
+/// @group peripherals.components.form-controls
+/// @since 0.2.2
+/// @link http://bit.ly/webskin-form-toggle-switches Toggle switch form component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/form-toggle-switches/atoms/form-toggle-switches-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend,
+                                                function shade-of);
+//
+// ********************************************************
+
+
+///
+/// Skin colors for `.checkbox-switch` components.
+/// ---
+/// @type Map
+/// @since 1.6.0
+/// ---
+/// @requires {function} get
+/// @requires {function} shade-of
+/// @requires {variable} $zc-green
+/// @requires {variable} $zc-gray-70
+/// @requires {variable} $zc-gray-80
+/// @requires {variable} $btn-colors-success
+/// @requires {variable} $btn-colors-alt
+/// @requires {variable} $btn-colors-warning
+/// @requires {variable} $btn-colors-danger
+/// ---
+/// @prop {Map} default
+/// @prop {Color} default.void-bg           [#e0e0e0] - Default backgrond color of the "void", e.g. the portion that the button slides around in
+/// @prop {Color} default.btn-bg            [#b2b2b2] - Default background color of the clickable button within the switch
+/// @prop {Color} default.btn-bd            [#a1a1a1] - Default border color of the clickable button within the switch
+/// @prop {Color} default.void-bg-active    [#d1f0b3] - Default background color of the "void" when switch is active, e.g. the portion that the button slides around in
+/// @prop {Color} default.btn-bg-active     [#66cc00] - Default background color of the clickable button within an active switch
+/// @prop {Color} default.btn-bd-active     [#61c200] - Default border color of the clickable button within an active switch
+///
+/// @prop {Map} alt
+/// @prop {Color} alt.void-bg           [inherit] - Backgrond color of the "void", e.g. the portion that the button slides around in for a `.checkbox-switch-alt` skin variation
+/// @prop {Color} alt.btn-bg            [inherit] - Background color of the clickable button within the switch for a `.checkbox-switch-alt` skin variation
+/// @prop {Color} alt.btn-bd            [inherit] - Border color of the clickable button within the switch for a `.checkbox-switch-alt` skin variation
+/// @prop {Color} alt.void-bg-active    [#b3dfff] - Background color of the "void" when switch is active, e.g. the portion that the button slides around in for a `.checkbox-switch-alt` skin variation
+/// @prop {Color} alt.btn-bg-active     [#0094ff] - Background color of the clickable button within an active switch for a `.checkbox-switch-alt` skin variation
+/// @prop {Color} alt.btn-bd-active     [#0085e6] - Border color of the clickable button within an active switch for a `.checkbox-switch-alt` skin variation
+///
+/// @prop {Map} warning
+/// @prop {Color} warning.void-bg           [inherit] - Backgrond color of the "void", e.g. the portion that the button slides around in for a `.checkbox-switch-warning` skin variation
+/// @prop {Color} warning.btn-bg            [inherit] - Background color of the clickable button within the switch for a `.checkbox-switch-warning` skin variation
+/// @prop {Color} warning.btn-bd            [inherit] - Border color of the clickable button within the switch for a `.checkbox-switch-warning` skin variation
+/// @prop {Color} warning.void-bg-active    [#fee6b9] - Background color of the "void" when switch is active, e.g. the portion that the button slides around in for a `.checkbox-switch-warning` skin variation
+/// @prop {Color} warning.btn-bg-active     [#fbad17] - Background color of the clickable button within an active switch for a `.checkbox-switch-warning` skin variation
+/// @prop {Color} warning.btn-bd-active     [#f4a204] - Border color of the clickable button within an active switch for a `.checkbox-switch-warning` skin variation
+///
+/// @prop {Map} danger
+/// @prop {Color} danger.void-bg           [inherit] - Backgrond color of the "void", e.g. the portion that the button slides around in for a `.checkbox-switch-danger` skin variation
+/// @prop {Color} danger.btn-bg            [inherit] - Background color of the clickable button within the switch for a `.checkbox-switch-danger` skin variation
+/// @prop {Color} danger.btn-bd            [inherit] - Border color of the clickable button within the switch for a `.checkbox-switch-danger` skin variation
+/// @prop {Color} danger.void-bg-active    [#fabebd] - Background color of the "void" when switch is active, e.g. the portion that the button slides around in for a `.checkbox-switch-danger` skin variation
+/// @prop {Color} danger.btn-bg-active     [#ee2724] - Background color of the clickable button within an active switch for a `.checkbox-switch-danger` skin variation
+/// @prop {Color} danger.btn-bd-active     [#e71512] - Border color of the clickable button within an active switch for a `.checkbox-switch-danger` skin variation
+///
+$cbox-switch-skin-config: (
+    'default': (
+        'void-bg': shade-of($zc-gray-70, 40%),
+        'btn-bg': $zc-gray-70,
+        'btn-bd': shade-of($zc-gray-80, 80%),
+        //
+        'void-bg-active': shade-of($zc-green, 30%),
+        'btn-bg-active': get($btn-colors-success, 'bg-base'),
+        'btn-bd-active': get($btn-colors-success, 'bd-base')
+    ),
+    'alt': (
+        'void-bg': inherit, // same as default
+        'btn-bg': inherit, // same as default
+        'btn-bd': inherit, // same as default
+        //
+        'void-bg-active': shade-of($zc-blue, 30%),
+        'btn-bg-active': get($btn-colors-alt, 'bg-base'),
+        'btn-bd-active': get($btn-colors-alt, 'bd-base')
+    ),
+    'warning': (
+        'void-bg': inherit, // same as default
+        'btn-bg': inherit, // same as default
+        'btn-bd': inherit, // same as default
+        //
+        'void-bg-active': shade-of($zc-orange, 30%),
+        'btn-bg-active': get($btn-colors-warning, 'bg-base'),
+        'btn-bd-active': get($btn-colors-warning, 'bd-base')
+    ),
+    'danger': (
+        'void-bg': inherit, // same as default
+        'btn-bg': inherit, // same as default
+        'btn-bd': inherit, // same as default
+        //
+        'void-bg-active': shade-of($zc-red, 30%),
+        'btn-bg-active': get($btn-colors-danger, 'bg-base'),
+        'btn-bd-active': get($btn-colors-danger, 'bd-base')
+    )
+) !default;
+
+
+///
+/// Configuration for `.checkbox-switch` components.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {function} get-deep
+/// @requires {variable} $form-control-config
+/// @requires {variable} $cbox-switch-skin-config
+/// ---
+/// @prop {Number} width            [30px]      - Default width
+/// @prop {Number} width-xs         [inherit]   - Width of the `xs` size variation
+/// @prop {Number} width-sm         [inherit]   - Width of the `sm` size variation
+/// @prop {Number} width-lg         [44px]      - Width of the `lg` size variation
+/// @prop {Number} void-denominator [1.5]       - Deprecated.  Will be removed in 2.0.0
+/// @prop {Number} void-width       [100%]      - Deprecated. Will be removed in 2.0.0
+/// @prop {Number} void-height      [8px]       - Height of the "void", e.g. the portion that the button slides around in
+/// @prop {Number} btn-width        [16px]      - Default width / height of the clickable button within the switch
+/// @prop {Number} btn-width-xs     [inherit]   - Width of the clickable button within a `xs` switch size variation
+/// @prop {Number} btn-width-sm     [inherit]   - Width of the clickable button within a `sm` switch size variation
+/// @prop {Number} btn-width-lg     [20px]      - Width of the clickable button within a `lg` switch size variation
+/// @prop {Number} btn-bd-width     [1px]       - Default border width of the clickable button within the switch
+/// @prop {Number} btn-inset        [0]         - Deprecated. Will be removed in 2.0.0
+/// @prop {Number} label-spacing    [10px]      - Amount of horizontal space between the label text and the toggle
+///
+/// @prop {Map} height      - Default heights for toggle switch `base`, `sm` and `xs` size variations
+/// @prop {Map} font-size   - Default font sizes for toggle switch `base`, `sm` and `xs` size variations
+/// @prop {Map} bd-radius   - Default border radii for toggle switch `base`, `sm` and `xs` size variations
+/// @prop {Map} text-indent - Deprecated. Will be removed in 2.0.0
+///
+/// @prop {Color} void-bg-base      [#e0e0e0] - Deprecated. Use `$cbox-switch-skin-config` instead.
+/// @prop {Color} btn-bg-base       [#b2b2b2] - Deprecated. Use `$cbox-switch-skin-config` instead.
+///
+/// @prop {Color} void-bg-active    [#d1f0b3] - Deprecated. Use `$cbox-switch-skin-config` instead.
+/// @prop {Color} btn-bg-active     [#66cc00] - Deprecated. Use `$cbox-switch-skin-config` instead.
+///
+/// @prop {Map} btn-elem   - Switch button element selector strings
+/// @prop {Map} text-elem  - Switch void element selector strings
+///
+$cbox-switch-config: (
+    'width': get-deep($form-control-config, 'height.base'),
+    'width-xs': inherit,
+    'width-sm': inherit,
+    'width-lg': 44px,
+    'void-denominator': 1.5,
+    'void-width': 100%,
+    'void-height': 8px,
+    'btn-width': 16px,
+    'btn-width-xs': inherit,
+    'btn-width-sm': inherit,
+    'btn-width-lg': 20px,
+    'btn-bd-width': 1px,
+    'btn-inset': 0,
+    'label-spacing': $spacing-base * 2,
+    //
+    'height': (
+        'base': get-deep($form-control-config, 'height.base'),
+        'sm':   get-deep($form-control-config, 'height.sm'),
+        'xs':   get-deep($form-control-config, 'height.xs'),
+        'lg':   get-deep($form-control-config, 'height.lg')
+    ),
+    'font-size': (
+        'base': get-deep($form-control-config, 'font-size.base'),
+        'sm':   get-deep($form-control-config, 'font-size.sm'),
+        'xs':   get-deep($form-control-config, 'font-size.xs'),
+        'lg':   get-deep($form-control-config, 'font-size.lg')
+    ),
+    'bd-radius': (
+        'base': get-deep($form-control-config, 'bd-radius.base'),
+        'sm':   get-deep($form-control-config, 'bd-radius.sm'),
+        'xs':   get-deep($form-control-config, 'bd-radius.xs'),
+        'lg':   get-deep($form-control-config, 'bd-radius.lg')
+    ),
+    'text-indent': (
+        'base': 0,
+        'sm':   0,
+        'xs':   0
+    ),
+    // unchecked state colors
+    'void-bg-base': get-deep($cbox-switch-skin-config, 'default.void-bg'),
+    'btn-bg-base': get-deep($cbox-switch-skin-config, 'default.btn-bg'),
+    // checked state colors
+    'void-bg-active': get-deep($cbox-switch-skin-config, 'default.void-bg-active'),
+    'btn-bg-active': get-deep($cbox-switch-skin-config, 'default.btn-bg-active'),
+    //
+    'btn-elem': (
+        'default': 'label:after',
+        'checked': 'input[type=checkbox]:checked + label:after' 'input[type=checkbox][checked] + label:after' 'input[type=checkbox][checked] + label:after'
+    ),
+    'text-elem': (
+        'default': 'label:before',
+        'checked': 'input[type=checkbox]:checked + label:before' 'input[type=checkbox][checked] + label:before' 'input[type=checkbox][checked] + label:before'
+    )
+) !default;

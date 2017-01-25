@@ -1,0 +1,102 @@
+// ********************************************************
+
+////
+/// Misc form element configuration
+/// (non `.form-control` elems)
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// @group core.components.form-controls
+/// @link http://bit.ly/webskin-form-controls Form component spec
+/// @link http://bit.ly/webskin-form-inline Inline form component spec
+/// @link http://bit.ly/webskin-form-horizontal Horizontal form component spec
+/// @link http://bit.ly/webskin-form-help-text Form help text spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/forms/config/form-misc-element-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// Configuration for miscellaneous elements (non `.form-control`) / components nested within a `<form>`.
+/// ---
+/// @requires {function} get-deep
+/// @requires {variable} $base-elem-margin-vertical
+/// @requires {variable} $line-height-base
+/// @requires {variable} $line-height-base-px
+/// @requires {variable} $form-control-config
+/// @requires {variable} $headings-font-family
+/// @requires {variable} $headings-config
+/// @requires {variable} $headings-margin-bottom
+/// @requires {variable} $headings-bd-width
+/// @requires {variable} $headings-color
+/// @requires {variable} $headings-bd-color
+/// ---
+/// @prop {Number} group-margin-bottom  [15px] - Default bottom margin for `.form-group` components
+///
+/// @prop {Number} label-margin-bottom          [5px]           - Default bottom margin for `<label>` elements within a `<form>`
+/// @prop {Number} label-line-height            [1.428571429]   - Default line height for `<label>` elements within a `<form>`
+/// @prop {Number} label-line-height-px         [20px]          - Default line height [in `px`] for `<label>` elements within a `<form>`
+/// @prop {Number} help-margin-bottom           [15px]          - Default bottom margin for `.help-block` components within a `<form>`
+/// @prop {Number} help-margin-top              [10px]          - Default top margin for `.help-block` components within a `<form>`
+/// @prop {Number} horizontal-label-padding-top [6px]           - Default top padding for `<label>` elements within a `.form-horizontal` component
+/// @prop {Number} inline-help-line-height      [34px]          - Default line height for `.help-block` components within a `.form-inline` component
+/// @prop {Number} inline-help-padding-left     [5px]           - Default left padding for `.help-block` components within a `.form-inline` component
+///
+/// @prop {List}   legend-font-family                  - Default font family for `<legend>` elements within a `<form>`
+/// @prop {Number} legend-font-size         [18px]     - Default font size for `<legend>` elements within a `<form>`
+/// @prop {Number} legend-margin-bottom     [.550em]   - Default bottom margin for `<legend>` elements within a `<form>`
+/// @prop {Number} legend-bd-width          [1px]      - Default bottom border width for `<legend>` elements within a `<form>`
+/// @prop {Color}  legend-text-color        [#444444]  - Default text color for `<legend>` elements within a `<form>`
+/// @prop {Color}  legend-bd-color          [#e3e3e3]  - Default bottom border color for `<legend>` elements within a `<form>`
+///
+$form-config: (
+    // `.form-group` components
+    'group-margin-bottom': $base-elem-margin-vertical * 1.5,
+    'group-margin-bottom-lg': $base-elem-margin-vertical * 2,
+    'group-margin-bottom-sm': $base-elem-margin-vertical,
+    'group-margin-bottom-xs': round($base-elem-margin-vertical / 2),
+    // labels / help text
+    'label-margin-bottom': round($base-elem-margin-vertical / 2),
+    'label-line-height': $line-height-base,
+    'label-line-height-px': $line-height-base-px,
+    'help-margin-bottom': $base-elem-margin-vertical * 1.5,
+    'help-margin-top': $base-elem-margin-vertical,
+    'horizontal-label-padding-top': get-deep($form-control-config, 'padding.base.vertical'),
+    'inline-help-line-height': get-deep($form-control-config, 'height.base'),
+    'inline-help-padding-left': round($base-elem-margin-vertical / 2),
+    // legends
+    'legend-font-family': $headings-font-family,
+    'legend-font-size': get-deep($headings-config, 'h4.font-size'),
+    'legend-margin-bottom': $headings-margin-bottom * 2,
+    'legend-bd-width': $headings-bd-width,
+    'legend-text-color': $headings-color,
+    'legend-bd-color': $headings-bd-color
+) !default;
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED VARS
+//
+// ********************************************************
+
+// ----------------------------------------------------
+//   BORDERED FORM VARIATION
+// ----------------------------------------------------
+    $form-bd-width:           1px;
+    $form-bd-color:           $zc-gray-60;
+    $form-actions-background: $state-default-bg;
+
+
+// ----------------------------------------------------
+//   FORM-HORIZONTAL VARIATION
+// ----------------------------------------------------
+    $horizontal-component-lbl-right-pad: $line-height-base-px;
+    $horizontal-component-lbl-top-pad:   (get-deep($form-control-config, 'height.base') - $line-height-base-px) / 2;

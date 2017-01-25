@@ -1,0 +1,22 @@
+// ----------------------------------------------------
+
+//+  PARTIAL:  _deprecated/_constants/_ua-media/_browsers.scss
+//+  PARENT:   _deprecated/_manifest.scss
+
+// NOTE: DO NOT USE THESE!!! They were deprecated in `1.0.0` will be removed no later than `2.0.0`
+// TODO: Remove no later than `2.0.0`
+
+// ----------------------------------------------------
+
+@mixin ie8 {
+    @warn "The Web Skin `ie8` mixin was deprecated in the `1.0.0` release and will be removed completely in a future release. Use `ie-support('<9')` instead.";
+    @include ie-support('<9') {
+        @content;
+    }
+}
+@mixin ltie8 {
+    @warn "Web Skin no longer support MSIE 7 as of the `1.0.0` release, and this mixin (`ltie8()`) will be removed completely in a future release.";
+    @include ie-support('<8') {
+        @content;
+    }
+}

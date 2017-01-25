@@ -1,0 +1,127 @@
+// ********************************************************
+//
+//   "INVISIBLE" SKIN VARIATION FOR COLLAPSIBLE CARD LIST
+//
+//   UIP-1409
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/cards/card-invisible-list';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $cards-module-config:  'core/components/atoms/cards/cards-config';
+    $cards-module-helpers: 'core/components/atoms/cards/cards-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $cards-module-config,
+                                          $cards-module-helpers);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//  Root `.card-collapse` element
+//
+//  -> Card children within this element MUST have the
+//     `card--invisible` skin class applied.
+//
+//  [1] Show a divider between cards that are not
+//      expanded, or hovered.
+//
+//  [2] Show a divider above cards that are nested
+//      within their own dissociated parent
+//      `.card-collapse` elements that are not
+//      themselves the first child.
+//
+//  [3] Show a divider between cards that are not
+//      expanded, or hovered - but are nested in two
+//      different, adjacent `.card-collapse` elements.
+//
+//  [4] Show a divider below the last card in the last
+//      collapsible list.
+//
+//  [5] Do not show a divider when a collapsed card
+//      is directly adjacent to an expanded card, or
+//      when an uncollapsed card that is hovered is
+//      directly adjacent to any other card.
+//
+//  [6] When each card is nested within its own parent
+//      `.card-collapse` element, and a hovered parent
+//      has a collapsed adjacent sibling, do not show
+//      a divider between them.
+//
+//  [7] When each card is nested within its own parent
+//      `.card-collapse` element, and a parent has a
+//      single child that is expanded, do not show
+//      a divider between it's adjacent sibling.
+//
+//  [8] Prevent browser from injecting / removing the
+//      pseudo element on mouseenter / mouseleave.
+// ----------------------------------------------------
+.card-collapse--invisible-list {
+    @include card-invisible-collapsed-card-header-actions();
+
+    position: relative; // [4]
+
+    .card--collapsed:before {
+        content: ""; // [8]
+    }
+
+    // ----- [1] ----- //
+    .card--collapsed:not(:first-child):before {
+        @include card-invisible-list-divider();
+    }
+
+    // ----- [2] ----- //
+    &:not(:first-child) .card--collapsed:only-child:before {
+        @include card-invisible-list-divider();
+    }
+
+    // ----- [3] ----- //
+    + .card-collapse--invisible-list .card--collapsed:first-child:before {
+        @include card-invisible-list-divider();
+    }
+
+    // ----- [4] ----- //
+    &:last-child {
+        &:after {
+            @include card-invisible-list-divider($placement: below);
+        }
+    }
+
+    // ----- [5] ----- //
+    .card:not(.card--collapsed) + .card--collapsed:before { background-color: rgba($white, 0); }
+    .card--collapsed {
+        @include card-invisible-list-hover-focus-selectors() {
+            &:before,
+            + .card--collapsed:before {
+                background-color: rgba($white, 0) !important;
+            }
+        }
+    }
+
+    // ----- DISSOCIATED PARENT EDGE CASES ----- //
+
+    // ----- [6] ----- //
+    &.card-collapse--is-dissociated {
+        &:hover,
+        &.card-collapse--has-focused-card {
+            + .card-collapse--invisible-list .card--collapsed:first-child {
+                &:before {
+                    background-color: rgba($white, 0) !important;
+                }
+            }
+        }
+    }
+
+    // ----- [7] ----- //
+    &.card-collapse--is-dissociated.card-collapse--has-expanded-card {
+        + .card-collapse--invisible-list .card--collapsed:first-child {
+            &:before {
+                background-color: rgba($white, 0) !important;
+            }
+        }
+    }
+}

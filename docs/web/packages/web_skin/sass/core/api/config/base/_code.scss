@@ -1,0 +1,121 @@
+// ********************************************************
+
+////
+/// Base code styles
+/// ---
+/// @access private
+/// @type Number
+/// @group core.internals.typography
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/base/code';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   <code>
+// ----------------------------------------------------
+    ///
+    /// Default border radius for an inline `<code>` element.
+    /// ---
+    /// @requires {variable} $border-radius-base
+    ///
+    $code-bd-radius: $border-radius-base;
+
+    ///
+    /// Default background color for an inline `<code>` element.
+    /// ---
+    /// @type Color
+    /// @color #f2f2f5
+    ///
+    $code-bg: #f2f2f5;
+
+    ///
+    /// Default border color for an inline `<code>` element.
+    /// ---
+    /// @type Color
+    /// @color #f4e8eb
+    /// @requires {variable} $code-bg
+    ///
+    $code-bd: darken($code-bg, 3);
+
+    ///
+    /// Default color for an inline `<code>` element.
+    /// ---
+    /// @type Color
+    /// @color #bd4147
+    ///
+    $code-color: #bd4147;
+
+
+// ----------------------------------------------------
+//   <kbd>
+// ----------------------------------------------------
+    ///
+    /// Default background color for an inline `<kbd>` element.
+    /// ---
+    /// @type Color
+    /// @color #f3f3f3
+    /// @since 0.4.8
+    /// @requires {variable} $zc-gray-20
+    ///
+    $kbd-bg: $zc-gray-20;
+
+    ///
+    /// Default color for an inline `<kbd>` element.
+    /// ---
+    /// @type Color
+    /// @color #595959
+    /// @since 0.4.8
+    /// @requires {variable} $zc-gray
+    ///
+    $kbd-color: $zc-gray;
+
+
+// ----------------------------------------------------
+//   <pre>
+// ----------------------------------------------------
+    ///
+    /// Default background color for a `<pre>` element.
+    /// ---
+    /// @type Color
+    /// @color #f5f5f5
+    ///
+    $pre-bg: #f5f5f5;
+
+    ///
+    /// Default color for a `<pre>` element.
+    /// ---
+    /// @type Color
+    /// @color #444444
+    /// @requires {variable} $zc-gray-120
+    ///
+    $pre-color: $zc-gray-120;
+
+    ///
+    /// Default border color for a `<pre>` element.
+    /// ---
+    /// @type Color
+    /// @color #cbcbcb
+    /// @requires {variable} $zc-gray-60
+    ///
+    $pre-bd-color: $zc-gray-60;
+
+    ///
+    /// Default amount of padding within a `<pre>` element.
+    /// ---
+    /// @since 1.0.0
+    ///
+    $pre-padding: 1em;
+
+    ///
+    /// Default `max-height` value for a `.pre-scrollable` element.
+    /// ---
+    /// @since 0.2.0
+    ///
+    $pre-scrollable-max-height: 340px;

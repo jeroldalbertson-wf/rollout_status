@@ -1,0 +1,14 @@
+// ********************************************************
+//
+//  HINT WIDTH / MULTILINE VARIATIONS
+//
+//  Defines width restricted hints that can have their
+//  text span across multiple lines.
+//
+// ********************************************************
+
+@each $size-key, $width in $hint-width-config {
+    .hint--#{$size-key} {
+        @include hint-width($width);
+    }
+}

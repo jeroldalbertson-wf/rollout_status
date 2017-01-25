@@ -1,0 +1,342 @@
+// ********************************************************
+//
+//   Highlight the grid columns within
+//   the docs so folks can see their padding,
+//   alignment, sizing, etc.
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-grid';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+$grid-demo-colors: (
+    'bg': $sidenav-bg,
+    'bg-rgba': rgba($sidenav-color-mixed, .25),
+    'bd': darken($sidenav-bg, 5%),
+    'bd-rgba': rgba($sidenav-color-mixed, .3),
+    'nested': (
+        'bg-rgba': rgba($sidenav-color-mixed, .45),
+        'bd-rgba': rgba($sidenav-color-mixed, .5)
+    )
+);
+
+
+// ----------------------------------------------------
+//   v1 Grid Demo
+// ----------------------------------------------------
+.ws-grid {
+    padding: 0 to-rem($grid-gutter-width / 2, $html-font-size-px);
+}
+
+.show-grid {
+    margin-bottom: to-rem($docs-spacing-base);
+}
+
+.show-grid {
+    // All columns
+    [class*="col-"] {
+        padding-top: to-rem($docs-spacing-md);
+        padding-bottom: to-rem($docs-spacing-md);
+        font-size: 1.3rem;
+        text-align: center;
+        background-color: get($grid-demo-colors, 'bg-rgba');
+        border: .1rem solid get($grid-demo-colors, 'bd-rgba');
+
+        //
+        // Make nested columns darker to add contrast
+        //
+        [class*="col-"] {
+            background-color: get-deep($grid-demo-colors, 'nested.bg-rgba');
+            border-color: get-deep($grid-demo-colors, 'nested.bd-rgba');
+        }
+    }
+
+    .badge {
+        font-size: to-rem($font-size-base);
+        font-weight: normal;
+        background-color: rgba(darken($sidenav-color-mixed, 20), .7);
+        color: mix($sidenav-color-mixed, $white, 25%);
+    }
+}
+
+
+
+// ----------------------------------------------------
+//   v2 Grid Demo
+// ----------------------------------------------------
+$grid-v2-demo-block-text-color: rgba($black, .5);
+$grid-v2-demo-block-margin: $flex-grid-gutter-width / 2;
+$grid-demo-min-height: to-rem(100px, $html-font-size-px);
+
+.ws-main > .grid-block,
+.ws-section > .grid-block:not(.ws-grid-demo) {
+    @include flex-wrap(wrap);
+}
+
+//
+// v2 Grid Utility Classes
+// Makes the grid examples easier to visually consume
+// by providing space between adjacent blocks
+//
+.wsg-margin {
+    margin: $grid-v2-demo-block-margin;
+
+    + .wsg-margin {
+        // prevent double horizontal margin
+        margin-left: 0;
+    }
+
+    .grid-vertical > & {
+        + .wsg-margin {
+            // prevent double vertical margin
+            margin-top: 0;
+            // re-instate left margin
+            margin-left: $grid-v2-demo-block-margin;
+        }
+    }
+}
+
+.wsg-margin-v {
+    margin-top: $grid-v2-demo-block-margin;
+    margin-bottom: $grid-v2-demo-block-margin;
+
+    + .wsg-margin-v {
+        // prevent double margin
+        margin-top: 0;
+    }
+}
+
+.wsg-margin-h {
+    margin-right: $grid-v2-demo-block-margin;
+    margin-left: $grid-v2-demo-block-margin;
+
+    // prevent double margin
+    + .wsg-margin-h {
+        margin-left: 0;
+    }
+}
+
+@each $direction in top, right, bottom, left {
+    .wsg-margin-#{$direction} {
+        margin-#{$direction}: $grid-v2-demo-block-margin;
+    }
+}
+
+//
+// v2 Grid Core Demo Styles
+//
+.ws-grid-demo {
+    min-height: $grid-demo-min-height;
+    margin: $flex-grid-gutter-width 0 ($flex-grid-gutter-width / 2) 0 !important;
+    color: $grid-v2-demo-block-text-color;
+    font-weight: bold;
+    text-align: center;
+    //
+    // Make first block in a nested situation slightly
+    // lighter to add contrast to nested blocks
+    //
+    background-color: get($grid-demo-colors, 'bg-rgba');
+
+    .grid-block {
+        // Force MSIE to render blocks even when they have no content
+        min-height: $grid-demo-min-height - ($grid-v2-demo-block-margin * 2);
+    }
+
+    //
+    // Container Blocks
+    //
+    .grid-container {
+        max-width: to-rem(400px, $html-font-size-px);
+        height: $grid-demo-min-height;
+        margin-top: (($grid-v2-demo-block-margin) * -1);
+        margin-bottom: (($grid-v2-demo-block-margin) * -1);
+    }
+
+    //
+    // Darken color of nested example blocks for better contrast
+    //
+    [class*="grid-block"],
+    .grid-content,
+    .grid-container {
+        background-color: get-deep($grid-demo-colors, 'nested.bg-rgba');
+    }
+
+    code {
+        font-weight: normal;
+        color: $grid-v2-demo-block-text-color;
+        background-color: transparent;
+        padding: 0;
+    }
+
+    &[class*="grid-up"] {
+        > .grid-block {
+            position: relative;
+            margin: 0 !important;
+            height: to-rem(100px, $html-font-size-px);
+            background-color: transparent;
+
+            &:after {
+                $pos: $grid-v2-demo-block-margin;
+                position: absolute;
+                top: $pos;
+                right: $pos;
+                bottom: $pos;
+                left: $pos;
+                display: block;
+                content: ' ';
+                background-color: get-deep($grid-demo-colors, 'nested.bg-rgba');
+            }
+        }
+    }
+}
+
+//
+// Adjust spacing of examples when adjacent to a header
+//
+h2, h3, h4, h5 {
+    + .ws-grid-demo {
+        margin-top: 1rem !important;
+    }
+}
+
+//
+// Give the vertical container some height since our
+// demo blocks have no content in them to force
+// the box model to grow vertically
+//
+.ws-grid-demo-vertical {
+    &.grid-vertical,
+    > .grid-vertical {
+        height: to-rem(400px, $html-font-size-px);
+    }
+}
+
+//
+// Grid content padding demo
+// .grid-collapse-*
+//
+.ws-grid-content-padding-demo {
+    > .grid-content {
+        background-color: transparent;
+
+        > .demo-content {
+            line-height: 7rem;
+        }
+
+        // Fill the min-height of the example container
+        // when the vertical padding is gone
+        &.grid-collapse,
+        &.grid-collapse-vertical {
+            > .demo-content {
+                min-height: 10rem;
+                line-height: 10rem;
+            }
+        }
+
+        // Fill the min-height of the example container
+        // when one of the vertical side's padding is gone
+        &.grid-collapse-top,
+        &.grid-collapse-bottom {
+            > .demo-content {
+                min-height: 8.5rem;
+                line-height: 8.5rem;
+            }
+        }
+    }
+}
+
+//
+// Grid Block Gutter Variation Demo
+//
+.ws-grid-gutter-demo {
+    // Make sure height is correct in MSIE - since MSIE treats flexbox blocks as `box-sizing: border-box`.
+    .grid-block {
+        min-height: 10rem;
+    }
+
+    .demo-block-label {
+        padding-top: 1rem; // vertically center the text
+    }
+
+    &.grid-gutter,
+    &.grid-gutter-vertical {
+        .demo-block-label {
+            padding-top: 0; // vertically center the text
+        }
+    }
+}
+
+//
+// Grid scrolling demo
+//
+.ws-grid-scroll-demo {
+    font-weight: normal;
+    text-align: left;
+    max-height: 25rem;
+}
+
+//
+// Grid source ordering demo
+//
+.ws-grid-ordering-demo {
+    .grid-content {
+        line-height: 4; // vertically center the numbers
+    }
+
+    .wsg-margin {
+        //
+        // Override the "remove double margin" setting
+        // since we can't trust the adjacent sibling CSS
+        // selector when we're modifying source order!
+        //
+        margin-left: $flex-grid-gutter-width / 2 !important;
+    }
+}
+
+//
+// Custom grid size examples
+//
+.ws-grid-demo {
+    .app-sidebar {
+        // Custom width
+        @include grid-size(15rem); // 15rem == 150px
+    }
+
+    .app-main-header,
+    .app-main-footer {
+        // Custom height
+        @include grid-size(7.5rem, vertical); // 7.5rem == 75px
+    }
+
+    .app-sidebar,
+    .app-main-header,
+    .app-main-footer {
+        .grid-content {
+            line-height: 4.5;
+        }
+    }
+}
+
+//
+// Utility color classes for all grid examples
+//
+.grid-demo-bg-light {
+    // hard-coded based on bg-rgba of nested atop bg of docs body bg
+    background-color: #eff1ec !important;
+
+    > .grid-content {
+        background-color: transparent;
+    }
+}
+
+.grid-demo-bg-dark {
+    // hard-coded based on bg-rgba of nested atop bg of non-nested bg
+    background-color: #e1e5db !important;
+
+    > .grid-content {
+        background-color: transparent;
+    }
+}

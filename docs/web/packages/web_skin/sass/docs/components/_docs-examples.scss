@@ -1,0 +1,499 @@
+// ********************************************************
+//
+//   Isolated sections of example content
+//   for each component or feature. Usually
+//   followed by a code snippet (`.highlight`)
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/examples';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Base class
+// ----------------------------------------------------
+.ws-example {
+    // ----- Mobile First Defaults ----- //
+    position: relative;
+    padding: $docs-example-padding;
+    margin-left: $docs-body-padding-horizontal * -1;
+    margin-right: $docs-body-padding-horizontal * -1;
+    margin-bottom: $docs-example-margin-bottom;
+    background-color: $docs-example-bg;
+    border-style: solid;
+    border-color: $docs-example-bd-color;
+    border-width: $docs-example-bd-width 0;
+    clear: both;
+}
+
+
+// ----------------------------------------------------
+//   Expand / Collapse Code Example Tab
+// ----------------------------------------------------
+.code-toggle {
+    @include clearfix();
+
+    display: block;
+    position: relative;
+    z-index: 2; // keep above header permalinks / example borders
+    float: left;
+    clear: both;
+    margin-bottom: to-rem($docs-spacing-base);
+    background: $docs-example-bg;
+    border: $docs-example-bd-width solid $docs-example-bd-color;
+    border-radius: $docs-example-bd-radius;
+    padding: .4rem 1rem;
+    font-size: 1.3rem;
+    color: $link-color;
+
+    #{$hover} {
+        color: $link-color-hover;
+    }
+
+    #{$focus} {
+        // use a border instead of an outline since it has rounded edges
+        @include focus-border();
+    }
+
+
+    // ----- WHEN ADJACENT TO COMPONENT EXAMPLE BOX ----- //
+    .ws-example + .highlight-wrapper &,
+    .ws-examples--horizontal + .highlight-wrapper & {
+        // make tab look "connected" to example
+        float: right;
+        clear: none;
+        display: inline-block;
+        top: $docs-example-bd-width * -1;
+        right: $docs-body-padding-horizontal;
+        margin-top: $docs-example-margin-bottom * -1;
+        margin-bottom: $docs-example-margin-bottom * -1;
+        border-top-color: $docs-example-bg; // look "connected" to example
+        @include border-top-radius(0);
+
+        #{$focus} {
+            border-top-color: $docs-example-bg; // should still look "connected" to example
+        }
+
+        // ----- ACTIVE / OPEN STATE ----- //
+        &.js-open {
+            // should now look "connected" to code example
+            background-color: $docs-code-bg;
+            border-top-color: $docs-code-bg !important;
+            margin-top: 0;
+            margin-bottom: to-rem($docs-spacing-base);
+        }
+
+        @include respond-to('screen-sm and up') {
+            right: 0;
+        }
+    }
+
+    // ----- WHEN ADJACENT TO COMPONENT EXAMPLE BOX WITHIN A TAB PANE ----- //
+    .tab-pane .ws-example + .highlight-wrapper & {
+        right: 0;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Progressively enhance example
+//   container and code examples
+// ----------------------------------------------------
+@include respond-to('screen-sm and up') {
+    .ws-example {
+        padding: $docs-example-padding-sm;
+        margin-left: 0;
+        margin-right: 0;
+        border-width: $docs-example-bd-width;
+        border-radius: $docs-example-bd-radius $docs-example-bd-radius 0 0;
+
+        &:not(.grid-block-sm) {
+            // Not grid blocks because we want to allow them to be
+            // adjacent horizontally (see: `ws-examples--horizontal` class)
+            width: 100%;
+        }
+    }
+
+    .ws-example,
+    .ws-examples--horizontal {
+        + .highlight-wrapper .highlight,
+        + .code-example,
+        + .ws-example {
+            margin-top: ($docs-example-margin-bottom + $docs-example-bd-width) * -1;
+        }
+
+        + .highlight-wrapper .highlight {
+            // only round bottom left since `.code-toggle` button sits flush right
+            @include border-bottom-left-radius($docs-example-bd-radius);
+        }
+
+        + .code-example {
+            @include border-bottom-radius($docs-example-bd-radius);
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   EXAMPLE VARIATIONS
+// ----------------------------------------------------
+.ws-example--borderless {
+    border-width: 0 !important;
+}
+
+.ws-example--flush {
+    padding: 0 !important;
+}
+
+
+
+// ----------------------------------------------------
+//   ADJACENT CODE EXAMPLES
+// ----------------------------------------------------
+
+// ----- STACKED VERTICALLY ----- //
+.ws-example {
+    + .highlight-wrapper .highlight,
+    + .code-example,
+    + .ws-example {
+        margin-top: $docs-example-margin-bottom * -1;
+        @include border-top-radius(0);
+        border-top-width: 0; // Prevent double border width
+    }
+
+    + .ws-example {
+        @include border-bottom-left-radius(0);
+    }
+
+    + .highlight-wrapper--with-toggle .highlight {
+        @include border-bottom-right-radius(0);
+    }
+}
+
+// ----- HORIZONTAL BLOCKS (above sm / md / lg breakpoint) ----- //
+@mixin horizontal-example-above-breakpoint($breakpoint-name) {
+    display: block; // Make it a content block
+    @include force-overflow(visible);
+
+    &:first-of-type:not(:only-of-type) {
+        @include border-right-radius(0);
+    }
+
+    + .ws-example.grid-block-#{$breakpoint-name} {
+        @include border-top-right-radius($docs-example-bd-radius);
+
+        border-left-width: 0; // Prevent double border
+        border-top-width: $docs-example-bd-width; // Reinstate top border since its no longer stacked vertically
+    }
+}
+
+.ws-examples--horizontal {
+    @include force-overflow(visible);
+    margin-bottom: $docs-example-margin-bottom; // since we're removing it from the examples themselves.
+
+    + .ws-examples--horizontal {
+        margin-top: ($docs-example-margin-bottom * -1) - $docs-example-bd-width;
+        @include border-top-radius(0);
+    }
+
+    + .highlight-wrapper .highlight,
+    + .code-example {
+        margin-top: $docs-example-margin-bottom * -1;
+        @include border-top-radius(0);
+    }
+
+    + .highlight-wrapper--with-toggle .highlight {
+        @include border-bottom-right-radius(0);
+    }
+
+    > .ws-example[class*="grid-block"] {
+        margin-bottom: 0;
+
+        + .ws-example[class*="grid-block"] {
+            // Stacked vertically at mobile viewport width
+            margin-top: 0;
+            border-top-width: 0;
+            border-radius: 0;
+        }
+    }
+
+    @include respond-to('screen-sm and up') {
+        &:not(.ws-examples--horizontal-md):not(.ws-examples--horizontal-lg) {
+            @include grid-block($allow-nested-vblocks: false);
+            @include force-overflow(visible);
+        }
+
+        // Then simply add the `.grid-block-sm` CSS class to see your examples side-by-side!
+        > .ws-example.grid-block-sm {
+            @include horizontal-example-above-breakpoint(sm);
+        }
+    }
+}
+
+.ws-examples--horizontal-md {
+    @include respond-to('screen-md and up') {
+        @include grid-block($allow-nested-vblocks: false);
+        @include force-overflow(visible);
+
+        // Then simply add the `.grid-block-md` CSS class to see your examples side-by-side!
+        > .ws-example.grid-block-md {
+            @include horizontal-example-above-breakpoint(md);
+        }
+    }
+}
+
+.ws-examples--horizontal-lg {
+    @include respond-to('screen-lg and up') {
+        @include grid-block($allow-nested-vblocks: false);
+        @include force-overflow(visible);
+
+        // Then simply add the `.grid-block-lg` CSS class to see your examples side-by-side!
+        > .ws-example.grid-block-lg {
+            @include horizontal-example-above-breakpoint(lg);
+        }
+    }
+}
+
+
+
+// ----------------------------------------------------
+//   "Full Screen" example variation
+//
+//   -> Size the example area proportionally
+//     to match a "typical" viewport
+// ----------------------------------------------------
+$fs-example-height-ratio: 1;
+
+.wdesk-fs-example {
+    position: relative;
+    // mobile-first-default
+    height: to-rem(round($screen-xs-min * $fs-example-height-ratio));
+
+    @include respond-to('screen-sm and up') {
+        height: to-rem(round($screen-sm-min * $fs-example-height-ratio));
+    }
+
+    @include respond-to('screen-md and up') {
+        // at this size... the content is only a col-md-9
+        height: to-rem(round(($screen-md-min * (9/$grid-columns)) * $fs-example-height-ratio));
+    }
+
+    @include respond-to('screen-lg and up') {
+        // at this size... the content is only a col-md-9
+        height: to-rem(round(($screen-lg-min * (9/$grid-columns)) * $fs-example-height-ratio));
+    }
+
+
+    // Vertically center wdesk-loading elem when its shown within a docs
+    // example container instead of in a full screen example.
+    .wdesk-loading {
+        position: relative;
+        top: 50%;
+        margin-top: -3.4rem;
+    }
+}
+
+
+
+// ----------------------------------------------------
+//   Examples with Labels
+// ----------------------------------------------------
+    .ws-example-label {
+        font-size: $docs-example-label-font-size;
+        font-weight: bold;
+        letter-spacing: .1rem;
+        color: $docs-example-label-color;
+        text-transform: uppercase;
+
+        .grid-content > & {
+            margin-bottom: to-rem($docs-spacing-base);
+        }
+    }
+
+    .ws-example--with-label,
+    .ws-example[data-example-label] {
+        padding-top: $docs-example-padding * 3;
+
+        &:after {
+            @extend .ws-example-label;
+
+            content: "Example";
+            display: block; // override any clearfix() props added to prevent http://bit.ly/17OE7LY
+            position: absolute;
+            top: to-rem($docs-spacing-base);
+            left: $docs-example-padding;
+
+            @include respond-to('screen-sm and up') {
+                left: $docs-example-padding-sm;
+            }
+        }
+    }
+
+    // ----- Custom label ----- //
+    .ws-example[data-example-label] {
+        &:after {
+            content: attr(data-example-label);
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Examples that contain nothing but tabular content
+//
+//   -> E.g. render a table that looks just like our
+//      `.ws-example` container, but contains rows
+//      and columns!
+// ----------------------------------------------------
+.ws-example--table {
+    padding: 0 !important;
+    overflow-x: scroll;
+
+    &.ws-example--width-label,
+    &[data-example-label] {
+        padding-top: $docs-example-padding * 3 !important;
+    }
+
+    // Be sure to use .table-rounded!
+    .ws-table {
+        background-color: transparent;
+        border-width: 0; // the border of the example container is all you need
+        margin-bottom: 0;
+
+        > thead,
+        > tbody {
+            td,
+            th {
+                border-top: $docs-example-bd-width solid $docs-example-bd-color;
+                padding: $docs-example-padding;
+                font-size: $docs-section-font-size;
+
+                @include respond-to('screen-sm and up') {
+                    padding: $docs-example-padding-sm;
+                }
+            }
+        }
+
+        > thead th {
+            // Make the table headers look like the `.ws-example` labels
+            color: $docs-example-label-color;
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: .1rem;
+            border-bottom: $docs-example-bd-width solid $docs-example-bd-color;
+            vertical-align: top;
+        }
+
+        code {
+            font-size: 1em;
+        }
+
+        &.table-bordered {
+            border-width: 0;
+
+            > thead,
+            > tbody {
+                tr > td,
+                tr > th {
+                    border-left: 0;
+
+                    &:not(:first-child) {
+                        border-left: $docs-example-bd-width solid $docs-example-bd-color;
+                    }
+                }
+            }
+        }
+
+        &.table-condensed {
+            > thead,
+            > tbody {
+                td,
+                th {
+                    padding: $docs-example-padding;
+                    font-size: $docs-section-font-size - .1rem;
+                }
+            }
+
+            > thead th {
+                font-size: 1.3rem; // match example container label size no matter what
+            }
+        }
+
+
+        // ----------------------------------------------------
+        //   Handle Nested Tables
+        // ----------------------------------------------------
+        .ws-table {
+            &.table-bordered {
+                border: $docs-example-bd-width solid $docs-example-bd-color;
+            }
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   Tweak examples content
+//   for optimum awesome
+// ----------------------------------------------------
+$example-items-with-margin: p ul ol blockquote '.form-control' '.table' '.navbar' '.nav-tabs' '.alert' '.panel' '.list-group' '.well' '.progress' '.thumbnail' '.table-responsive';
+
+.ws-example {
+    @each $selector in $example-items-with-margin {
+        @if $selector != '.table-responsive' {
+            > #{$selector}:last-child,
+            > [class*="grid-block"] #{$selector}:last-child {
+                margin-bottom: 0;
+            }
+        } @else {
+            > #{$selector}:last-child > .table,
+            > [class*="grid-block"] #{$selector}:last-child > .table {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .row:last-of-type > .form-group[class*=col-xs-] {
+        margin-bottom: 0;
+    }
+
+    @include respond-to('screen-sm and up') {
+        .form--flexbox:last-of-type > .form-group,
+        .row:last-of-type > .form-group[class*=col-sm-] {
+            margin-bottom: 0;
+        }
+    }
+
+    @include respond-to('screen-md and up') {
+        .form--flexbox-md:last-of-type > .form-group,
+        .row:last-of-type > .form-group[class*=col-md-] {
+            margin-bottom: 0;
+        }
+    }
+
+    @include respond-to('screen-lg and up') {
+        .form--flexbox-lg:last-of-type > .form-group,
+        .row:last-of-type > .form-group[class*=col-lg-] {
+            margin-bottom: 0;
+        }
+    }
+
+    > p > .close {
+        float: none;
+    }
+
+    //
+    // table bg should always be $body-bg
+    // even at mobile-first size when example
+    // bg may not be white
+    //
+    .table {
+        background-color: $body-bg;
+
+        .table {
+            background-color: transparent;
+        }
+    }
+}

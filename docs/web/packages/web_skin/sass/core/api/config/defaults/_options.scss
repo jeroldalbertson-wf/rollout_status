@@ -1,0 +1,157 @@
+// ********************************************************
+
+////
+/// Default values that are used to set options for a particular module, or for global UI component feature flags
+/// ---
+/// @access private
+/// @group core.internals.options
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/options';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   MODULE PORTABILITY HELPERS
+//
+// ********************************************************
+    ///
+    /// Path helper that can be set to something like `../` in a module that will be output to a nested directory.
+    /// This value should be referenced in any `*-url` helper methods to ensure that a call to those methods from a module that is in a nested directory will not result in a 404 path.
+    /// ---
+    /// @type String
+    /// @since 1.1.0
+    /// @group core.internals.modularity
+    ///
+    $module-root: '' !default;
+
+    ///
+    /// Boolean flag used to determine whether Comapss image url helpers can be used when compiling Web Skin Sass modules in client projects
+    /// ---
+    /// @type Bool
+    /// @since 0.4.9
+    /// @deprecated 1.1.0 No longer necessary since we internalized the image helpers
+    /// @group core.internals.modularity
+    ///
+    $use-web-skin-img-dir: false !default;
+
+    ///
+    /// Allow apps to change the "root" element where they use Web Skin for better style encapsulation
+    /// ---
+    /// @type String
+    /// @since 0.2.0
+    /// @group core.internals.modularity
+    ///
+    $base-elem: 'body' !default;
+
+
+
+// ********************************************************
+//
+//   GLOBAL UI FLAGS / OPTIONS
+//
+// ********************************************************
+    ///
+    /// 1:96 fixed ratio of CSS `in` to `px`
+    /// ---
+    /// @type Number
+    /// @since 1.0.0
+    ///
+    $css-in-to-px-ratio: 96;
+
+
+
+// ********************************************************
+//
+//   GLOBAL BORDER RADIUS
+//
+// ********************************************************
+    ///
+    /// Collection of component border-radius configuration values. Great for building dynamic values within loops, etc...
+    /// ---
+    /// @access public
+    /// @group core.size.box-model
+    /// @type Map
+    /// @since 1.0.0
+    /// --
+    /// @prop {Number} base [4px] - Default corner radius of components at their base size
+    /// @prop {Number} xs   [2px] - Default corner radius of components at their extra small size variation
+    /// @prop {Number} sm   [3px] - Default corner radius of components at their small size variation
+    /// @prop {Number} lg   [6px] - Default corner radius of components at their large size variation
+    ///
+    $global-component-bd-radius-config: (
+        'base': 4px,
+        'xs':   2px,
+        'sm':   3px,
+        'lg':   6px
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   PRIVATE BD RADIUS ALIASES
+    // ----------------------------------------------------
+        ///
+        /// Rounded corner radius of for a component's base size.
+        /// ---
+        /// @group core.internals.size.box-model
+        /// @type Number
+        /// @requires {variable} $global-component-bd-radius-config
+        ///
+        $border-radius-base: map-get($global-component-bd-radius-config, 'base');
+
+        ///
+        /// Rounded corner radius of for a component's large size variation.
+        /// ---
+        /// @group core.internals.size.box-model
+        /// @type Number
+        /// @requires {variable} $global-component-bd-radius-config
+        ///
+        $border-radius-lg: map-get($global-component-bd-radius-config, 'lg');
+
+        ///
+        /// Rounded corner radius of for a component's small size variation.
+        /// ---
+        /// @group core.internals.size.box-model
+        /// @type Number
+        /// @requires {variable} $global-component-bd-radius-config
+        ///
+        $border-radius-sm: map-get($global-component-bd-radius-config, 'sm');
+
+        ///
+        /// Rounded corner radius of for a component's extra small size variation.
+        /// ---
+        /// @group core.internals.size.box-model
+        /// @type Number
+        /// @requires {variable} $global-component-bd-radius-config
+        ///
+        $border-radius-xs: map-get($global-component-bd-radius-config, 'xs');
+
+
+
+// ********************************************************
+//
+//   MISC UNDOCUMENTED OPTIONS
+//
+// ********************************************************
+    $btn-gradients: false; // !default omitted intentionally
+
+    $angular-ngmodel-form-validation: true !default;
+
+    // ----- Global Paths / Asset Names ----- //
+    $wdesk-logo-dir:  'brand/' !default;
+    $wdesk-logo-name: 'wdesk-logo_color' !default;
+    $wdesk-logo-lg-name: 'wdesk-logo-lg_color' !default;
+    $wdesk-logo-mime: 'png' !default;
+
+    ///
+    /// Fully qualified URL to the static Wdesk logo image asset
+    /// ---
+    /// @type String
+    ///
+    $wdesk-logo-url:  '#{$wdesk-logo-dir}#{$wdesk-logo-name}.#{$wdesk-logo-mime}' !default;

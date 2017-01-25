@@ -1,0 +1,760 @@
+// ********************************************************
+//
+//   NAVBAR COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-navbars
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/navs/navbars';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $navs-navbars-module-config:  'core/components/atoms/navs/navbars-config';
+    $navs-navbars-module-helpers: 'core/components/atoms/navs/navbars-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $navs-navbars-module-config,
+                                          $navs-navbars-module-helpers);
+//
+// ********************************************************
+
+
+
+// ********************************************************
+//
+//   WRAPPER / BASE CLASS
+//
+//   -> Provide a static navbar from which we expand to
+//      create full-width, fixed, and other variations.
+//
+// ********************************************************
+.navbar {
+    @include clearfix();
+
+    min-height: to-rem($navbar-height);
+    margin-bottom: to-rem($navbar-margin-bottom);
+    border: to-rem($navbar-bd-width) solid transparent;
+    position: relative;
+
+
+    @include uncollapsed-navbar-mq {
+        height: to-rem($navbar-height);
+        border-radius: to-rem(get($navbar-base-config, 'bd-radius'));
+    }
+}
+
+
+
+// ********************************************************
+//
+//   NAVBAR HEADER
+//
+//   -> Groups `.navbar-brand` and `.navbar-toggle` into
+//      a single component for easy responsive styling
+//
+// ********************************************************
+.navbar-header {
+    @include clearfix();
+
+
+    @include uncollapsed-navbar-mq {
+        float: left;
+    }
+}
+
+
+
+// ********************************************************
+//
+//   NAVBAR COLLAPSE BODY
+//
+//   -> Group your navbar content into this for easy
+//      collapsing and expanding across various device sizes.
+//      By default, this content is collapsed when <768px,
+//      but will expand past that for a horizontal display.
+//
+//   -> To start (on mobile devices) the navbar links, forms,
+//      and buttons are stacked vertically and include a
+//      `max-height` to overflow in case you have too much
+//      content for the user's viewport.
+//
+// ********************************************************
+.navbar-collapse {
+    @include clearfix();
+
+    padding-right: to-rem($navbar-padding-right);
+    padding-left: to-rem($navbar-padding-left);
+    border-top: to-rem($navbar-bd-width) solid transparent;
+    overflow-x: visible;
+
+    &.in {
+        overflow-y: auto; // show collapsed elem
+    }
+
+    .navbar-fixed-top &,
+    .navbar-fixed-bottom & {
+        // Add a max-height when shown within a fixed navbar
+        max-height: to-rem(get($navbar-base-config, 'collapse-max-height'));
+
+
+        // Adjust max-height for xs landscape viewport
+        @include breakpoint($navbar-phone-landscape-mq) {
+            max-height: 20rem;
+        }
+    }
+
+
+    @include uncollapsed-navbar-mq {
+        width: auto;
+        border-top: 0;
+        //
+        // Undo the collapse side padding for
+        // navbars with `.container` to ensure
+        // alignment of right-aligned contents
+        //
+        padding-left: 0;
+        padding-right: 0;
+
+        &.collapse {
+            display: block !important;
+            visibility: visible !important;
+            height: auto !important;
+            padding-bottom: 0;
+            overflow: visible !important;
+        }
+
+        &.in {
+            overflow-y: visible;
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   NAVBAR CONTAINER
+//
+//   -> When a `.container` is present, change the behavior
+//      of the `.navbar-header` and `.navbar-collapse` elems
+//
+// ********************************************************
+> .navbar-header,
+> .navbar-collapse {
+    // ----------------------------------------------------
+    //   WHEN NAVBAR IS COLLAPSED (mobile)
+    // ----------------------------------------------------
+    .container & {
+        margin-right: to-rem($navbar-padding-right) * -1;
+        margin-left: to-rem($navbar-padding-left) * -1;
+    }
+
+    .container-wide & {
+        margin-right: to-rem($navbar-padding-right-wide) * -1;
+        margin-left: to-rem($navbar-padding-left-wide) * -1;
+    }
+
+
+    // ----------------------------------------------------
+    //   WHEN NAVBAR IS EXPANDED (768px+)
+    // ----------------------------------------------------
+    @include uncollapsed-navbar-mq {
+        .container & {
+            margin-right: 0;
+            margin-left: to-rem($navbar-logo-offset-adjustment);
+        }
+
+        .container-wide & {
+            margin-right: 0;
+            margin-left: to-rem($navbar-logo-offset-adjustment-wide);
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   NAVBAR ALIGNMENT VARIATIONS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   Static Top (unfixed, but 100% wide)
+    // ----------------------------------------------------
+    .navbar-static-top {
+        z-index: z('navbar');
+        border-width: 0 0 to-rem($navbar-bd-width);
+
+
+        @include uncollapsed-navbar-mq {
+            border-radius: 0;
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   Fixed (only when viewport size allows it)
+    // ----------------------------------------------------
+    .navbar-fixed-top {
+        @include navbar-fixed-shared-styles();
+
+        top: 0;
+        border-width: 0 0 to-rem($navbar-bd-width);
+    }
+
+    .navbar-fixed-bottom {
+        @include navbar-fixed-shared-styles();
+
+        bottom: 0;
+        border-width: to-rem($navbar-bd-width) 0 0;
+    }
+
+
+
+// ********************************************************
+//
+//   WDESK BRANDING / SOLUTION NAME
+//
+// ********************************************************
+.navbar-brand {
+    display: block;
+    float: left;
+    position: relative;
+    width: auto;
+    min-width: to-rem(image-width($wdesk-logo-url));
+    height: to-rem($navbar-height-inner);
+    line-height: to-rem($navbar-height-inner);
+    padding-left: to-rem($navbar-logo-offset-left);
+    white-space: nowrap;
+
+
+    @include uncollapsed-navbar-mq {
+        padding-left: 0;
+    }
+
+
+    // ----------------------------------------------------
+    //   Brand Child Elements
+    // ----------------------------------------------------
+    .brand-link {
+        display: block;
+        float: left;
+        width: 100%;
+        height: to-rem($navbar-height-inner);
+        padding: 0 to-rem(get($navbar-brand-config, 'link-padding-right')) 0 0;
+
+
+        // ----- HOVER STATE ----- //
+        #{$link-hover-focus} {
+            text-decoration: none;
+            @include remove-focus-outline(); // TODO: How else could we indicate focus?
+            color: get($navbar-link-config, 'text-color-hover');
+        }
+
+
+        // ----- PRESSED STATE ----- //
+        #{$link-pressed} {
+            color: get($navbar-link-config, 'text-color-press');
+        }
+    }
+
+    .brand-logo {
+        @include img-wdesk-logo();
+
+        display: block;
+        float: left;
+        position: relative;
+        top: to-rem(get($navbar-brand-config, 'logo-offset-top'));
+    }
+
+    .solution-name {
+        display: block;
+        float: left;
+        margin-left: .8rem;
+        width: auto;
+        height: to-rem($navbar-height-inner);
+
+        //
+        // we want the solution name to line up to the baseline of the wdesk logo
+        // so we need to figure out where the bottom edge of the image is
+        //
+        line-height: to-rem(($navbar-height * 2) +
+                     get($navbar-brand-config, 'solution-lowercase-offset'));
+    }
+
+    .navbar-fixed-top &,
+    .navbar-fixed-bottom & {
+        &,
+        .brand-link,
+        .brand-logo,
+        .solution-name {
+            // Adjust child elem heights when nested within fixed navbar
+            height: to-rem($navbar-fixed-height-inner);
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   NAVBAR TOGGLE BUTTON
+//
+//   -> Custom "hamburger" button for toggling the
+//      `.navbar-collapse` elem, built using `nav-block`,
+//      powered by our Collapse JS Plugin
+//
+// ********************************************************
+.navbar-toggle {
+    @include nav-blocks-link-default($width: $navbar-height,
+                                     $height: $navbar-height-inner
+                                    );
+
+    position: relative;
+    float: right;
+
+    #{$focus} {
+        outline-offset: -.1rem;
+    }
+
+    .navbar-fixed-top &,
+    .navbar-fixed-bottom & {
+        // Adjust height / width when nested within a fixed navbar variation
+        @include nav-blocks-link-default($width: $navbar-height,
+                                         $height: $navbar-fixed-height-inner,
+                                         $global: false
+                                        );
+    }
+
+
+    @include uncollapsed-navbar-mq {
+        // Toggle button only shows when navbar contents are collapsed
+        display: none;
+    }
+}
+
+
+
+// ********************************************************
+//
+//   NAVBAR NAV LINKS
+//
+//   -> Extends the core `.nav` components with its own
+//      modifier class to make necessary adjustments
+//
+// ********************************************************
+
+// ----------------------------------------------------
+//  The nav container
+// ----------------------------------------------------
+.navbar-nav {
+    margin: to-rem($navbar-padding-top (to-rem($navbar-padding-right) * -1));
+
+    @include uncollapsed-navbar-mq {
+        float: left;
+        //
+        // Add bottom border and a negative bottom margin
+        // to aid in the "connected" effect needed by .navbar-nav
+        // dropdown menus when revealed
+        //
+        margin: 0 0 (-$navbar-bd-width-rem) 0;
+        //
+        // add equivalent of negative bottom margin to ensure
+        // bottom border is flush with navbar bottom border
+        //
+        height: to-rem($navbar-height-inner) + $navbar-bd-width-rem;
+        border-bottom: $navbar-bd-width-rem solid transparent;
+
+        .navbar-static-top &,
+        .navbar-fixed-top & {
+            //
+            // Add equivalent of negative bottom margin to ensure
+            // bottom border is flush with navbar bottom border
+            //
+            height: to-rem($navbar-height-inner-fixed) + $navbar-bd-width-rem;
+        }
+
+        .navbar-fixed-bottom & {
+            //
+            // Reverse the negative margin / border direction
+            // to preserve the "connected" appearance of dropup
+            // menus appearing within fixed bottom variation
+            //
+            margin: (-$navbar-bd-width-rem) 0 0 0;
+            border-bottom-width: 0;
+            border-top: $navbar-bd-width-rem solid transparent;
+            //
+            // Add equivalent of negative bottom margin to ensure
+            // bottom border is flush with navbar bottom border
+            //
+            height: to-rem($navbar-height-inner-fixed) + $navbar-bd-width-rem;
+        }
+    }
+}
+
+// ----------------------------------------------------
+//  The (non-tab) nav items / hitareas
+// ----------------------------------------------------
+.navbar-nav:not(.nav-tabs) {
+    // nav links are stacked by default (mobile first)
+    > .nav-item {
+        > .hitarea {
+            padding: to-rem(get($navbar-link-config, 'padding-stacked'));
+            height: auto;
+            width: 100%; // Support `<button>` hitareas
+            text-align: left; // Support `<button>` hitareas
+            line-height: to-rem(get($navbar-link-config, 'line-height'));
+
+            // ----- PRESSED STATE ----- //
+            #{$link-pressed} {
+                background-color: transparent; // override default .nav pressed .hitarea
+            }
+        }
+
+        // ----- ACTIVE STATE ----- //
+        &.active {
+            > .hitarea {
+                background-color: transparent; // override default .nav .active .hitarea
+                font-weight: bold;
+            }
+        }
+
+        // ----- OPEN, PRESSED DROPDOWN MENU TOGGLE ----- //
+        &.open {
+            > .hitarea {
+                #{$link-pressed} {
+                    // override transparent overrides above so that dropdown menu appears connected to toggle button even when button is pressed
+                    background-color: get($nav-link-config, 'bg-active');
+                }
+            }
+        }
+    }
+
+
+    @include uncollapsed-navbar-mq {
+        // float links side-by-side w/ centered text
+        > .nav-item {
+            float: left;
+
+            > .hitarea {
+                float: left;
+                width: auto;
+                text-align: center;
+                padding: to-rem(get($navbar-link-config, 'padding'));
+                //
+                // add invisible borders that can have their color adjusted
+                // without changing the width / height of the dropdown toggle when menu is revealed
+                //
+                border-right: $navbar-bd-width-rem solid transparent;
+                border-left: $navbar-bd-width-rem solid transparent;
+            }
+
+
+            // ----- Adjacent links ----- //
+            + .nav-item > .hitarea,
+            + .nav-item > .dropdown-menu {
+                //
+                // prevent double border shift when activating
+                // adjacent dd menu links one after the other
+                //
+                margin-left: -$navbar-bd-width-rem;
+            }
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   NAVBAR NAV "BLOCK" LINKS
+//
+//   -> Extends the `.navbar-nav` component with its own
+//      modifier class to make necessary adjustments
+//
+// ********************************************************
+.navbar-nav.nav-blocks {
+    //
+    // Base link styles
+    //
+    > .nav-item {
+        height: to-rem($navbar-height);
+
+        > .hitarea {
+            @include nav-blocks-link-default($width: $navbar-height, $height: $navbar-height);
+        }
+    }
+
+
+    //
+    // Navbar block links in a collapsed navbar
+    //
+    @include collapsed-navbar-mq {
+        $navbar-height-inner-rem: to-rem($navbar-height-inner);
+        $navbar-height-inner-fixed-rem: to-rem($navbar-height-inner-fixed);
+
+        //
+        // `.nav-block` links outside of `.navbar-collapse`
+        //
+        // Since these are often displayed even in mobile-first
+        // scenarios outside of the `.navbar-collapse` elem
+        // we need to ensure that they will float side-by-side
+        // with the `.navbar-toggle`
+        //
+        .navbar-header + & {
+            float: left;
+            margin-top: -$navbar-height-inner-rem;
+            margin-right: $navbar-height-inner-rem - to-rem($navbar-padding-right);
+            margin-bottom: -$navbar-height-inner-rem;
+            margin-left: 0;
+
+            > .nav-item {
+                float: left;
+            }
+
+            &.navbar-right {
+                float: right;
+            }
+        }
+
+        // Adjust vertical margin for fixed variation
+        .navbar-fixed-top .navbar-header + &,
+        .navbar-fixed-bottom .navbar-header + & {
+            margin-top: -$navbar-height-inner-fixed-rem;
+            margin-bottom: -$navbar-height-inner-fixed-rem;
+        }
+
+
+        //
+        // `.nav-block` links inside of `.navbar-collapse`
+        //
+        // On the off-chance that these are nested within
+        // the `.navbar-collapse` elem, make them appear like
+        // standard `.navbar-nav` buttons, and use the `sr-only`
+        // contents as a text label to the right of the icon
+        //
+        .navbar-collapse & {
+            // show the labels
+            .sr-only {
+                @include sr-only-reveal();
+            }
+
+            > .nav-item {
+                width: auto;
+
+                > .hitarea {
+                    padding: to-rem(get($navbar-link-config, 'padding-stacked'));
+                    text-align: left; // specificity override
+                    line-height: to-rem(get($navbar-link-config, 'line-height'));
+
+                    // adjust size of icon to be base size no matter what
+                    .icon {
+                        @include icon-size('base', $size-base: 'base16');
+                        margin-top: 0;
+                        margin-right: to-rem($nav-link-icon-margin-horizontal);
+                    }
+
+                    [class*="icon-twfr"] {
+                        @include icon-size('base', $size-base: 'base24');
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   NAVBAR-NAV DROPDOWN MENUS
+//
+// ********************************************************
+.navbar-nav {
+    // ----------------------------------------------------
+    //   In a collapsed navbar
+    // ----------------------------------------------------
+    @include collapsed-navbar-mq {
+        > .dropdown > .dropdown-menu {
+            position: static;
+            float: none;
+            min-width: 0 !important; // override inline width added via `data-auto-width` option
+            max-width: none;
+            margin: to-rem(0 $navbar-padding-right 0 $navbar-padding-left);
+            padding: 0;
+            background-color: transparent;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   In an un-collapsed navbar
+    // ----------------------------------------------------
+    @include uncollapsed-navbar-mq {
+        > .dropdown > .dropdown-menu {
+            //
+            // make the dropdown menu look "connected"
+            // to the navbar / dropdown toggle when its revealed
+            //
+            @include border-top-radius(0);
+            margin: 0;
+        }
+
+
+        // ------------------------------------------------
+        //   Change to a dropup in a `.navbar-fixed-bottom`
+        //   without forcing the user to specify `.dropup`
+        // ------------------------------------------------
+        .navbar-fixed-bottom & {
+            > .dropdown {
+                > .hitarea {
+                    margin-top: to-rem($navbar-bd-width) * -1;
+                }
+
+                > .dropdown-menu {
+                    @include dropup-menu-base($set-margin-bottom: false);
+                    @include border-top-radius(to-rem(get($dropdown-menu-base-size-config, 'bd-radius')));
+                    @include border-bottom-radius(0);
+
+                    margin-bottom: 0; // make it look "connected"
+                }
+
+
+                // ----- Reverse the caret direction ----- //
+                .caret {
+                    @include triangle-direction('up', $width: $caret-width);
+                }
+
+                &.open .caret {
+                    @include triangle-direction('down', $width: $caret-width);
+                }
+            }
+        }
+
+
+        // --------------------------------------------
+        //   Right-align in `.navbar-right` menus
+        // --------------------------------------------
+        &.navbar-right > .dropdown .dropdown-menu {
+            float: right;
+            left: auto;
+            right: 0;
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   OPTIONAL NAVBAR COMPONENTS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   Navbar Buttons
+    //
+    //   -> Vertically center a button within a
+    //      navbar (when *not* in a form)
+    // ----------------------------------------------------
+    .navbar-btn {
+        @include navbar-valign(get-deep($btn-config, 'height.base'));
+
+        @each $size-name in $btn-size-variation-names {
+            // Only output a style if the size variation fits within our navbar
+            $btn-height: get-deep($btn-config, 'height.#{$size-name}');
+
+            @if $navbar-height - $btn-height >= 2 {
+                &.btn-#{$size-name} {
+                    @include navbar-valign($btn-height);
+                }
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   Navbar Text
+    //
+    //   -> Make any element properly align itself
+    //      vertically within a navbar
+    // ----------------------------------------------------
+    .navbar-text {
+        @include navbar-valign(get($navbar-link-config, 'line-height-px'));
+
+        line-height: to-rem(get($navbar-link-config, 'line-height'));
+
+
+        @include uncollapsed-navbar-mq {
+            float: left;
+            margin-left: to-rem($navbar-padding-left);
+            margin-right: to-rem($navbar-padding-left);
+
+            &.navbar-right {
+                margin-right: 0;
+            }
+        }
+    }
+
+
+
+// ********************************************************
+//
+//   WDESK GLOBAL "HELP" NAVBAR TAB / MENU
+//
+// ********************************************************
+@import "navbar-global-support-tab";
+
+
+
+// ********************************************************
+//
+//   NAVBAR -> TABBED TOOLBAR ("RIBBON")
+//
+// ********************************************************
+@import "navbar-tabbed-toolbar";
+
+
+
+// ********************************************************
+//
+//   NAVBAR COMPONENT ALIGNMENT
+//
+//   -> Re-purpose the pull utilities as their own navbar
+//      utilities to avoid specificity issues with parents
+//      and chaining.
+//
+//   -> Only do this when the navbar is uncollapsed though
+//      so that navbar contents stack and align in mobile.
+//
+//   -> Declared after the navbar components to ensure
+//      more specificity on the margins via the cascade.
+//
+// ********************************************************
+@include uncollapsed-navbar-mq {
+    .navbar-left {
+        float: left !important;
+    }
+
+    .navbar-right {
+        float: right !important;
+
+        ~ .navbar-right {
+            margin-right: 0;
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   NAVBAR / NAVBAR COMPONENT SKINS
+//
+// ********************************************************
+.navbar-default {
+    @include navbar-skin();
+}

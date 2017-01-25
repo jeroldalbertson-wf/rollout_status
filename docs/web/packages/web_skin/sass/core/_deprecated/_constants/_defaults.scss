@@ -1,0 +1,337 @@
+// ----------------------------------------------------
+
+//+  PARTIAL: _deprecated/_constants/_defaults.scss
+//+  PARENT:  _deprecated/_manifest.scss
+
+// NOTE: DO NOT USE THESE!!! They were deprecated in `1.0.0` will be removed no later than `2.0.0`
+// TODO: Remove no later than `2.0.0`
+
+// ----------------------------------------------------
+
+    // have to re-import here because these moved out of global defaults
+    @import '../../../core/foundation/icons/atoms/icons-config';
+    @import '../../../peripherals/form-toggle-switches/atoms/form-toggle-switches-config';
+
+
+    $useWebSkinImgDir:              $use-web-skin-img-dir;
+    //
+    $baseElem:                      $base-elem;
+    //
+    $touchOnly:                     $touch-only;
+    $touchUIhitarea:                $touch-uihitarea;
+    //
+    $hoverInline:                   $hover-inline;
+    $hoverNested:                   $hover-nested;
+    $linkHoverFocus:                $link-hover-focus;
+    $linkHoverFocusNested:          $link-hover-focus-nested;
+    //
+    $inputFocus:                    $input-focus;
+    $inputFocusInline:              $input-focus-inline;
+    $linkFocus:                     $focus;
+    $linkFocusInline:               $focus-inline;
+    $linkFocusNested:               $focus-nested;
+    //
+    $linkPressed:                   $link-pressed;
+    $linkPressedInline:             $link-pressed-inline;
+    $linkPressedNested:             $link-pressed-nested;
+    //
+    $btnGradients:                  $btn-gradients;
+    $wdeskLogoDir:                  $wdesk-logo-dir;
+    $wdeskLogoName:                 $wdesk-logo-name;
+    $wdeskLogoLgName:               $wdesk-logo-lg-name;
+    $wdeskLogoMime:                 $wdesk-logo-mime;
+    $wdeskLogoUrl:                  $wdesk-logo-url;
+    //
+    $componentActiveBg:             $zc-green;
+    //
+    $browserDefaultFontSize:        $browser-default-font-size;
+    $htmlFontSize:                  $html-font-size;
+    //
+    $webfontRendering:              $webfont-rendering;
+    $gibsonWebfontSupport:          true;
+    //
+    $fontFamilyBase:                $font-family-base;
+    $fontFamilySansSerif:           $font-family-sans-serif;
+    $fontFamilySerif:               $font-family-serif;
+    $fontFamilyMonospace:           $font-family-monospace;
+    //
+    $disabledShadeShiftDefault:     $disabled-alpha-pct-default;
+    $disabledAlphaDefault:          $disabled-alpha-default;
+    //
+    $rotatedElemBdDarkenAmt:        $rotated-elem-bd-darken-amount;
+    //
+    $screenPhone:                   $screen-xs-min;
+    $screenPhoneMin:                $screen-xs-min;
+    //
+    $screenTablet:                  $screen-sm-min;
+    $screenTabletMin:               $screen-sm-min;
+    //
+    $screenDesktop:                 $screen-md-min;
+    $screenDesktopMin:              $screen-md-min;
+    //
+    $screenDesktopLarge:            $screen-lg-min;
+    $screenDesktopLargeMin:         $screen-lg-min;
+    //
+    $screenDesktopHuge:             $screen-xl-min;
+    $screenDesktopHugeMin:          $screen-xl-min;
+    //
+    $screenPhoneMax:                $screen-xs-max;
+    $screenTabletMax:               $screen-sm-max;
+    $screenDesktopMax:              $screen-md-max;
+    $screenDesktopLargeMax:         $screen-lg-max;
+    //
+    $containerGutterDefault:        $container-gutter-default;
+    $containerGutterWide:           $container-gutter-wide;
+    //
+    $gridColumns:                       $grid-columns;
+    $gridGutterWidth:                   $grid-gutter-width;
+    $gridGutterWideWidth:               $grid-wide-gutter-width;
+    //
+    $gridFloatBreakpoint:               $grid-float-breakpoint;
+    //
+    $gridContainerMaxWidthTablet:       $grid-container-width-sm;
+    $gridContainerMaxWidthDesktop:      $grid-container-width-md;
+    $gridContainerMaxWidthDesktopLarge: $grid-container-width-lg;
+    $gridContainerMaxWidthDesktopHuge:  $grid-container-width-xl;
+    //
+    $gridContainerWideMaxWidth:         $grid-wide-container-width;
+    //
+    $textShadow_alpha:              $text-shadow-alpha;
+    //
+    $fontSizeBase:                  $font-size-base;
+    $lineHeightBasePx:              $line-height-base-px;
+    //
+    $lineHeightBase:                $line-height-base;
+    $lineHeightLarge:               $line-height-lg;
+    $lineHeightSmall:               $line-height-sm;
+    $lineHeightXsmall:              $line-height-xs;
+    //
+    $goldenRule:                    $golden-ratio;
+    //
+    $fontSizeModifierLarge:         $font-size-lg-modifier;
+    $fontSizeModifierSmall:         $font-size-sm-modifier;
+    $fontSizeModifierXsmall:        $font-size-xs-modifier;
+    //
+    $fontSizeLead:                  $font-size-lead;
+    $fontSizeLarge:                 $font-size-lg;
+    $fontSizeMedium:                $font-size-md;
+    $fontSizeSmall:                 $font-size-sm;
+    $fontSizeXsmall:                $font-size-xs;
+    //
+    $fontSizeLargePct:              $font-size-lg-pct;
+    $fontSizeSmallPct:              $font-size-sm-pct;
+    $fontSizeXsmallPct:             $font-size-xs-pct;
+    //
+    $paddingBaseVertical:           $padding-base-vertical;
+    $paddingBaseHorizontal:         $padding-base-horizontal;
+    $paddingBase:                   $padding-base;
+    //
+    $paddingLargeVertical:          $padding-lg-vertical;
+    $paddingLargeHorizontal:        $padding-lg-horizontal;
+    $paddingLarge:                  $padding-lg;
+    //
+    $paddingSmallVertical:          $padding-sm-vertical;
+    $paddingSmallHorizontal:        $padding-sm-horizontal;
+    $paddingSmall:                  $padding-sm;
+    //
+    $paddingXsmallVertical:         $padding-xs-vertical;
+    $paddingXsmallHorizontal:       $padding-xs-horizontal;
+    $paddingXsmall:                 $padding-xs;
+    //
+    $paddingBaseGibson:             $padding-base;
+    $paddingLargeGibson:            $padding-lg;
+    $paddingSmallGibson:            $padding-sm;
+    //
+    $borderRadiusBase:              $border-radius-base;
+    $borderRadiusLarge:             $border-radius-lg;
+    $borderRadiusSmall:             $border-radius-sm;
+    $borderRadiusXsmall:            $border-radius-xs;
+    //
+    $spacingBase:                   $spacing-base;
+    $spacingLarge:                  $spacing-lg;
+    $spacingSmall:                  $spacing-sm;
+    //
+    $spinnerSpeed:                  get($progress-spinner-config, 'rotate-speed');
+    $carouselTransitionSpeed:       $default-carousel-speed;
+    //
+    $zindexDropdown:                z('dropdown');
+    $zindexTooltip:                 z('tooltip');
+    $zindexFixedNavbar:             z('fixed-navbar');
+    $zindexModalBackdrop:           z('modal-backdrop');
+    $zindexModal:                   z('modal');
+    $zindexPopover:                 z('popover');
+    $zindexToastAlert:              z('toast-alert');
+    //
+    $fadeDefaultTiming:             $default-fade-speed;
+    $dialogFadeTiming:              get($dialog-config, 'fade-speed');
+    //
+    $dialogBackdropBg:              $dialog-backdrop-bg;
+    $shadowDefaultColor:            $shadow-default-color;
+    //
+    $dialogBackdropAlpha:           $dialog-backdrop-alpha;
+    $modalContainedBackdropAlpha:   get($modal-config, 'contained-backdrop-alpha');
+    $shadowDefaultAlpha:            get($shadow-default-config, 'alpha');
+    $shadowOnBackdropAlpha:         get($shadow-on-dark-backdrop-config, 'alpha');
+    //
+    $shadowDefaultX:                $shadow-default-horizontal;
+    $shadowDefaultY:                $shadow-default-vertical;
+    $shadowDefaultBlur:             $shadow-default-blur;
+    $shadowDefaultSpread:           $shadow-default-spread;
+    $boxShadowDefault:              $box-shadow-default;
+    //
+    $inputBdWidth:                  get($form-control-config, 'bd-width');
+    $inputBdWidthFocus:             $inputBdWidth;
+    //
+    $inputBdColorGroupFocus:        get-deep($form-control-config, 'colors.bd-focus-key');
+    //
+    $inputPadding:                  get-deep($form-control-config, 'padding.base.all');
+    $inputPaddingLarge:             get-deep($form-control-config, 'padding.lg.all');
+    $inputPaddingSmall:             get-deep($form-control-config, 'padding.sm.all');
+    $inputPaddingXsmall:            get-deep($form-control-config, 'padding.xs.all');
+    //
+    $inputHeightBase:               get-deep($form-control-config, 'height.base');
+    $inputHeightLarge:              get-deep($form-control-config, 'height.lg');
+    $inputHeightSmall:              get-deep($form-control-config, 'height.sm');
+    $inputHeightXsmall:             get-deep($form-control-config, 'height.xs');
+    //
+    $btnBdWidth:                    get($btn-config, 'bd-width');
+    $btnBdRadius:                   get-deep($btn-config, 'bd-radius.base');
+    $btnShadowDepth:                get($btn-config, 'shadow-depth');
+    //
+    $btnPadding:                    get-deep($btn-config, 'padding.base.all');
+    $btnPadX:                       get-deep($btn-config, 'padding.base.horizontal');
+    $btnPadY:                       get-deep($btn-config, 'padding.base.vertical');
+    $btnPadTop:                     get-deep($btn-config, 'padding.base.vertical');
+    $btnPadTopLarge:                get-deep($btn-config, 'padding.lg.vertical');
+    $btnPadTopSmall:                get-deep($btn-config, 'padding.sm.vertical');
+    $btnPadTopXsmall:               get-deep($btn-config, 'padding.xs.vertical');
+    //
+    $btnHeight:                     get-deep($btn-config, 'height.base');
+    $btnHeightInner:                get-deep($btn-config, 'height-inner.base');
+    $btnTextHeight:                 get-deep($btn-config, 'height-text.base');
+    $btnHeightLarge:                get-deep($btn-config, 'height.lg');
+    $btnHeightInnerLarge:           get-deep($btn-config, 'height-inner.lg');
+    $btnTextHeightLarge:            get-deep($btn-config, 'height-text.lg');
+    $btnHeightSmall:                get-deep($btn-config, 'height.sm');
+    $btnHeightInnerSmall:           get-deep($btn-config, 'height-inner.sm');
+    $btnTextHeightSmall:            get-deep($btn-config, 'height-text.sm');
+    $btnHeightXsmall:               get-deep($btn-config, 'height.xs');
+    $btnHeightInnerXsmall:          get-deep($btn-config, 'height-inner.xs');
+    $btnTextHeightXsmall:           get-deep($btn-config, 'height-text.xs');
+    //
+    $btnIconMargin:                 get-deep($btn-config, 'icon.base.margin-horizontal');
+    $btnIconMarginLarge:            get-deep($btn-config, 'icon.lg.margin-horizontal');
+    $btnIconMarginSmall:            get-deep($btn-config, 'icon.sm.margin-horizontal');
+    $btnIconMarginXsmall:           get-deep($btn-config, 'icon.xs.margin-horizontal');
+    //
+    $caretWidth:                    round($caret-width / 2); // is now the actual width in the 1.0.0 release, not half the width
+    $caretHeight:                   $caret-half-height; // is now the actual height in the 1.0.0 release, not half the height
+    $caretSizeDifferential:         $caretWidth - $caretHeight;
+    $caretSizeRatio:                $caret-size-ratio;
+    //
+    $caretTopMarginBase:            $caret-margin-top;
+    $caretTopMarginSmall:           $caret-margin-top-sm;
+    $caretTopMarginXsmall:          $caret-margin-top-xs;
+    $caretTopMarginLarge:           $caret-margin-top-lg;
+    //
+    $caretTopOffsetBase:            $caret-offset-top;
+    $caretTopOffsetSmall:           $caret-offset-top-sm;
+    $caretTopOffsetXsmall:          $caret-offset-top-xs;
+    $caretTopOffsetLarge:           $caret-offset-top-lg;
+    //
+    $caretHorizontalSpacing:        $caret-spacing-horizontal;
+    $caretOnlyBtnWidth:             get($caret-only-btn-widths, 'base');
+    $caretOnlyBtnWidthLarge:        get($caret-only-btn-widths, 'lg');
+    $caretOnlyBtnWidthSmall:        get($caret-only-btn-widths, 'sm');
+    $caretOnlyBtnWidthXsmall:       get($caret-only-btn-widths, 'xs');
+    //
+    $cboxSwitchWidth:               get($cbox-switch-config, 'width');
+    //
+    $cboxSwitchHeight:              get-deep($cbox-switch-config, 'height.base');
+    $cboxSwitchHeightSm:            get-deep($cbox-switch-config, 'height.sm');
+    $cboxSwitchHeightXs:            get-deep($cbox-switch-config, 'height.xs');
+    //
+    $cboxSwitchFontSize:            get-deep($cbox-switch-config, 'font-size.base');
+    $cboxSwitchFontSizeSm:          get-deep($cbox-switch-config, 'font-size.sm');
+    $cboxSwitchFontSizeXs:          get-deep($cbox-switch-config, 'font-size.xs');
+    //
+    $cboxSwitchBdRadius:            get-deep($cbox-switch-config, 'bd-radius.base');
+    $cboxSwitchBdRadiusSm:          get-deep($cbox-switch-config, 'bd-radius.sm');
+    $cboxSwitchBdRadiusXs:          get-deep($cbox-switch-config, 'bd-radius.xs');
+    //
+    $cboxSwitchTextIndent:          get-deep($cbox-switch-config, 'text-indent.base');
+    $cboxSwitchTextIndentSm:        get-deep($cbox-switch-config, 'text-indent.sm');
+    $cboxSwitchTextIndentXs:        get-deep($cbox-switch-config, 'text-indent.xs');
+    //
+    $cboxSwitchBgVoidDenominator:   get($cbox-switch-config, 'void-denominator');
+    $cboxSwitchBgVoid:              get($cbox-switch-config, 'void-width');
+    $cboxSwitchBtnInset:            get($cbox-switch-config, 'btn-inset');
+    $cboxSwitchBgActive:            get($cbox-switch-config, 'void-bg-active');
+    $cboxSwitchBg:                  get($cbox-switch-config, 'void-bg-base');
+    $cboxSwitchBtnBg:               get($cbox-switch-config, 'btn-bg-base');
+    //
+    $cboxSwitchTextElemDefault:     get-deep($cbox-switch-config, 'text-elem.default');
+    $cboxSwitchTextElemChecked:     get-deep($cbox-switch-config, 'text-elem.checked');
+    $cboxSwitchBtnElem:             get-deep($cbox-switch-config, 'btn-elem.default');
+    $cboxSwitchBtnElemChecked:      get-deep($cbox-switch-config, 'btn-elem.checked');
+    //
+    $twoColorClassName:             $icon-class-two-color;
+    $mainIconsPath:                 $icon-font-path-main;
+    $mainIconsFont:                 $icon-font-name-main;
+    $colorIconsPath:                $icon-font-path-color;
+    $colorIconsFont:                $icon-font-name-color;
+    $doctypeIconsPath:              $icon-font-path-doctype;
+    $doctypeIconsFont:              $icon-font-name-doctype;
+    //
+    $baseIconSize:                  $icon-size-base;
+    $baseIconSize24:                $icon-size-base-24;
+    $iconPseudoShiftY:              $icon-pseudo-shift-vertical;
+    $baseSpinnerSize:               $progress-spinner-size-base;
+    $baseSpinnerBdWidthRatio:       get($progress-spinner-config, 'bd-width-ratio');
+    //
+    $utilitySizeClasses:            'sm', 'md', 'lg', 'xl', 'xxl';
+    $utilitySizeMultipliers:        .5, 1.5, 2, 3, 6;
+    $utilitySizeMultipliersBase24:  .5, 1, 2, 3, 6;
+    //
+    $smallMultiplier:               $symbol-size-multiplier-sm;
+    $mediumMultiplier:              $symbol-size-multiplier-md;
+    $largeMultiplier:               $symbol-size-multiplier-lg;
+    $hugeMultiplier:                $symbol-size-multiplier-xl;
+    $giganticMultiplier:            $symbol-size-multiplier-xxl;
+    //
+    $smallMultiplierBase24:         $symbol-size-multiplier-sm-base-24;
+    $mediumMultiplierBase24:        $symbol-size-multiplier-md-base-24;
+    $largeMultiplierBase24:         $symbol-size-multiplier-lg-base-24;
+    $hugeMultiplierBase24:          $symbol-size-multiplier-xl-base-24;
+    $giganticMultiplierBase24:      $symbol-size-multiplier-xxl-base-24;
+    //
+    $iconSizeBase:                  $icon-size-base;
+    $iconSmallSize:                 $icon-size-sm;
+    $iconMediumSize:                $icon-size-md;
+    $iconLargeSize:                 $icon-size-lg;
+    $iconHugeSize:                  $icon-size-xl;
+    //
+    $iconGiganticFontSize:          $icon-font-size-xxl;
+    $iconGiganticSize:              $icon-size-xxl;
+    $iconGiganticHeight:            $icon-height-xxl;
+    $iconGiganticWidth:             $icon-width-xxl;
+    //
+    $iconSizeBase24:                $icon-size-base-24;
+    $iconSmallSizeBase24:           $icon-size-sm-base-24;
+    $iconMediumSizeBase24:          $icon-size-md-base-24;
+    $iconLargeSizeBase24:           $icon-size-lg-base-24;
+    $iconHugeSizeBase24:            $icon-size-xl-base-24;
+    $iconGiganticSizeBase24:        $icon-size-xxl-base-24;
+    //
+    $btnSizeClasses:                'xs', 'sm', 'base', 'lg';
+    $btnIconSizes:                  $iconSmallSize, $iconSizeBase, $iconSizeBase, $iconMediumSize;
+    $btnIconSizeClasses:            'sm', 'base', 'base', 'md';
+    $btnIconSizesBase24:            $iconSmallSizeBase24, $iconSizeBase24, $iconSizeBase24, $iconSizeBase24;
+    $btnIconSizeClassesBase24:      'sm', 'base', 'base', 'base';
+    //
+    $spinnerSmallSize:              $progress-spinner-size-sm;
+    $spinnerMediumSize:             $progress-spinner-size-md;
+    $spinnerLargeSize:              $iconLargeSize;
+    $spinnerHugeSize:               $progress-spinner-size-lg;
+    $spinnerGiganticSize:           $progress-spinner-size-xl;
+    //

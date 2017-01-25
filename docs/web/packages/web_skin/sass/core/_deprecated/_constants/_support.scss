@@ -1,0 +1,20 @@
+// ----------------------------------------------------
+
+//+  PARTIAL:  _deprecated/_constants/support
+//+  PARENT:   core/api/config/support/defaults
+
+// NOTE: DO NOT USE THESE!!! They were deprecated in `1.0.0` will be removed no later than `2.0.0`
+// TODO: Remove no later than `2.0.0`
+
+// ----------------------------------------------------
+
+
+$ie6-support:           if($min-ie-supported < 7,  true, false) !global !default;
+$ie7-support:           if($min-ie-supported < 8,  true, false) !global !default;
+$ie8-support:           if($min-ie-supported < 9,  true, false) !global !default;
+$ie9-support:           if($min-ie-supported < 10, true, false) !global !default;
+$filter-gradient-support: if($ie9-support, true, false) !global !default; // IE9 gradients
+
+// Firefox
+$mozilla-support:       $firefox-support        !global !default;
+$min-mozilla-supported: $min-firefox-supported  !global !default;

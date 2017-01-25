@@ -1,0 +1,52 @@
+// ********************************************************
+
+////
+/// Zesty Crayon Red Color Aliases
+/// ---
+/// @access public
+/// @type Color
+/// @group core.color.zesty
+/// ---
+/// @requires {variable} $zc-reds
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/aliases/zesty-reds';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+/// Zesty Crayon Red
+/// @color #ee2724
+$zc-red: get($zc-reds, '100');
+
+/// @alias zc-red
+/// @since 1.6.0
+$zc-red-100: $zc-red;
+
+/// Zesty Crayon Red 120
+/// @since 1.6.0
+/// @color #a71b19
+$zc-red-120: get($zc-reds, '120');
+
+/// Zesty Crayon Red 80
+/// @since 1.6.0
+/// @color #f15250
+$zc-red-80: get($zc-reds, '80');
+
+/// Zesty Crayon Red 60
+/// @since 1.6.0
+/// @color #f57d7c
+$zc-red-60: get($zc-reds, '60');
+
+/// Zesty Crayon Red 40
+/// @since 1.6.0
+/// @color #f8a9a7
+$zc-red-40: get($zc-reds, '40');

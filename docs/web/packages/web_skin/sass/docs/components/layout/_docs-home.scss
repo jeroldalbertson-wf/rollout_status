@@ -1,0 +1,140 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/layout/home';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+$line-height-base-rem: to-rem($line-height-base-px);
+
+
+.home {
+    color: $docs-navbar-link-color;
+    background-color: $docs-navbar-bg;
+
+    a:not(.btn),
+    .text-link {
+        color: $white !important;
+    }
+
+    strong,
+    .text-bold {
+        color: $white !important;
+    }
+
+    // ----------------------------------------------------
+    //   Special .btn-outline variation
+    //   for home page only
+    // ----------------------------------------------------
+    .docs-btn-outline {
+        @include btn-outline-skin($parent-bg: $docs-navbar-bg);
+    }
+}
+
+// ----- Masthead (headings and download button) ----- //
+.ws-header.ws-masthead {
+    position: relative;
+    padding: to-rem($container-gutter-default) to-rem($container-gutter-default / 2);
+    text-align: center;
+    text-shadow: 0 .1rem 0 rgba(0,0,0,.15);
+
+    h1 {
+        font-size: 6rem;
+        line-height: 1;
+        color: $white;
+    }
+
+    .btn {
+        margin: to-rem($docs-spacing-md);
+    }
+}
+
+// ----- Links to project-level content (repo, versions, etc) ----- //
+.masthead-links {
+    margin-top: $line-height-base-rem;
+    margin-bottom: $line-height-base-rem;
+    margin-left: 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+    font-size: to-rem($font-size-base);
+
+    li {
+        display: inline;
+
+        + li {
+            margin-left: $line-height-base-rem / 4;
+        }
+    }
+}
+
+@include respond-to('screen-sm and up') {
+    .ws-header.ws-masthead {
+        text-align: left;
+        padding: 14rem 7rem;
+
+        h1 {
+            font-size: 12rem;
+            letter-spacing: -.2rem;
+        }
+
+        .btn {
+            width: auto;
+            margin: $line-height-base-rem to-rem($docs-spacing-sm) $line-height-base-rem 0;
+            padding: 1.8rem 2.4rem;
+            font-size: 2.1rem;
+        }
+    }
+
+    .masthead-links {
+        padding: 0;
+        text-align: left;
+
+        li + li {
+            margin-left: $line-height-base-rem;
+        }
+    }
+}
+
+@include respond-to('screen-sm and up') {
+    .ws-header.ws-masthead {
+        text-align: left;
+        padding: 14rem 7rem;
+
+        h1 {
+            font-size: 12rem;
+            letter-spacing: -.2rem;
+        }
+
+        .btn {
+            width: auto;
+            margin: $line-height-base-rem to-rem($docs-spacing-sm) $line-height-base-rem 0;
+            padding: 1.8rem 2.4rem;
+            font-size: 2.1rem;
+        }
+    }
+
+    .masthead-links {
+        padding: 0;
+        text-align: left;
+
+        li + li {
+            margin-left: $line-height-base-rem;
+        }
+    }
+}
+
+@include respond-to('screen-lg and up') {
+    .ws-header.ws-masthead {
+        h1 {
+            font-size: 15rem;
+        }
+
+        .lead {
+            margin-right: 25%;
+            font-size: 3rem;
+        }
+    }
+}

@@ -1,0 +1,168 @@
+// ********************************************************
+
+////
+/// Helper mixins pertaining to [CSS3 animations](http://www.w3.org/TR/css3-animations/)
+/// ---
+/// @since 1.1.0
+/// @access public
+/// @group core.utils.css3
+/// @link http://www.w3.org/TR/css3-animations/ CSS3 Animations Spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/css3/animation';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, mixin with-each-prefix,
+                                                mixin prefixed-properties,
+                                                function set-arglist-default);
+//
+// ********************************************************
+
+
+///
+/// Defaults used by CSS3 Animation helpers
+/// ---
+/// @type Map
+/// ---
+/// @prop {String | Null} name              [null] - Default animation name
+/// @prop {Number | Null} duration          [null] - Default animation duration
+/// @prop {Number | Null} delay             [null] - Default animation delay
+/// @prop {String | Null} timing-function   [null] - Default animation timing function
+/// @prop {Number | Null} iteration-count   [null] - Default animation iteration count
+/// @prop {String | Null} direction         [null] - Default animation direction
+/// @prop {String | Null} fill-mode         [null] - Default animation fill mode
+/// @prop {String | Null} play-state        [null] - Default animation play state
+///
+$animation-defaults: (
+    name:            null,
+    duration:        null,
+    delay:           null,
+    timing-function: null,
+    iteration-count: null,
+    direction:       null,
+    fill-mode:       null,
+    play-state:      null
+) !default;
+
+
+// ----------------------------------------------------
+//   PUBLIC API
+// ----------------------------------------------------
+    ///
+    /// Create a named animation sequence that can be applied to elements later.
+    /// ---
+    /// @link http://www.w3.org/TR/css3-animations/#keyframes CSS3 Animation Keyframes
+    /// @param {String} $name - The name of your animation
+    ///
+    @mixin keyframes($name) {
+        // It would be so nice if we could dynamically construct directive names!
+        @include with-each-prefix() {
+            @if $current-prefix == -moz    { @-moz-keyframes    #{$name} { @content; } }
+            @if $current-prefix == -webkit { @-webkit-keyframes #{$name} { @content; } }
+            @if $current-prefix == -o      { @-o-keyframes      #{$name} { @content; } }
+            @if $current-prefix == null    { @keyframes         #{$name} { @content; } }
+        }
+    }
+
+    ///
+    /// Shortcut to apply any number of animations to an element, with all the settings.
+    /// ---
+    /// @link http://www.w3.org/TR/css3-animations/#animation CSS3 Animation Shorthand Property
+    /// @param {List...} $animations - Names and settings
+    ///
+    @mixin animation($animations...) {
+        @include prefixed-properties((animation: $animations));
+    }
+
+    ///
+    /// Apply any number of animation names.
+    /// ---
+    /// @link http://www.w3.org/TR/css3-animations/#animation-name-property CSS3 Animation Name Property
+    /// @param {String...} $name
+    ///
+    @mixin animation-name($name...) {
+        $names: set-arglist-default($name, get($animation-defaults, name));
+        @include prefixed-properties((animation-name: $name));
+    }
+
+    ///
+    /// Apply any number of animation durations.
+    /// ---
+    /// @link http://www.w3.org/TR/css3-animations/#animation-duration CSS3 Animation Duration Property
+    /// @param {Number...} $duration - Must be a unit of time in `s` or `ms`
+    ///
+    @mixin animation-duration($duration...) {
+        $durations: set-arglist-default($duration, get($animation-defaults, duration));
+        @include prefixed-properties((animation-duration: $duration));
+    }
+
+    ///
+    /// Apply any number of animation delays.
+    /// ---
+    /// @link http://www.w3.org/TR/css3-animations/#animation-delay CSS3 Animation Delay Property
+    /// @param {Number...} $delay - Must be a unit of time in `s` or `ms`
+    ///
+    @mixin animation-delay($delay...) {
+        $delays: set-arglist-default($delay, get($animation-defaults, delay));
+        @include prefixed-properties((animation-delay: $delay));
+    }
+
+    ///
+    /// Apply any number of animation timing functions.
+    /// ---
+    /// @link http://www.w3.org/TR/css3-animations/#animation-timing-function CSS3 Animation Timing Function Property
+    /// @param {String...} $function - `ease`, `linear`, `ease-in`, `ease-out` or `ease-in-out`
+    ///
+    @mixin animation-timing-function($function...) {
+        $functions: set-arglist-default($function, get($animation-defaults, timing-function));
+        @include prefixed-properties((animation-timing-function: $function));
+    }
+
+    ///
+    /// Apply any number of animation iteration counts.
+    /// ---
+    /// @link http://www.w3.org/TR/css3-animations/#animation-iteration-count CSS3 Animation Iteration Count Property
+    /// @param {Number...|String...} $count - `infinite` or `<number>`
+    ///
+    @mixin animation-iteration-count($count...) {
+        $counts: set-arglist-default($count, get($animation-defaults, count));
+        @include prefixed-properties((animation-iteration-count: $count));
+    }
+
+    ///
+    /// Apply any number of animation directions.
+    /// ---
+    /// @link http://www.w3.org/TR/css3-animations/#animation-direction CSS3 Animation Direction Property
+    /// @param {String...} $direction - `normal`, `reverse`, `alternate` or `alternate-reverse`
+    ///
+    @mixin animation-direction($direction...) {
+        $directions: set-arglist-default($direction, get($animation-defaults, direction));
+        @include prefixed-properties((animation-direction: $direction));
+    }
+
+    ///
+    /// Apply any number of animation fill modes.
+    /// ---
+    /// @link http://www.w3.org/TR/css3-animations/#animation-fill-mode CSS3 Animation Fill Mode Property
+    /// @param {String...} $mode - `none`, `forwards`, `backwards` or `both`
+    ///
+    @mixin animation-fill-mode($mode...) {
+        $modes: set-arglist-default($mode, get($animation-defaults, mode));
+        @include prefixed-properties((animation-fill-mode: $mode));
+    }
+
+    ///
+    /// Apply any number of animation play states.
+    /// ---
+    /// @link http://www.w3.org/TR/css3-animations/#animation-play-state CSS3 Animation Play State Property
+    /// @param {String...} $state - `running` or `paused`
+    ///
+    @mixin animation-play-state($state...) {
+        $states: set-arglist-default($state, get($animation-defaults, state));
+        @include prefixed-properties((animation-play-state: $state));
+    }

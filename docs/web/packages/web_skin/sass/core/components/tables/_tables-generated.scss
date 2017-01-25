@@ -1,0 +1,84 @@
+// ********************************************************
+//
+//   TABLE COMPONENT GENERATED STYLE MODULE
+//   http://bit.ly/webskin-tables
+//
+//   -> These styles DO need to be re-generated
+//      when creating virtualized table selectors
+//      using CSS classes instead of table elems.
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/tables/generated';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $tables-module-config:  'core/components/atoms/tables/tables-config';
+    $tables-module-helpers: 'core/components/atoms/tables/tables-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $tables-module-config,
+                                          $tables-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE TABLE ELEMENT STYLES
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   CELLS
+    // ----------------------------------------------------
+    @include generate-table-cells();
+    @include generate-table-sm-cells();
+
+    // ----------------------------------------------------
+    //   CAPTIONS
+    // ----------------------------------------------------
+    @include generate-table-captions();
+    @include generate-table-sm-captions();
+
+
+
+// ********************************************************
+//
+//   TABLE / TABLE ELEMENT VARIATIONS
+//
+// ********************************************************
+    @include generate-table-bordered();
+    @include generate-table-striped-rows();
+    @include generate-table-hoverable-rows(); // Must be placed AFTER `.table-striped` styles
+    @include generate-table-selectable-rows();
+    @include generate-table-sortable-rows();
+    @include generate-table-row-skin-variations();
+
+
+
+// ********************************************************
+//
+//   RESPONSIVE TABLES
+//   -> Wrap your tables in `.table-responsive` and we'll
+//      make them mobile friendly by enabling horizontal
+//      scrolling. Only applies <768px. Everything above
+//      that will display normally.
+//
+// ********************************************************
+    @include respond-to('below screen-sm') {
+        @include table-responsive();
+    }
+
+    // ----------------------------------------------------
+    //  ALWAYS RESPONSIVE
+    //
+    //  -> Use this class in-addition-to the base
+    //     `table-responsive` class when you want to make a
+    //     table scroll horizontally no matter what instead
+    //     of only below a certain breakpoint.
+    //
+    //     Useful for when application logic needs to
+    //     determine whether a table should scroll.
+    // ----------------------------------------------------
+    @include table-responsive($selector: '.table-responsive--always');

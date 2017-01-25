@@ -1,0 +1,242 @@
+// ********************************************************
+//
+////
+/// Reusable button skin helper styles
+/// ---
+/// @since 1.3.0
+/// @access public
+/// @group core.components.buttons
+/// @link http://bit.ly/webskin-buttons Button component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/buttons/buttons-skins';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function remove-unit,
+                                                function is,
+                                                function is-string,
+                                                function is-list,
+                                                function is-map);
+//
+// ********************************************************
+
+
+@mixin btn-skins() {
+    // ----------------------------------------------------
+    //   Outline variation must go *before* standard skins
+    //   for cascade purposes.
+    // ----------------------------------------------------
+    @include btn-outline-skins();
+
+    @each $state-name in $btn-state-names {
+        .btn-#{$state-name} {
+            @include btn-skin($state-name);
+        }
+    }
+}
+
+
+@mixin btn-outline-skins($include-standard-btn-skins: false) {
+    // ----------------------------------------------------
+    //   OUTLINE VARIATION
+    //
+    //   *** MUST GO BEFORE BUTTON STATE COLORS ***
+    //
+    //   -> By default, the only color provided is a "link"
+    //      color in which the text and the border color
+    //      are link blue, and then reverse contrast on hover
+    //      and press.
+    //
+    //   -> Consumers can also create their own custom
+    //      outline buttons by calling the btn-outline-skin
+    //      mixin, passing the background color of the element
+    //      their outline button is nested within.
+    //
+    //  [1] The "standard" button skins must be declared
+    //      after the outline ones for CSS cascade purposes
+    //
+    //  [2] xs / xxs size variations, and flat button
+    //      variations should never have the shadow effect,
+    //      so override here for CSS cascade purposes (UIP-644)
+    //
+    //  [3] "flat" (no "punch" effect)
+    //      Extra .btn selector necessary to override
+    //      shadow added for each "standard" skin above
+    // ----------------------------------------------------
+    .btn-outline {
+        @each $state-name in $state-names {
+            &.btn-#{$state-name} {
+                @include btn-outline-skin($state-name: $state-name);
+            }
+        }
+
+        &.btn-link {
+            @include btn-outline-skin($state-name: 'link');
+        }
+    }
+
+    @if $include-standard-btn-skins {
+        @include btn-skins(); // [1]
+
+        .btn-xs, .btn-xxs, // [2]
+        .btn-flat {
+            @include remove-btn-punch-effect();
+        }
+
+        // ----- [3] ----- //
+        .btn.btn-outline {
+            @include remove-btn-punch-effect();
+        }
+    }
+}
+
+
+//
+// Base styling for buttons that don't have a specific
+// skin declared, but need distinct styling in hover,
+// press and active states.
+//
+// Note that the styling of a "toggle" button for skinned
+// buttons is handled simply by adding the `active` CSS
+// class.
+//
+// Typically nested within a `<div class="btn-toggle-group">`
+//
+@mixin btn-toggle-skins($isVertical: false) {
+    $text-color: get($btn-colors-default, 'text-hover');
+    $bg-color: get($btn-colors-default, 'bg-base');
+    $bd-color: get($btn-colors-default, 'bd-base');
+    $text-color-press: get($btn-colors-default, 'text-press');
+    $bg-color-press: get($btn-colors-default, 'bg-press');
+    $bd-color-press: get($btn-colors-default, 'bd-press');
+    $text-color-active: $text-color;
+    $bg-color-active: transparent;
+    $bd-color-active: get($btn-colors-alt, 'bd-press');
+
+    // The border / background styles of a `.btn-toggle` are placed
+    // on the button itself.
+    //
+    // This is equivalent to the old "symbol" button skin in the flex app,
+    // and is typically used with an icon-only use-case.
+    //
+    // TODO: In 2.0.0 use better intent with this so that it doesn't pollute skinned toggle buttons as bad.
+    //       Currently we have to do a bunch of nasty stuff like `.js-focus:hover` on all the `.btn-{skin}` variations.
+    .btn-toggle {
+        #{$hover} {
+            color: $text-color;
+            background-color: $bg-color;
+            border-color: $bd-color;
+        }
+
+        #{$focus},
+        &#{$focus-class},
+        &#{$focus-class}:hover {
+            color: $text-color;
+            background-color: $bg-color;
+            border-color: get($form-control-colors, 'bd-focus');
+        }
+
+        #{$link-pressed} {
+            color: $text-color-press;
+            background-color: $bg-color-press;
+            border-color: $bd-color-press;
+        }
+
+        &.active {
+            color: $text-color-active;
+            background-color: $bg-color-active;
+
+            &,
+            #{$hover} {
+                border-color: $bd-color-active;
+
+                // Layer the active button above any adjacent
+                // focused / hovered buttons within the group.
+                // z-index: 4;
+            }
+
+            #{$focus},
+            &#{$focus-class} {
+                border-color: get($form-control-colors, 'bd-focus');
+            }
+        }
+    }
+
+    // The border / background styles of a `.btn-toggle.btn-vertical`
+    // should appear to be placed on the icon, not the entire button.
+    //
+    // However - since the size of the styles needs to be larger than the actual
+    // bounding box of the `.icon` element itself, we'll use the `:before` portion
+    // of the icon to "float" a box behind the icon to apply the bg / border styling.
+    //
+    // The use-case for this is tool palette buttons for the annotations viewer
+    // See: https://github.com/Workiva/web-skin/issues/1250
+    .btn-toggle--vertical {
+        // ----- Reset styles from .btn-toggle ----- //
+        #{$link-hover-focus},
+        &#{$focus-class},
+        #{$link-pressed} {
+            background-color: transparent;
+            border-color: transparent;
+            outline: none;
+            box-shadow: none;
+        }
+
+        &.active {
+            background-color: transparent;
+            outline: none;
+            box-shadow: none;
+
+            &,
+            &:hover {
+                border-color: transparent;
+            }
+        }
+
+        > .icon:before {
+            border: to-rem($btn-bd-width) solid transparent; // Increases width / height by .2rem
+            border-radius: to-rem(get-deep($btn-config, 'bd-radius.sm'));
+            margin-top: to-rem($icon-edge-clipping-padding + $btn-bd-width) * -1;
+            margin-left: to-rem($icon-edge-clipping-padding + $btn-bd-width) * -1;
+        }
+
+        #{$hover} {
+            > .icon:before {
+                color: $text-color;
+                background-color: $bg-color;
+                border-color: $bd-color;
+            }
+        }
+
+        #{$focus} {
+            > .icon:before {
+                color: $text-color;
+                background-color: $bg-color;
+                border-color: get($form-control-colors, 'bd-focus');
+            }
+        }
+
+        #{$link-pressed} {
+            > .icon:before {
+                color: $text-color-press;
+                background-color: $bg-color-press;
+                border-color: $bd-color-press;
+            }
+        }
+
+        &.active {
+            > .icon:before {
+                color: $text-color-active;
+                background-color: $bg-color-active;
+                border-color: $bd-color-active;
+            }
+        }
+    }
+}

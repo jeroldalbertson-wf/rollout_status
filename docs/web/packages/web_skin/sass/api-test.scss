@@ -1,0 +1,20 @@
+/*!
+ * -------------------------------------
+ * Web Skin API Test
+ * ---
+ * THIS MODULE PRODUCES NO CSS OUTPUT
+ * IT IS USED ONLY FOR TESTING API
+ * FUNCTIONALITY VIA BOTH THE RUBY AND
+ * LIBSASS (C) COMPILERS.
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+@import 'bootcamp';
+
+@import 'core/api';
+
+@include runner-start;
+@import 'specs/index';
+@include runner-end;

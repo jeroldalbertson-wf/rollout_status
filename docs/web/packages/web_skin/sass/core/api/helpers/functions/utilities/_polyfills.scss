@@ -1,0 +1,75 @@
+// ********************************************************
+
+////
+/// Global functions to polyfill SassScript methods that have limited support based on compiler type, compiler version, etc.
+/// ---
+/// @access private
+/// @group core.internals.support
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/functions/utilities/polyfills';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// Polyfills SassScript [`quote()` method](http://bit.ly/sass_quote) so that non-string values can be passed as an argument without having the Ruby Sass compiler throw.
+/// ---
+/// @since 1.3.1
+/// ---
+/// @requires {external} SassScript/quote   <http://bit.ly/sass_quote>
+/// @requires {external} SassScript/inspect <http://bit.ly/sass_inspect>
+/// ---
+/// @param {*} $value
+/// ---
+/// @returns {String} - Quoted string interpolation of given `$value`
+///
+@function _quote($value) {
+    @return quote(inspect($value));
+}
+
+///
+/// Polyfills SassScript [`unquote()` method](http://bit.ly/sass_unquote) so that non-string values can be passed as an argument without having the Ruby Sass compiler throw.
+/// ---
+/// @since 1.3.1
+/// ---
+/// @requires {external} SassScript/unquote <http://bit.ly/sass_unquote>
+/// @requires {external} SassScript/inspect <http://bit.ly/sass_inspect>
+/// ---
+/// @param {*} $value
+/// ---
+/// @returns {String} - Unquoted string interpolation of given `$value`
+///
+@function _unquote($value) {
+    @return unquote(inspect($value));
+}
+
+///
+/// Prevents CSS output of a "square box" where an escaped unicode sequence once lived.
+/// ---
+/// @since 1.6.0
+/// @link https://github.com/sass/sass/issues/1395
+/// @param {String} $str - Bytes to use in the unicode sequence
+/// @return {String} - Unicode escape sequence of the given $str
+/// ---
+/// @example scss
+///   .icon {
+///     content: to-unicode('e655');
+///   }
+///
+/// @example css Generated CSS
+///   .icon {
+///     content: '\e655';
+///   }
+///
+@function to-unicode($str) {
+    @if not type-of($str) == 'string' {
+        @error "`to-unicode` function expecting a string. Was #{$str} (#{type-of($str)}).";
+    }
+
+    @return unquote("\"") + unquote(str-insert($str, "\\", 1)) + unquote("\"");
+}

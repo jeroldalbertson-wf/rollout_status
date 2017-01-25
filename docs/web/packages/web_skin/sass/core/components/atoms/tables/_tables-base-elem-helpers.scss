@@ -1,0 +1,494 @@
+// ********************************************************
+
+////
+/// Table base element helpers used to output standardized
+/// table grid styling on any DOM element either via classname
+/// or by standard table element
+/// ---
+/// @since 1.3.0
+/// @access public
+/// @group core.components.tables
+/// @link http://bit.ly/webskin-tables Table component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/tables/tables-base-elem-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   <table> / .table
+//
+// ********************************************************
+    ///
+    /// Styles to normalize a base `<table>` element.
+    ///
+    @mixin table-reset {
+        max-width: 100%;
+        border-spacing: 0;
+        border-collapse: collapse;
+    }
+
+    ///
+    /// Default `.table` component skin.
+    ///
+    @mixin table-skin {
+        font-family: $table-font-family;
+        font-weight: normal;
+        color: $table-cell-color;
+        background-color: $table-bg;
+        border-color: $table-bd-color;
+    }
+
+    ///
+    /// Styles for `.table` component.
+    ///
+    @mixin table-component {
+        @include table-skin();
+
+        display: table;
+        width: 100%;
+        margin-bottom: to-rem($table-margin-bottom);
+        border-left-width: 0;
+    }
+
+    ///
+    /// Styles for a `.table` nested within another `.table`.
+    ///
+    @mixin table-nested {
+        margin-bottom: 0;
+        background-color: $table-bg;
+    }
+
+
+
+// ********************************************************
+//
+//   <td>, <th> / .td, .th
+//
+// ********************************************************
+    ///
+    /// Default skin for table cells.
+    ///
+    @mixin table-cell-skin {
+        @include table-skin();
+    }
+
+    ///
+    /// Styles for table cells.
+    ///
+    @mixin table-cell {
+        @include transition(to-list($table-transition-properties, comma) $table-transition-speed linear);
+        @include table-cell-skin();
+        border-top-width: to-rem($table-bd-width);
+        border-top-style: solid;
+        padding: to-rem($table-cell-padding);
+        line-height: $line-height-base;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    ///
+    /// Styles for "small" / "condensed" table cells.
+    ///
+    @mixin table-sm-cell {
+        padding: to-rem($table-sm-cell-padding);
+    }
+
+    ///
+    /// Styles for both row and column header cells.
+    ///
+    @mixin table-header-cell {
+        font-weight: bold;
+    }
+
+    ///
+    /// Default skin for column header cells.
+    ///
+    @mixin table-thead-header-cell-skin {
+        border-bottom-color: $table-header-bd-color;
+        color: $table-header-color;
+        text-transform: uppercase;
+    }
+
+    ///
+    /// Styles for column header cells.
+    ///
+    @mixin table-thead-header-cell {
+        @include table-thead-header-cell-skin();
+
+        padding: to-rem($table-header-cell-padding);
+        font-size: to-rem(get($table-cell-config, 'header-font-size'));
+        line-height: to-rem(get($table-cell-config, 'header-line-height'));
+        border-bottom-width: to-rem($table-bd-width);
+        border-bottom-style: solid;
+    }
+
+    ///
+    /// Styles for "small" / "condensed" column header cells.
+    ///
+    @mixin table-sm-thead-header-cell {
+        padding: to-rem($table-sm-header-cell-padding);
+    }
+
+
+
+// ********************************************************
+//
+//   TABLE VARIATION / TABLE ELEM VARIATION / STATE
+//
+// ********************************************************
+    ///
+    /// Skin for table cells that are in a hovered state.
+    ///
+    @mixin table-cell-hover-skin {
+        color: get($table-cell-config, 'text-color-hover') !important;
+        background-color: get($table-cell-config, 'bg-hover') !important;
+    }
+
+
+    // ----------------------------------------------------
+    //   ROW STATE VARIATIONS
+    // ----------------------------------------------------
+        ///
+        /// Skin for a table row and its cells for a specified state.
+        /// ---
+        /// @param {String} $state-name - Key in the `$table-row-states` configuration map
+        ///
+        @mixin table-row-state-skin($state-name) {
+            $state-colors: get($table-row-states, $state-name);
+            $state-bg-color: get($state-colors, 'bg');
+            $state-bd-color: get($state-colors, 'bd');
+            $default-table-row-bd-color: get($table-config, 'bd-color');
+
+            @if $state-colors {
+                background-color: $state-bg-color;
+
+                @if $state-bd-color != $default-table-row-bd-color {
+                    border-top-color: get($state-colors, 'bd');
+                }
+            }
+        }
+
+        ///
+        /// Skin for a table row and its cells for a specified state when it is in a hovered state.
+        /// ---
+        /// @param {String} $state-name - Key in the `$table-row-states` configuration map
+        ///
+        @mixin table-row-hover-state-skin($state-name) {
+            $state-colors: get($table-row-states, $state-name);
+
+            @if $state-colors {
+                background-color: get($state-colors, 'bg-hover') !important;
+            }
+        }
+
+
+    // ----------------------------------------------------
+    //   SELECTABLE
+    // ----------------------------------------------------
+        ///
+        /// Skin for a table row that should appear selectable.
+        ///
+        @mixin table-row-selectable-skin {
+            cursor: pointer;
+
+            > #{$_td},
+            > #{$_th} {
+                @include disable-user-select();
+            }
+
+            // HOVER
+            #{$hover} {
+                > #{$_td},
+                > #{$_th} {
+                    @include table-cell-hover-skin();
+                }
+            }
+        }
+
+        ///
+        /// Skin for a table row that should appear selected.
+        /// ---
+        /// @see {mixin} table-row-selectable-skin
+        ///
+        @mixin table-row-selected-skin {
+            > #{$_td},
+            > #{$_th} {
+                color: get($table-cell-config, 'text-color-active');
+                background-color: get($table-cell-config, 'bg-active');
+            }
+
+            // ----- HOVER STATE ----- //
+            #{$hover} {
+                > #{$_td},
+                > #{$_th} {
+                    @include table-cell-hover-skin();
+                }
+            }
+        }
+
+
+    // ----------------------------------------------------
+    //   SORTABLE
+    // ----------------------------------------------------
+        ///
+        /// Skin for a `.caret` elem nested within a sortable column header cell.
+        ///
+        @mixin table-sortable-thead-header-cell-caret-skin {
+            border-top-color: $table-sortable-caret-color;
+            opacity: $table-sortable-caret-alpha;
+            @include transition(opacity $table-transition-speed linear);
+        }
+
+        ///
+        /// Styles for a `.caret` elem nested within a sortable column header cell.
+        ///
+        @mixin table-sortable-thead-header-cell-caret {
+            @include table-sortable-thead-header-cell-caret-skin();
+
+            margin-top: to-rem($caret-margin-top);
+            margin-right: to-rem($table-cell-padding);
+            margin-left: to-rem($table-cell-padding);
+        }
+
+        ///
+        /// Styles for a `.caret` elem nested within a sortable column header cell when the table is a `.table-bordered` variation.
+        ///
+        @mixin table-bordered-sortable-thead-header-cell-caret {
+            float: right;
+        }
+
+        ///
+        /// Styles for a `.caret` elem nested within a "small" / "condensed" sortable column header cell.
+        ///
+        @mixin table-sm-sortable-thead-header-cell-caret {
+            margin-top: to-rem(ceil(($table-sm-header-cell-height - $caret-height) / 2));
+            margin-right: to-rem($table-sm-cell-padding);
+            margin-left: to-rem($table-sm-cell-padding);
+        }
+
+        ///
+        /// Skin for a `.caret` elem nested within a sortable column header cell that is in a hovered state.
+        ///
+        @mixin table-sortable-thead-header-cell-hover-caret-skin {
+            border-top-color: $table-sortable-caret-color-hover;
+            opacity: $table-sortable-caret-alpha-hover;
+        }
+
+        ///
+        /// Styles for a `.caret` elem nested within a sortable column header cell that is sorted ascending, with the caret facing upward.
+        ///
+        @mixin table-sortable-thead-header-cell-ascending-caret {
+            @include triangle-direction('up', $table-sortable-caret-color, $width: $caret-width);
+        }
+
+        ///
+        /// Skin for a `.caret` elem nested within a sortable column header cell that is sorted ascending, with the caret facing upward, and is in a hovered state.
+        ///
+        @mixin table-sortable-thead-header-cell-ascending-hover-caret-skin {
+            border-bottom-color: $table-sortable-caret-color-hover;
+        }
+
+        ///
+        /// Skin for a `.caret` elem nested within a sortable column header cell that is sorted ascending, with the caret facing upward, and is in an actively sorted state.
+        ///
+        @mixin table-sortable-thead-header-cell-ascending-sorted-caret-skin {
+            border-bottom-color: $table-sortable-caret-color-sorted;
+        }
+
+        ///
+        /// Skin for a column header cell that should appear sortable.
+        ///
+        @mixin table-sortable-thead-header-cell-skin {
+            cursor: pointer;
+            //
+            // don't allow headers to break onto a second line
+            // since they have a .caret adjacent to them inline
+            //
+            @include truncate-text();
+            // don't allow contents of the headers to be selected
+            @include disable-user-select();
+        }
+
+        ///
+        /// Skin for a sortable column header cell that is in a hovered state.
+        ///
+        @mixin table-sortable-thead-header-cell-hover-skin {
+            color: get($table-sortable-header-config, 'text-hover');
+        }
+
+        ///
+        /// Styles for a column header cell that is in a hovered state.
+        ///
+        @mixin table-sortable-thead-header-cell-hover {
+            @include table-sortable-thead-header-cell-hover-skin();
+
+            .caret {
+                @include table-sortable-thead-header-cell-hover-caret-skin();
+            }
+        }
+
+        ///
+        /// Styles for a column header cell that represents the actively sorted column.
+        ///
+        @mixin table-sortable-thead-header-cell-sorted {
+            @include table-sortable-thead-header-cell-hover();
+        }
+
+        ///
+        /// Styles for a column header cell that should appear sortable.
+        ///
+        @mixin table-sortable-thead-header-cell {
+            @include table-sortable-thead-header-cell-skin();
+
+            .caret {
+                @include table-sortable-thead-header-cell-caret();
+            }
+
+            // ----- STATE: HOVERED ----- //
+            #{$hover} {
+                @include table-sortable-thead-header-cell-hover();
+            }
+
+            // ----- STATE: SORTED ----- //
+            &.column-sorted {
+                @include table-sortable-thead-header-cell-sorted();
+            }
+
+            // ----------------------------------------------------
+            //   VARIATION: ASCENDING
+            //
+            //   -> .caret points downward (descending) by default
+            //      so we only need a modifier class to make it
+            //      face upward (ascending)
+            // ----------------------------------------------------
+            &.column-sorted-ascending {
+                .caret {
+                    @include table-sortable-thead-header-cell-ascending-caret();
+                }
+
+                // ----- STATE: HOVERED ----- //
+                #{$hover} {
+                    .caret {
+                        @include table-sortable-thead-header-cell-ascending-hover-caret-skin();
+                    }
+                }
+
+                // ----- STATE: SORTED ----- //
+                &.column-sorted {
+                    .caret {
+                        @include table-sortable-thead-header-cell-ascending-sorted-caret-skin();
+                    }
+                }
+            }
+
+            // ----------------------------------------------------
+            //   VARIATION: UNSORTABLE
+            //
+            //   -> Sometimes a single column within a table of
+            //      many sortable columns is not itself sortable.
+            // ----------------------------------------------------
+            &.column-unsortable {
+                &.column-unsortable {
+                    cursor: default;
+
+                    .caret {
+                        display: none !important;
+                    }
+
+                    &.column-sorted,
+                    #{$hover} {
+                        // Reset to standard header skin
+                        @include table-thead-header-cell-skin();
+                    }
+                }
+            }
+        }
+
+
+
+// ********************************************************
+//
+//   MISC
+//
+// ********************************************************
+    ///
+    /// Set default `display` property values for all table elements when using CSS classes applied to divs to build tables.
+    /// This will only output styles if `$table-selector-prefix` is equal to `.`.
+    ///
+    @mixin table-elem-display-defaults {
+        @if $table-selector-prefix == '.' {
+            @each $element, $selector in $table-selectors {
+                #{$selector} {
+                    display: get($table-element-display, $element);
+                }
+            }
+        }
+    }
+
+    ///
+    /// Styles that prevent double-border issues involving multiple tbody + adjacent thead / tbody and first thead situations.
+    ///
+    @mixin table-remove-double-borders {
+        #{$_thead}:first-of-type,
+        #{$_thead} #{'+'} #{$_tbody} {
+            #{$_tr}:first-child {
+                > #{$_td},
+                > #{$_th} {
+                    border-top: 0;
+                }
+            }
+        }
+
+        #{$_tbody} + #{$_tbody} {
+            border-top: to-rem($table-bd-width * 2) solid $table-bd-color;
+        }
+
+        &.has-fixed-header {
+            border-top: 0 none;
+            #{$_tr}:first-child {
+                > #{$_td},
+                > #{$_th} {
+                    border-top: 0 none !important;
+                }
+            }
+        }
+    }
+
+    ///
+    /// Styles for a table caption.
+    /// Typically a `<caption>` element will be hidden from non-screen-reader users by adding the `.sr-only` helper class.
+    /// However, in the event that a caption is shown on a screen... these styles make it look presentable.
+    ///
+    @mixin table-caption {
+        padding: to-rem($table-cell-padding);
+        text-align: left;
+        color: $table-header-color;
+    }
+
+    ///
+    /// Styles for a "small" / "condensed" table caption.
+    ///
+    @mixin table-sm-caption {
+        padding: to-rem($table-sm-cell-padding);
+        font-size: to-rem($font-size-sm);
+    }
+
+    ///
+    /// Set `display` property value for table cells that use Web Skin v1 grid column classes for setting their width.
+    ///
+    @mixin table-child-grid-sizing($child) {
+        display: table-#{unquote($child)};
+        float: none;
+    }

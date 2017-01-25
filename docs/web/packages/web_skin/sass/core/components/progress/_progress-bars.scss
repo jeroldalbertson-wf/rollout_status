@@ -1,0 +1,107 @@
+// ********************************************************
+//
+//   PROGRESS BAR COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-progress-bars
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/progress/progress-bars';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $progress-bars-module-config:  'core/components/atoms/progress/progress-config';
+    $progress-bars-module-helpers: 'core/components/atoms/progress/progress-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $progress-bars-module-config,
+                                          $progress-bars-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE PROGRESS CONTAINER
+//
+// ********************************************************
+.progress {
+    position: relative;
+    height: to-rem($progress-bar-height);
+    margin-bottom: to-rem($progress-bar-height);
+    overflow: hidden;
+    background-color: get($progress-bar-config, 'bg'); // fallback
+    background-color: rgba($black, (darkness(get($progress-bar-config, 'bg')) / 100%));
+    border-radius: to-rem(get-deep($progress-bar-config, 'bd-radius.base'));
+}
+
+
+// ********************************************************
+//
+//   BASE PROGRESS BAR
+//
+// ********************************************************
+.progress-bar {
+    @include transition(width get($progress-bar-config, 'bar-width-transition-speed') ease);
+
+    float: left;
+    width: 0;
+    height: 100%;
+    background-color: get($progress-bar-config, 'bar-bg');
+
+    // Text styles for optional label
+    text-align: center;
+    font-size: to-rem(get-deep($progress-bar-config, 'label-font-size.base'));
+    font-weight: get($progress-bar-config, 'label-font-weight');
+    line-height: to-rem($progress-bar-height);
+    color: get($progress-bar-config, 'label-text-color');
+    text-shadow: 0 .1rem .1rem rgba(get($progress-bar-config, 'label-shadow-color'), get($progress-bar-config, 'label-shadow-alpha'));
+}
+
+
+// ********************************************************
+//
+//   STRIPED BAR VARIATION
+//   -> a.k.a "Barber Pole"
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   STRIPED ANIMATION KEYFRAMES
+    // ----------------------------------------------------
+    @include keyframes(progress-bar-stripes) {
+        from  { background-position: 0 0; }
+        to    { background-position: to-rem(get($progress-bar-config, 'bar-bg-size')) 0; }
+    }
+
+    // ----------------------------------------------------
+    //   INDETERMINATE STATE
+    // ----------------------------------------------------
+    .progress-indeterminate .progress-bar {
+        // "indeterminate" state of a progress bar implies that the bar is full width
+        width: 100%;
+        @include experimental(animation, progress-bar-stripes get($progress-bar-config, 'bar-stripe-animation-speed') linear infinite);
+        @include gradient-striped(get($progress-bar-config, 'bar-bg'));
+        @include background-size(to-rem($progress-bar-bg-size $progress-bar-bg-size));
+
+        // ensure the animation isn't running when its not visible (saves on CPU)
+        @include animation-visibility-control();
+    }
+
+
+// ********************************************************
+//
+//   SIZE VARIATIONS
+//
+// ********************************************************
+    @include progress-bar-size('sm');
+    @include progress-bar-size('xs');
+
+
+// ********************************************************
+//
+//   SKIN / STATE COLOR VARIATIONS
+//
+// ********************************************************
+    @each $state-name in map-keys(get($progress-bar-config, 'state-colors')) {
+        @include progress-bar-skin($state-name);
+    }

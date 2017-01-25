@@ -1,0 +1,51 @@
+// ********************************************************
+//
+//   These are styles specifically for
+//   displaying Sass API data in our
+//   online docs
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/sassdoc';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Local Config
+// ----------------------------------------------------
+$item-description-font-size: 18px;
+
+$item-annotations-container-bg: $docs-example-bg;
+$item-annotations-nested-prop-row-bg: darken($item-annotations-container-bg, 2);
+$item-annotation-section-padding: $line-height-base-px;
+
+$item-code-block-inset-text-color: darken($docs-code-bd, 10); // for things like the language label, expand/collapse icon, etc...
+$item-code-block-preview-height: 50px;
+$code-control-item-font-size: .6em;
+$code-control-item-font-size-px: to-px($code-control-item-font-size, to-px($docs-section-font-size));
+$code-control-link-padding: .6em .6em .3em .8em;
+$code-control-text-alpha: .8;
+$code-control-icon-alpha: .3;
+$code-control-toggle-width: 6.5em; // about 62px
+$code-control-toggle-offset-right: $item-annotation-section-padding;
+$code-control-toggle-offset-right-em: to-em($code-control-toggle-offset-right, $code-control-item-font-size-px);
+$code-control-view-src-offset-right: ($code-control-toggle-offset-right-em * 2) + $code-control-toggle-width; // when adjacent to toggle
+
+// links to code resources outside of our api
+$code-color-external: $zc-gray-90;
+$code-color-muted: desaturate($code-color, 30%);
+$code-color-muted-hover: darken($code-color-muted, $link-color-hover-darken-amount);
+
+$item-subheading-margin-top: 1.5em;
+$item-subheading-margin-bottom: .5em;
+
+
+// ----------------------------------------------------
+//   Modules
+// ----------------------------------------------------
+@import 'sassdoc/sassdoc-base';
+@import 'sassdoc/sassdoc-searchbar';
+@import 'sassdoc/sassdoc-sidebar';
+@import 'sassdoc/sassdoc-item';

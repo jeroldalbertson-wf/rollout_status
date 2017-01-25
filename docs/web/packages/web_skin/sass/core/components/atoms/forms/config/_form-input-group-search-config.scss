@@ -1,0 +1,163 @@
+// ********************************************************
+
+////
+/// Form input group search control component configuration
+/// ---
+/// @access public
+/// @group core.components.form-controls
+/// @link http://bit.ly/webskin-forms-input-group-search Form search control component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/forms/config/form-input-group-search-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function icon-size-base-16,
+                                                function get,
+                                                function get-deep,
+                                                function extend);
+//
+// ********************************************************
+
+
+///
+/// Component configuration for search form controls
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get-deep
+/// @requires {function} extend
+/// @requires {variable} $icon-size-config
+/// @requires {variable} $form-control-config
+/// @requires {variable} $zc-red
+/// ---
+/// @prop {String} active-search-class ['js-searching'] - CSS class added to the component by the Buttons JS plugin when an active search is in-progress
+///
+/// @prop {Number} clear-search-btn-alpha       [.2]
+/// @prop {Number} clear-search-btn-alpha-hover [.5]
+/// @prop {Number} clear-search-btn-alpha-press [.7]
+///
+/// @prop {Color}  clear-search-btn-color       [#000000] - Added in 1.3.2 via [https://github.com/Workiva/web-skin/issues/1144](web-skin/#1144)
+/// @prop {Color}  clear-search-btn-color-hover [#000000] - Deprecated in 1.3.2 via [https://github.com/Workiva/web-skin/issues/1144](web-skin/#1144)
+///
+/// @prop {Number} search-icon-size [16px]
+///
+/// @prop {Map} search-icon-offset-vertical
+/// @prop {Number} search-icon-offset-vertical.base [0]
+/// @prop {Number} search-icon-offset-vertical.xs   [0]
+/// @prop {Number} search-icon-offset-vertical.sm   [0]
+/// @prop {Number} search-icon-offset-vertical.lg   [0]
+///
+/// @prop {Map} search-icon-addon-padding-horizontal
+/// @prop {Number} search-icon-addon-padding-horizontal.base [6px]
+/// @prop {Number} search-icon-addon-padding-horizontal.xs   [4px]
+/// @prop {Number} search-icon-addon-padding-horizontal.sm   [5px]
+/// @prop {Number} search-icon-addon-padding-horizontal.lg   [8px]
+///
+/// @prop {Map} search-icon-addon-width
+/// @prop {Number} search-icon-addon-width.base [10px]
+/// @prop {Number} search-icon-addon-width.xs   [8px]
+/// @prop {Number} search-icon-addon-width.sm   [10px]
+/// @prop {Number} search-icon-addon-width.lg   [16px]
+///
+/// @prop {Map} search-field-padding-left
+/// @prop {Number} search-field-padding-left.base [16px]
+/// @prop {Number} search-field-padding-left.xs   [12px]
+/// @prop {Number} search-field-padding-left.sm   [15px]
+/// @prop {Number} search-field-padding-left.lg   [24px]
+///
+$input-group-search-config: (
+    'active-search-class': 'js-searching',
+    'clear-search-btn-alpha': get($close-btn-config, 'alpha'),
+    'clear-search-btn-alpha-hover': get($close-btn-config, 'alpha-hover'),
+    'clear-search-btn-alpha-press': get($close-btn-config, 'alpha-press'),
+    'clear-search-btn-color': get($close-btn-config, 'text-color'),
+    'clear-search-btn-color-hover': get($close-btn-config, 'text-color'), // deprecated
+    'search-icon-size': icon-size-base-16(),
+    'search-icon-offset-vertical': (
+        'base': 0,
+        'xs':   0,
+        'sm':   0,
+        'lg':   0
+    ),
+    'search-icon-addon-padding-horizontal': (
+        'base': round(get-deep($form-control-config, 'padding.base.horizontal') / 2),
+        'xs':   round(get-deep($form-control-config, 'padding.xs.horizontal') / 2),
+        'sm':   round(get-deep($form-control-config, 'padding.sm.horizontal') / 2),
+        'lg':   round(get-deep($form-control-config, 'padding.lg.horizontal') / 2)
+    ),
+    'search-icon-addon-width': (
+        'base': null, // calculated value added via @extend
+        'xs':   null, // calculated value added via @extend
+        'sm':   null, // calculated value added via @extend
+        'lg':   null  // calculated value added via @extend
+    ),
+    'search-field-padding-left': (
+        'base': null, // calculated value added via @extend
+        'xs':   null, // calculated value added via @extend
+        'sm':   null, // calculated value added via @extend
+        'lg':   null  // calculated value added via @extend
+    )
+) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $input-group-search-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $input-group-search-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $form-control-padding-horizontal: get-deep($form-control-config, 'padding.base.horizontal');
+        $form-control-padding-horizontal-xs: get-deep($form-control-config, 'padding.xs.horizontal');
+        $form-control-padding-horizontal-sm: get-deep($form-control-config, 'padding.sm.horizontal');
+        $form-control-padding-horizontal-lg: get-deep($form-control-config, 'padding.lg.horizontal');
+        //
+        $form-control-padding-vertical: get-deep($form-control-config, 'padding.base.vertical');
+        $form-control-padding-vertical-xs: get-deep($form-control-config, 'padding.xs.vertical');
+        $form-control-padding-vertical-sm: get-deep($form-control-config, 'padding.sm.vertical');
+        $form-control-padding-vertical-lg: get-deep($form-control-config, 'padding.lg.vertical');
+        //
+        $search-icon-offset-vertical: get-deep($input-group-search-config, 'search-icon-offset-vertical.base');
+        $search-icon-offset-vertical-xs: get-deep($input-group-search-config, 'search-icon-offset-vertical.xs');
+        $search-icon-offset-vertical-sm: get-deep($input-group-search-config, 'search-icon-offset-vertical.sm');
+        $search-icon-offset-vertical-lg: get-deep($input-group-search-config, 'search-icon-offset-vertical.lg');
+        //
+        $search-icon-addon-width: get($input-group-search-config, 'search-icon-size') + 6;
+        $search-icon-addon-width-xs: get($input-group-search-config, 'search-icon-size');
+        $search-icon-addon-width-sm: get($input-group-search-config, 'search-icon-size') + 4;
+        $search-icon-addon-width-lg: get($input-group-search-config, 'search-icon-size') + 10;
+        //
+        $search-field-padding-left: $form-control-padding-horizontal + $search-icon-addon-width - get-deep($input-group-search-config, 'search-icon-addon-padding-horizontal.base');
+        $search-field-padding-left-xs: $form-control-padding-horizontal-xs + $search-icon-addon-width-xs - get-deep($input-group-search-config, 'search-icon-addon-padding-horizontal.xs');
+        $search-field-padding-left-sm: $form-control-padding-horizontal-sm + $search-icon-addon-width-sm - get-deep($input-group-search-config, 'search-icon-addon-padding-horizontal.sm');
+        $search-field-padding-left-lg: $form-control-padding-horizontal-lg + $search-icon-addon-width-lg - get-deep($input-group-search-config, 'search-icon-addon-padding-horizontal.lg');
+
+        // ----- EXTEND input-group-search config with calc'd values ----- //
+        $input-group-search-config: extend($input-group-search-config,
+            (
+                'search-icon-addon-width': (
+                    'base': $search-icon-addon-width,
+                    'xs':   $search-icon-addon-width-xs,
+                    'sm':   $search-icon-addon-width-sm,
+                    'lg':   $search-icon-addon-width-lg
+                ),
+                'search-field-padding-left': (
+                    'base': $search-field-padding-left,
+                    'xs':   $search-field-padding-left-xs,
+                    'sm':   $search-field-padding-left-sm,
+                    'lg':   $search-field-padding-left-lg
+                )
+            )
+        );
+

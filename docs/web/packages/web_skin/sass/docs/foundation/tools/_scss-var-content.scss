@@ -1,0 +1,388 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/foundation/tools/scss-var-content';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   Global
+//
+// ********************************************************
+.scss-output {
+    &.js-content-replaced {
+        // pseudo content was added to the actual cell so that it can
+        // be copied and pasted, so the pseudo content is no longer necessary.
+        &:after {
+            display: none;
+            content: '';
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   Numerical values
+//
+// ********************************************************
+.scss-output {
+    // -------------------------------------
+    //   Misc key vars
+    // ----------------------------------------------------
+    &.font-size-base:after         { content: "#{to-rem($font-size-base)}"; }
+    &.font-size-lg:after           { content: "#{to-rem($font-size-lg)}"; }
+    &.font-size-md:after           { content: "#{to-rem($font-size-md)}"; }
+    &.font-size-sm:after           { content: "#{to-rem($font-size-sm)}"; }
+    &.font-size-sm-pct:after       { content: "#{floor($font-size-sm-pct)}"; }
+    &.font-size-xs:after           { content: "#{to-rem($font-size-xs)}"; }
+    &.line-height-base:after       { content: "#{$line-height-base}"; }
+    &.paragraph-margin:after       { content: "#{$paragraph-margin-bottom}"; }
+    &.font-size-mod-sm:after       { content: "#{percentage($font-size-sm-modifier)}"; }
+    &.disabled-fade-pct:after      { content: "#{percentage(1 - $disabled-alpha-default)}"; }
+    &.navbar-height:after          { content: "#{to-rem(get($navbar-base-config, "height"))}"; }
+    &.pre-scrollable-height:after  { content: "#{to-rem($pre-scrollable-max-height)}"; }
+
+
+    // ----------------------------------------------------
+    //   Browser support
+    // ----------------------------------------------------
+    &.min-ie-supported:after       { content: "#{$min-ie-supported}"; }
+    &.min-firefox-supported:after  { content: "#{$min-firefox-supported}"; }
+    &.min-opera-supported:after    { content: "#{$min-opera-supported}"; }
+    &.min-safari-supported:after   { content: "#{$min-safari-supported}"; }
+    &.min-chrome-supported:after   { content: "#{$min-safari-supported}"; }
+    &.min-ios-supported:after      { content: "#{$min-ios-supported}"; }
+    &.min-droid-supported:after    { content: "#{$min-droid-supported}"; }
+
+
+    // ----------------------------------------------------
+    //   Button size variation attribs
+    // ----------------------------------------------------
+    $_btn-height-config:    get($btn-config, 'height');
+    $_btn-font-size-config: get($btn-config, 'font-size');
+    &.btn-height-base:before    { content: "#{to-rem(get($_btn-height-config, "base"))}"; }
+    &.btn-height-lg:before      { content: "#{to-rem(get($_btn-height-config, "lg"))}"; }
+    &.btn-height-sm:before      { content: "#{to-rem(get($_btn-height-config, "sm"))}"; }
+    &.btn-height-xs:before      { content: "#{to-rem(get($_btn-height-config, "xs"))}"; }
+    &.btn-font-size-base:before { content: "#{to-rem(get($_btn-font-size-config, "base"))}"; }
+    &.btn-font-size-lg:before   { content: "#{to-rem(get($_btn-font-size-config, "lg"))}"; }
+    &.btn-font-size-sm:before   { content: "#{to-rem(get($_btn-font-size-config, "sm"))}"; }
+    &.btn-font-size-xs:before   { content: "#{to-rem(get($_btn-font-size-config, "xs"))}"; }
+    &.btn-pad-y-base:before     { content: "#{to-rem(get-deep($btn-config, "padding.base.vertical"))}"; }
+    &.btn-pad-x-base:before     { content: "#{to-rem(get-deep($btn-config, "padding.base.horizontal"))}"; }
+    &.btn-pad-y-lg:before       { content: "#{to-rem(get-deep($btn-config, "padding.lg.vertical"))}"; }
+    &.btn-pad-x-lg:before       { content: "#{to-rem(get-deep($btn-config, "padding.lg.horizontal"))}"; }
+    &.btn-pad-y-sm:before       { content: "#{to-rem(get-deep($btn-config, "padding.sm.vertical"))}"; }
+    &.btn-pad-x-sm:before       { content: "#{to-rem(get-deep($btn-config, "padding.sm.horizontal"))}"; }
+    &.btn-pad-y-xs:before       { content: "#{to-rem(get-deep($btn-config, "padding.xs.vertical"))}"; }
+    &.btn-pad-x-xs:before       { content: "#{to-rem(get-deep($btn-config, "padding.xs.horizontal"))}"; }
+
+
+    // ----------------------------------------------------
+    //   Dropdown menu size variation attribs
+    // ----------------------------------------------------
+    &.dropdown-menu-min-width:before            { content: "#{to-rem(get($dropdown-menu-base-size-config, "min-width"))}"; }
+    &.dropdown-menu-max-width:before            { content: "#{to-rem(get($dropdown-menu-base-size-config, "max-width"))}"; }
+    &.dropdown-menu-bd-radius:before            { content: "#{to-rem(get($dropdown-menu-base-size-config, "bd-radius"))}"; }
+    &.dropdown-menu-font-size:before            { content: "#{to-rem(get($dropdown-menu-base-size-config, "font-size"))}"; }
+    &.dropdown-menu-header-font-size:before     { content: "#{to-rem(get($dropdown-menu-base-size-config, "header-font-size"))}"; }
+    &.dropdown-menu-link-padding:before         { content: "#{to-rem(get($dropdown-menu-base-size-config, "link-padding"))}"; }
+    &.dropdown-menu-link-height:before          { content: "#{to-rem(get($dropdown-menu-base-size-config, "link-height"))}"; }
+    &.dropdown-menu-link-icon-margin-hz:before  { content: "#{to-rem(get($dropdown-menu-base-size-config, "link-icon-margin-horizontal"))}"; }
+    &.dropdown-menu-divider-margin-vert:before  { content: "#{to-rem(get($dropdown-menu-base-size-config, "divider-margin"))}"; }
+    // Medium
+    &.dropdown-menu-md-min-width:before            { content: "#{to-rem(get($dropdown-menu-md-size-config, "min-width"))}"; }
+    &.dropdown-menu-md-max-width:before            { content: "#{to-rem(get($dropdown-menu-md-size-config, "max-width"))}"; }
+    &.dropdown-menu-md-bd-radius:before            { content: "#{to-rem(get($dropdown-menu-md-size-config, "bd-radius"))}"; }
+    &.dropdown-menu-md-font-size:before            { content: "#{to-rem(get($dropdown-menu-md-size-config, "font-size"))}"; }
+    &.dropdown-menu-md-header-font-size:before     { content: "#{to-rem(get($dropdown-menu-md-size-config, "header-font-size"))}"; }
+    &.dropdown-menu-md-link-padding:before         { content: "#{to-rem(get($dropdown-menu-md-size-config, "link-padding"))}"; }
+    &.dropdown-menu-md-link-height:before          { content: "#{to-rem(get($dropdown-menu-md-size-config, "link-height"))}"; }
+    &.dropdown-menu-md-link-icon-margin-hz:before  { content: "#{to-rem(get($dropdown-menu-md-size-config, "link-icon-margin-horizontal"))}"; }
+    &.dropdown-menu-md-divider-margin-vert:before  { content: "#{to-rem(get($dropdown-menu-md-size-config, "divider-margin"))}"; }
+    // Large
+    &.dropdown-menu-lg-min-width:before            { content: "#{to-rem(get($dropdown-menu-lg-size-config, "min-width"))}"; }
+    &.dropdown-menu-lg-max-width:before            { content: "#{to-rem(get($dropdown-menu-lg-size-config, "max-width"))}"; }
+    &.dropdown-menu-lg-bd-radius:before            { content: "#{to-rem(get($dropdown-menu-lg-size-config, "bd-radius"))}"; }
+    &.dropdown-menu-lg-font-size:before            { content: "#{to-rem(get($dropdown-menu-lg-size-config, "font-size"))}"; }
+    &.dropdown-menu-lg-header-font-size:before     { content: "#{to-rem(get($dropdown-menu-lg-size-config, "header-font-size"))}"; }
+    &.dropdown-menu-lg-link-padding:before         { content: "#{to-rem(get($dropdown-menu-lg-size-config, "link-padding"))}"; }
+    &.dropdown-menu-lg-link-height:before          { content: "#{to-rem(get($dropdown-menu-lg-size-config, "link-height"))}"; }
+    &.dropdown-menu-lg-link-icon-margin-hz:before  { content: "#{to-rem(get($dropdown-menu-lg-size-config, "link-icon-margin-horizontal"))}"; }
+    &.dropdown-menu-lg-divider-margin-vert:before  { content: "#{to-rem(get($dropdown-menu-lg-size-config, "divider-margin"))}"; }
+
+
+
+
+    // ----------------------------------------------------
+    //   Form control size variation attribs
+    // ----------------------------------------------------
+    $_input-height-config:    get($form-control-config, 'height');
+    $_input-font-size-config: get($form-control-config, 'font-size');
+    &.input-height-base:before    { content: "#{to-rem(get($_input-height-config, "base"))}"; }
+    &.input-height-lg:before      { content: "#{to-rem(get($_input-height-config, "lg"))}"; }
+    &.input-height-sm:before      { content: "#{to-rem(get($_input-height-config, "sm"))}"; }
+    &.input-height-xs:before      { content: "#{to-rem(get($_input-height-config, "xs"))}"; }
+    &.input-font-size-base:before { content: "#{to-rem(get($_input-font-size-config, "base"))}"; }
+    &.input-font-size-lg:before   { content: "#{to-rem(get($_input-font-size-config, "lg"))}"; }
+    &.input-font-size-sm:before   { content: "#{to-rem(get($_input-font-size-config, "sm"))}"; }
+    &.input-font-size-xs:before   { content: "#{to-rem(get($_input-font-size-config, "xs"))}"; }
+    &.input-pad-y-base:before     { content: "#{to-rem(get-deep($form-control-config, "padding.base.vertical"))}"; }
+    &.input-pad-x-base:before     { content: "#{to-rem(get-deep($form-control-config, "padding.base.horizontal"))}"; }
+    &.input-pad-y-lg:before       { content: "#{to-rem(get-deep($form-control-config, "padding.lg.vertical"))}"; }
+    &.input-pad-x-lg:before       { content: "#{to-rem(get-deep($form-control-config, "padding.lg.horizontal"))}"; }
+    &.input-pad-y-sm:before       { content: "#{to-rem(get-deep($form-control-config, "padding.sm.vertical"))}"; }
+    &.input-pad-x-sm:before       { content: "#{to-rem(get-deep($form-control-config, "padding.sm.horizontal"))}"; }
+    &.input-pad-y-xs:before       { content: "#{to-rem(get-deep($form-control-config, "padding.xs.vertical"))}"; }
+    &.input-pad-x-xs:before       { content: "#{to-rem(get-deep($form-control-config, "padding.xs.horizontal"))}"; }
+
+
+    // ----------------------------------------------------
+    //   Icon size variations
+    // ----------------------------------------------------
+    &.icon-size-base:after         { content: "#{to-rem($icon-size-base)}"; }
+    &.icon-size-sm:after           { content: "#{to-rem($icon-size-sm)}"; }
+    &.icon-size-md:after           { content: "#{to-rem($icon-size-md)}"; }
+    &.icon-size-lg:after           { content: "#{to-rem($icon-size-lg)}"; }
+    &.icon-size-xl:after           { content: "#{to-rem($icon-size-xl)}"; }
+    &.icon-size-xxl:after          { content: "#{to-rem($icon-size-xxl)}"; }
+    // ----- base 24 ----- //
+    &.icon-twfr-base-size:after    { content: "#{to-rem($icon-size-base-24)}"; }
+    &.icon-twfr-lg-size:after      { content: "#{to-rem($icon-size-lg-base-24)}"; }
+    &.icon-twfr-xl-size:after      { content: "#{to-rem($icon-size-xl-base-24)}"; }
+    &.icon-twfr-xxl-size:after     { content: "#{to-rem($icon-size-xxl-base-24)}"; }
+
+
+    // ----------------------------------------------------
+    //   Grid
+    // ----------------------------------------------------
+    &.grid-columns:after            { content: "#{$grid-columns}"; }
+    &.grid-gutter-width:after       { content: "#{to-rem($grid-gutter-width)}"; }
+    &.grid-gutter-side-width:after  { content: "#{to-rem($grid-gutter-width / 2)}"; }
+    &.grid-column-width-sm:after    { content: "#{to-rem($grid-column-width-sm)}"; }
+    &.grid-column-width-md:after    { content: "#{to-rem($grid-column-width-md)}"; }
+    &.grid-column-width-lg:after    { content: "#{to-rem($grid-column-width-lg)}"; }
+    &.grid-column-width-xl:after    { content: "#{to-rem($grid-column-width-xl)}"; }
+
+
+    // ----------------------------------------------------
+    //   Media Query Breakpoints
+    // ----------------------------------------------------
+    &.screen-sm-min:after             { content: "#{to-rem($screen-sm-min)}"; }
+    &.grid-container-width-sm:after   { content: "#{to-rem($grid-container-width-sm)}"; }
+
+    &.screen-md-min:after             { content: "#{to-rem($screen-md-min)}"; }
+    &.grid-container-width-md:after   { content: "#{to-rem($grid-container-width-md)}"; }
+
+    &.screen-lg-min:after             { content: "#{to-rem($screen-lg-min)}"; }
+    &.grid-container-width-lg:after   { content: "#{to-rem($grid-container-width-lg)}"; }
+
+    &.screen-xl-min:after             { content: "#{to-rem($screen-xl-min)}"; }
+    &.grid-container-width-xl:after   { content: "#{to-rem($grid-container-width-xl)}"; }
+
+
+    // ----------------------------------------------------
+    //  Spacing Utility Classes
+    // ----------------------------------------------------
+    @each $spacing-type in margin padding {
+        @each $amount-key, $amount in $component-spacing-config {
+            &.l-#{$spacing-type}-#{$amount-key}-output:after {
+                content: "#{to-rem($amount)}";
+            }
+
+            @each $direction in top right bottom left {
+                &.l-#{$spacing-type}-#{$direction}-#{$amount-key}-output:after {
+                    content: "#{to-rem($amount)}";
+                }
+            }
+        }
+    }
+}
+
+
+// -------------------------------------
+//   Color values
+//
+// ********************************************************
+.scss-output {
+    // ----- Color palette ----- //
+    &.swatch {
+        padding: .2rem .4rem;
+        border-radius: .3rem;
+        text-shadow: none;
+    }
+
+
+    // ----------------------------------------------------
+    //   Misc
+    // ----------------------------------------------------
+    &.ws-select-bg-hover    { @extend %ws-select-bg-hover; }
+    &.ws-select-bg-press    { @extend %ws-select-bg-press; }
+    &.ws-select-bg-active   { @extend %ws-select-bg-active; }
+    &.ws-select-text-hover  { @extend %ws-select-text-hover; }
+    &.ws-select-text-press  { @extend %ws-select-text-press; }
+    &.ws-select-text-active { @extend %ws-select-text-active; }
+    &.ws-yellow-highlight   { @extend %ws-yellow-highlight; }
+
+    // ----- Labels ----- //
+    &.ws-select-bg-hover:after    { content: "#{color("selection.bg-hover")}";    @extend %ws-select-bg-hover; }
+    &.ws-select-bg-press:after    { content: "#{color("selection.bg-press")}";    @extend %ws-select-bg-press; }
+    &.ws-select-bg-active:after   { content: "#{color("selection.bg-active")}";   @extend %ws-select-bg-active; }
+    &.ws-select-text-hover:after  { content: "#{color("selection.text-hover")}";  @extend %ws-select-text-hover; }
+    &.ws-select-text-press:after  { content: "#{color("selection.text-press")}";  @extend %ws-select-text-press; }
+    &.ws-select-text-active:after { content: "#{color("selection.text-active")}"; @extend %ws-select-text-active; }
+
+    &.ws-yellow-highlight:after   { content: "#{color("highlight.yellow")}";      @extend %ws-yellow-highlight; }
+
+
+    // ----------------------------------------------------
+    //   WF Grays ("Secondary")
+    // ----------------------------------------------------
+    &.zc-gray-120   { @extend %zc-gray-120; }
+    &.zc-gray       { @extend %zc-gray; }
+    &.zc-gray-90    { @extend %zc-gray-90; }
+    &.zc-gray-80    { @extend %zc-gray-80; }
+    &.zc-gray-70    { @extend %zc-gray-70; }
+    &.zc-gray-60    { @extend %zc-gray-60; }
+    &.zc-gray-50    { @extend %zc-gray-50; }
+    &.zc-gray-40    { @extend %zc-gray-40; }
+    &.zc-gray-30    { @extend %zc-gray-30; }
+    &.zc-gray-20    { @extend %zc-gray-20; }
+
+    // ----- Labels ----- //
+    &.zc-gray-120:after     { content: "#{$zc-gray-120}";   @extend %zc-gray-120; }
+    &.zc-gray:after         { content: "#{$zc-gray}";       @extend %zc-gray; }
+    &.zc-gray-90:after      { content: "#{$zc-gray-90}";    @extend %zc-gray-90; }
+    &.zc-gray-80:after      { content: "#{$zc-gray-80}";    @extend %zc-gray-80; }
+    &.zc-gray-70:after      { content: "#{$zc-gray-70}";    @extend %zc-gray-70; }
+    &.zc-gray-60:after      { content: "#{$zc-gray-60}";    @extend %zc-gray-60; }
+    &.zc-gray-50:after      { content: "#{$zc-gray-50}";    @extend %zc-gray-50; }
+    &.zc-gray-40:after      { content: "#{$zc-gray-40}";    @extend %zc-gray-40; }
+    &.zc-gray-30:after      { content: "#{$zc-gray-30}";    @extend %zc-gray-30; }
+    &.zc-gray-20:after      { content: "#{$zc-gray-20}";    @extend %zc-gray-20; }
+
+
+    // ----------------------------------------------------
+    //   WF Greens ("Primary")
+    //
+    //   These all read from left to right
+    //   when looking at the color palette
+    //   matrix in the docs.
+    // ----------------------------------------------------
+    &.zc-green-c            { @extend %zc-green-c; }
+    &.zc-green-b            { @extend %zc-green-b; }
+    &.zc-green              { @extend %zc-green; }
+    // labels
+    &.zc-green-c:after      { content: "#{$zc-green-c}";    @extend %zc-green-c; }
+    &.zc-green-b:after      { content: "#{$zc-green-b}";    @extend %zc-green-b; }
+    &.zc-green:after        { content: "#{$zc-green}";      @extend %zc-green; }
+
+    // ----- Darker ----- //
+    &.zc-green-c-120        { @extend %zc-green-c-120; }
+    &.zc-green-b-120        { @extend %zc-green-b-120; }
+    &.zc-green-120          { @extend %zc-green-120; }
+    // labels
+    &.zc-green-c-120:after  { content: "#{$zc-green-c-120}";  @extend %zc-green-c-120; }
+    &.zc-green-b-120:after  { content: "#{$zc-green-b-120}";  @extend %zc-green-b-120; }
+    &.zc-green-120:after    { content: "#{$zc-green-120}";    @extend %zc-green-120; }
+
+    // ----- Lighter ----- //
+    &.zc-green-c-80         { @extend %zc-green-c-80; }
+    &.zc-green-b-80         { @extend %zc-green-b-80; }
+    &.zc-green-80           { @extend %zc-green-80; }
+    // labels
+    &.zc-green-c-80:after   { content: "#{$zc-green-c-80}";  @extend %zc-green-c-80; }
+    &.zc-green-b-80:after   { content: "#{$zc-green-b-80}";  @extend %zc-green-b-80; }
+    &.zc-green-80:after     { content: "#{$zc-green-80}";    @extend %zc-green-80; }
+
+    // ----- Pastel 1 ----- //
+    &.zc-green-c-60         { @extend %zc-green-c-60; }
+    &.zc-green-b-60         { @extend %zc-green-b-60; }
+    &.zc-green-60           { @extend %zc-green-60; }
+    // labels
+    &.zc-green-c-60:after   { content: "#{$zc-green-c-60}";  @extend %zc-green-c-60; }
+    &.zc-green-b-60:after   { content: "#{$zc-green-b-60}";  @extend %zc-green-b-60; }
+    &.zc-green-60:after     { content: "#{$zc-green-60}";    @extend %zc-green-60; }
+
+    // ----- Pastel 2 ----- //
+    &.zc-green-c-40         { @extend %zc-green-c-40; }
+    &.zc-green-b-40         { @extend %zc-green-b-40; }
+    &.zc-green-40           { @extend %zc-green-40; }
+    // labels
+    &.zc-green-c-40:after   { content: "#{$zc-green-c-40}";  @extend %zc-green-c-40; }
+    &.zc-green-b-40:after   { content: "#{$zc-green-b-40}";  @extend %zc-green-b-40; }
+    &.zc-green-40:after     { content: "#{$zc-green-40}";    @extend %zc-green-40; }
+
+
+    // ----------------------------------------------------
+    //   WF Blues ("Alternate")
+    // ----------------------------------------------------
+    &.zc-blue-120          { @extend %zc-blue-120; }
+    &.zc-blue              { @extend %zc-blue; }
+    &.zc-blue-80           { @extend %zc-blue-80; }
+    &.zc-blue-60           { @extend %zc-blue-60; }
+    &.zc-blue-40           { @extend %zc-blue-40; }
+
+    // ----- Labels ----- //
+    &.zc-blue-120:after    { content: "#{$zc-blue-120}"; @extend %zc-blue-120; }
+    &.zc-blue:after        { content: "#{$zc-blue}";     @extend %zc-blue; }
+    &.zc-blue-80:after     { content: "#{$zc-blue-80}";  @extend %zc-blue-80; }
+    &.zc-blue-60:after     { content: "#{$zc-blue-60}";  @extend %zc-blue-60; }
+    &.zc-blue-40:after     { content: "#{$zc-blue-40}";  @extend %zc-blue-40; }
+
+
+    // ----------------------------------------------------
+    //   WF Orange ("Warning")
+    // ----------------------------------------------------
+    &.zc-orange-120        { @extend %zc-orange-120; }
+    &.zc-orange            { @extend %zc-orange; }
+    &.zc-orange-80         { @extend %zc-orange-80; }
+    &.zc-orange-60         { @extend %zc-orange-60; }
+    &.zc-orange-40         { @extend %zc-orange-40; }
+
+    // ----- Labels ----- //
+    &.zc-orange-120:after  { content: "#{$zc-orange-120}"; @extend %zc-orange-120; }
+    &.zc-orange:after      { content: "#{$zc-orange}";     @extend %zc-orange; }
+    &.zc-orange-80:after   { content: "#{$zc-orange-80}";  @extend %zc-orange-80; }
+    &.zc-orange-60:after   { content: "#{$zc-orange-60}";  @extend %zc-orange-60; }
+    &.zc-orange-40:after   { content: "#{$zc-orange-40}";  @extend %zc-orange-40; }
+
+
+    // ----------------------------------------------------
+    //   WF Purple ("University/Helpl")
+    // ----------------------------------------------------
+    &.zc-purple-120        { @extend %zc-purple-120; }
+    &.zc-purple            { @extend %zc-purple; }
+    &.zc-purple-80         { @extend %zc-purple-80; }
+    &.zc-purple-60         { @extend %zc-purple-60; }
+    &.zc-purple-40         { @extend %zc-purple-40; }
+
+    // ----- Labels ----- //
+    &.zc-purple-120:after  { content: "#{$zc-purple-120}"; @extend %zc-purple-120; }
+    &.zc-purple:after      { content: "#{$zc-purple}";     @extend %zc-purple; }
+    &.zc-purple-80:after   { content: "#{$zc-purple-80}";  @extend %zc-purple-80; }
+    &.zc-purple-60:after   { content: "#{$zc-purple-60}";  @extend %zc-purple-60; }
+    &.zc-purple-40:after   { content: "#{$zc-purple-40}";  @extend %zc-purple-40; }
+
+
+    // ----------------------------------------------------
+    //   WF Red ("Danger/Error")
+    // ----------------------------------------------------
+    &.zc-red-120    { @extend %zc-red-120; }
+    &.zc-red        { @extend %zc-red; }
+    &.zc-red-80     { @extend %zc-red-80; }
+    &.zc-red-60     { @extend %zc-red-60; }
+    &.zc-red-40     { @extend %zc-red-40; }
+
+    // ----- Labels ----- //
+    &.zc-red-120:after  { content: "#{$zc-red-120}";    @extend %zc-red-120; }
+    &.zc-red:after      { content: "#{$zc-red}";        @extend %zc-red; }
+    &.zc-red-80:after   { content: "#{$zc-red-80}";     @extend %zc-red-80; }
+    &.zc-red-60:after   { content: "#{$zc-red-60}";     @extend %zc-red-60; }
+    &.zc-red-40:after   { content: "#{$zc-red-40}";     @extend %zc-red-40; }
+}

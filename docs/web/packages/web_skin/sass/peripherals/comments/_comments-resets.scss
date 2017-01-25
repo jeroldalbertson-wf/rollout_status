@@ -1,0 +1,12 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/comments/comments-resets';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+@include comment-elem-resets();
+@include comment-warning-hover-pill();

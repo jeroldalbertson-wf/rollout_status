@@ -1,0 +1,77 @@
+// ********************************************************
+
+////
+/// Well component configuration
+/// ---
+/// @group core.components.wells
+/// @link http://bit.ly/webskin-wells Well component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/wells/wells-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function extend);
+//
+// ********************************************************
+
+
+///
+/// Configuration for `.well` components.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {function} extend
+/// @requires {variable} $state-default-bg
+/// @requires {variable} $global-component-bd-width
+/// ---
+/// @prop {Color}  bg       [#fafafa]
+/// @prop {Color}  bd-color [#e8e8e8]
+/// @prop {Number} bd-width [1px]
+///
+$well-config: (
+    'bg': $state-default-bg,
+    'bd-color': null, // actual calculated value inserted via @extend
+    'bd-width': $global-component-bd-width
+) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $well-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $well-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $well-bd-color: darken(get($well-config, 'bg'), 7%);
+
+        // ----- EXTEND well config with calc'd values ----- //
+        $well-config: extend($well-config,
+            (
+                'bd-color': $well-bd-color
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED CONFIG ALIAS / SHORTHAND
+//
+//   -> DO NOT MODIFY THESE (modify the map config)
+//
+// ********************************************************
+    $well-bg: get($well-config, 'bg');
+    $well-bd-width: get($well-config, 'bd-width');

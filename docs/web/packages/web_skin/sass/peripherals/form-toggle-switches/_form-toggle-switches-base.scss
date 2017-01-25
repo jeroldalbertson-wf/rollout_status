@@ -1,0 +1,328 @@
+// ********************************************************
+//
+//   FORM TOGGLE SWITCH COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-form-toggle-switches
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/form-toggle-switches/form-toggle-switches-base';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   LOCAL CONFIG ALIASES
+//
+// ********************************************************
+    $cbox-switch-width: to-rem(get($cbox-switch-config, 'width'));
+    $cbox-switch-btn-width: to-rem(get($cbox-switch-config, 'btn-width'));
+    $cbox-switch-btn-bd-width: to-rem(get($cbox-switch-config, 'btn-bd-width'));
+
+    $cbox-switch-void-bg-base: get-deep($cbox-switch-skin-config, 'default.void-bg');
+    $cbox-switch-btn-bg-base: get-deep($cbox-switch-skin-config, 'default.btn-bg');
+    $cbox-switch-btn-bd-base: get-deep($cbox-switch-skin-config, 'default.btn-bd');
+
+    $cbox-switch-height-base: to-rem(get-deep($cbox-switch-config, 'height.base'));
+    $cbox-switch-void-height-base: to-rem(get-deep($cbox-switch-config, 'void-height'));
+    $cbox-switch-bd-radius-base: to-rem(get-deep($cbox-switch-config, 'bd-radius.base'));
+    $cbox-switch-text-indent-base: to-rem(get-deep($cbox-switch-config, 'text-indent.base'));
+    $cbox-switch-font-size-base: to-rem(get-deep($cbox-switch-config, 'font-size.base'));
+
+
+// ********************************************************
+//
+//   BASE STYLES (SCREEN AND PRINT)
+//
+// ********************************************************
+.checkbox-switch {
+    display: inline-block;
+
+    label {
+        font-family: $font-family-base;
+        font-weight: normal;
+    }
+}
+
+
+// ********************************************************
+//
+//   SCREEN ONLY STYLES
+//
+// ********************************************************
+@media screen {
+    // ----------------------------------------------------
+    //   BASE STYLES (SCREEN ONLY)
+    // ----------------------------------------------------
+    .checkbox-switch {
+        position: relative;
+        height: $cbox-switch-height-base;
+
+        // ------------------------------------------------
+        //   CLICKABLE ELEM
+        // ------------------------------------------------
+        label {
+            @include disable-user-select();
+
+            position: relative;
+            height: $cbox-switch-height-base;
+            width: 100%;
+            line-height: $cbox-switch-height-base;
+            text-indent: $cbox-switch-width + to-rem(get($cbox-switch-config, 'label-spacing'));
+            cursor: pointer;
+
+            // (SLIDER)
+            &:before {
+                // Enable hardware acceleration
+                @include activate-gpu();
+                @include transition(all .2s ease);
+
+                box-sizing: border-box;
+                content: "";
+                display: block;
+                position: absolute;
+                z-index: 1;
+                left: 0;
+                top: 50%;
+                margin-top: $cbox-switch-void-height-base / -2; // center vertically
+                width: $cbox-switch-width;
+                height: $cbox-switch-void-height-base;
+                background-color: $cbox-switch-void-bg-base;
+                border-radius: $cbox-switch-void-height-base / 2;
+            }
+
+            // (BUTTON)
+            &:after {
+                // Enable hardware acceleration
+                @include activate-gpu();
+                @include transition(all .2s ease);
+
+                box-sizing: border-box;
+                content: "";
+                display: block;
+                position: absolute;
+                z-index: 2; // keep above labels
+                top: 50%;
+                margin-top: $cbox-switch-btn-width / -2; // center vertically
+                left: 0;
+                width: $cbox-switch-btn-width;
+                height: $cbox-switch-btn-width;
+                border: $cbox-switch-btn-bd-width solid $cbox-switch-btn-bd-base;
+                background-color: $cbox-switch-btn-bg-base;
+                border-radius: 50%; // circle
+            }
+        }
+
+        // ------------------------------------------------
+        //   ACTUAL CHECKBOX (HIDDEN)
+        // ------------------------------------------------
+        input[type="checkbox"] {
+            //
+            // even though we are hiding it we still want
+            // it to inherit the size of its container
+            // so the entire area is clickable
+            //
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+
+            //
+            // must hide this to prevent mozilla suckage:
+            // https://bugzilla.mozilla.org/show_bug.cgi?id=605985
+            //
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            // use opacity instead of visibility: hidden; in order to allow the inputs to gain :focus
+            opacity: 0;
+            .no-touch & {
+                //
+                // do not use clip() on touch devices because it causes (https://github.com/Workiva/web-skin/issues/611)
+                // but we do need to use it on devices that use a mouse/hover HCI pattern in order to only have
+                // to declare our :hover style on the parent .radio/.checkbox
+                //
+                clip: rect(0,0,0,0);
+            }
+        }
+
+        // ------------------------------------------------
+        //   SWITCH IS TURNED ON
+        // ------------------------------------------------
+        input[type="checkbox"]:checked + label {
+            @include checked-switch-label();
+        }
+
+        // ------------------------------------------------
+        //   SWITCH IS FOCUSED
+        // ------------------------------------------------
+        input[type="checkbox"]:focus + label {
+            @include focused-switch-label();
+        }
+
+        // ------------------------------------------------
+        //   SWITCH IS DISABLED
+        // ------------------------------------------------
+        input[type="checkbox"][disabled] + label {
+            @include disabled-switch-label();
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   LABEL ALIGNMENT VARIATION (SCREEN ONLY)
+    //
+    //   -> Makes the toggle appear to the right of the label
+    // ----------------------------------------------------
+    .checkbox-switch--label-left {
+        label {
+            text-indent: 0;
+            padding-right: $cbox-switch-width + to-rem(get($cbox-switch-config, 'label-spacing'));
+
+            // (SLIDER)
+            &:before {
+                left: auto;
+                right: 0;
+            }
+
+            // (BUTTON)
+            &:after {
+                @include translateX(($cbox-switch-width - $cbox-switch-btn-width) * -1);
+
+                left: auto;
+                right: 0;
+            }
+        }
+
+        // ------------------------------------------------
+        //   SWITCH IS TURNED ON
+        // ------------------------------------------------
+        input[type="checkbox"]:checked + label {
+            // (BUTTON)
+            &:after {
+                @include translateX(0);
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   SIZE VARIATIONS (SCREEN ONLY)
+    // ----------------------------------------------------
+    @each $size-name in reject(map-keys(get($cbox-switch-config, 'height')), 'base') {
+        .checkbox-switch-#{$size-name} {
+            // ----- LOCAL SIZE VARIANT VARS ----- //
+            $cbox-switch-height: to-rem(get-deep($cbox-switch-config, 'height.#{$size-name}'));
+            $cbox-switch-bd-radius: to-rem(get-deep($cbox-switch-config, 'bd-radius.#{$size-name}'));
+            $cbox-switch-font-size: to-rem(get-deep($cbox-switch-config, 'font-size.#{$size-name}'));
+
+            $cbox-switch-width: get($cbox-switch-config, 'width-#{$size-name}');
+            $cbox-switch-width: if($cbox-switch-width != inherit, to-rem($cbox-switch-width), $cbox-switch-width);
+
+            $cbox-switch-btn-width: get($cbox-switch-config, 'btn-width-#{$size-name}');
+            $cbox-switch-btn-width: if($cbox-switch-btn-width != inherit, to-rem($cbox-switch-btn-width), $cbox-switch-btn-width);
+
+            height: $cbox-switch-height;
+            line-height: $cbox-switch-height;
+            font-size: $cbox-switch-font-size;
+            border-radius: $cbox-switch-bd-radius;
+
+            label {
+                height: $cbox-switch-height;
+                line-height: $cbox-switch-height;
+                font-size: $cbox-switch-font-size;
+
+                @if $cbox-switch-width != inherit {
+                    text-indent: $cbox-switch-width + to-rem(get($cbox-switch-config, 'label-spacing'));
+
+                    // ----- SLIDER ----- //
+                    &:before {
+                        width: $cbox-switch-width;
+                    }
+                }
+
+                @if $cbox-switch-btn-width != inherit {
+                    // ----- BUTTON ----- //
+                    &:after {
+                        width: $cbox-switch-btn-width;
+                        height: $cbox-switch-btn-width;
+                        margin-top: $cbox-switch-btn-width / -2; // center vertically
+                    }
+                }
+            }
+
+            @if $cbox-switch-btn-width != inherit or $cbox-switch-width != inherit {
+                // Set to base sizes if inherit value is found
+                $cbox-switch-btn-width: if($cbox-switch-btn-width == inherit, to-rem(get($cbox-switch-config, 'btn-width')), $cbox-switch-btn-width);
+                $cbox-switch-width: if($cbox-switch-width == inherit, to-rem(get($cbox-switch-config, 'width')), $cbox-switch-width);
+
+                // ----------------------------------------
+                //   SWITCH IS TURNED ON
+                // ----------------------------------------
+                input[type="checkbox"]:checked + label {
+                    // ----- BUTTON ----- //
+                    &:after {
+                        // Slide to the right
+                        @include translateX($cbox-switch-width - $cbox-switch-btn-width);
+                    }
+                }
+
+                // Label alignment variation
+                &.checkbox-switch--label-left {
+                    label {
+                        text-indent: 0;
+                        padding-right: $cbox-switch-width + to-rem(get($cbox-switch-config, 'label-spacing'));
+
+                        // ----- BUTTON ----- //
+                        &:after {
+                            @include translateX(($cbox-switch-width - $cbox-switch-btn-width) * -1);
+                        }
+                    }
+
+                    input[type="checkbox"]:checked + label {
+                        // ----- BUTTON (ACTIVE) ----- //
+                        &:after {
+                            // Slide to the right
+                            @include translateX(0);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    //   SKIN COLOR VARIATIONS (SCREEN ONLY)
+    // ----------------------------------------------------
+    @each $skin-name, $skin-config in map-remove($cbox-switch-skin-config, 'default') {
+        .checkbox-switch-#{$skin-name} {
+            // ----------------------------------------
+            //   SWITCH IS TURNED ON
+            // ----------------------------------------
+            input[type="checkbox"]:checked + label {
+                // (SLIDER)
+                &:before {
+                    background-color: get($skin-config, 'void-bg-active');
+                }
+
+                // (BUTTON)
+                &:after {
+                    background-color: get($skin-config, 'btn-bg-active');
+                    border-color: get($skin-config, 'btn-bd-active');
+                }
+            }
+
+            // ------------------------------------------------
+            //   SWITCH IS FOCUSED
+            // ------------------------------------------------
+            input[type="checkbox"]:focus + label {
+                @include focused-switch-label();
+            }
+        }
+    }
+}

@@ -1,0 +1,109 @@
+// ********************************************************
+//
+//   FORM CLICK TO EDIT COMPONENT STYLE MODULE
+//
+//   -> `cte` CSS class goes on a `.form-group` elem
+//
+//   -> The `.cte-group` elem should be where `onClick` / `onDblclick`
+//      event handlers are housed
+//
+//   -> `is-selected` CSS class added when `.cte-group` elem is
+//      single clicked
+//
+//   -> `is-editable` CSS class added when `.cte-group` elem is
+//      double clicked
+//
+//   -> `form-control-static` CSS class should be present
+//      on the `.form-control` elem until the `is-editable`
+//      CSS class is added to the `.cte-group` elem
+//
+//
+//   MARKUP SPEC:
+//
+//   <div class="cte-group-wrapper">
+//     <div class="cte-group  form-group">
+//       <label class="control-label"></label>
+//       <div class="cte-block-controls">
+//         <div class="cte-block-input-control">
+//           <!-- The input, textarea, select, whatever -->
+//         </div>
+//         <div class="cte-block-btn-control">
+//           <!-- The "pencil" icon button -->
+//         </div>
+//       </div>
+//     </div>
+//     <div class="cte-group  form-group">...</div>
+//     <div class="cte-group  form-group">...</div>
+//     <div class="cte-group  form-group">...</div>
+//   </div>
+//
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/form-click-to-edit';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+    // ----------------------------------------------------
+    //   Adjust / normalize core form component styles to
+    //   work in the context of click-to-edit where necessary.
+    // ----------------------------------------------------
+    @include normalize-core-cte-form-components();
+
+    // ----------------------------------------------------
+    //   Apply grid v2 structure to click-to-edit elems
+    // ----------------------------------------------------
+    @include make-cte-grid-flex();
+
+    // ----------------------------------------------------
+    //   Apply click-to-edit styles based on state
+    // ----------------------------------------------------
+    .cte-group {
+        @include cte-state-default();
+
+        // ----- STATE: HOVER ----- //
+        #{$hover},
+        &#{$hover-class} {
+            @include cte-state-hover();
+        }
+
+        // ----- STATE: EDITABLE VIA A SINGLE CLICK (When edit button is hovered) ----- //
+        &.cte-group--single-click-enabled {
+            @include cte-state-single-click-enabled();
+        }
+
+        // ----- STATE: SELECTED VIA `onClick` ----- //
+        &.is-selected {
+            // If it is not an editable value, render the same
+            // colors used on hover.
+            @include cte-state-hover();
+
+            &.cte-group--can-be-edited {
+                // If it is an editable value, render the discrete
+                // selected state (blue color)
+                @include cte-state-selected();
+            }
+        }
+
+        // ----- STATE: EDITABLE VIA `onDblclick` ----- //
+        &.is-editable {
+            @include cte-state-editable();
+        }
+
+        // ----- STATE: DISABLED ----- //
+        &.disabled {
+            @include cte-state-disabled();
+        }
+    }
+
+    // ----------------------------------------------------
+    //   Cancel / Confirm Toolbar Button Styles
+    // ----------------------------------------------------
+    @include cte-cancel-confirm-btns();
+
+    // ----------------------------------------------------
+    //   Adjust padding-right / right alignment values
+    //   of cte and its children / siblings.
+    // ----------------------------------------------------
+    @include cte-control-right-side-insets();

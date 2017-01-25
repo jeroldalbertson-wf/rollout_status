@@ -1,0 +1,20 @@
+// ********************************************************
+//
+$module: add-api-module('core/api/config/support/not-msie');
+//
+//   Import this module to compile a stylesheet
+//   with no MSIE hacks / support
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Default support
+// ----------------------------------------------------
+@import "defaults";
+
+
+// ----------------------------------------------------
+//   Remove support for MSIE
+// ----------------------------------------------------
+@include set-supported-browsers(reject($supported-browsers, ie, ie-mobile));

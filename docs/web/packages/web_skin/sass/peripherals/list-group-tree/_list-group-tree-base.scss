@@ -1,0 +1,180 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/list-group-tree/list-group-tree-base';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   GLOBAL TREE ITEMS
+//
+//   -> All tree items, no matter their hierarchial pos
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   BASE TREE ITEM CLASS
+    // ----------------------------------------------------
+    .list-group-tree .list-group-item {
+        @include list-group-tree-item-base();
+    }
+
+
+    // ----------------------------------------------------
+    //   BASE TREE ITEM SIZE VARIATIONS
+    // ----------------------------------------------------
+    @include list-group-tree-item-size('xs');
+    @include list-group-tree-item-size('sm');
+    @include list-group-tree-item-size('lg');
+
+
+    // ----------------------------------------------------
+    //   ACTIVE TREE ITEM
+    //
+    //   -> Override default "active" style since
+    //      collapsible stuff can still be clicked.
+    // ----------------------------------------------------
+    .list-group-tree {
+        .active > .list-group-item,
+        .active-parent > .list-group-item,
+        .list-group-item.active-parent,
+        .list-group-item.active {
+            cursor: pointer !important;
+            box-shadow: none !important; // Remove focus shadow inset
+        }
+
+        // ------------------------------------------------
+        //   CHILD OF ITEM IS ACTIVE
+        // ------------------------------------------------
+        .active-parent {
+            > .list-group-item {
+                @include list-group-item-link-active();
+
+                // Slight bg color variation
+                background-color: get($list-group-tree-group-config, 'bg-active-child');
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   TREE ITEM CARET INDICATORS
+    // ----------------------------------------------------
+    .list-group-tree {
+        .list-group-item {
+            @include list-group-tree-item-base-caret();
+        }
+
+        // ----- ACTIVE LIST GROUP CARET INDICATOR (pointing right) ----- //
+        .active,
+        .active-parent {
+            > .list-group-item:not(.open) {
+                @include list-group-tree-item-active-caret();
+            }
+        }
+
+        // ----- EXPANDED LIST GROUP CARET INDICATOR (pointing down) ----- //
+        .open > .list-group-item,
+        .list-group-item.open {
+            @include list-group-tree-item-open-caret();
+        }
+
+        // ----- ACTIVE EXPANDED LIST GROUP CARET INDICATOR (pointing down) ----- //
+        .active,
+        .active-parent {
+            > .list-group-item.open {
+                @include list-group-tree-item-open-active-caret();
+            }
+        }
+    }
+
+
+
+// ********************************************************
+//
+//   NESTED TREE ITEMS / GROUPS
+//
+//   -> Tree items / groups that are not "top-level" nodes
+//
+// ********************************************************
+    .list-group-tree .list-group-parent .list-group {
+        margin-bottom: 0;
+        padding-left: to-rem(list-group-tree-item-indent(1));
+    }
+
+
+
+// ********************************************************
+//
+//   TOP LEVEL TREE ITEMS
+//
+//   -> Tree items at the "topmost" hierarchial pos
+//
+//   -> These have the green left border instead of
+//      a caret, and should only be used in-combination
+//      with the `data-parent` option
+//      (e.g. only one group open at a time)
+//
+// ********************************************************
+    // ------------------------------------------------
+    //   DEFAULT GROUP PARENT SKIN
+    //
+    //   -> These have the green left border instead
+    //      of a caret, and should only be used
+    //      in-combination with the `data-parent` prop
+    //      (e.g. only one group open at a time)
+    // ------------------------------------------------
+    .list-group-tree {
+        > .list-group-parent {
+            > .list-group-item {
+                @include list-group-tree-item-top-level();
+            }
+
+
+            // ----- ACTIVE PARENT STATE ----- //
+            &.active,
+            &.active-parent {
+                > .list-group-item {
+                    @include list-group-tree-item-top-level-active();
+                }
+            }
+        }
+
+        // ----- TOP LEVEL TREE ITEM DIVIDERS ----- //
+        .list-group-parent-border {
+            @include list-group-tree-top-level-divider();
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   GROUP-ICON PARENT SKIN VARIATION
+    //
+    //   -> Variation in which a nested `.icon` is used
+    //      in-lieu of the platform "indicator" on the left
+    // ----------------------------------------------------
+    .list-group-tree.has-group-icons {
+        > .list-group-parent {
+            > .list-group-item {
+                @include list-group-tree-item-top-level-with-group-icons();
+            }
+
+            // Make the group icon appear active,
+            // even if its a parent's child that is active
+            &.active,
+            &.active-parent {
+                > .list-group-item {
+                    @include list-group-tree-item-top-level-with-group-icons-active();
+                }
+            }
+
+
+            // ----- NESTED LIST GROUPS BENEATH GROUP ICONS ----- //
+            > .list-group {
+                padding-left: to-rem(list-group-tree-item-indent(1, $top-level-item-has-icon: true));
+            }
+        }
+    }

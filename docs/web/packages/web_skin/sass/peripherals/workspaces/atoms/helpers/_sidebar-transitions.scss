@@ -1,0 +1,436 @@
+// ********************************************************
+
+////
+/// Workspaces layout / component transition logic
+/// ---
+/// @since 1.3.0
+/// @access public
+/// @group peripherals.components.workspaces
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/atoms/helpers/sidebar-transitions';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+$enable-wksp-css-transitions: true !default;
+
+
+// ********************************************************
+//
+//   SHARED HELPERS
+//
+// ********************************************************
+    @function get-trans-key($phase, $key) {
+        $_keys: (
+            'duration': (
+                'primary':   get-deep($wksp-sidebar-primary-transitions,   'duration.#{$phase}'),
+                'secondary': get-deep($wksp-sidebar-secondary-transitions, 'duration.#{$phase}')
+            ),
+            'delay': (
+                'primary':   get-deep($wksp-sidebar-primary-transitions,   'delay.#{$phase}'),
+                'secondary': get-deep($wksp-sidebar-secondary-transitions, 'delay.#{$phase}')
+            )
+        );
+
+        @return get-deep($_keys, $key);
+    }
+
+    // --------------------------------------------- //
+    @function wksp-sidebar-transitions-builder(
+        $properties: all,
+        $duration: get-deep($wksp-sidebar-primary-transitions, 'duration.default'),
+        $easing: ease,
+        $delay: 0s,
+        $phase: null,
+        $hover-delay: 0s
+    ) {
+        $transition-shorthand: comma-list();
+
+        @if is-list($properties) {
+            @each $property in $properties {
+                $transition-shorthand: append($transition-shorthand, $property $duration $easing $delay, comma);
+            }
+        } @else {
+            $transition-shorthand: append($transition-shorthand, $properties $duration $easing $delay, comma);
+        }
+
+        //
+        // If its a min-to-max phase, add color properties to facilitate
+        // a delay effect for the "grayscale" effect that occurs when the user's
+        // mouse exits a maximized sidebar.
+        //
+        @if $phase == 'min-to-max' {
+            $grayscale-hover-duration: .1s;
+            $grayscale-hover-ease: linear;
+            $grayscale-hover-delay: $hover-delay;
+            $color-properties: background-color, color, border-color;
+
+            @each $property in $color-properties {
+                $transition-shorthand: append($transition-shorthand, $property $grayscale-hover-duration $grayscale-hover-ease $grayscale-hover-delay, comma);
+            }
+        }
+
+        @return $transition-shorthand;
+    }
+
+    // --------------------------------------------- //
+    @mixin wksp-sidebar-transitions(
+        $properties: all,
+        $duration: get-deep($wksp-sidebar-primary-transitions, 'duration.default'),
+        $easing: ease,
+        $delay: 0s
+    ) {
+        @if $enable-wksp-css-transitions {
+            @include transition(wksp-sidebar-transitions-builder($properties, $duration, $easing, $delay));
+        }
+    }
+
+        //
+        // Default transition behavior for the "primary" transition
+        // when a sidebar is maximizing.
+        // The "primary" transition goes LAST in this scenario
+        //
+        @mixin wksp-min-to-max-sidebar-transitions(
+            $properties: all,
+            $duration: get-deep($wksp-sidebar-primary-transitions, 'duration.default'),
+            $easing: ease
+        ) {
+            @include wksp-sidebar-transitions($properties, $duration, $easing, get-deep($wksp-sidebar-primary-transitions, 'delay.min-to-max'));
+        }
+
+        //
+        // Default transition behavior for the "primary" transition
+        // when a sidebar is minimizing.
+        // The "primary" transition goes FIRST in this scenario
+        //
+        @mixin wksp-max-to-min-sidebar-transitions(
+            $properties: all,
+            $duration: get-deep($wksp-sidebar-primary-transitions, 'duration.default'),
+            $easing: ease
+        ) {
+            @include wksp-sidebar-transitions($properties, $duration, $easing, get-deep($wksp-sidebar-primary-transitions, 'delay.max-to-min'));
+        }
+
+        //
+        // Default transition behavior for the "secondary" transition
+        // when a sidebar is maximizing.
+        // The "secondary" transition goes FIRST in this scenario
+        //
+        @mixin wksp-min-to-max-sidebar-secondary-transitions(
+            $properties: all,
+            $duration: get-deep($wksp-sidebar-secondary-transitions, 'duration.min-to-max'),
+            $easing: linear
+        ) {
+            @include wksp-sidebar-transitions($properties, $duration, $easing, get-deep($wksp-sidebar-secondary-transitions, 'delay.min-to-max'));
+        }
+
+        //
+        // Default transition behavior for the "secondary" transition
+        // when a sidebar is minimizing.
+        // The "secondary" transition goes LAST in this scenario
+        //
+        @mixin wksp-max-to-min-sidebar-secondary-transitions(
+            $properties: all,
+            $duration: get-deep($wksp-sidebar-secondary-transitions, 'duration.max-to-min'),
+            $easing: linear
+        ) {
+            @include wksp-sidebar-transitions($properties, $duration, $easing, get-deep($wksp-sidebar-secondary-transitions, 'delay.max-to-min'));
+        }
+
+
+    // --------------------------------------------- //
+    @mixin wksp-two-phase-transition($radius-transition, $default-hitarea-transitions...) {@if $enable-wksp-css-transitions {
+        $all-transitions: comma-list();
+        $default-hitarea-transitions: arglists-to-list($default-hitarea-transitions); // normalize arg value
+
+        @each $transition in $default-hitarea-transitions {
+            $all-transitions: append($all-transitions, $transition, comma);
+        }
+
+        @each $transition in $radius-transition {
+            $all-transitions: append($all-transitions, $transition, comma);
+        }
+
+        @include transition(to-list($all-transitions));
+    }}
+
+
+
+// ********************************************************
+//
+//   INDIVIDUAL COMPONENT / STATE TRANSITION HELPERS
+//
+//   -> Sole purpose is to make the workspaces
+//      styles actually readable!
+//
+//   -> Naming conventions should very closely, or
+//      eactly match the CSS class selector that the
+//      contents are injected within.
+//
+// ********************************************************
+
+// .wksp-sidebar-content-block
+@mixin wksp-sidebar-content-block-transitions($phase) {@if $enable-wksp-css-transitions {
+    $trans1: none;
+    $trans2: none;
+
+    //
+    // When it's within a minimized sidebar that is becoming maximized
+    // we should change the border-color first with no tween.
+    //
+    @if $phase == 'min-to-max' {
+        $trans1: wksp-sidebar-transitions-builder(
+            $properties:    padding,
+            $delay:         get-trans-key($phase, 'delay.primary')
+        );
+
+        $trans2: wksp-sidebar-transitions-builder(
+            $properties:    border-color,
+            $duration:      0s,
+            $easing:        linear,
+            $delay:         get-trans-key($phase, 'delay.secondary')
+        );
+    }
+
+    //
+    // When it's within a maximized sidebar that is becoming minimized
+    // we should do the border-color transition last after a delay.
+    //
+    @if $phase == 'max-to-min' {
+        $trans1: wksp-sidebar-transitions-builder(
+            $properties:    padding,
+            $delay:         get-trans-key($phase, 'delay.primary')
+        );
+
+        $trans2: wksp-sidebar-transitions-builder(
+            $properties:    border-color,
+            $duration:      get-trans-key($phase, 'duration.secondary'),
+            $easing:        linear,
+            $delay:         get-trans-key($phase, 'delay.secondary')
+        );
+    }
+
+
+    @include transition($trans1, $trans2);
+}}
+
+
+// .wksp-pill-panel .panel-collapse
+@mixin wksp-sidebar-pill-panel-transitions($phase) {@if $enable-wksp-css-transitions {
+    $trans1: none;
+    $trans2: none;
+
+    //
+    // When it's within a minimized sidebar
+    // that is becoming maximized we should
+    // change the height and opacity after
+    // the sidebar has finished maximizing.
+    //
+    @if $phase == 'min-to-max' {
+        $trans1: wksp-sidebar-transitions-builder(
+            $properties:    height,
+            $duration:      get-trans-key($phase, 'duration.primary'),
+            $easing:        ease,
+            $delay:         get-trans-key($phase, 'delay.primary')
+        );
+
+        $trans2: wksp-sidebar-transitions-builder(
+            $properties:    opacity,
+            $duration:      get-trans-key($phase, 'duration.secondary'),
+            $easing:        linear,
+            $delay:         get-trans-key($phase, 'delay.secondary')
+        );
+    }
+
+    //
+    // When it's within a maximized sidebar
+    // that is becoming minimized we should
+    // change the height and opacity IMMEDIATELY
+    // before the sidebar starts minimizing.
+    //
+    @if $phase == 'max-to-min' {
+        $trans1: none;
+        $trans2: none;
+    }
+
+    @if $trans1 == none and $trans2 == none {
+        @include transition(none);
+    } @else {
+        @include transition($trans1, $trans2);
+    }
+}}
+
+
+// .wksp-pill-panel .panel-body .nav
+@mixin wksp-sidebar-pill-panel-nav-transitions($phase) {@if $enable-wksp-css-transitions {
+    $trans: none;
+
+    //
+    // When it's within a minimized sidebar
+    // that is becoming maximized we should
+    // wait until the sidebar is done maximizing
+    // before revealing the nav.
+    //
+    @if $phase == 'min-to-max' {
+        $trans: wksp-sidebar-transitions-builder(
+            $properties:    opacity,
+            $duration:      get-trans-key($phase, 'duration.secondary'),
+            $easing:        linear,
+            $delay:         get-trans-key($phase, 'duration.primary') - $wksp-sidebar-secondary-transitions-timing-buffer
+        );
+    }
+
+    //
+    // When it's within a maximized sidebar
+    // that is becoming minimized we should
+    // hide the nav IMMEDIATELY.
+    //
+    @if $phase == 'max-to-min' {
+        $trans: none;
+    }
+
+
+    @include transition($trans);
+}}
+
+
+// .wksp-sidebar-min-max-control-wrapper
+@mixin wksp-sidebar-min-max-control-wrapper-transitions($phase) {@if $enable-wksp-css-transitions {
+    $trans: none;
+
+    //
+    // When the sidebar is maximizing, we want to
+    // transition the close button opacity AFTER the
+    // width of the sidebar is done changing.
+    //
+    @if $phase == 'min-to-max' {
+        $trans: wksp-sidebar-transitions-builder(
+            $properties: opacity,
+            $duration: get-deep($wksp-sidebar-secondary-transitions, 'duration.min-to-max'),
+            $easing: linear,
+            $delay: get-deep($wksp-sidebar-primary-transitions, 'duration.max-to-min') - $wksp-sidebar-secondary-transitions-timing-buffer
+        );
+    }
+
+    //
+    // When the sidebar is minimizing, we want to
+    // transition the close button opacity IMMEDIATELY.
+    //
+    @if $phase == 'max-to-min' {
+        $trans: none;
+    }
+
+
+    @include transition($trans);
+}}
+
+
+// .wksp-sidebar .hitarea / .btn
+@mixin wksp-sidebar-hitarea-transitions($phase, $hover-delay: 0s) {@if $enable-wksp-css-transitions {
+    $trans1: none;
+    $trans2: none;
+
+    //
+    // When it's within a minimized sidebar that is becoming maximized
+    // we should change the border-radius first with no tween, while
+    // delaying all the default stuff a bit.
+    //
+    @if $phase == 'min-to-max' {
+        $trans1: wksp-sidebar-transitions-builder(
+            $properties:    border-radius,
+            $duration:      0s,
+            $easing:        linear,
+            $delay:         get-trans-key($phase, 'delay.secondary')
+        );
+
+        $trans2: wksp-sidebar-transitions-builder(
+            $properties:    get($wksp-sidebar-primary-transitions, 'hitarea-properties'),
+            $delay:         get-trans-key($phase, 'delay.primary'),
+            $phase:         $phase,
+            $hover-delay:   $hover-delay
+        );
+    }
+
+    //
+    // When it's within a maximized sidebar that is becoming minimized
+    // we should do the border-radius transition last after a delay
+    // so the bd radius transition appears to be the result of the
+    // boundary of the minimized sidebar "squishing" it.
+    //
+    @if $phase == 'max-to-min' {
+        $trans1: wksp-sidebar-transitions-builder(
+            $properties:    border-radius,
+            $duration:      get-trans-key($phase, 'duration.secondary'),
+            $easing:        linear,
+            $delay:         get-trans-key($phase, 'delay.secondary')
+        );
+
+        $trans2: wksp-sidebar-transitions-builder(
+            $properties:    get($wksp-sidebar-primary-transitions, 'hitarea-properties'),
+            $delay:         get-trans-key($phase, 'delay.primary'),
+            $phase:         $phase,
+            $hover-delay:   $hover-delay
+        );
+    }
+
+
+    @include wksp-two-phase-transition($trans1, $trans2);
+}}
+
+
+// .wksp-sidebar .wksp-pill-panel .hitarea / .btn
+@mixin wksp-sidebar-pill-panel-hitarea-transitions($phase, $hover-delay: 0s) {@if $enable-wksp-css-transitions {
+    $trans1: none;
+    $trans2: none;
+
+    //
+    // When it's within a minimized sidebar that is becoming maximized
+    // we should change the border-radius first with no tween, while
+    // delaying all the default stuff a bit.
+    //
+    @if $phase == 'min-to-max' {
+        $trans1: wksp-sidebar-transitions-builder(
+            $properties:    border-radius,
+            $duration:      0s,
+            $easing:        linear,
+            $delay:         get-trans-key($phase, 'delay.secondary') // reversed on purpose
+        );
+
+        $trans2: wksp-sidebar-transitions-builder(
+            $properties:    get($wksp-sidebar-primary-transitions, 'hitarea-properties'),
+            $delay:         get-trans-key('max-to-min', 'delay.primary'), // reversed on purpose
+            $phase:         $phase,
+            $hover-delay:   $hover-delay
+        );
+    }
+
+    //
+    // When it's within a maximized sidebar that is becoming minimized
+    // we should do the border-radius transition last after a delay
+    // so the bd radius transition appears to be the result of the
+    // boundary of the minimized sidebar "squishing" it.
+    //
+    @if $phase == 'max-to-min' {
+        $trans1: wksp-sidebar-transitions-builder(
+            $properties:    border-radius,
+            $duration:      get-trans-key($phase, 'duration.secondary'),
+            $easing:        linear,
+            $delay:         get-trans-key($phase, 'delay.secondary')
+        );
+
+        $trans2: wksp-sidebar-transitions-builder(
+            $properties:    get($wksp-sidebar-primary-transitions, 'hitarea-properties'),
+            $delay:         get-trans-key($phase, 'delay.primary'),
+            $phase:         'min-to-max', // reversed on purpose
+            $hover-delay:   $hover-delay
+        );
+    }
+
+
+    @include wksp-two-phase-transition($trans1, $trans2);
+}}

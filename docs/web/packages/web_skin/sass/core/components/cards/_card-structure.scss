@@ -1,0 +1,255 @@
+// ********************************************************
+//
+//   CARDS STRUCTURAL STYLES
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/cards/card-structure';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $cards-module-config:  'core/components/atoms/cards/cards-config';
+    $cards-module-helpers: 'core/components/atoms/cards/cards-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $cards-module-config,
+                                          $cards-module-helpers);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Base Element
+//
+//   [1] This will only kick-in if the card is wrapped
+//       by an element that has `display: flex`.  But
+//       we are adding it here instead of on the `.card`
+//       elems within `.card-group` / `.card-deck` so
+//       that our Flexbox Grid size classes have a
+//       chance to not be overridden, which will be
+//       very useful for consumers who want to use
+//       something like a group / deck, but not have
+//       the cards all be the same width.
+// ----------------------------------------------------
+    .card {
+        @include flex(1 0 0%); // [1]
+
+        position: relative;
+        font-size: get($card-size-base-config, 'font-size');
+
+        #{$card-selected-platform-elem-selector} {
+            @include card-selected-platform();
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Adjacent Root Card Component Siblings
+//
+//   -> Can be adjacent non-collapsible `.card` elems,
+//      or adjacent `.card-collapse` elems.
+//
+//      `card-collapse` is the CSS class added to the
+//      element wrapped around one or more collapsible
+//      cards via the WSD `CardCollapse` component.
+// ----------------------------------------------------
+    .card + .card,
+    .card-collapse + .card-collapse {
+        margin-top: get($card-size-base-config, 'spacer-vertical');
+    }
+
+
+// ----------------------------------------------------
+//   Top Level Elements
+//
+//   -> Optional "Caps" (header / footer), and
+//      blocks - which are the primary way to nest
+//      padded content within the `.card__body` elem.
+//
+//      The `.card__footer` is nested within `.card__body`
+//      so that it disappears when the card is collapsed,
+//      whereas the header is always visible - so it is
+//      outside of the `.card__body`.
+//
+//  ---
+//
+//  [1] The `.card__body` elem only exists to
+//      provide a padding-free elem that the
+//      collapsible functionality can hook into.
+//
+//  [2] `.card__block` and `.card__footer` belong nested
+//      within `.card__body` in the HTML markup - which
+//      is why we are displaying it "nested" here - but
+//      we use `@at-root` to avoid unnecessarily specific
+//      selectors.
+//
+//  [3] Vertically align the contents of blocks within the footer
+//
+//  [4] Fix a weird bug where the text of the adjacent
+//      `.card__body` gets all jumbled as the card expands
+//
+//  [6] Panel footers have left-aligned content.
+//
+//  [7] Panel footers have a top border.
+//
+// ----------------------------------------------------
+    .card__header {
+        @include card-cap-grid-block();
+        // Handle :focus state of header
+        @include card-header-focus();
+
+        .card--collapsible & {
+            cursor: pointer;
+        }
+    }
+
+    .card__body {  // [1]
+        @at-root { // [2]
+            .card__footer {
+                @include card-cap-grid-block($wrap: true, $align: right);
+                @include align-items(center); // [3]
+
+                position: static; // [4]
+
+                .card:not(.card--panel) & {
+                    font-size: to-rem($font-size-sm);
+                }
+
+                .card--panel & {
+                    @include justify-content(flex-start); // [6]
+                    border-top: .1rem solid transparent; // [7]
+                }
+            }
+        }
+
+        .card__header + & {
+            border-top: .1rem solid transparent;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Header Elements
+//
+//   -> header-title element is nested between two
+//      optional adjacent left / right regions
+//
+//  [1] Get color from card, not from base platform
+//      header color.
+// ----------------------------------------------------
+    .card__header__title {
+        @include card-cap-grid-block();
+        @include truncate-text();
+        // Must be block for text truncation to work.
+        display: block;
+
+        margin: 0;
+        font-size: get($card-size-base-config, 'font-size');
+        line-height: $line-height-base;
+        font-family: $font-family-sans-serif;
+        color: inherit; // [1]
+
+        // ----- Expanded / Not Collapsible ----- //
+        font-weight: bold;
+        color: get($card-shared-config, 'header-title-color');
+
+        // ----- Collapsed ----- //
+        .card--collapsed & {
+            font-weight: normal;
+            color: get($card-shared-config, 'header-title-color-collapsed');
+        }
+    }
+
+    .card__cap,
+    .card__cap--left,
+    .card__cap--right {
+        @include card-cap-grid-block(shrink);
+    }
+
+
+    // ------------------------------------------------
+    //   Checkboxes in Card Caps
+    //
+    //   -> Used for tasking UI
+    // ------------------------------------------------
+    .card__cap,
+    .card__cap--left,
+    .card__cap--right {
+        .checkbox,
+        .radio {
+            margin: 0;
+        }
+    }
+
+
+    // ------------------------------------------------
+    //   Card Header Actions
+    //
+    //   -> Make the dd menu appear "connected" to the
+    //      triggering button.
+    // ------------------------------------------------
+    .card__header__actions {
+        @include card-cap-grid-block(shrink);
+
+        // ----- PRESSED STATE ----- //
+        .btn#{$link-pressed-inline} {
+            background-color: get($dropdown-menu-color-config, 'bg');
+            border-color: get($dropdown-menu-color-config, 'bd-color');
+        }
+
+        // ----- OPEN DROPDOWN STATE ----- //
+        .btn.active,
+        .open .btn {
+            @include border-bottom-radius(0);
+
+            background-color: get($dropdown-menu-color-config, 'bg');
+            border-color: get($dropdown-menu-color-config, 'bd-color');
+            border-bottom-color: get($dropdown-menu-color-config, 'bg') !important;
+            // sit atop the menu so the white border of the btn
+            // makes the menu appear "connected"
+            z-index: z('dropdown') + 1 !important;
+        }
+
+        .dropdown-menu {
+            @include border-top-right-radius(0);
+
+            margin-top: -.1rem;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Tertiary Content Elements that
+//   go within a `.card__block`
+// ----------------------------------------------------
+    .card__title {
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
+
+    .card__subtitle {
+        margin-top: -.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .card__link {
+        // Add space between adjacent links
+        + .card__link {
+            margin-left: get($card-size-base-config, 'padding');
+        }
+    }
+
+    .card__block {
+        @include enable-user-select(); // UIP-1543. TODO: Remove when UIP-1132 is implemented (2.0.0)
+
+        .card__title,
+        .card__subtitle,
+        .card__text {
+            &:last-child {
+                // Prevent double spacing with the
+                // padding of the `.card__block`
+                margin-bottom: 0;
+            }
+        }
+    }

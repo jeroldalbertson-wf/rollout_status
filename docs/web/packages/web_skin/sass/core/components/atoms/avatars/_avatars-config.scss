@@ -1,0 +1,96 @@
+// ********************************************************
+
+////
+/// User avatar component configuration
+/// ---
+/// @group core.components.avatars
+/// @type Map
+/// @since 1.9.0
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/avatars/avatars-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// Configuration for `.w-avatar` components.
+/// ---
+/// @see {variable} avatar-skin-colors
+/// @requires {variable} $zc-green-b
+/// @requires {variable} $white
+/// ---
+/// @prop {Color} default-color [#42ad48] - Default color of the avatar border / user initials
+///
+/// @prop {Number} diameter     [2.4rem]
+/// @prop {Number} bd-width     [.1rem]
+/// @prop {Number} font-size    [.9rem]
+///
+/// @prop {Number} diameter-lg  [4.4rem]
+/// @prop {Number} bd-width-lg  [.1rem]
+/// @prop {Number} font-size-lg [1.8rem]
+///
+$avatar-config: (
+    default-color: $zc-green-b,
+    default-bg-color: $white,
+    //
+    diameter: 2.4rem,
+    bd-width: .1rem,
+    font-size: .9rem,
+    //
+    diameter-lg: 4.4rem,
+    bd-width-lg: .1rem,
+    font-size-lg: 1.8rem,
+) !default;
+
+///
+/// Configuration for `.w-avatar__badge` elements.
+/// ---
+/// @requires {function} get
+/// @requires {variable} $avatar-config
+/// @requires {variable} $badge-config
+/// ---
+/// @prop {Number} padding-vertical [0]
+/// @prop {Number} padding-left     [.425em]
+/// @prop {Number} padding-right    [.4725em]
+/// @prop {Number} font-size        [1em]
+/// @prop {Number} min-height       [1.333em]
+/// @prop {Number} offset-bottom    [-.444em]
+/// @prop {Number} offset-right     [-.555em]
+///
+$avatar-badge-config: (
+    padding-vertical: get($badge-config, 'padding-vertical'),
+    padding-right: get($badge-config, 'padding-right') - .1em,
+    padding-left: get($badge-config, 'padding-left') - .1em,
+    font-size: 1em,
+    min-height: 1.333em,
+    offset-bottom: -.444em,
+    offset-right: -.555em,
+) !default;
+
+///
+/// Configuration for `.w-avatar` component skin variations.
+///
+/// The default skin color can be found in `$avatar-config`.
+/// ---
+/// @see {variable} avatar-config
+/// @requires {variable} $zc-blue-120
+/// @requires {variable} $zc-purple
+/// @requires {variable} $zc-orange-120
+/// @requires {variable} $zc-red-120
+/// ---
+/// @prop {Color} blue      [#026dce]
+/// @prop {Color} purple    [#813296]
+/// @prop {Color} orange    [#f26c21]
+/// @prop {Color} red       [#a71b19]
+///
+$avatar-skin-colors: (
+    blue: $zc-blue-120,
+    purple: $zc-purple,
+    orange: $zc-orange-120,
+    red: $zc-red-120,
+) !default;

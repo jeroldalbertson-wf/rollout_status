@@ -1,0 +1,31 @@
+// ********************************************************
+//
+//   WORKSPACES MAIN PANEL BASE STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/main/base';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $wksp-module-config:  'peripherals/workspaces/atoms/workspaces-config';
+    $wksp-module-helpers: 'peripherals/workspaces/atoms/workspaces-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $wksp-module-config,
+                                          $wksp-module-helpers);
+//
+// ********************************************************
+
+//
+// Ensure that over-scroll reveals a color behind the
+// grid frame that matches the bg color of .wksp-main
+//
+body {
+    background-color: get($wksp-main-config, 'bg');
+}
+
+.wksp-main {
+    background-color: get($wksp-main-config, 'bg');
+}

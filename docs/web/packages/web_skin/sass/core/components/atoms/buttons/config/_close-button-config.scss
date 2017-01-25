@@ -1,0 +1,54 @@
+// ********************************************************
+
+////
+/// Close button component configuration
+/// ---
+/// @group core.components.buttons
+/// @link http://bit.ly/webskin-close-button Close button component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/buttons/config/close-button-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function close-button-padding-bottom);
+//
+// ********************************************************
+
+
+///
+/// Global configuration for `.close` button components.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {variable} $black
+/// @requires {function} close-button-padding-bottom
+/// ---
+/// @prop {Number} font-size            [20px] - Default font size
+/// @prop {Number} font-size            [16px] - Small font size variation
+/// @prop {Number} font-size-lg         [26px] - Large font size variation
+/// @prop {Number} padding-bottom       [4px]  - Default bottom padding
+/// @prop {Number} line-height-windows  [1.2]  - Line height used to ensure correct vertical alignment in browsers running on Windows OS
+///
+/// @prop {Color}  text-color   [#000000]   - Default color used in `rgba()` function
+/// @prop {Number} alpha        [.2]        - Default opacity used in `rgba()` function
+/// @prop {Number} alpha-hover  [.5]        - Hovered opacity used in `rgba()` function
+/// @prop {Number} alpha-press  [.7]        - Pressed opacity used in `rgba()` function
+///
+$close-btn-config: (
+    'font-size': 20px,
+    'font-size-sm': 16px,
+    'font-size-lg': 26px,
+    'padding-bottom': close-button-padding-bottom(),
+    'line-height-windows': 1.2,
+    //
+    'text-color': $black,
+    'alpha': .2,
+    'alpha-hover': .5,
+    'alpha-press': .7
+) !default;

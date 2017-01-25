@@ -1,0 +1,28 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for Grid v1
+ * ---
+ * This is still built into web-skin.css (CORE)
+ * until version 2.0.0
+ * ---
+ * MSIE Support: 10+
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import '../core/api';
+
+
+// ----------------------------------------------------
+//   Build the Grid (v1)
+// ----------------------------------------------------
+    @import 'grid-v1/index';

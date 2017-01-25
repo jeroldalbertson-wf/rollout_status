@@ -1,0 +1,40 @@
+// ********************************************************
+//
+//   WORKSPACES SHARED COMPONENTS STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/module-components';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $wksp-module-config:  'peripherals/workspaces/atoms/workspaces-config';
+    $wksp-module-helpers: 'peripherals/workspaces/atoms/workspaces-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $wksp-module-config,
+                                          $wksp-module-helpers);
+//
+// ********************************************************
+
+
+@import 'components/sidebar-min-max-toggle-control';
+@import 'components/sidebar-hitareas';
+@import 'components/sidebar-hoverable-skins';
+@import 'components/pill-panels';
+
+
+// ********************************************************
+//
+//   INBOX
+//
+//   -> Stuff that eventually needs to get put somewhere.
+//
+// ********************************************************
+.btn-group.btn-block {
+    > .btn {
+        display: block;
+        width: 100%;
+    }
+}

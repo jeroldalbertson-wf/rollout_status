@@ -1,0 +1,284 @@
+// ********************************************************
+//
+$module: 'core/api/helpers/functions/utilities/check-dependencies';
+//
+
+////
+/// Global functions to help check dependencies between directives / modules.
+/// ---
+/// @since 1.0.0
+/// @access private
+/// @group core.internals.shared
+////
+
+//
+// ********************************************************
+
+
+///
+/// Checks if variable, mixin and function dependencies exist.
+/// ---
+/// @todo Write unit tests
+/// ---
+/// @example scss Default dependency type
+///   $deps: dependencies-met(my-function1, my-function2, my-function3);
+/// ---
+/// @example scss Mixed dependency types
+///   $deps: dependencies-met(my-function1, mixin my-mixin, var my-variable);
+/// ---
+/// @example scss Improve logging info
+///   $deps: dependencies-met(for entity-name, my-function1, mixin my-mixin, var my-variable);
+/// ---
+/// @param {...String | ...List | ...Arglist} $dependencies - var, function and mixin dependencies to check for
+/// @returns {Bool} - `true` if all dependencies are met, `false` if there are unmet dependencies (throws error)
+///
+@function dependencies-met($dependencies...) {
+    $unmet-dependencies: ();
+    $caller: false; // Name of entity that has the dependencies
+
+    @each $dependency in $dependencies {
+        $valid-dependency-types: 'function' 'mixin' 'global-variable' 'variable' 'var' 'for';
+        $type: 'function'; // Default type of dependency
+
+        @if length($dependency) == 2 {
+            $type: nth($dependency, 1);
+            $dependency: nth($dependency, 2);
+
+            @if $type != 'for' {
+                @if not index($valid-dependency-types, $type) {
+                    @warn "`dependencies-met` function expecting one of the following types: `#{$valid-dependency-types}`. `#{$type}` given. Will default to checking dependency `#{$dependency}` as a function.";
+                    $type: 'function';
+                }
+            } @else {
+                // else its the name of the entity that has the requirements
+                $caller: $dependency;
+            }
+        }
+
+        // if the type of dependency is 'variable' or 'var', call `global-variable-exists`
+        // since this function is only for checking global dependencies
+        @if $type == 'variable' or $type == 'var' {
+            $type: 'global-variable'
+        }
+
+        // if its a dependency, and not a 'caller', add to the unmet-dependencies list if it doesn't exist
+        @if $type != 'for' {
+            @if not call("#{$type}-exists", $dependency) {
+                $unmet-dependencies: append($unmet-dependencies, '[#{$type} `#{$dependency}`]', comma);
+            }
+        }
+    }
+
+    @if length($unmet-dependencies) > 0 {
+        $plural: length($unmet-dependencies) > 1;
+        $plural-dep1: if($plural, 'dependencies', 'dependency');
+        $plural-dep2: if($plural, 'are', 'is');
+        $required-by-msg: #{$plural-dep1} #{$plural-dep2} if($caller, 'required by `#{$caller}`', 'required');
+
+        @error "#{length($unmet-dependencies)} missing #{$plural-dep1}! #{$required-by-msg}: [#{$unmet-dependencies}].";
+    }
+
+    @return length($unmet-dependencies) == 0;
+}
+
+
+///
+/// Checks if core api/component module dependencies exist.
+/// ---
+/// @see {function} dependencies-met
+/// @todo Write unit tests
+/// ---
+/// @requires {variable} $api-modules
+/// @requires {variable} $component-modules
+/// @requires {function} dependencies-met
+/// ---
+/// @example scss API Modules
+///   $module-deps: module-dependencies-met(in api, 'api-module-1', 'api-module-2');
+/// ---
+/// @example scss Component Modules
+///   $module-deps: module-dependencies-met(in components, 'component-module-1');
+///   // for better logging information, include the name of the entity
+///   // that has the dependencies using the `for` type
+///   $module-deps: module-dependencies-met(for entity-name, in api, 'api-module-1', 'api-module-2');
+///   $module-deps: module-dependencies-met(for entity-name, in components, 'component-module-1');
+/// ---
+/// @param {...List | ...Arglist} $modules - api module dependencies to check for
+/// @returns {Bool} - `true` if all dependencies are met, `false` if there are unmet dependencies (throws error)
+///
+@function module-dependencies-met($modules...) {
+    $missing-modules: ();
+    $module-reference-list-name: null;
+    $module-reference-list: null;
+    $caller: false; // Name of entity that has the dependencies
+    $type: false;
+    $first-arg-item: nth($modules, 1);
+    $dependency-start-index: 1;
+
+    // ----------------------------------------------------
+    //   ERROR CHECKING
+    // ----------------------------------------------------
+    @if length($first-arg-item) == 1 {
+        @error "`module-dependencies-met` function expecting the first item in the `$modules` list to be `in api` or `in components`. Received `#{$first-arg-item}`";
+        @return false;
+    } @else {
+        @if nth($first-arg-item, 1) == 'for' {
+            $dependency-start-index: 2;
+            $caller: nth($first-arg-item, 2);
+            //
+            // since the first one is 'for', we need to check the
+            // second one to make sure we know which list to check
+            //
+            $second-arg-item: nth($modules, 2);
+            @if length($second-arg-item) == 1 {
+                @error "`module-dependencies-met` function expecting the second item in the `$modules` list for the #{$caller} module to be `in api` or `in components`. Received `#{$second-arg-item}`";
+                @return false;
+            } @else {
+                @if nth($second-arg-item, 1) != 'in' {
+                    @error "`module-dependencies-met` function expecting the second item in the `$modules` list for the #{$caller} module to be `in api` or `in components`. Received `#{$second-arg-item}`";
+                    @return false;
+                } @else {
+                    @if nth($second-arg-item, 2) != 'api' and nth($second-arg-item, 2) != 'components' {
+                        @error "`module-dependencies-met` function expecting the second item in the `$modules` list for the #{$caller} module to be `in api` or `in components`. Received `#{$second-arg-item}`";
+                        @return false;
+                    }
+
+                    //
+                    // First two args are both valid non-dependency args
+                    //
+                    $dependency-start-index: 3;
+                    $module-reference-list-name: if(nth($second-arg-item, 2) == 'api', api-modules, component-modules);
+                    // make sure the reference list exists
+                    $check-deps: dependencies-met(for module-dependencies-met, var $module-reference-list-name);
+                    // if we make it past dependencies-met, everything checked out... set the variable
+                    $module-reference-list: if($module-reference-list-name == api-modules, $api-modules, $component-modules);
+                }
+            }
+        } @else if nth($first-arg-item, 1) != 'in' {
+            @error "`module-dependencies-met` function expecting the first item in the `$modules` list to be `for` or `in`. Received `#{$first-arg-item}`";
+            @return false;
+        } @else {
+            @if nth($second-arg-item, 2) != 'api' and nth($second-arg-item, 2) != 'components' {
+                @error "`module-dependencies-met` function expecting the second item in the `$modules` list for the #{$caller} module to be `in api` or `in components`. Received `#{$second-arg-item}`";
+                @return false;
+            }
+
+            //
+            // First arg is `in {api|components}`
+            //
+            $dependency-start-index: 2;
+            $module-reference-list-name: if(nth($first-arg-item, 2) == 'api', api-modules, component-modules);
+            // make sure the reference list exists
+            $check-deps: dependencies-met(for module-dependencies-met, var $module-reference-list-name);
+            // if we make it past dependencies-met, everything checked out... set the variable
+            $module-reference-list: if($module-reference-list-name == api-modules, $api-modules, $component-modules);
+        }
+    }
+    // Should never make it here... but just in case...
+    @if $module-reference-list == null {
+        @error "OOPS. Something went wrong in the `module-dependencies-met` function. `$module-reference-list` was never set.";
+        @return false;
+    }
+    // END ERROR CHECKING
+
+    // ----------------------------------------------------
+    //   CHECK EACH ITEM IN `$modules`
+    // ----------------------------------------------------
+    @for $n from $dependency-start-index through length($modules) {
+        $required-module: nth($modules, $n);
+
+        @if not index($module-reference-list, $required-module) {
+            // @warn "Cannot find [#{$required-module}] in #{$module-reference-list-name}:(#{$module-reference-list})";
+            $missing-modules: append($missing-modules, $required-module);
+        }
+    }
+
+    // ----------------------------------------------------
+    //   MODULE NOT FOUND
+    // ----------------------------------------------------
+    @if length($missing-modules) > 0 {
+        $plural: length($missing-modules) > 1;
+        $plural-dep: if($plural, 'ies are', 'y is');
+        $plural-mod: if($plural, 'modules', 'module');
+        $required-by-msg: if($caller, 'required by `#{$caller}`', 'required');
+
+        @error "#{length($missing-modules)} missing #{$plural-mod}! The following dependenc#{$plural-dep} #{$required-by-msg}: [#{$missing-modules}].";
+        @return false;
+    }
+
+    // ----------------------------------------------------
+    //   MODULE FOUND
+    // ----------------------------------------------------
+    @return length($missing-modules) == 0;
+}
+
+
+///
+/// Helper function that simply updates the global `$api-modules` list variable so that it can be checked by `module-dependencies-met()` function.
+/// ---
+/// @see {function} module-dependencies-met
+/// @see {function} add-component-module
+/// @todo Write unit tests
+/// ---
+/// @param {String} $module - name of the module to add
+/// @returns {String} - The name of the module added
+///
+@function add-api-module($module) {
+    @if not is-string($module) {
+        @error "Function `add-api-module` expecting a `String` for the `$module` parameter. Received `#{type-of($module)}`.";
+    }
+
+    $api-modules: () !global !default; // declare it if it doesn't already exist
+
+    @if $debug-api-module-imports {
+        @debug "Adding '#{$module}' api module";
+
+        @if length($api-modules) > 0 and
+            list-has($api-modules, $module) and
+            index($api-modules, $module) {
+
+            $dupe-api-modules: $dupe-api-modules + 1 !global;
+
+            @warn "(#{$dupe-api-modules}) Dependency already met: '#{$module}'";
+        }
+    }
+
+    $api-modules: append($api-modules, $module) !global;
+
+    @return $module;
+}
+
+
+///
+/// Helper function that simply updates the global `$component-modules` list variable so that it can be checked by `module-dependencies-met()` function.
+/// ---
+/// @see {function} module-dependencies-met
+/// @see {function} add-api-module
+/// @todo Write unit tests
+/// ---
+/// @param {String} $module - name of the module to add
+/// @returns {String} - The name of the module added
+///
+@function add-component-module($module) {
+    @if not is-string($module) {
+        @error "Function `add-component-module` expecting a `String` for the `$module` parameter. Received `#{type-of($module)}`.";
+    }
+
+    $component-modules: () !global !default; // declare it if it doesn't already exist
+
+    @if $debug-component-module-imports {
+        @debug "Adding '#{$module}' component module";
+
+        @if length($component-modules) > 0 and
+            list-has($component-modules, $module) and
+            index($component-modules, $module) {
+
+            $dupe-component-modules: $dupe-component-modules + 1 !global;
+
+            @warn "(#{$dupe-component-modules}) Dependency already met: '#{$module}'";
+        }
+    }
+
+    $component-modules: append($component-modules, $module) !global;
+
+    @return $module;
+}

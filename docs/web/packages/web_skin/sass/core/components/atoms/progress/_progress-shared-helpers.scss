@@ -1,0 +1,246 @@
+// ********************************************************
+
+////
+/// Progress components helpers
+/// ---
+/// @since 1.0.0
+/// @access public
+/// @group core.components.progress
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/progress/progress-shared-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function is-number,
+                                                function to-rem,
+                                                function image-url);
+//
+// ********************************************************
+
+
+///
+/// Reusable styles for size variations of `.progress-bar` elems
+/// ---
+/// @param {String} $size - CSS class suffix for size variation
+///
+@mixin progress-bar-size($size) {
+    $bar-height: to-rem(get-deep($progress-bar-config, 'height.#{$size}'));
+    $bd-radius: to-rem(get-deep($progress-bar-config, 'bd-radius.#{$size}'));
+    $label-font-size: to-rem(get-deep($progress-bar-config, 'label-font-size.#{$size}'));
+
+    //
+    // Bar container
+    //
+    .progress-#{$size} {
+        height: $bar-height;
+        margin-bottom: $bar-height;
+        border-radius: $bd-radius;
+
+        //
+        // Bar of progress
+        //
+        .progress-bar {
+            font-size: $label-font-size;
+            line-height: $bar-height;
+
+            @if unquote($size) == xs {
+                font-weight: normal;
+                // remove the blur from the shadow
+                text-shadow: 0 .1rem 0 rgba(get($progress-bar-config, 'label-shadow-color'), get($progress-bar-config, 'label-shadow-alpha'));
+            }
+        }
+    }
+}
+
+
+///
+/// Reusable styles for skin variations of `.progress-bar` elems
+/// ---
+/// @since 1.0.0
+/// ---
+/// @param {String} $skin-name
+/// @param {Map}    $skin-colors - Map configuration of variation colors
+///
+@mixin progress-bar-skin($skin-name,
+                         $skin-colors: get($progress-bar-config, 'state-colors')
+                        )
+{
+    $default-skin-color-config: get($progress-bar-config, 'state-colors');
+    $skin-bg: get-deep($skin-colors, '#{$skin-name}.bg');
+    $progress-bar-bg-size: to-rem(get($progress-bar-config, 'bar-bg-size'));
+
+    .progress-bar-#{$skin-name} {
+        background-color: $skin-bg;
+
+        .progress-indeterminate & {
+            @include gradient-striped($skin-bg);
+            @include background-size($progress-bar-bg-size $progress-bar-bg-size);
+        }
+    }
+}
+
+
+///
+/// Calculate border width for progress spinner proportionate to its diameter
+/// ---
+/// @since 0.4.0
+/// ---
+/// @requires {function} to-rem
+/// @requires {function} get
+/// @requires {function} get-deep
+/// @requires {variable} $progress-spinner-config
+/// ---
+/// @param {Number} $diameter [32px]
+/// ---
+/// @returns {Number} Spinner border width
+///
+@function spinner-bd-width($diameter: get-deep($progress-spinner-config, 'diameter.base')) {
+    @if not is-number($diameter) {
+        @error "`spinner-bd-width` function expecting a number; #{type-of($diameter)} given.";
+    }
+    // END error-checking
+
+    @return ceil($diameter * get($progress-spinner-config, 'bd-width-ratio'));
+}
+
+
+//
+// TODO: document params
+//
+@function progress-spinner-label-spacing($diameter: get-deep($progress-spinner-config, 'diameter.base'),
+                                         $label-font-size: get-deep($progress-spinner-config, 'label-font-size.base')
+                                        )
+{
+    @return round(($diameter - $label-font-size) / 2);
+}
+
+
+//
+// TODO: document params
+//
+@mixin progress-spinner-bd-color($color: get($progress-spinner-config, 'color'),
+                                 $bg: $body-bg,
+                                 $alpha-on: get($progress-spinner-config, 'alpha-on'),
+                                 $alpha-base: get($progress-spinner-config, 'alpha-base')
+                                )
+{
+    // fallback
+    $fallback-on:   percentage($alpha-on);
+    $fallback-base: percentage($alpha-base);
+
+    $color-on: $color;
+    $color-base: darken($color-on, 30); // reduce the contrast between the spinning color and it's adjacent color just a tad
+
+    border-color: mix($color-on,   $bg, $fallback-on)
+                  mix($color-base, $bg, $fallback-base)
+                  mix($color-base, $bg, $fallback-base)
+                  mix($color-base, $bg, $fallback-base);
+
+    // rgba
+    border-color: rgba($color-on,   $alpha-on)
+                  rgba($color-base, $alpha-base)
+                  rgba($color-base, $alpha-base)
+                  rgba($color-base, $alpha-base);
+}
+
+
+//
+// TODO: document params
+//
+@mixin progress-spinner-size($size-suffix) {
+    $diameter: get-deep($progress-spinner-config, 'diameter.#{$size-suffix}');
+    $label-font-size: get-deep($progress-spinner-config, 'label-font-size.#{$size-suffix}');
+
+    .progress-spinner-#{$size-suffix} {
+        width: to-rem($diameter);
+        height: to-rem($diameter);
+        border-width: to-rem(spinner-bd-width($diameter));
+
+        // ----------------------------------------------------
+        //   LABEL SIZE ADJUSTMENT
+        // ----------------------------------------------------
+        + .progress-label {
+            font-size: to-rem($label-font-size);
+            margin-top: to-rem(progress-spinner-label-spacing($diameter: $diameter, $label-font-size: $label-font-size));
+            margin-left: to-rem(progress-spinner-label-spacing($diameter: $diameter, $label-font-size: $label-font-size));
+        }
+    }
+}
+
+
+///
+/// Implements three keyframe animations that the "dot" elements within `loading-ellipsis-dots()` use.
+/// ---
+/// @since 1.4.0
+/// @access private
+/// @group core.internals.components.progress
+/// ---
+/// @content Three keyframe animations named "loading-ellipsis-dot-first", "loading-ellipsis-dot-middle" and "loading-ellipsis-dot-last"
+///
+@mixin _loading-ellipsis-dot-keyframes() {
+    @include keyframes(loading-ellipsis-dot-first) {
+      0%   { opacity: 0; }
+
+      20%  { opacity: 0; }
+      32%  { opacity: 1; }
+
+      99%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @include keyframes(loading-ellipsis-dot-middle) {
+      0%   { opacity: 0; }
+
+      44%  { opacity: 0; }
+      56%  { opacity: 1; }
+
+      99%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @include keyframes(loading-ellipsis-dot-last) {
+      0%   { opacity: 0; }
+
+      68%  { opacity: 0; }
+      80%  { opacity: 1; }
+
+      99%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+}
+
+
+///
+/// Reusable styles to create a series of three "blinking" dots that form an "ellipsis" to indicate loading progress.
+/// ---
+/// @since 1.4.0
+/// ---
+/// @param {Number} $blink-duration [1.666s]
+///
+@mixin loading-ellipsis-dots($blink-duration: 1.666s) {
+    .loading-ellipsis__dot--first {
+        @include animation(loading-ellipsis-dot-first $blink-duration infinite);
+
+        padding-left: .3rem;
+    }
+
+    .loading-ellipsis__dot--middle {
+        @include animation(loading-ellipsis-dot-middle $blink-duration infinite);
+
+        padding-left: .1rem;
+    }
+
+    .loading-ellipsis__dot--last {
+        @include animation(loading-ellipsis-dot-last $blink-duration infinite);
+
+        padding-left: .1rem;
+    }
+}
+

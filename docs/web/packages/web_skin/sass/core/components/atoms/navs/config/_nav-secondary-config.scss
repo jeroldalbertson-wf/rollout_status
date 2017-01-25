@@ -1,0 +1,86 @@
+// ********************************************************
+
+////
+/// Secondary nav component base configuration
+/// e.g. `.list-group-item`, `.dropdown-menu`
+/// ---
+/// @group core.components.navs
+/// @link http://bit.ly/webskin-navs Nav components spec
+/// @type Map
+/// @since 1.0.0
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/config/nav-secondary-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function color,
+                                                function disabled-color,
+                                                function get);
+//
+// ********************************************************
+
+
+///
+/// Base configuration for secondary navs (e.g. `.dropdown-menu` components).
+/// ---
+/// @requires {function} get
+/// @requires {variable} $nav-base-config
+/// @requires {variable} $zc-gray-60
+/// ---
+/// @prop {Color}  bg        [#ffffff] - Default background color
+/// @prop {Color}  bd-color  [#cbcbcb] - Default border color
+/// @prop {Number} bd-width  [1px]     - Default border width
+///
+$nav-secondary-config: (
+    'bg': get($nav-base-config, 'bg'),
+    'bd-color': $zc-gray-60,
+    'bd-width': get($nav-base-config, 'bd-width')
+) !default;
+
+///
+/// Configuration for `.hitarea` elems within secondary navs (e.g. `.dropdown-menu` components).
+/// ---
+/// @requires {function} get
+/// @requires {function} color
+/// @requires {function} disabled-color
+/// @requires {variable} $nav-link-config
+/// @requires {variable} $nav-secondary-config
+/// ---
+/// @prop {Color}  bg          [transparent]   - Default background color
+/// @prop {Color}  bg-hover    [#f0f9fd]       - Hovered background color
+/// @prop {Color}  bg-focus    [#e0f2ff]       - Focused background color
+/// @prop {Color}  bg-press    [#e0f2ff]       - Pressed background color
+/// @prop {Color}  bg-selected [#e0f2ff]       - Selected background color. Similar to `bg-active`, but used in situations where more than one item can be selected in the same parent.
+/// @prop {Color}  bg-active   [#ffffff]       - Active background color
+/// @prop {Color}  bg-disabled [transparent]   - Disabled background color
+///
+/// @prop {Color}  text-color          [#595959]   - Default text color
+/// @prop {Color}  text-color-hover    [#505050]   - Hovered text color
+/// @prop {Color}  text-color-focus    [#4b4b4b]   - Focused text color
+/// @prop {Color}  text-color-press    [#4b4b4b]   - Pressed text color
+/// @prop {Color}  text-color-selected [#4b4b4b]   - Selected text color. Similar to `text-color-active`, but used in situations where more than one item can be selected in the same parent.
+/// @prop {Color}  text-color-active   [#474747]   - Active text color
+/// @prop {Color}  text-color-disabled [#cecece]   - Disabled text color
+///
+$nav-secondary-link-config: (
+    'bg': get($nav-secondary-config, 'bg'),
+    'bg-hover': color('selection.bg-hover'),
+    'bg-focus': color('selection.bg-focus'),
+    'bg-press': color('selection.bg-press'),
+    'bg-selected': color('selection.bg-selected'),
+    'bg-active': get($nav-secondary-config, 'bg'),
+    'bg-disabled': get($nav-secondary-config, 'bg'),
+    //
+    'text-color': get($nav-link-config, 'text-color'),
+    'text-color-hover': color('selection.text-hover'),
+    'text-color-focus': color('selection.text-focus'),
+    'text-color-press': color('selection.text-press'),
+    'text-color-selected': color('selection.text-selected'),
+    'text-color-active': get($nav-link-config, 'text-color-active'),
+    'text-color-disabled': disabled-color(get($nav-link-config, 'text-color'))
+) !default;

@@ -1,0 +1,39 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for Workspaces
+ * ---
+ * MSIE Support: 10+
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ *   web-skin v{{ws_css_version}} Grid v2 CSS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import '../core/api';
+
+
+// ----------------------------------------------------
+//   Workspaces Atoms
+// ----------------------------------------------------
+    @import 'workspaces/atoms/workspaces-config';
+    @import 'workspaces/atoms/workspaces-helpers';
+
+
+// ----------------------------------------------------
+//   Workspaces Components
+// ----------------------------------------------------
+    @import 'workspaces/module-components';
+
+
+// ----------------------------------------------------
+//   Workspaces Layout Regions
+// ----------------------------------------------------
+    @import 'workspaces/module-layout';

@@ -1,0 +1,354 @@
+// ********************************************************
+
+////
+/// Card component configs
+/// ---
+/// @since 1.4.0
+/// @access public
+/// @group core.components.cards
+/// @link http://bit.ly/webskin-cards Card component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/cards/cards-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend,
+                                                function to-rem,
+                                                function color);
+//
+// ********************************************************
+
+
+///
+/// Map of color palettes that can be used to apply a specific color to indicate a selected card using a CSS class like `.card--selected--{keyValue}`.
+///
+/// __NOTE:__ The `'blue'` key is removed from the `$colors-zc` map here because a blue selected color is the default.
+/// ---
+/// @type Map
+/// @requires {variable} $colors-zc
+/// ---
+/// @prop {Map} gray    [$zc-grays]     - `$zc-grays` map
+/// @prop {Map} green   [$zc-greens]    - `$zc-greens` map
+/// @prop {Map} orange  [$zc-oranges]   - `$zc-oranges` map
+/// @prop {Map} purple  [$zc-purples]   - `$zc-purples` map
+/// @prop {Map} red     [$zc-reds]      - `$zc-reds` map
+///
+$card-selected-platform-colors: map-remove($colors-zc, 'blue', 'green-in-gamut', 'green-alt', 'green-alt2', 'green-b', 'green-c');
+
+///
+/// Card component configuration values that do not vary based on a size or skin variation.
+/// ---
+/// @type Map
+/// ---
+/// @requires {function} color
+/// @requires {variable} $global-component-bd-width
+/// @requires {variable} $form-control-colors
+/// @requires {variable} $text-color
+/// @requires {variable} $zc-gray-120
+/// @requires {variable} $zc-gray-70
+/// @requires {variable} $white
+/// @requires {variable} $card-selected-platform-colors
+/// ---
+/// @prop {Number} bd-width [1px] - The width of a `.card--bordered` element's border.
+///
+/// @prop {Color} bd-color-focus                [#0094ff] - The color of a `.card--focusable` element when `card--focused` class is applied, or the card element is actually focused.
+/// @prop {Color} body-text-color               [#595959] - Default text color of `.card` elements unless otherwise specified.
+/// @prop {Color} header-title-color            [#444444] - Default text color of a `.card__header__title` element.
+/// @prop {Color} header-title-color-collapsed  [#595959] - Text color of a `.card__header__title` element within a `.card--collapsible` element that is collapsed.
+/// @prop {Color} footnote-color                [#b2b2b2] - Default text color of a `.card__footnote` elem.
+///
+/// @prop {Color} body-text-color-inverse               [rgba($white, .8)]  - Inverse text color of `.card` elements unless otherwise specified.
+/// @prop {Color} header-title-color-inverse            [#ffffff]           - Inverse text color of a `.card__header__title` element.
+/// @prop {Color} header-title-color-collapsed-inverse  [#ffffff]           - Inverse text color of a `.card__header__title` element within a `.card--collapsible` element that is collapsed.
+/// @prop {Color} footnote-color-inverse                [rgba($white, .8)]  - Inverse text color of a `.card__footnote` elem.
+/// @prop {Color} link-color-inverse                    [#ffffff]           - Text color of `.card__link` elements when used within a `.card--inverse` skin.
+///
+/// @prop {String} selected-platform-elem-selector  ['&::after'] - The CSS selector used for the "selected" state platform border
+/// @prop {Map} selected-platform-color-palette     [$card-selected-platform-colors] - Map of color palettes that can be used to apply a specific color to indicate a selected card.
+///
+$card-shared-config: (
+    'bd-width': $global-component-bd-width, // only visible in `.card--bordered` variation.
+    'bd-color-focus': color('global.#{get($form-control-colors, 'bd-focus-key')}.base'), // only visible in `.card--focusable` variation
+    'body-text-color': $text-color,
+    'header-title-color': $zc-gray-120,
+    'header-title-color-collapsed': $zc-gray,
+    'footnote-color': $zc-gray-70,
+    'body-text-color-inverse': rgba($white, .8),
+    'header-title-color-inverse': $white,
+    'header-title-color-collapsed-inverse': $white,
+    'footnote-color-inverse': rgba($white, .8),
+    'link-color-inverse': $white,
+    'selected-platform-elem-selector': '&::after',
+    // blue is removed because that is the default.
+    'selected-platform-color-palette': $card-selected-platform-colors
+);
+
+
+@import "config/card-color-config";
+@import "config/card-task-color-config";
+
+
+///
+/// Size configuration for a base `.card` component.
+/// @type Map
+/// ---
+/// @requires {function} to-rem
+/// @requires {function} component-height
+/// @requires {variable} $card-shared-config
+/// @requires {variable} $border-radius-base
+/// @requires {variable} $global-component-platform-bd-width
+/// ---
+/// @prop {Number} spacer-vertical [.4rem] - Amount of vertical space between adjacent `.card` elements
+///
+/// @prop {Number} header-height [3.4rem] - The height of the `.card__header` element
+///
+/// @prop {Number} padding [1.6rem]
+/// @prop {Number} padding-bordered [1.5rem] - _Added via `@extend`_
+///
+/// @prop {Number} adjacent-sibling-padding-top     [.3rem]  - Top padding applied to a block that is immediately adjacent to another block
+///
+/// @prop {Number} footer-padding-top               [.3rem]  - Top padding for `.card__footer`. _Added via `@extend`_
+/// @prop {Number} footer-padding-bottom            [.9rem]  - Bottom padding for `.card__footer`.  Results in the _perception_ of `1.2rem` of padding when combined with the `line-height` of child text nodes.
+/// @prop {Number} footer-padding-top-bordered      [.3rem]  - Top padding for `.card__footer` within a `.card--bordered` variation.  Results in the _perception_ of `1.1rem` of padding when combined with the `line-height` of child text nodes. _Added via `@extend`_
+/// @prop {Number} footer-padding-bottom-bordered   [.8rem]  - Bottom padding for `.card__footer` within a `.card--bordered` variation.  Results in the _perception_ of `1.1rem` of padding when combined with the `line-height` of child text nodes. _Added via `@extend`_
+///
+/// @prop {Number}  cap-padding-vertical    [0]
+/// @prop {Number}  cap-padding-horizontal  [1.6rem]        - _Added via `@extend`_
+/// @prop {Arglist} cap-padding             [0 1.6rem]      - _Added via `@extend`_
+///
+/// @prop {Number}  cap-padding-vertical-bordered   [0]
+/// @prop {Number}  cap-padding-horizontal-bordered [1.5rem]        - _Added via `@extend`_
+/// @prop {Arglist} cap-padding-bordered            [0 1.5rem]      - _Added via `@extend`_
+///
+/// @prop {Arglist} cap-outer-padding                   [0 1.2rem]          - _Added via `@extend`_
+/// @prop {Arglist} cap-outer-left-padding-bordered     [0 1.2rem 0 1.1rem] - _Added via `@extend`_
+/// @prop {Arglist} cap-outer-right-padding-bordered    [0 1.1rem 0 1.2rem] - _Added via `@extend`_
+///
+/// @prop {Number} selected-platform-width  [.3rem]
+///
+/// @prop {Number} bd-radius        [.4rem] - Corner radius for a `.card--rounded` variation
+/// @prop {Number} bd-radius-inner  [.3rem] - Corner radius for child elems of a `.card--rounded` variation
+///
+/// @prop {Number} font-size [1.4rem] - Font size that should be used within a `.card`
+///
+$card-size-base-config: (
+    'spacer-vertical': .4rem,
+    'header-height': to-rem(component-height(base)),
+    'padding': 1.6rem,
+    'padding-bordered': null, // calculated value added via @extend
+    'adjacent-sibling-padding-top': .3rem,
+    'footer-padding-top':  null, // calculated value added via @extend
+    'footer-padding-bottom': .9rem,
+    'footer-padding-top-bordered': null, // calculated value added via @extend
+    'footer-padding-bottom-bordered': null, // calculated value added via @extend
+    'cap-padding-vertical': 0,
+    'cap-padding-horizontal': null, // calculated value added via @extend
+    'cap-padding': null, // calculated value added via @extend
+    'cap-padding-vertical-bordered': 0,
+    'cap-padding-horizontal-bordered': null, // calculated value added via @extend
+    'cap-padding-bordered': null, // calculated value added via @extend
+    //
+    'cap-outer-padding': null, // calculated value added via @extend
+    'cap-outer-left-padding-bordered':  null, // calculated value added via @extend
+    'cap-outer-right-padding-bordered': null, // calculated value added via @extend
+    //
+    'selected-platform-width': $global-component-platform-bd-width,
+    'bd-radius': to-rem($border-radius-base),
+    'bd-radius-inner': to-rem($border-radius-base - get($card-shared-config, 'bd-width')),
+    //
+    'font-size': to-rem($font-size-base)
+) !default;
+
+
+// ----------------------------------------------------
+//   CALCULATED VALUES
+//   -> based on $card-size-base-config
+//
+//   -> cannot be included in initial map declaration
+//      because the calculations depend on values
+//      within the map, and Sass has no ability to
+//      reference a key in a map from within that map.
+//
+//   -> documented as props of $card-size-base-config
+//      because they are added via extend() below.
+// ----------------------------------------------------
+    $card-padding-base: get($card-size-base-config, 'padding');
+    $card-padding-base-bordered:                        $card-padding-base - to-rem(get($card-shared-config, 'bd-width'));
+    $card-cap-padding-base-vertical:                    get($card-size-base-config, 'cap-padding-vertical');
+    $card-cap-padding-base-vertical-bordered:           get($card-size-base-config, 'cap-padding-vertical-bordered');
+    $card-outer-cap-padding-base-horizontal:            $card-padding-base * .75;
+    $card-outer-cap-padding-base-horizontal-bordered:   $card-outer-cap-padding-base-horizontal - to-rem(get($card-shared-config, 'bd-width'));
+    $card-footer-padding-top: get($card-size-base-config, 'adjacent-sibling-padding-top');
+
+    // ----- EXTEND card base size config with calc'd values ----- //
+    $card-size-base-config: extend($card-size-base-config,
+        (
+            'padding-bordered': $card-padding-base-bordered,
+            'footer-padding-top': $card-footer-padding-top,
+            'footer-padding-top-bordered': $card-footer-padding-top,
+            'footer-padding-bottom-bordered': get($card-size-base-config, 'footer-padding-bottom') - to-rem(get($card-shared-config, 'bd-width')),
+            'cap-padding-horizontal': $card-padding-base,
+            'cap-padding': $card-cap-padding-base-vertical $card-padding-base,
+            'cap-padding-horizontal-bordered': $card-padding-base-bordered,
+            'cap-padding-bordered': $card-cap-padding-base-vertical-bordered $card-padding-base-bordered,
+            //
+            'cap-outer-padding': $card-cap-padding-base-vertical $card-outer-cap-padding-base-horizontal,
+            'cap-outer-left-padding-bordered':  $card-cap-padding-base-vertical-bordered $card-outer-cap-padding-base-horizontal $card-cap-padding-base-vertical-bordered $card-outer-cap-padding-base-horizontal-bordered,
+            'cap-outer-right-padding-bordered': $card-cap-padding-base-vertical-bordered $card-outer-cap-padding-base-horizontal-bordered $card-cap-padding-base-vertical-bordered $card-outer-cap-padding-base-horizontal
+        )
+    );
+
+
+///
+/// Size configuration for a `.card--sm` (_a.k.a_ "condensed") size variation.
+/// @type Map
+/// ---
+/// @requires {function} to-rem
+/// @requires {variable} $card-shared-config
+/// @requires {variable} $border-radius-base
+/// @requires {variable} $global-component-platform-bd-width
+/// ---
+/// @prop {Number} spacer-vertical [.4rem] - Amount of vertical space between adjacent `.card--sm` elements
+///
+/// @prop {Number} header-height [2.6rem] - The height of the `.card__header` element within a `.card--sm` size variation
+///
+/// @prop {Arglist} padding [.8rem 1.6rem]
+/// @prop {Arglist} padding-bordered [.7rem 1.5rem] - _Added via `@extend`_
+///
+/// @prop {Number} adjacent-sibling-padding-top     [0]     - Top padding applied to a block that is immediately adjacent to another block within a `.card--sm` variation
+///
+/// @prop {Number} footer-padding-top               [0]     - Top padding for `.card__footer` within a `.card--sm` variation. _Added via `@extend`_
+/// @prop {Number} footer-padding-bottom            [.9rem] - Bottom padding for `.card__footer` within a `.card--sm` variation
+/// @prop {Number} footer-padding-top-bordered      [0]     - Top padding for `.card__footer` within a `.card--sm.card--bordered` variation. _Added via `@extend`_
+/// @prop {Number} footer-padding-bottom-bordered   [.8rem] - Bottom padding for `.card__footer` within a `.card--sm.card--bordered` variation. _Added via `@extend`_
+///
+/// @prop {Number}  cap-padding-vertical    [0]
+/// @prop {Number}  cap-padding-horizontal  [1.6rem]    - _Added via `@extend`_
+/// @prop {Arglist} cap-padding             [0 1.6rem]  - _Added via `@extend`_
+///
+/// @prop {Number}  cap-padding-vertical-bordered   [0]
+/// @prop {Number}  cap-padding-horizontal-bordered [1.5rem]    - _Added via `@extend`_
+/// @prop {Arglist} cap-padding-bordered            [0 1.5rem]  - _Added via `@extend`_
+///
+/// @prop {Arglist} cap-outer-padding                   [0 1.2rem]          - _Added via `@extend`_
+/// @prop {Arglist} cap-outer-left-padding-bordered     [0 1.2rem 0 1.1rem] - _Added via `@extend`_
+/// @prop {Arglist} cap-outer-right-padding-bordered    [0 1.1rem 0 1.2rem] - _Added via `@extend`_
+///
+/// @prop {Number} selected-platform-width  [.3rem]
+///
+/// @prop {Number} bd-radius        [.3rem] - Corner radius for a `.card--sm.card--rounded` variation
+/// @prop {Number} bd-radius-inner  [.2rem] - Corner radius for child elems of a `.card--sm.card--rounded` variation
+///
+/// @prop {Number} font-size [1.3rem] - Font size that should be used within a `.card--sm` variation
+///
+$card-size-sm-config: (
+    'spacer-vertical': .4rem,
+    'header-height': 2.6rem,
+    'padding': (get($card-size-base-config, 'padding') / 2) get($card-size-base-config, 'padding'),
+    'padding-bordered': null, // calculated value added via @extend
+    'adjacent-sibling-padding-top': 0,
+    'footer-padding-top': null,
+    'footer-padding-bottom': get($card-size-base-config, 'footer-padding-bottom'),
+    'footer-padding-top-bordered': null, // calculated value added via @extend
+    'footer-padding-bottom-bordered': null, // calculated value added via @extend
+    'cap-padding-vertical': 0,
+    'cap-padding-horizontal': null, // calculated value added via @extend
+    'cap-padding': null, // calculated value added via @extend
+    'cap-padding-vertical-bordered': 0,
+    'cap-padding-horizontal-bordered': null, // calculated value added via @extend
+    'cap-padding-bordered': null, // calculated value added via @extend
+    //
+    'cap-outer-padding': null, // calculated value added via @extend
+    'cap-outer-left-padding-bordered':  null, // calculated value added via @extend
+    'cap-outer-right-padding-bordered': null, // calculated value added via @extend
+    //
+    'selected-platform-width': $global-component-platform-bd-width,
+    'bd-radius': to-rem($border-radius-base),
+    'bd-radius-inner': to-rem($border-radius-base - get($card-shared-config, 'bd-width')),
+    //
+    'font-size': to-rem($font-size-md)
+) !default;
+
+
+// ----------------------------------------------------
+//   CALCULATED VALUES
+//   -> based on $card-size-sm-config
+//
+//   -> cannot be included in initial map declaration
+//      because the calculations depend on values
+//      within the map, and Sass has no ability to
+//      reference a key in a map from within that map.
+//
+//   -> documented as props of $card-size-sm-config
+//      because they are added via extend() below.
+// ----------------------------------------------------
+    $card-padding-sm: get($card-size-sm-config, 'padding');
+    $card-padding-sm-bordered:                        (nth($card-padding-sm, 1) - to-rem(get($card-shared-config, 'bd-width'))) (nth($card-padding-sm, 2) - to-rem(get($card-shared-config, 'bd-width')));
+    $card-cap-padding-sm-vertical:                    get($card-size-base-config, 'cap-padding-vertical');
+    $card-cap-padding-sm-vertical-bordered:           get($card-size-base-config, 'cap-padding-vertical-bordered');
+    $card-outer-cap-padding-sm-horizontal:            nth($card-padding-sm, 2) * .75;
+    $card-outer-cap-padding-sm-horizontal-bordered:   $card-outer-cap-padding-sm-horizontal - to-rem(get($card-shared-config, 'bd-width'));
+    $card-footer-padding-top-sm: get($card-size-sm-config, 'adjacent-sibling-padding-top');
+
+    // ----- EXTEND card small size config with calc'd values ----- //
+    $card-size-sm-config: extend($card-size-sm-config,
+        (
+            'padding-bordered': $card-padding-sm-bordered,
+            'footer-padding-top': $card-footer-padding-top-sm,
+            'footer-padding-top-bordered': $card-footer-padding-top-sm,
+            'footer-padding-bottom-bordered': get($card-size-sm-config, 'footer-padding-bottom') - to-rem(get($card-shared-config, 'bd-width')),
+            'cap-padding-vertical': $card-cap-padding-sm-vertical,
+            'cap-padding-horizontal': $card-padding-sm,
+            'cap-padding': $card-cap-padding-sm-vertical nth($card-padding-sm, 2),
+            'cap-padding-vertical-bordered': $card-cap-padding-sm-vertical-bordered,
+            'cap-padding-horizontal-bordered': $card-padding-sm-bordered,
+            'cap-padding-bordered': $card-cap-padding-sm-vertical-bordered $card-padding-sm-bordered,
+            //
+            'cap-outer-padding': $card-cap-padding-sm-vertical $card-outer-cap-padding-sm-horizontal,
+            'cap-outer-left-padding-bordered':  $card-cap-padding-sm-vertical-bordered $card-outer-cap-padding-sm-horizontal $card-cap-padding-sm-vertical-bordered $card-outer-cap-padding-sm-horizontal-bordered,
+            'cap-outer-right-padding-bordered': $card-cap-padding-sm-vertical-bordered $card-outer-cap-padding-sm-horizontal-bordered $card-cap-padding-sm-vertical-bordered $card-outer-cap-padding-sm-horizontal
+        )
+    );
+
+
+///
+/// Convenience collection of size configurations for the `.card` component.
+/// @type Map
+/// ---
+/// @requires {variable} $card-size-base-config
+/// @requires {variable} $card-size-sm-config
+/// ---
+/// @prop {Map} base [$card-size-base-config]
+/// @prop {Map} sm   [$card-size-sm-config]
+///
+$card-sizes: (
+    'base': $card-size-base-config,
+    'sm': $card-size-sm-config
+);
+
+
+///
+/// Amount of white-space between adjacent `.card` elements within a `.card-deck`.
+///
+/// Default is `1.5rem`.
+/// ---
+/// @type Number
+/// ---
+/// @requires {function} to-rem
+/// @requires {variable} grid-config
+///
+$card-deck-gutter: to-rem(get($grid-config, 'gutter-width') / 2) !default;
+
+
+// ----------------------------------------------------
+//   Undocumented Alias Vars
+// ----------------------------------------------------
+
+$card-selected-platform-elem-selector: get($card-shared-config, 'selected-platform-elem-selector');

@@ -1,0 +1,74 @@
+// ********************************************************
+//
+//   TASKING UI FOR THE CARD COMPONENT
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/cards/card-tasking';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $cards-module-config:  'core/components/atoms/cards/cards-config';
+    $cards-module-helpers: 'core/components/atoms/cards/cards-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $cards-module-config,
+                                          $cards-module-helpers);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Task complete state
+//
+//   -> Should be added to the base `.card` element
+// ----------------------------------------------------
+    .task--complete {
+        .card__header__title {
+            color: get($card-shared-config, 'footnote-color');
+            text-decoration: line-through;
+        }
+
+        &.card--inverse {
+            .card__header__title {
+                color: get($card-shared-config, 'footnote-color-inverse');
+            }
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Task due date color based risk of being late
+// ----------------------------------------------------
+    @each $status, $color in $card-task-due-date-status-colors {
+        .task__due-date--#{$status} {
+            color: $color;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Tasks displayed as table rows
+// ----------------------------------------------------
+    .card-table {
+        .card__cap--task-checkbox {
+            width: .4rem; // TODO: Should this be configurable?
+        }
+
+        .card__cap--task-date {
+            width: 7rem; // TODO: Should this be configurable?
+            text-align: right;
+        }
+
+        .card__task-title {
+            width: 40%; // TODO: Should this be configurable?
+        }
+
+        .card__header {
+            .card__footnote,
+            .card__header__actions {
+                float: right;
+            }
+        }
+    }

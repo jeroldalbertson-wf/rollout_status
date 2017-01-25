@@ -1,0 +1,239 @@
+// ********************************************************
+//
+//   Base layout structure / templating
+//   for the Web Skin core module
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/base/scaffolding';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Base Document Settings (from normalize module)
+//
+//   [1] Set default font family to sans-serif.
+//
+//   [2] Prevent Windows Mobile text size adjust after
+//       orientation change, without disabling user zoom.
+//
+//   [3] " " iOS " "
+//
+//   [4] Set base font size to 10px for easy rem units
+// ----------------------------------------------------
+html {
+    font-family: sans-serif;        // [1]
+    -webkit-text-size-adjust: 100%; // [2]
+        -ms-text-size-adjust: 100%; // [3]
+    //
+    // Base 10 rem font-sizing
+    //
+    font-size: $html-font-size;
+
+    //
+    // Custom text-selection bg color
+    //
+    @include cursor-selected(false) {
+        background: color('selection.bg-base');
+    }
+}
+
+
+// ----------------------------------------------------
+//   Global Resets
+// ----------------------------------------------------
+* {
+    //
+    // Global box-sizing
+    //
+    box-sizing: $box-sizing-default;
+
+    //
+    // Disable tap highlight and turn off text selection
+    // at this level so accidental drag/move
+    // actions don't cause huge selected bgcolors
+    // all over the page we turn this `::selection`
+    // functionality back on - on a per-selector
+    // basis below using elements-of-type(selectable)
+    //
+    @include disable-user-select();
+
+    //
+    // Webfont ligature reset for Mozilla
+    //
+    @if $firefox-support {
+        -moz-font-feature-settings: "liga" 0;
+    }
+
+    @include scroll-inertia();
+}
+
+
+// ----------------------------------------------------
+//   Global `:focus` Style
+//   Make components accessible by applying
+//   a standard style on `:focus`
+// ----------------------------------------------------
+#{$focus-inline} {
+    @include focus-outline();
+}
+
+//
+// Prevent things like carets / icons from being
+// focused since they use the <i> elem which
+// apparently can gain focus.
+//
+[aria-hidden="true"]#{$focus-inline} {
+    outline: 0;
+}
+
+//
+// Prevent elems that are unfocusable via [tab] keypress
+// since they only become focused on [click] in MSIE 11
+//
+div,
+span,
+td,
+th,
+fieldset {
+    &:not([tabindex]):not([contenteditable="true"])#{$focus-inline} {
+        outline: 0;
+    }
+}
+
+
+// ----------------------------------------------------
+//   `<body>` / base elem reset
+// ----------------------------------------------------
+#{$base-elem} {
+    margin: 0;
+    color: $text-color;
+    background-color: if($base-elem == "body", $body-bg, transparent);
+    font-family: $font-family-base;
+    font-size: to-rem($font-size-base);
+    line-height: $line-height-base;
+
+    @if unquote($base-elem) == body {
+        //
+        // Fix strange mozilla `user-select` behavior when the `html` elem can be
+        // clicked as a result of the `body` elem not filling the entire height of the viewport
+        // @see https://github.com/Workiva/web-skin/issues/828
+        //
+        min-height: 100vh;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Custom text selection characteristics
+//   for selectable elems only
+// ----------------------------------------------------
+#{elements-of-type(selectable)} {
+    @include enable-user-select();
+}
+
+
+// ----------------------------------------------------
+//   Links
+// ----------------------------------------------------
+.hitarea,
+.btn {
+    // reset in-case its used with a <button> or <input> elem
+    @include button-normalize();
+    // reset natural inheritence to overrule normalized `<button>` style
+    text-transform: inherit;
+
+    // if the hitarea is "active", typically it is no longer clickable
+    .active > &:not([data-toggle="dropdown"]):not(.dropdown-toggle),
+    :not([data-toggle="buttons"]):not(.btn-toggle-group) > &.active:not([data-toggle="dropdown"]):not(.dropdown-toggle) {
+        cursor: default;
+    }
+}
+
+.hitarea {
+    #{$hover} {
+        text-decoration: none;
+    }
+
+    #{$focus},
+    &#{$focus-class} {
+        @include focus-shadow-inset();
+        text-decoration: none;
+
+        //
+        // Remove focus outline on mousepress
+        // @see #962
+        //
+        &:active {
+            @include remove-focus-outline();
+        }
+
+        &[disabled],
+        &.disabled {
+            @include remove-focus-outline();
+        }
+    }
+
+    .active > &,
+    &.active {
+        #{$focus},
+        &#{$focus-class} {
+            @include remove-focus-outline();
+        }
+    }
+}
+
+a,
+.text-link {
+    cursor: pointer;
+    text-decoration: none;
+    color: $link-color;
+
+    #{$link-hover-focus} {
+        text-decoration: underline;
+        color: $link-color-hover;
+        outline: 0; // the underline is enough of an indicator that the focus has occurred
+    }
+
+    #{$link-pressed} {
+        color: $link-color-pressed;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Images
+// ----------------------------------------------------
+.img-responsive {
+    @include img-responsive();
+}
+
+// Rounded corners
+.img-rounded {
+    border-radius: to-rem($border-radius-lg);
+}
+
+// Image thumbnails
+.img-thumbnail {
+    @include img-thumbnail-base();
+
+    // Keep them at most 100% wide
+    @include img-responsive($display: inline-block);
+}
+
+// Perfect circle
+.img-circle {
+    @include make-circle();
+}
+
+
+.backdrop {
+    @include dialog-backdrop-default();
+}
+
+// "opaque" backdrop variation that is 100% opaque when faded `.in`
+.backdrop-opaque.in {
+    @include opacity(1, !important);
+}

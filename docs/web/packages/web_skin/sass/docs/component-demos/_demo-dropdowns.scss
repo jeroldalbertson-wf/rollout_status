@@ -1,0 +1,111 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-dropdowns';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.dropdown-menu-static-example {
+    .ws-example.grid-block-sm {
+        .dropdown {
+            display: block;
+        }
+
+        .dropdown-menu {
+            float: none;
+            margin-bottom: 0;
+            min-width: none;
+
+            > .menu-item > .hitarea {
+                min-width: none;
+            }
+        }
+    }
+
+    .dropdown-menu {
+        position: static;
+        display: block;
+        margin-bottom: to-rem($docs-spacing-sm);
+
+        // Fix for nested `.dropdown-menu__filtered-items` examples
+        .dropdown-menu {
+            margin-bottom: 0;
+        }
+    }
+
+    // tweak max-widths of grid columns so
+    // the menus do not overlap one another
+    .col-dd-base {
+        max-width: 20.6rem;
+    }
+
+    .col-dd-md {
+        max-width: 21.3rem;
+    }
+
+    .col-dd-lg {
+        max-width: 23.6rem;
+    }
+}
+
+.dropdown-menu-dynamic-example {
+    min-height: 22rem;
+
+    [class*="col-"] {
+        //
+        // make the dropdown menus within grid
+        // columns fill the width of the column
+        .dropdown {
+            display: block;
+        }
+
+        .dropdown-menu {
+            float: none;
+
+            //
+            // ensure that text truncation works on <button> hitareas
+            // even when the column the menu is nested within is less
+            // than the default max-width value of the menu and hitarea
+            //
+            max-width: 100%;
+
+            > .menu-item > .hitarea {
+                max-width: 100%;
+            }
+        }
+    }
+}
+
+.dropdown-menu-color-picker-example {
+    min-height: 32rem;
+
+    > .btn-group {
+        margin-left: get($cp-pane-config, 'width');
+    }
+}
+
+.dropdown-menu-color-picker-example--custom {
+    min-height: 38rem;
+}
+
+.ws-example .form-group[class*="grid-block"] {
+    .form-control-wrapper {
+        // Don't allow any inline widths applied by the chosen.js plugin
+        // cause the component to exceed the width of it's grid block container.
+        max-width: 100%;
+    }
+}
+
+.ws-example .dropdown-menu__filtered-items {
+    // So we can demo scrolling styles
+    max-height: 24rem;
+}
+
+.ws-example-dd-box-static {
+  > .dropdown {
+    top: -1.8rem; // Not a clue
+  }
+}

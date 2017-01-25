@@ -1,0 +1,104 @@
+// ********************************************************
+
+////
+/// Carousel component configuration
+/// ---
+/// @since 0.4.5
+/// @group core.components.carousels
+/// @link http://bit.ly/webskin-js-carousel Web Skin Carousel JS Plugin
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/carousels/carousels-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend,
+                                                function icon-size-base-16);
+//
+// ********************************************************
+
+
+///
+/// Configuration for `.carousel` components.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {function} get-deep
+/// @requires {function} extend
+/// @requires {function} icon-size-base-16
+/// @requires {variable} $dialog-config
+/// @requires {variable} $zc-gray-40
+/// @requires {variable} $nav-secondary-link-config
+/// ---
+/// @prop {List}   padding              [0 64px]    - Default padding for `.carousel`. _Added via `@extend`_
+/// @prop {Number} inner-padding-bottom [80px]      - Default bottom padding for `.carousel .carousel-inner`
+/// @prop {Number} control-padding      [16px]      - Default padding for `.carousel .carousel-control`
+/// @prop {Number} control-icon-size    [32px]      - Font size used for `.carousel .carousel-control .icon`
+/// @prop {Number} control-width        [64px]      - Calculated width of each `.carousel .carousel-control`. _Added via `@extend`_
+/// @prop {Number} transition-speed     [.6s]       - Speed at which each image / content area within a `.carousel` slides
+///
+/// @prop {Color} control-color         [#e3e3e3] - Color of `.carousel .carousel-control`
+/// @prop {Color} control-color-hover   [#66cc00] - Color of a hovered `.carousel .carousel-control`
+/// @prop {Color} caption-text-color    [#444444] - Text color for `.carousel .carousel-caption`
+///
+$carousel-config: (
+    'padding': null, // actual calculated value inserted via @extend
+    'inner-padding-bottom': 80px,
+    'control-padding': get-deep($dialog-config, 'base.content-padding'),
+    'control-icon-size': icon-size-base-16() * get($symbol-base16-multipliers, 'lg'),
+    'control-width': null, // actual calculated value inserted via @extend
+    'transition-speed': .6s,
+    //
+    'control-color': $zc-gray-40,
+    'control-color-hover': get($nav-secondary-link-config, 'text-color-hover'),
+    'caption-text-color': $zc-gray-120
+) !default;
+
+
+// ----------------------------------------------------
+//   CALCULATED VALUES
+//   -> based on $carousel-config
+//
+//   -> cannot be included in initial map declaration
+//      because the calculations depend on values
+//      within the map, and Sass has no ability to
+//      reference a key in a map from within that map.
+//
+//   -> documented as props of $carousel-config
+//      because they are added via extend() below.
+// ----------------------------------------------------
+    $carousel-control-width: (get($carousel-config, 'control-padding') * 2) + get($carousel-config, 'control-icon-size');
+    $carousel-padding: 0 $carousel-control-width;
+
+    // ----- EXTEND carousel config with calc'd values ----- //
+    $carousel-config: extend($carousel-config,
+        (
+            'padding': $carousel-padding,
+            'control-width': $carousel-control-width
+        )
+    );
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED CONFIG ALIAS / SHORTHAND
+//
+//   -> DO NOT MODIFY THESE (modify the map config)
+//
+// ********************************************************
+    $carousel-control-padding: get($carousel-config, 'control-padding');
+    $carousel-control-icon-size: get($carousel-config, 'control-icon-size');
+    $carousel-control-color: get($carousel-config, 'control-color');
+    $carousel-control-color-hover: get($carousel-config, 'control-color-hover');
+    $carousel-caption-text-color: get($carousel-config, 'caption-text-color');
+    $carousel-inner-padding-bottom: get($carousel-config, 'inner-padding-bottom');
+    $default-carousel-speed: get($carousel-config, 'transition-speed');

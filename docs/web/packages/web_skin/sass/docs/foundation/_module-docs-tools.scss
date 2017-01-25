@@ -1,0 +1,21 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/foundation/module-docs-tools';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+@import "tools/scss-var-content";
+@import "tools/visibility-docs-options";
+@import "tools/docs-utilities";
+
+
+// ----------------------------------------------------
+//   Re-instate the core tools utility
+//   CSS classes so they are more
+//   specific than anything in the docs
+// ----------------------------------------------------
+@import "../../core/foundation/tools/utilities";

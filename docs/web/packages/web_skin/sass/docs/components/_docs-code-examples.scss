@@ -1,0 +1,134 @@
+// ********************************************************
+//
+//   Generated via Pygments and Jekyll
+//   via the `{% highlight %}` tag --
+//   these are snippets of HTML/CSS/JS/etc
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/code-examples';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+$line-number-column-width: 40px;
+
+
+// ----------------------------------------------------
+//   Resolve monospaced font-size differences between
+//   Windows and OSX since Consolas is what most
+//   Windows machines have, and it doesn't require the
+//   90% font-size like Menlo / Monaco do on OSX
+// ----------------------------------------------------
+samp,
+kbd,
+code {
+    @include windows-support {
+        font-size: 100%;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Base classes
+// ----------------------------------------------------
+.highlight {
+    @include docs-code-highlight-base();
+    border-width: $docs-example-bd-width 0;
+
+    &.linenums {
+        @include docs-code-highlight-linenums();
+    }
+
+    @include respond-to('screen-sm and up') {
+        border-width: $docs-example-bd-width;
+    }
+}
+
+.highlight-wrapper figure,
+figure.code,
+figure.highlight-wrapper {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+// make sure the "show code" button clears floats
+// when not "connected" to a component example
+.highlight-wrapper {
+    clear: both;
+    margin-right: to-rem($docs-body-padding-horizontal * -1) !important;
+    margin-left: to-rem($docs-body-padding-horizontal * -1) !important;
+
+    @include respond-to('screen-sm and up') {
+        width: 100%;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+
+    figure {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Nested `<pre>` and `<code>`
+// ----------------------------------------------------
+    .highlight pre,
+    .prettyprint {
+        @include disable-pre-word-wrap($nested-code: false);
+
+        margin-top: 0;
+        margin-bottom: 0;
+        background-color: transparent;
+        border: 0;
+        font-size: to-rem($font-size-md); // mobile-first defaults
+
+        // Enlarge code snippet font-size based on overall vw
+        @include respond-to('screen-lg and up') {
+            font-size: to-rem($font-size-base);
+        }
+
+        code {
+            @include disable-pre-code-word-wrap();
+            // Ensure that inline <code> colors / padding set within
+            // _docs-type.scss don't effect block code examples
+            background-color: transparent !important;
+            padding: 0 !important;
+            font-size: inherit;
+        }
+    }
+
+    // ----- Color swatch code examples ----- //
+    .highlight.swatches {
+        pre {
+            // leave enough room so there is whitespace
+            // between each swatch vertically
+            line-height: to-rem($line-height-base-px + 2);
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Line numbers
+// ----------------------------------------------------
+.highlight {
+    pre .lineno {
+        display: inline-block;
+        width: to-rem($line-number-column-width);
+        padding-right: .8rem;
+        margin: 0 0 0 ((to-rem($line-number-column-width) + $docs-code-horizontal-padding) * -1);
+        text-align: right;
+        color: #bebec5;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Nested within a list item
+// ----------------------------------------------------
+li > .highlight-wrapper .highlight {
+
+}

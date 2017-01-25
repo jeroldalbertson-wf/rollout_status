@@ -1,0 +1,13 @@
+@charset "UTF-8";/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for Global Jobs Panel
+ * ---
+ * MSIE Support: 10+
+ * ---
+ * Requires
+ *   web-skin v1.14.0 Core CSS
+ *   web-skin v1.14.0 Core Plugin JS
+ * ---
+ * Copyright © 2017 Workiva
+ * -------------------------------------
+ */.body-footer{position:fixed;z-index:10;bottom:0;left:0;width:100%;min-height:2.6rem;height:auto}.global-jobs-panel{position:absolute;top:auto;bottom:0;left:3.6rem;right:3.6rem;width:auto}@media screen and (min-width:48em){.global-jobs-panel{width:48rem;right:3.6rem;left:auto}}.global-jobs-panel .panel-heading .panel-title{font-weight:400}.global-jobs-panel .panel-heading .caret{border-top-width:0;border-bottom-width:.5rem;border-bottom-style:solid;border-bottom-color:#fff}.global-jobs-panel .panel-heading[data-toggle].open .caret{border-bottom-width:0;border-top-width:.5rem;border-top-style:solid;border-top-color:#fff}.global-jobs-panel .panel-heading .icon,.global-jobs-panel .panel-heading .progress-spinner{position:absolute;top:.5rem;left:.8rem}.global-jobs-panel .panel-heading .icon+.title-text,.global-jobs-panel .panel-heading .progress-spinner+.title-text{margin-left:2.4rem}.global-jobs-panel .panel-heading .panel-actions .caret{right:3.1rem}.global-jobs-panel .panel-heading .panel-actions .close{position:absolute;top:0;right:0;width:2.6rem;height:2.6rem;padding-bottom:.8rem;color:#fff;text-shadow:0 .1rem 0 rgba(0,0,0,.2);opacity:.8}.global-jobs-panel .panel-heading .panel-actions .close:hover{opacity:1}.jobs-list{table-layout:fixed}.job-item .item-col{padding:0 .8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-color:#fff}.job-item .item-icon{width:3.2rem;height:4.8rem}.job-item .item-name{padding-left:0}.job-item .item-progress{width:15.6rem}.job-item .item-progress .progress{margin:0}.job-item .item-progress .btn{float:right}.job-item:hover .item-progress .btn-link{text-decoration:underline;color:#0094ff}.job-item .item-icon-error,.job-item .item-icon-success,.job-item .item-progress .btn,.job-item.job-done .item-icon-pending,.job-item.job-done .item-progress .progress{display:none}.job-item.job-done.job-error .item-icon-error{display:inline-block;color:#ee2724}.job-item.job-done.job-error .item-btn-error{display:inline-block}.job-item.job-done.job-success .item-icon-success{display:inline-block;color:#6c0}.job-item.job-done.job-success .item-btn-success{display:inline-block}

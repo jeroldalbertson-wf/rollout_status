@@ -1,0 +1,58 @@
+// ********************************************************
+//
+//   Wdesk Login Page Manifest
+//
+    $module: 'peripherals/wdesk-login/module-wdesk-login';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   LOGIN PAGE ATOMS
+//
+// ********************************************************
+    // ----- Login Page Config ----- //
+    @import "atoms/wdesk-login-config";
+
+    // ----- Login Page Helpers ----- //
+    @import "atoms/wdesk-login-helpers";
+
+
+
+// ********************************************************
+//
+//   WEB SKIN CORE MODULES
+//
+//   -> Core WS modules that are required
+//      for this standalone peripheral
+//      (wdesk.scss) core is not required
+//      in login views
+//
+// ********************************************************
+    // ----- Web Skin Core Module Dependencies ----- //
+    @import 'atoms/wdesk-login-dependencies';
+
+
+
+// ********************************************************
+//
+//   LOGIN PAGE STYLES
+//
+// ********************************************************
+    // ----- Login Page Branding ----- //
+    @import "wdesk-login-branding";
+
+    // ----- Login Flow Layouts ----- //
+    @import "wdesk-login-layout";
+    @import "wdesk-login-layout-help";
+
+    // ----- Login Page Alerts ----- //
+    @import "wdesk-login-alerts";
+
+    // ----- Login Page Form Controls ----- //
+    @import "wdesk-login-form-controls";
+
+    // ----- Login Page Utility Classes ----- //
+    @import "wdesk-login-utilities";

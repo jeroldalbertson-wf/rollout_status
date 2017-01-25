@@ -1,0 +1,138 @@
+// ********************************************************
+//
+//   Builder function that can dynamically generate the
+//   values needed for the CSS `box-shadow` property by
+//   parsing a standardized shadow configuration Map.
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/builders/box-shadow-builder';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function is-bool,
+                                                function is-number,
+                                                function is-map,
+                                                function is-color,
+                                                function list-has,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+///
+/// Builder function that creates the space-separated `Arglist` values for a CSS `box-shadow` property using the given `$shadow-config`.
+/// ---
+/// @access public
+/// @since 1.0.0
+/// @group core.color.shadow
+/// @link https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow#Values CSS Box Shadow
+/// ---
+/// @requires {external} SassScript/unquote  <http://bit.ly/sass_unquote>
+/// @requires {external} SassScript/map-keys <http://bit.ly/sass_map-keys>
+/// ---
+/// @example scss - Configuration
+///  $component-shadow-config: (
+///    'inset': false,
+///    'offset-x': 0,
+///    'offset-y': .3rem,
+///    'blur': 0,
+///    'spread': 0,
+///    'color': #000000,
+///    'alpha': .11
+///  );
+/// ---
+/// @example scss - Usage
+///  .component {
+///    box-shadow: build-box-shadow($component-shadow-config);
+///  }
+/// ---
+/// @example css - CSS Output
+///  .component {
+///    box-shadow: 0 .3rem 0 0 rgba(0, 0, 0, .11);
+///  }
+/// ---
+/// @param {Map} $shadow-config - Configuration map
+/// ---
+/// @returns {Arglist} - CSS value for `box-shadow` property
+///
+@function build-box-shadow($shadow-config) {
+    // ----------------------------------------------------
+    //  MAP ERROR HANDLING
+    //
+    //  1. MAP CHECK
+    //
+        @if not is-map($shadow-config) {
+            @error "Function `build-box-shadow` expecting `$shadow-config` to be of type Map. Received `#{type-of($shadow-config)}`.";
+        }
+
+    //
+    //  2. REQUIRED KEY CHECKING
+    //
+        $required-keys: 'inset', 'offset-x', 'offset-y', 'blur', 'spread', 'color', 'alpha';
+        $param-keys: map-keys($shadow-config);
+        @each $key in $required-keys {
+            @if not list-has($param-keys, $key) {
+                @error "Function `build-box-shadow` expecting `$shadow-config` to contain a `#{unquote($key)}` key.";
+            }
+        }
+    //
+    // ----------------------------------------------------
+
+    //
+    // Set local vars for map key values now that we know
+    // it's the map data is valid for our use.
+    //
+    $inset:     get($shadow-config, 'inset');
+    $offset-x:  get($shadow-config, 'offset-x');
+    $offset-y:  get($shadow-config, 'offset-y');
+    $blur:      get($shadow-config, 'blur');
+    $spread:    get($shadow-config, 'spread');
+    $color:     get($shadow-config, 'color');
+    $alpha:     get($shadow-config, 'alpha');
+
+    $offset-x: if(is-px($offset-x), to-rem($offset-x), $offset-x);
+    $offset-y: if(is-px($offset-y), to-rem($offset-y), $offset-y);
+    $blur: if(is-px($blur), to-rem($blur), $blur);
+    $spread: if(is-px($spread), to-rem($spread), $spread);
+
+    // ----------------------------------------------------
+    //  MAP KEY VALUE ERROR HANDLING
+    //
+    //  1. TYPE / UNIT CHECKING FOR MAP KEY VALUES
+    //
+        @if not is-bool($inset) {
+            @error "Function `build-box-shadow` expecting the value of the `inset` key within `$shadow-config` to be of type Bool. Received `#{type-of($inset)}`.";
+        }
+        @if not is-number-with-valid-unit($offset-x) {
+            @error "Function `build-box-shadow` expecting the value of the `offset-x` key within `$shadow-config` to be a Number with a valid unit. Received `#{$offset-x}` (`#{type-of($offset-x)}`).";
+        }
+        @if not is-number-with-valid-unit($offset-y) {
+            @error "Function `build-box-shadow` expecting the value of the `offset-y` key within `$shadow-config` to be a Number with a valid unit. Received `#{$offset-y}` (`#{type-of($offset-y)}`).";
+        }
+        @if not is-number-with-valid-unit($blur) {
+            @error "Function `build-box-shadow` expecting the value of the `blur` key within `$shadow-config` to be a Number with a valid unit. Received `#{$blur}` (`#{type-of($blur)}`).";
+        }
+        @if not is-number-with-valid-unit($spread) {
+            @error "Function `build-box-shadow` expecting the value of the `spread` key within `$shadow-config` to be a Number with a valid unit. Received `#{$spread}` (`#{type-of($spread)}`).";
+        }
+        @if not is-color($color) {
+            @error "Function `build-box-shadow` expecting the value of the `color` key within `$shadow-config` to be of type Color. Received `#{type-of($color)}`.";
+        }
+        @if not is-unitless-number($alpha) {
+            @error "Function `build-box-shadow` expecting the value of the `alpha` key within `$shadow-config` to be a unitless Number. Received `#{$alpha}` (`#{type-of($alpha)}`).";
+        }
+
+    //
+    //  2. VALUE CHECKING FOR MAP KEY VALUES
+    //
+        @if $alpha < 0 or $alpha > 1 {
+            @error "Function `build-box-shadow` expecting the value of the `alpha` key within `$shadow-config` to be a Number between 0 and 1. Received `#{$alpha}`.";
+        }
+    //
+    // ----------------------------------------------------
+
+    @return unquote(if($inset, 'inset', '')) $offset-x $offset-y $blur $spread rgba($color, $alpha);
+}

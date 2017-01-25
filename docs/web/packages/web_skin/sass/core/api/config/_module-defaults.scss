@@ -1,0 +1,86 @@
+// ********************************************************
+
+////
+/// Imports config modules that are used as defaults across multiple modules / components.
+/// Vars with the `!default` flag can be changed by client apps via our Sass API
+/// ---
+/// @type List
+/// @access private
+/// @since 1.0.0
+/// @group core.internals.modularity
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/module-defaults';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// List of imported api modules that is updated each time a module is imported and can be checked / referenced by non-api component modules to ensure that required api variables and helper methods exist
+///
+$api-modules: () !default;
+
+
+///
+/// Debugging utility var that keeps track of duplicate api module imports
+/// @group core.internals.debug
+///
+$dupe-api-modules: 0 !default;
+
+
+///
+/// List of imported component modules that is updated each time a module is imported and can be checked / referenced by other component modules to ensure that cross-module dependencies are met
+///
+$component-modules: () !default;
+
+
+///
+/// Debugging utility var that keeps track of duplicate component module imports
+/// @group core.internals.debug
+///
+$dupe-component-modules: 0 !default;
+
+
+// ----------------------------------------------------
+//   Colon Utility Vars
+//
+//   -> To be used within string values
+//      adjacent to Sass operators (hack)
+// ----------------------------------------------------
+$cl: ":" !default;
+$cl2: #{$cl}#{$cl} !default;
+
+
+// ----------------------------------------------------
+//   Module Imports
+// ----------------------------------------------------
+@import "support/defaults";
+@import "defaults/constants";
+@import "defaults/elem-states";
+@import "defaults/options";
+@import "defaults/display";
+@import "defaults/module-color";
+@import "defaults/type-rhythm";
+@import "defaults/fonts";
+@import "defaults/images";
+@import "defaults/breakpoints";
+@import "defaults/grid";
+@import "defaults/symbol-sizes";
+@import "defaults/animation";
+@import "defaults/draggables";
+
+
+// ----------------------------------------------------
+//   Inbox
+//
+//   -> Stuff that doesn't have a home yet
+// ----------------------------------------------------
+    $touch-uihitarea: 44px !default;
+    $link-text-shadow: none !default;
+    $text-shadow-alpha: .7 !default;
+    $box-sizing-default: border-box !default;
+    $nav-box-sizing-default: content-box !default; // makes scrolling navs easier

@@ -1,0 +1,111 @@
+// ********************************************************
+//
+//   Generate a set of tests to show the
+//   responsive utilities in action.
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/docs-examples/responsive-utilities';
+    $module: add-component-module($module);
+    $module_docs-components-examples-responsive-utilities: true !global;
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Table listing viewport / class relationships
+// ----------------------------------------------------
+.responsive-utilities-table {
+    th small {
+        display: block;
+        font-weight: normal;
+        color: #999;
+    }
+
+    tbody th {
+        font-weight: normal;
+    }
+
+    td {
+        text-align: center;
+    }
+
+    .is-visible {
+        color: #468847;
+        background-color: #dff0d8 !important;
+    }
+
+    .is-hidden {
+        color: #ccc;
+        background-color: #f9f9f9 !important;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Table listing media queries
+// ----------------------------------------------------
+.responsive-utilities-mq-table {
+    .icon[title] {
+        cursor: help;
+        @include opacity(.5);
+
+        #{$link-hover-focus} {
+            @include opacity(1);
+        }
+    }
+
+    td {
+        text-align: left;
+
+        code {
+            // make sure the values line up with the <th> in the <thead>
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   Live demo of responsive classes
+// ----------------------------------------------------
+.responsive-utilities-test {
+    margin-top: to-rem($docs-spacing-sm);
+
+    .test-case-col {
+        margin-bottom: to-rem($docs-spacing-md);
+    }
+
+    .test-case {
+        padding: to-rem($docs-spacing-base $docs-spacing-md);
+        font-size: to-rem($font-size-base);
+        font-weight: bold;
+        line-height: 1.1;
+        text-align: center;
+        border-radius: to-rem($border-radius-base);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &.visible-on {
+        [class*="hidden"] {
+            @include responsive-test-case-inactive();
+        }
+
+        [class*="visible"] {
+            @include responsive-test-case-active();
+        }
+    }
+
+    &.hidden-on {
+        [class*="hidden"] {
+            @include responsive-test-case-active();
+        }
+
+        [class*="visible"] {
+            @include responsive-test-case-inactive();
+        }
+    }
+}

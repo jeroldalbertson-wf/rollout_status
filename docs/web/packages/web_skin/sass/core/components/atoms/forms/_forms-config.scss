@@ -1,0 +1,37 @@
+// ********************************************************
+
+////
+/// Form component configuration manifest
+/// ---
+/// @access public
+/// @group core.components.form-controls
+/// @link http://bit.ly/webskin-form-controls Form component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/forms/forms-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// Name of the breakpoint used by the `respond-to` function to determine when `.form-inline` actually displays its contents in an inline-fashion.
+/// ---
+/// @type String
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {variable} grid-config
+///
+$form-inline-breakpoint-name: 'screen-#{get($grid-config, 'float-breakpoint')} and up';
+
+
+@import 'config/form-control-config';
+@import 'config/form-misc-element-config';
+@import 'config/form-cbox-radio-config';
+@import 'config/form-chosen-config';
+@import 'config/form-input-group-search-config';
+@import 'config/form-file-browser-config';

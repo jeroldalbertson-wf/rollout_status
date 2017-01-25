@@ -1,0 +1,157 @@
+// ********************************************************
+//
+//   BREADCRUMB NAV COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-breadcrumbs
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/breadcrumbs';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $breadcrumbs-module-config:  'core/components/atoms/breadcrumbs/breadcrumbs-config';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $breadcrumbs-module-config);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE BREADCRUMB CONTAINER
+//
+// ********************************************************
+.breadcrumb {
+    padding: to-rem($breadcrumb-padding);
+    margin: 0;
+    font-size: to-rem($breadcrumb-font-size);
+    list-style: none;
+    background-color: $breadcrumb-bg;
+}
+
+
+// ********************************************************
+//
+//   BREADCRUMB ITEMS / ITEM HITAREAS
+//
+// ********************************************************
+.breadcrumb-item {
+    @include disable-user-select();
+
+    position: relative; // to contain the :after separator
+    display: inline-block;
+    padding-right: to-rem($breadcrumb-crumb-padding-right);
+    padding-left: to-rem($breadcrumb-crumb-padding-left);
+    margin: to-rem(0 $breadcrumb-crumb-margin-right 0 $breadcrumb-crumb-margin-left);
+    white-space: nowrap; // zap generated content white-space bug: http://bit.ly/180xVJM
+    cursor: default;
+    text-transform: uppercase;
+
+    //
+    // Zap left margin on first crumb
+    // !important used to override
+    // `.breadcrumb-header > .breadcrumb-item` margin
+    //
+    &:first-child {
+        margin-left: 0 !important;
+    }
+
+    // ----------------------------------------------------
+    //   BREADCRUMB ITEM HITAREA
+    // ----------------------------------------------------
+    > .hitarea {
+        @include disable-user-select();
+
+        display: inline-block; // ensure height of <button> and <a> hitareas are the same
+        color: $breadcrumb-crumb-text-color;
+
+        // ----- HOVER STATE ----- //
+        #{$link-hover-focus} {
+            color: $breadcrumb-crumb-text-color-hover;
+            outline-offset: .2rem; // don't "hug" the text on focus
+        }
+
+        // ----- PRESSED STATE ----- //
+        #{$link-pressed} {
+            color: $breadcrumb-crumb-text-color-press;
+        }
+    }
+
+    // ----- ACTIVE BREADCRUMB STATE ----- //
+    &.active {
+        color: $breadcrumb-crumb-text-color-active;
+        font-weight: bold;
+    }
+}
+
+
+// ********************************************************
+//
+//   BREADCRUMB DIVIDERS
+//   -> Generated using the `:after` pseudo-elem
+//
+// ********************************************************
+.breadcrumb-item {
+    &:after {
+        position: absolute;
+        display: inline-block;
+        padding-left: to-rem($breadcrumb-crumb-padding-left + $breadcrumb-crumb-divider-angle-adjust);
+        color: $breadcrumb-crumb-divider-color;
+        // pre white-space added to override inline-block non-collapsing white-space
+        // zap generated content white-space bug: http://bit.ly/180xVJM
+        white-space: pre;
+        cursor: default;
+        content: "/";
+    }
+
+    // No divider after last breadcrumb
+    &:last-child:after {
+        content: "";
+    }
+}
+
+
+// ********************************************************
+//
+//   BREADCRUMB VARIATIONS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   BORDERED VARIATION
+    // ----------------------------------------------------
+    .breadcrumb-bordered {
+        padding: to-rem($breadcrumb-bordered-padding);
+        border-radius: to-rem($border-radius-base);
+        border: to-rem($breadcrumb-bordered-bd-width) solid $breadcrumb-bordered-bd-color;
+    }
+
+    // ----------------------------------------------------
+    //   HEADER VARIATION
+    //   -> Use when the active breadcrumb doubles as a
+    //      page / app view header.
+    // ----------------------------------------------------
+    .breadcrumb-header {
+        padding-top: to-rem($breadcrumb-header-padding-top);
+        padding-bottom: to-rem($breadcrumb-header-padding-bottom);
+        font-size: to-rem($breadcrumb-header-font-size);
+        font-family: $webfont-sans-serif;
+
+        > .breadcrumb-item {
+            padding-right: to-rem($breadcrumb-header-crumb-padding-right);
+            padding-left: to-rem($breadcrumb-header-crumb-padding-left);
+            margin: to-rem(0 $breadcrumb-header-crumb-margin-right 0 $breadcrumb-header-crumb-margin-left);
+            text-transform: none;
+
+            // ----- BREADCRUMB DIVIDER ----- //
+            &:after {
+                padding-left: to-rem($breadcrumb-header-crumb-padding-left + $breadcrumb-header-crumb-divider-angle-adjust);
+            }
+
+            // ----- ACTIVE BREADCRUMB STATE ----- //
+            &.active {
+                font-weight: normal; // don't bold Lato font
+            }
+        }
+    }

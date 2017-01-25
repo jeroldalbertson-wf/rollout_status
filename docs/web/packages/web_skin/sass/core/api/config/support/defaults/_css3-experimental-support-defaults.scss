@@ -1,0 +1,512 @@
+// ********************************************************
+
+////
+/// Default browser CSS3 experimental capability (prefixed) support config values
+/// ---
+/// @since 1.1.0
+/// @access private
+/// @group core.internals.utils.css3
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/support/defaults/css3-experimental-support-defaults';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   BASELINE VALUES
+// ----------------------------------------------------
+    ///
+    /// Indicates if `-moz` prefixed properties should be generated for an experimental CSS3 property.
+    ///
+    /// __Do not modify this value directly.__ Use the `set-experimental-support()` mixin to set it.
+    /// ---
+    /// @see {mixin} set-experimental-support
+    /// ---
+    /// @type Boolean
+    /// @requires {variable} $firefox-support
+    ///
+    $experimental-support-for-mozilla: $firefox-support;
+
+    ///
+    /// Indicates if `-webkit` prefixed properties should be generated for an experimental CSS3 property.
+    ///
+    /// __Do not modify this value directly.__ Use the `set-experimental-support()` mixin to set it.
+    /// ---
+    /// @see {mixin} set-experimental-support
+    /// ---
+    /// @type Boolean
+    /// @requires {variable} $webkit-support
+    ///
+    $experimental-support-for-webkit: $webkit-support;
+
+    ///
+    /// Indicates if `-o` prefixed properties should be generated for an experimental CSS3 property.
+    ///
+    /// __Do not modify this value directly.__ Use the `set-experimental-support()` mixin to set it.
+    /// ---
+    /// @see {mixin} set-experimental-support
+    /// ---
+    /// @type Boolean
+    /// @requires {variable} $opera-support
+    ///
+    $experimental-support-for-opera: $opera-support;
+
+    ///
+    /// Indicates if `-ms` prefixed properties should be generated for an experimental CSS3 property.
+    ///
+    /// __Do not modify this value directly.__ Use the `set-experimental-support()` mixin to set it.
+    /// ---
+    /// @see {mixin} set-experimental-support
+    /// ---
+    /// @type Boolean
+    /// @requires {variable} $ie-support
+    ///
+    $experimental-support-for-microsoft: $ie-support;
+
+    ///
+    /// Indicates if `-khtml` prefixed properties should be generated for an experimental CSS3 property.
+    ///
+    /// __Do not modify this value directly.__ Use the `set-experimental-support()` mixin to set it.
+    /// ---
+    /// @see {mixin} set-experimental-support
+    /// ---
+    /// @type Boolean
+    /// @requires {variable} $ie-support
+    ///
+    $experimental-support-for-khtml: false;
+
+    ///
+    /// Capture the current exerimental support settings.
+    /// ---
+    /// @returns {List} List of experimental support variable values
+    ///
+    @function capture-experimental-matrix() {
+      @return $experimental-support-for-mozilla
+              $experimental-support-for-webkit
+              $experimental-support-for-opera
+              $experimental-support-for-microsoft
+              $experimental-support-for-khtml;
+    }
+
+
+// ----------------------------------------------------
+//   API ENTRY-POINT FOR CONSUMER MODIFICATION
+// ----------------------------------------------------
+    ///
+    /// Change the experimental-support settings in specific contexts.
+    /// ---
+    /// @access public
+    /// @group core.utils.css3
+    /// ---
+    /// @see {variable} experimental-support-for-mozilla
+    /// @see {variable} experimental-support-for-webkit
+    /// @see {variable} experimental-support-for-opera
+    /// @see {variable} experimental-support-for-microsoft
+    /// @see {variable} experimental-support-for-khtml
+    /// ---
+    /// @param {Boolean} $moz       [false]
+    /// @param {Boolean} $webkit    [false]
+    /// @param {Boolean} $o         [false]
+    /// @param {Boolean} $ms        [false]
+    /// @param {Boolean} $khtml     [false]
+    ///
+    @mixin set-experimental-support(
+        $moz    : false,
+        $webkit : false,
+        $o      : false,
+        $ms     : false,
+        $khtml  : false
+    ) {
+        $experimental-support-for-mozilla   : $moz !global;
+        $experimental-support-for-webkit    : $webkit !global;
+        $experimental-support-for-opera     : $o !global;
+        $experimental-support-for-microsoft : $ms !global;
+        $experimental-support-for-khtml     : $khtml !global;
+    }
+
+
+// ----------------------------------------------------
+//   VENDOR PREFIXING
+// ----------------------------------------------------
+
+///
+/// Vendor prefixes used for experimental CSS3 properties and property values
+/// @type Map
+/// ---
+/// @prop {String} moz      - Mozilla Firefox
+/// @prop {String} webkit   - Google Chrome / Apple Safari
+/// @prop {String} o        - Opera
+/// @prop {String} ms       - Microsoft Internet Explorer
+/// @prop {String} khtml    - Old school
+/// @prop {Null}   official - Browsers that don't need prefixed properties or values
+///
+$browser-prefixes: (
+    'moz':      if($experimental-support-for-mozilla, -moz, false),
+    'webkit':   if($experimental-support-for-webkit, -webkit, false),
+    'o':        if($experimental-support-for-opera, -o, false),
+    'ms':       if($experimental-support-for-microsoft, -ms, false),
+    'khtml':    if($experimental-support-for-khtml, -khtml, false),
+    'official': null
+);
+
+///
+/// Map of browser names and their corresponding CSS property / value prefix strings.
+/// @type Map
+/// @since 1.8.0
+/// ---
+/// @prop {String} firefox ['moz']
+/// @prop {String} chrome  ['webkit']
+/// @prop {String} safari  ['webkit']
+/// @prop {String} opera   ['o']
+/// @prop {String} ie      ['ms']
+///
+$browser-name-to-prefix: (
+    firefox: 'moz',
+    chrome:  'webkit',
+    safari:  'webkit',
+    opera:   'o',
+    ie:      'ms'
+);
+
+///
+/// Map of "experimental" features, along with browser versions at or below which a prefixed property is required.
+/// ---
+/// @type Map
+/// @since 1.8.0
+/// @see {function} property-category-needs-prefix
+/// @see {variable} $browser-minimum-versions
+/// @see {variable} $flexbox-support
+/// ---
+/// @prop {Map} flex - Prefixed property version requirement information for flexbox-related properties.
+/// @prop {Number} flex.firefox [21]    - The last version of Firefox that required the `-moz-*` prefixed properties.
+/// @prop {Number} flex.chrome  [28]    - The last version of Chrome that required the `-webkit-*` prefixed properties.
+/// @prop {Number} flex.safari  [8]     - The last version of Safari that required the `-webkit-*` prefixed properties.
+/// @prop {Number} flex.opera   [0]     - Opera uses `-webkit` prefixes (if any).
+/// @prop {Number} flex.ie      [0]     - Only the 2011 spec uses prefixes, which is handled separately.
+///
+/// @prop {Map} border-radius - Prefixed property version requirement information for border-radius-related properties.
+/// @prop {Number} border-radius.firefox [3.6]     - The last version of Firefox that required the `-moz-*` prefixed properties.
+/// @prop {Number} border-radius.chrome  [4]       - The last version of Chrome that required the `-webkit-*` prefixed properties.
+/// @prop {Number} border-radius.safari  [4]       - The last version of Safari that required the `-webkit-*` prefixed properties.
+/// @prop {Number} border-radius.opera   [10.1]    - The last version of Opera that required the `-webkit-*` prefixed properties.
+/// @prop {Number} border-radius.ie      [8]       - The last version of MSIE that required the `-ms-*` prefixed properties.
+///
+/// @prop {Map} user-select - Prefixed property version requirement information for user-select-related properties.
+/// @prop {Number} user-select.firefox [9999]   - The last version of Firefox that required the `-moz-*` prefixed properties.
+/// @prop {Number} user-select.chrome  [9999]   - The last version of Chrome that required the `-webkit-*` prefixed properties.
+/// @prop {Number} user-select.safari  [9999]   - The last version of Safari that required the `-webkit-*` prefixed properties.
+/// @prop {Number} user-select.opera   [9999]   - The last version of Opera that required the `-webkit-*` prefixed properties.
+/// @prop {Number} user-select.ie      [9999]   - The last version of MSIE that required the `-ms-*` prefixed properties.
+///
+/// @prop {Map} transform - Prefixed property version requirement information for transform-related properties.
+/// @prop {Number} transform.firefox [15]   - The last version of Firefox that required the `-moz-*` prefixed properties.
+/// @prop {Number} transform.chrome  [35]   - The last version of Chrome that required the `-webkit-*` prefixed properties.
+/// @prop {Number} transform.safari  [8]    - The last version of Safari that required the `-webkit-*` prefixed properties.
+/// @prop {Number} transform.opera   [22]   - The last version of Opera that required the `-webkit-*` prefixed properties.
+/// @prop {Number} transform.ie      [9]    - The last version of MSIE that required the `-ms-*` prefixed properties.
+///
+/// @prop {Map} transition - Prefixed property version requirement information for transition-related properties.
+/// @prop {Number} transition.firefox [15]      - The last version of Firefox that required the `-moz-*` prefixed properties.
+/// @prop {Number} transition.chrome  [25]      - The last version of Chrome that required the `-webkit-*` prefixed properties.
+/// @prop {Number} transition.safari  [6]       - The last version of Safari that required the `-webkit-*` prefixed properties.
+/// @prop {Number} transition.opera   [11.5]    - The last version of Opera that required the `-webkit-*` prefixed properties.
+/// @prop {Number} transition.ie      [9]       - The last version of MSIE that required the `-ms-*` prefixed properties.
+///
+/// @prop {Map} background - Prefixed property version requirement information for background-related properties.
+/// @prop {Number} background.firefox [3.6]     - The last version of Firefox that required the `-moz-*` prefixed properties.
+/// @prop {Number} background.chrome  [14]      - The last version of Chrome that required the `-webkit-*` prefixed properties.
+/// @prop {Number} background.safari  [6.1]     - The last version of Safari that required the `-webkit-*` prefixed properties.
+/// @prop {Number} background.opera   [10.1]    - The last version of Opera that required the `-webkit-*` prefixed properties.
+/// @prop {Number} background.ie      [8]       - The last version of MSIE that required the `-ms-*` prefixed properties.
+///
+/// @prop {Map} gradient - Prefixed property value version requirement information for gradient background images.
+/// @prop {Number} gradient.firefox [15]    - The last version of Firefox that required the `-moz-*` prefixed property values.
+/// @prop {Number} gradient.chrome  [25]    - The last version of Chrome that required the `-webkit-*` prefixed property values.
+/// @prop {Number} gradient.safari  [6.1]   - The last version of Safari that required the `-webkit-*` prefixed property values.
+/// @prop {Number} gradient.opera   [11.5]  - The last version of Opera that required the `-webkit-*` prefixed property values.
+/// @prop {Number} gradient.ie      [9]     - The last version of MSIE that required the `-ms-*` prefixed property values.
+///
+/// @prop {Map} animation - Prefixed property value version requirement information for animation properties.
+/// @prop {Number} gradient.firefox [15]    - The last version of Firefox that required the `-moz-*` prefixed property values.
+/// @prop {Number} gradient.chrome  [42]    - The last version of Chrome that required the `-webkit-*` prefixed property values.
+/// @prop {Number} gradient.safari  [8]     - The last version of Safari that required the `-webkit-*` prefixed property values.
+/// @prop {Number} gradient.opera   [29]    - The last version of Opera that required the `-webkit-*` prefixed property values.
+/// @prop {Number} gradient.ie      [9]     - The last version of MSIE that required the `-ms-*` prefixed property values.
+///
+/// @prop {Map} columns - Prefixed property version requirement information for columns-related properties.
+/// @prop {Number} columns.firefox [9999] - The last version of Firefox that required the `-moz-*` prefixed properties.
+/// @prop {Number} columns.chrome  [49]   - The last version of Chrome that required the `-webkit-*` prefixed properties.
+/// @prop {Number} columns.safari  [8]    - The last version of Safari that required the `-webkit-*` prefixed properties.
+/// @prop {Number} columns.opera   [36]   - The last version of Opera that required the `-webkit-*` prefixed properties.
+/// @prop {Number} columns.ie      [9]    - The last version of MSIE that required the `-ms-*` prefixed properties.
+///
+/// @prop {Map} calc - Prefixed property value version requirement information for `calc()`.
+/// @prop {Number} calc.firefox [15]    - The last version of Firefox that required the `-moz-*` prefixed property value.
+/// @prop {Number} calc.chrome  [25]    - The last version of Chrome that required the `-webkit-*` prefixed property value.
+/// @prop {Number} calc.safari  [6]     - The last version of Safari that required the `-webkit-*` prefixed property value.
+/// @prop {Number} calc.opera   [12.1]  - The last version of Opera that required the `-webkit-*` prefixed property value.
+/// @prop {Number} calc.ie      [9]     - The last version of MSIE that required the `-ms-*` prefixed property value.
+///
+/// @prop {Map} apperance - Prefixed property version requirement information for apperance-related properties.
+/// @prop {Number} apperance.firefox [9999] - The last version of Firefox that required the `-moz-*` prefixed properties.
+/// @prop {Number} apperance.chrome  [9999] - The last version of Chrome that required the `-webkit-*` prefixed properties.
+/// @prop {Number} apperance.safari  [9999] - The last version of Safari that required the `-webkit-*` prefixed properties.
+/// @prop {Number} apperance.opera   [0]    - Uses `-webkit` prefix.
+/// @prop {Number} apperance.ie      [0]    - Only edge uses prefixes, and they use `-webkit`.
+///
+$prefixed-property-category-browser-versions: (
+    flex: (
+        firefox: 21,
+        chrome:  28,
+        safari:  8,
+        opera:   0,
+        ie:      0
+    ),
+    border-radius: (
+        firefox: 3.6,
+        chrome:  4,
+        safari:  4,
+        opera:   10.1,
+        ie:      8
+    ),
+    user-select: (
+        firefox: 9999,
+        chrome:  9999,
+        safari:  9999,
+        opera:   9999,
+        ie:      9999
+    ),
+    transform: (
+        firefox: 15,
+        chrome:  35,
+        safari:  8,
+        opera:   22,
+        ie:      9
+    ),
+    transition: (
+        firefox: 15,
+        chrome:  25,
+        safari:  6,
+        opera:   11.5,
+        ie:      9
+    ),
+    background: (
+        firefox: 3.6,
+        chrome:  14,
+        safari:  6.1,
+        opera:   10.1,
+        ie:      8
+    ),
+    gradient: (
+        firefox: 15,
+        chrome:  25,
+        safari:  6.1,
+        opera:   11.5,
+        ie:      9
+    ),
+    animation: (
+        firefox: 15,
+        chrome:  42,
+        safari:  8,
+        opera:   29,
+        ie:      9
+    ),
+    columns: (
+        firefox: 9999,
+        chrome:  49,
+        safari:  8,
+        opera:   36,
+        ie:      9
+    ),
+    calc: (
+        firefox: 15,
+        chrome:  25,
+        safari:  6,
+        opera:   12.1,
+        ie:      9
+    ),
+    appearance: (
+        firefox: 9999,
+        chrome:  9999,
+        safari:  9999,
+        opera:   0,
+        ie:      0
+    )
+);
+
+///
+/// Prefixed / "experimental" CSS __values__ mapped to their corresponding "categories".
+///
+/// Use in-combination with `$prefixed-property-category-browser-versions` to determine the browser-version requirement for prefixing a specific CSS property:
+/// ---
+/// @example scss
+///     $flex-display-category: get($prefixed-property-value-categories, flex);
+///     $does-flex-basis-prop-need-a-chrome-prefix: property-category-needs-prefix($flex-display-category, chrome);
+/// ---
+/// @type Map
+/// @since 1.8.0
+/// @see {function} property-category-needs-prefix
+/// @see {variable} $prefixed-property-categories
+/// @see {variable} $prefixed-property-category-browser-versions
+/// @see {variable} $browser-minimum-versions
+/// ---
+/// @prop {String} flex         [flex]      - The corresponding category key within `$prefixed-property-category-browser-versions` for the `flex` value of the `display` property.
+/// @prop {String} inline-flex  [flex]      - The corresponding category key within `$prefixed-property-category-browser-versions` for the `inline-flex` value of the `display` property.
+/// @prop {String} calc         [calc]      - The corresponding category key within `$prefixed-property-category-browser-versions` for the `calc` function.
+/// @prop {String} transform    [transform] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `transform` value of a `transition` property.
+$prefixed-property-value-categories: (
+    flex: flex,
+    inline-flex: flex,
+    calc: calc,
+    transform: transform
+);
+
+///
+/// Prefixed / "experimental" CSS __properties__ mapped to their corresponding "categories".
+///
+/// Use in-combination with `$prefixed-property-category-browser-versions` to determine the browser-version requirement for prefixing a specific CSS property:
+/// ---
+/// @example scss
+///     $flex-basis-category: get($prefixed-property-categories, flex-basis);
+///     $does-flex-basis-prop-need-a-chrome-prefix: property-category-needs-prefix($flex-basis-category, chrome);
+/// ---
+/// @type Map
+/// @since 1.8.0
+/// @see {function} property-category-needs-prefix
+/// @see {variable} $prefixed-property-value-categories
+/// @see {variable} $prefixed-property-category-browser-versions
+/// @see {variable} $browser-minimum-versions
+/// ---
+/// @prop {String} flex             [flex] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `flex` property.
+/// @prop {String} flex-grow        [flex] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `flex-grow` property.
+/// @prop {String} flex-shrink      [flex] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `flex-shrink` property.
+/// @prop {String} flex-basis       [flex] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `flex-basis` property.
+/// @prop {String} flex-flow        [flex] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `flex-flow` property.
+/// @prop {String} flex-direction   [flex] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `flex-direction` property.
+/// @prop {String} flex-wrap        [flex] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `flex-wrap` property.
+/// @prop {String} order            [flex] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `order` property.
+/// @prop {String} justify-content  [flex] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `justify-content` property.
+/// @prop {String} align-items      [flex] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `align-items` property.
+/// @prop {String} align-self       [flex] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `align-self` property.
+/// @prop {String} align-content    [flex] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `align-content` property.
+///
+/// @prop {String} border-radius                [border-radius] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `border-radius` property.
+/// @prop {String} border-top-left-radius       [border-radius] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `border-top-left-radius` property.
+/// @prop {String} border-top-right-radius      [border-radius] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `border-top-right-radius` property.
+/// @prop {String} border-bottom-left-radius    [border-radius] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `border-bottom-left-radius` property.
+/// @prop {String} border-bottom-right-radius   [border-radius] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `border-bottom-right-radius` property.
+///
+/// @prop {String} user-select [user-select] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `user-select` property.
+///
+/// @prop {String} transform            [transform] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `transform` property.
+/// @prop {String} transform-origin     [transform] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `transform-origin` property.
+/// @prop {String} transform-style      [transform] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `transform-style` property.
+/// @prop {String} perspective          [transform] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `perspective` property.
+/// @prop {String} perspective          [transform] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `perspective` property.
+/// @prop {String} perspective-origin   [transform] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `perspective-origin` property.
+/// @prop {String} backface-visibility  [transform] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `backface-visibility` property.
+///
+/// @prop {String} transition                   [transition] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `transition` property.
+/// @prop {String} transition-property          [transition] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `transition-property` property.
+/// @prop {String} transition-duration          [transition] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `transition-duration` property.
+/// @prop {String} transition-timing-function   [transition] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `transition-timing-function` property.
+/// @prop {String} transition-delay             [transition] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `transition-delay` property.
+///
+/// @prop {String} background-clip      [background] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `background-clip` property.
+/// @prop {String} background-origin    [background] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `background-origin` property.
+/// @prop {String} background-size      [background] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `background-size` property.
+///
+/// @prop {String} animation            [animation] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `animation` property.
+/// @prop {String} animation-play-state [animation] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `animation-play-state` property.
+///
+/// @prop {String} columns              [columns] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `columns` property.
+/// @prop {String} column-count         [columns] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `column-count` property.
+/// @prop {String} column-gap           [columns] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `column-gap` property.
+/// @prop {String} column-width         [columns] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `column-width` property.
+/// @prop {String} column-rule-width    [columns] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `column-rule-width` property.
+/// @prop {String} column-rule-style    [columns] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `column-rule-style` property.
+/// @prop {String} column-rule-color    [columns] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `column-rule-color` property.
+/// @prop {String} column-rule          [columns] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `column-rule` property.
+/// @prop {String} column-break-before  [columns] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `column-break-before` property.
+/// @prop {String} column-break-after   [columns] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `column-break-after` property.
+/// @prop {String} column-break-inside  [columns] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `column-break-inside` property.
+/// @prop {String} column-break         [columns] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `column-break` property.
+///
+/// @prop {String} appearance [appearance] - The corresponding category key within `$prefixed-property-category-browser-versions` for the `appearance` property.
+///
+$prefixed-property-categories: (
+    flex: flex,
+    flex-grow: flex,
+    flex-shrink: flex,
+    flex-basis: flex,
+    flex-flow: flex,
+    flex-direction: flex,
+    flex-wrap: flex,
+    order: flex,
+    justify-content: flex,
+    align-items: flex,
+    align-self: flex,
+    align-content: flex,
+    //
+    border-radius: border-radius,
+    border-top-left-radius: border-radius,
+    border-top-right-radius: border-radius,
+    border-bottom-left-radius: border-radius,
+    border-bottom-right-radius: border-radius,
+    //
+    user-select: user-select,
+    //
+    transform: transform,
+    transform-origin: transform,
+    transform-style: transform,
+    perspective: transform,
+    perspective-origin: transform,
+    backface-visibility: transform,
+    //
+    transition: transition,
+    transition-property: transition,
+    transition-duration: transition,
+    transition-timing-function: transition,
+    transition-delay: transition,
+    //
+    background-clip: background,
+    background-origin: background,
+    background-size: background,
+    //
+    animation: animation,
+    animation-play-state: animation,
+    //
+    columns: columns,
+    column-count: columns,
+    column-gap: columns,
+    column-width: columns,
+    column-rule-width: columns,
+    column-rule-style: columns,
+    column-rule-color: columns,
+    column-rule: columns,
+    column-break-before: columns,
+    column-break-after: columns,
+    column-break-inside: columns,
+    column-break: columns,
+    //
+    appearance: appearance
+);
+
+
+// ----------------------------------------------------
+//   INBOX
+//   -> Undocumented stuff
+//   TODO: Do we need this after the compass conversion?
+// ----------------------------------------------------
+    $experimental-support-for-svg: false;
+    $support-for-original-webkit-gradients: false;
+    $legacy-support-for-ie6: true;
+    $legacy-support-for-ie7: true;
+    $legacy-support-for-ie8: true;
+    $legacy-support-for-mozilla: true;
+    $legacy-support-for-webkit: true;

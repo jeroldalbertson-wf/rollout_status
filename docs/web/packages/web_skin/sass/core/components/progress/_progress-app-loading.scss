@@ -1,0 +1,107 @@
+// ********************************************************
+//
+//   WDESK APP LOADING PROGRESS STYLE MODULE
+//   http://bit.ly/webskin-progress-app-loading
+//
+//
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/progress/progress-app-loading';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $progress-app-loading-module-config:  'core/components/atoms/progress/progress-config';
+    $progress-app-loading-module-helpers: 'core/components/atoms/progress/progress-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $progress-app-loading-module-config,
+                                          $progress-app-loading-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   V2 WDESK APP LOADING MODULE (using blinking ellipsis)
+//
+//   The "app-loading-*" CSS classes below are considered
+//   deprecated as of `1.4.0`, and will be removed
+//   completely in `2.0.0`.
+//
+//   TODO: Remove all the v1 app loading styles in 2.0.0
+//
+// ********************************************************
+@import './progress-app-loading-v2';
+
+
+// ********************************************************
+//
+//   PRIVATE HELPERS
+//
+// ********************************************************
+    // @private
+    @mixin app-loading-container-base {
+        // horizontal centering / full width
+        width: 100%;
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
+
+    // @private
+    @mixin app-loading-logo-size {
+        width: to-rem(get($app-loading-config, 'logo-width'));
+        height: to-rem(get($app-loading-config, 'logo-height'));
+    }
+
+
+// ********************************************************
+//
+//   APP LOADING CONTENT CONTAINER
+//
+// ********************************************************
+.app-loading-content {
+    @include app-loading-container-base();
+
+    // vertical centering of app-loading-content
+    top: 50%;
+    margin-top: to-rem((get($app-loading-config, 'content-height') / 2) + get($app-loading-config, 'copyright-height')) * -1;
+
+    .progress {
+        // the progress bar width should exceed the width of the logo by an amount of "x-height" * 2
+        width: to-rem(get($app-loading-config, 'logo-width') + (get($app-loading-config, 'logo-xheight') * 2));
+        margin-bottom: 0;
+    }
+}
+
+
+// ********************************************************
+//
+//   APP LOADING WDESK LOGO
+//
+// ********************************************************
+.app-loading-logo {
+    @include app-loading-logo-size();
+
+    // the bottom margin should be the "x-height" of the wdesk logo (according to marketing)
+    margin-bottom: to-rem(get($app-loading-config, 'logo-xheight'));
+
+    img {
+        @include app-loading-logo-size();
+    }
+}
+
+
+// ********************************************************
+//
+//   APP LOADING COPYRIGHT CONTAINER
+//
+// ********************************************************
+.app-loading-copyright {
+    @include app-loading-container-base();
+
+    bottom: to-rem(get($app-loading-config, 'copyright-margin-top'));
+    margin-top: to-rem(get($app-loading-config, 'copyright-margin-top'));
+}

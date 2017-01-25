@@ -1,0 +1,102 @@
+// ********************************************************
+
+////
+/// Button "outline" variation component state color configuration
+/// ---
+/// @access public
+/// @type Map
+/// @since 1.3.0
+/// @group core.components.buttons
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/buttons/config/button-outline-color-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function extend,
+                                                function to-decimal);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   .btn-default.btn-outline
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.btn-outline` component's `.btn-default` color variation.
+    /// ---
+    /// @requires {function} get
+    /// @requires {variable} $body-bg
+    /// @requires {variable} $btn-colors-default
+    /// @requires {variable} $link-color-pressed-darken-amount
+    /// ---
+    /// @prop {Color} text-base  [#595959]
+    /// @prop {Color} text-hover [#ffffff]
+    /// @prop {Color} text-press [#ffffff]
+    ///
+    /// @prop {Color} bd-base  [#666666]
+    /// @prop {Color} bd-hover [#666666]
+    /// @prop {Color} bd-press [#595959]
+    ///
+    /// @prop {Color} bg-base  [transparent]
+    /// @prop {Color} bg-hover [#666666]
+    /// @prop {Color} bg-press [#595959]
+    ///
+    $btn-outline-colors-default: (
+        'text-base': get($btn-colors-default, 'text-base'),
+        'text-hover': $body-bg,
+        'text-press': $body-bg,
+        'bd-base':  lighten(get($btn-colors-default, 'text-base'), $link-color-pressed-darken-amount),
+        'bd-hover': lighten(get($btn-colors-default, 'text-base'), $link-color-pressed-darken-amount),
+        'bd-press': get($btn-colors-default, 'text-base'),
+        'bg-base':  transparent,
+        'bg-hover': lighten(get($btn-colors-default, 'text-base'), $link-color-pressed-darken-amount),
+        'bg-press': get($btn-colors-default, 'text-base')
+    ) !default;
+
+
+// ********************************************************
+//
+//   .btn-link.btn-outline
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.btn-outline` component's `.btn-link` color variation.
+    /// ---
+    /// @requires {function} get
+    /// @requires {variable} $body-bg
+    /// @requires {variable} $link-color
+    /// @requires {variable} $link-color-hover
+    /// @requires {variable} $link-color-pressed
+    /// @requires {variable} $link-color-pressed-darken-amount
+    /// ---
+    /// @prop {Color} text-base  [#026dce]
+    /// @prop {Color} text-hover [#ffffff]
+    /// @prop {Color} text-press [#ffffff]
+    ///
+    /// @prop {Color} bd-base  [#026dce]
+    /// @prop {Color} bd-hover [#0094ff]
+    /// @prop {Color} bd-press [#0085e6]
+    ///
+    /// @prop {Color} bg-base  [transparent]
+    /// @prop {Color} bg-hover [#0094ff]
+    /// @prop {Color} bg-press [#0085e6]
+    ///
+    $btn-outline-colors-link: (
+        'text-base': $link-color,
+        'text-hover': $body-bg,
+        'text-press': darken($body-bg, $link-color-pressed-darken-amount),
+        'bd-base': $link-color,
+        'bd-hover': $link-color-hover,
+        'bd-press': $link-color-pressed,
+        'bg-base': transparent,
+        'bg-hover': $link-color-hover,
+        'bg-press': $link-color-pressed
+    ) !default;

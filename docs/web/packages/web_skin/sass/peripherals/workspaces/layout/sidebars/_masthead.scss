@@ -1,0 +1,230 @@
+// ********************************************************
+//
+//   WORKSPACES SIDEBAR MASTHEAD STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/layout/sidebars/masthead';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $wksp-module-config:  'peripherals/workspaces/atoms/workspaces-config';
+    $wksp-module-helpers: 'peripherals/workspaces/atoms/workspaces-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $wksp-module-config,
+                                          $wksp-module-helpers);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   MASTHEAD HORIZONTAL DIVIDERS
+// ----------------------------------------------------
+.wksp-sidebar-masthead {
+    border-bottom: to-rem(get($wksp-sidebar-config, 'divider-height')) solid get($wksp-sidebar-config, 'divider-color');
+
+    .wksp-sidebar-minimized & {
+        border-bottom-color: transparent;
+    }
+
+    // No border option
+    &.hide-border {
+        border-bottom-color: transparent;
+    }
+}
+
+
+// ----------------------------------------------------
+//   MASTHEAD CHILD CONTENT BLOCK SPACING
+//
+//   [1] Remove the padding on the left sidebar masthead
+//       in both maximized and minimized sidebar state
+//       since it contains the brand stuff.
+//
+//   [2] Tweak the vertical spacing between the content
+//       block that contains the "create" button and
+//       the block that contains the brand stuff so
+//       that it matches the amount shown in the spec.
+//
+// ----------------------------------------------------
+.wksp-sidebar-content-block {
+    &.wksp-sidebar-masthead-left {
+        padding: 0; // [1]
+    }
+
+    &.wksp-sidebar-masthead-create {
+        padding-top: get($wksp-sidebar-config, 'masthead-create-block-padding-top'); // [2]
+        @include force-overflow(visible);
+    }
+
+    &.wksp-sidebar-masthead-brand {
+        padding: get($wksp-sidebar-config, 'masthead-brand-padding'); // [2]
+        @include force-overflow(hidden);
+    }
+}
+
+
+// ----------------------------------------------------
+//   CREATE / IMPORT BUTTON LAYOUT
+//
+//   [1] Side-by-side when sidebar is expanded
+//
+//   [2] Stacked vertically when sidebar is collapsed
+//
+//   [3] Hide overflow in these button wrappers so
+//       that things like a hidden input for file
+//       import doesn't cause the firefox vertical
+//       scrolling bug (SOX-1820)
+//
+// ----------------------------------------------------
+.wksp-create-btn-wrapper,
+.wksp-create-import-btn-wrapper {
+    @include grid-block($orientation: false, $align: false, $order: false); // [1]
+    @include grid-content(
+        $gutter: 0,
+        $scroll: false // [3]
+    );
+
+    // ----- [2] ----- //
+    .wksp-sidebar-minimized & {
+        @include grid-size(12);
+    }
+}
+
+.wksp-create-import-btn-wrapper {
+    @include grid-size(shrink);
+    @include force-overflow(hidden); // [3]
+
+    padding-left: get($wksp-sidebar-config, 'content-padding-vertical'); // [1]
+
+    // ----- [2] ----- //
+    .wksp-sidebar-minimized & {
+        padding-left: 0;
+        padding-top: get($wksp-sidebar-config, 'content-padding-vertical');
+    }
+}
+
+
+// ----------------------------------------------------
+//   CREATE BUTTON LABEL TWEAKS
+//
+//   -> Since we need to horizontally align the icon and
+//      label text in this button, we are using a series
+//      of three adjacent `.grid-block` elems, with the
+//      icon and label that need to be centered nested
+//      within the middle block, which has the CSS class
+//      `.wksp-create-btn-label-wrapper`.
+//
+//   [1] "Shrink to fit" the label wrapper when the sidebar
+//       is maximized since the `.wksp-hitarea-label`
+//       elem is positioned `relative` in that state.
+//       (see: `workspaces/components/sidebar-hitareas`)
+//
+//   [2] Override hitarea-label alignment since this
+//       one is naturally centered by-way of being
+//       nested within a flexbox grid.
+//
+// ----------------------------------------------------
+.wksp-create-btn-label-wrapper {
+    @include grid-content($size: shrink, $gutter: 0, $scroll: false); // [1]
+
+    .wksp-hitarea-label {
+        top: 0; // [2]
+    }
+}
+
+
+// ----------------------------------------------------
+//   MASTHEAD BRAND CONTAINER SKINNING
+//
+//   [1] When the sidebar is maximizing, we want to
+//       transition the background-color of the brand
+//       container BEFORE the width of the sidebar
+//       is done changing.
+//
+//   [2] When the sidebar is minimizing, we want to
+//       transition the background-color of the brand
+//       container AFTER the width of the sidebar
+//       begins to change.
+//
+// ----------------------------------------------------
+.wksp-sidebar-masthead-brand {
+    @include wksp-min-to-max-sidebar-secondary-transitions(background-color); // [1]
+
+    background-color: $white;
+
+
+    // ----- MINIMIZED SIDEBAR ----- //
+    .wksp-sidebar-minimized & {
+        @include wksp-max-to-min-sidebar-secondary-transitions(background-color); // [2]
+
+        background-color: $zc-green;
+    }
+}
+
+
+// ----------------------------------------------------
+//   MASTHEAD BRAND IMAGES
+//
+//   [1] When the sidebar is maximizing, we want to
+//       transition the brand image opacity BEFORE the
+//       width of the sidebar is done changing.
+//
+//   [2] When the sidebar is minimizing, we want to
+//       transition the brand image opacity AFTER the
+//       width of the sidebar begins to change.
+//
+//   [3] Set the background size of both the W Symbol
+//       and the Wdesk logo to have a consistent height
+//       and then a proportionate width based on
+//       their respective aspect ratios.
+//
+// ----------------------------------------------------
+.wksp-sidebar-masthead-brand {
+    .brand-img-wrapper {
+        position: relative;
+        width: 100%;
+        height: get($wksp-sidebar-config, 'masthead-brand-img-height');
+    }
+
+    // Common styling for both `.brand-logo` and `.brand-symbol`
+    .brand-img {
+        @include wksp-min-to-max-sidebar-secondary-transitions(opacity); // [1]
+
+        position: absolute;
+        width: 100%; // [3]
+        height: get($wksp-sidebar-config, 'masthead-brand-img-height'); // [3]
+        background-size: auto get($wksp-sidebar-config, 'masthead-brand-img-height'); // [3]
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-color: transparent;
+    }
+
+    .brand-logo {
+        background-image: image-url('#{$wdesk-logo-dir}wdesk-logo_color.svg');
+        opacity: 1;
+    }
+
+    .brand-symbol {
+        background-image: image-url('#{$wdesk-logo-dir}w-symbol_white.svg');
+        opacity: 0;
+    }
+
+
+    // ----- MINIMIZED SIDEBAR ----- //
+    .wksp-sidebar-minimized & {
+        .brand-img {
+            @include wksp-max-to-min-sidebar-secondary-transitions(opacity); // [2]
+        }
+
+        .brand-logo {
+            opacity: 0;
+        }
+
+        .brand-symbol {
+            opacity: 1;
+        }
+    }
+}

@@ -1,0 +1,135 @@
+// ********************************************************
+//
+//   "LIGHTBOX" MODAL DIALOG COMPONENT STYLE MODULE
+//
+//   Extends `.modal`
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/dialogs/lightbox';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $dialogs-lightbox-module-config:  'core/components/atoms/dialogs/lightbox-config';
+    $dialogs-lightbox-module-helpers: 'core/components/atoms/dialogs/modals-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $dialogs-lightbox-module-config,
+                                          $dialogs-lightbox-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//  DIALOG
+//
+//  [1] Scrolling in a lightbox happens in the white box,
+//      not the overlay.
+//
+//  [2] Override property for all built-in modal breakpoint
+//      styles.
+//
+//  [3] "Headers" for a lightbox appear pinned at the top
+//      of the viewport, instead of within the modal-dialog.
+//
+// ********************************************************
+.modal--lightbox {
+    &.in {
+        @include display-flex();
+        @include align-items(center);
+        @include justify-content(center);
+    }
+
+    .modal-open & {
+        overflow: hidden; // [1]
+    }
+
+    .modal-dialog {
+        overflow-x: auto; // [1]
+        overflow-y: auto; // [1]
+        margin: 0 !important; // [2]
+        left: 0 !important; // [2]
+        width: 100% !important; // [2]
+        max-width: get-deep($lightbox-config, 'breakpoints.default.max-width');
+        max-height: get-deep($lightbox-config, 'breakpoints.default.max-height');
+
+        @each $breakpoint-key, $breakpoint-config in get($lightbox-config, 'breakpoints') {
+            $break-at: get($breakpoint-config, 'break-at');
+            $max-width: get($breakpoint-config, 'max-width');
+            $max-height: get($breakpoint-config, 'max-height');
+
+            @include breakpoint('screen' $break-at) {
+                max-width: $max-width;
+                max-height: $max-height;
+            }
+        }
+    }
+
+    .modal-content {
+        overflow: hidden;
+    }
+
+    // ----- [3] ----- //
+    .modal-header {
+        @include grid-block(
+            $allow-nested-vblocks: false,
+            $scroll: false
+        );
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: get($lightbox-config, 'header-padding-vertical') get($lightbox-config, 'header-padding-vertical');
+        height: get($lightbox-config, 'header-height');
+        color: get($lightbox-config, 'header-text-color');
+        background-color: get($lightbox-config, 'backdrop-bg');
+
+        &:focus {
+            @include remove-focus-outline();
+        }
+    }
+
+    .modal-title {
+        font-family: $font-family-sans-serif;
+        font-size: get($lightbox-config, 'header-title-font-size');
+        padding: 0 get($lightbox-config, 'header-padding-vertical') 0 0;
+        margin: 0;
+        text-align: center;
+        line-height: get($lightbox-config, 'header-height');
+        color: get($lightbox-config, 'header-text-color');
+    }
+
+    @at-root .lightbox-header__actions {
+        .btn {
+            color: get($lightbox-config, 'header-text-color');
+            opacity: get($lightbox-config, 'header-action-btn-alpha');
+
+            #{$hover} {
+                opacity: get($lightbox-config, 'header-action-btn-alpha-hover');
+            }
+
+            #{$focus} {
+                @include focus-shadow($inset: true);
+
+                opacity: get($lightbox-config, 'header-action-btn-alpha-hover');
+            }
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//  BACKDROP
+//
+// ********************************************************
+.modal--lightbox-backdrop {
+    background-color: get($lightbox-config, 'backdrop-bg');
+
+    &.in {
+        opacity: get($lightbox-config, 'backdrop-alpha');
+    }
+}

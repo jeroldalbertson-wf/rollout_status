@@ -1,0 +1,57 @@
+@charset "UTF-8";
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for Beta Icons
+ * ---
+ * MSIE Support: 10+
+ * Touch UI Support: false
+ * ---
+ * Requires
+ *   web-skin v1.14.0 Core CSS
+ * ---
+ * Copyright © 2017 Workiva
+ * -------------------------------------
+ */
+.icon-file-dc-beta:before {
+  content: "\e603";
+}
+
+.icon-file-dc-beta.icon-color:before {
+  color: #66cc00;
+}
+
+.icon-twfr-file-dc-frozen-beta:before {
+  content: "\e605";
+}
+
+.icon-twfr-file-dc-frozen-beta.icon-two-color:before {
+  color: #66cc00;
+}
+
+.icon-twfr-file-dc-frozen-beta.icon-two-color:after {
+  content: "\e633";
+  color: #595959 !important;
+}
+
+.icon-twfr-file-dc-draft-beta:before {
+  content: "\e606";
+}
+
+.icon-twfr-file-dc-draft-beta.icon-two-color:before {
+  color: #66cc00;
+}
+
+.icon-twfr-file-dc-draft-beta.icon-two-color:after {
+  content: "\e634";
+  color: #595959 !important;
+}
+
+.icon-twfr-file-dc-beta:before {
+  content: "\e607";
+}
+
+.icon-twfr-file-dc-beta.icon-color:before {
+  color: #66cc00;
+}
+
+/*# sourceMappingURL=icons-beta.css.map */

@@ -1,0 +1,213 @@
+// ********************************************************
+
+////
+/// Font and WebFont configs
+/// ---
+/// @access private
+/// @group core.internals.typography
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/fonts';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// Relative path to the webfont directory.
+/// ---
+/// @type String
+/// @since 1.1.0
+///
+$webfont-directory: '#{$module-root}../fonts/' !default;
+
+
+// ********************************************************
+//
+//   INITIALIZE WEBFONT VARS
+//
+// ********************************************************
+    ///
+    /// WebFont baseline offset
+    /// ---
+    /// @since 0.4.8
+    /// @type Number
+    /// @group core.internals.size.box-model
+    ///
+    $webfont-baseline-offset: 0;
+
+    // ----------------------------------------------------
+    //   FONT STACKS
+    // ----------------------------------------------------
+        ///
+        /// Global sans-serif font stack used for `font-family` property values.
+        /// ---
+        /// @access public
+        /// @type List
+        /// @group core.typography
+        ///
+        $font-family-sans-serif: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+        ///
+        /// Global serif font stack used for `font-family` property values.
+        /// ---
+        /// @access public
+        /// @type List
+        /// @group core.typography
+        ///
+        $font-family-serif: Georgia, "Times New Roman", Times, serif;
+
+        ///
+        /// Global monospace font stack used for `font-family` property values.
+        /// ---
+        /// @access public
+        /// @type List
+        /// @group core.typography
+        ///
+        $font-family-monospace: Menlo, Monaco, Consolas, "Courier New", courier, monospace;
+
+        ///
+        /// Global base _(default)_ font stack.
+        /// ---
+        /// @access public
+        /// @type List
+        /// @group core.typography
+        /// ---
+        /// @alias font-family-sans-serif
+        ///
+        $font-family-base: $font-family-sans-serif;
+
+
+    // ----------------------------------------------------
+    //   FONT PROPERTIES
+    // ----------------------------------------------------
+        ///
+        /// Global `font-weight` value used to request the `light` font-face within a Webfont family.
+        /// ---
+        /// @since 0.4.0
+        /// @type Number
+        ///
+        $webfont-weight-light: 300;
+
+        ///
+        /// Global `font-weight` value used to request the `regular` font-face within a Webfont family.
+        /// ---
+        /// @since 0.4.0
+        /// @type String
+        ///
+        $webfont-weight-regular: normal;
+
+        ///
+        /// Global `font-weight` value used to request the `semi-bold` font-face within a Webfont family.
+        /// ---
+        /// @since 0.4.0
+        /// @type Number
+        ///
+        $webfont-weight-semibold: 500;
+
+
+    // ----------------------------------------------------
+    //   WEBFONT NAMES / DIRECTORIES
+    // ----------------------------------------------------
+        ///
+        /// Path where the Lato Webfont files live relative to project font directory.
+        /// ---
+        /// @since 1.5.0
+        /// @type String
+        ///
+        $lato-font-dir: "lato/";
+
+        ///
+        /// Name that will be used to reference the Lato Webfont at the beginning of a font stack list.
+        /// ---
+        /// @since 1.5.0
+        /// @type String
+        ///
+        $lato-font-family-name: "Lato";
+
+        ///
+        /// Font stack used for the Lato Webfont in `font-family` rules.
+        /// ---
+        /// @since 1.5.0
+        /// @type List
+        /// ---
+        /// @requires {variable} $lato-font-family-name
+        /// @requires {variable} $font-family-base
+        ///
+        $font-family-lato: $lato-font-family-name, $font-family-base;
+
+
+        ///
+        /// Global base _(default)_ Webfont stack.
+        /// ---
+        /// @access public
+        /// @type List
+        /// @group core.typography
+        /// ---
+        /// @requires {variable} $font-family-lato
+        ///
+        $webfont-sans-serif: $font-family-lato;
+
+
+
+// ********************************************************
+//
+//   WEBFONT CONFIG MAP(S)
+//
+//   -> DO NOT MODIFY
+//
+// ********************************************************
+    ///
+    /// Global configuration for Lato Webfonts used in Web Skin.
+    /// ---
+    /// @since 1.5.0
+    /// @type Map
+    /// ---
+    /// @requires {variable} $lato-font-dir
+    /// @requires {variable} $lato-font-family-name
+    /// @requires {variable} $webfont-weight-light
+    /// @requires {variable} $webfont-weight-semibold
+    /// ---
+    /// @prop {String}   dir         [$lato-font-dir]
+    /// @prop {String}   family-name [$lato-font-family-name]
+    /// @prop {Map}      faces                                   - Map of all the font-face variations within the Lato family, and their properties.
+    ///
+    $lato-font: (
+        'dir': $lato-font-dir,
+        'family-name': $lato-font-family-name,
+        'faces': (
+            'light': (
+                'file':   '#{$lato-font-dir}Lato-Light',
+                'weight': $webfont-weight-light,
+                'style':  normal
+            ),
+            'light-italic': (
+                'file':   '#{$lato-font-dir}Lato-LightItalic',
+                'weight': $webfont-weight-light,
+                'style':  italic
+            ),
+            'regular': (
+                'file':   '#{$lato-font-dir}Lato-Regular',
+                'weight': normal,
+                'style':  normal
+            ),
+            'regular-italic': (
+                'file':   '#{$lato-font-dir}Lato-Italic',
+                'weight': normal,
+                'style':  italic
+            ),
+            'bold': (
+                'file':   '#{$lato-font-dir}Lato-Bold',
+                'weight': bold,
+                'style':  normal
+            ),
+            'bold-italic': (
+                'file':   '#{$lato-font-dir}Lato-BoldItalic',
+                'weight': bold,
+                'style':  italic
+            )
+        )
+    );

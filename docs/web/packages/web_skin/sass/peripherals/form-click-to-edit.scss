@@ -1,0 +1,34 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for
+ * "Click To Edit" Form Fields
+ * ---
+ * MSIE Support: 10+
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ *   web-skin v{{ws_css_version}} Grid v2 CSS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import '../core/api';
+
+
+// ----------------------------------------------------
+//   Click To Edit Atoms
+// ----------------------------------------------------
+    @import 'form-click-to-edit/atoms/form-click-to-edit-config';
+    @import 'form-click-to-edit/atoms/form-click-to-edit-helpers';
+
+
+// ----------------------------------------------------
+//   Click To Edit Styles
+// ----------------------------------------------------
+    @import 'form-click-to-edit/index';

@@ -1,0 +1,42 @@
+// ********************************************************
+
+////
+/// Color configuration for tasking UI within the Card component
+/// ---
+/// @since 1.4.0
+/// @type Map
+/// @access public
+/// @group core.components.cards
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/cards/config/card-task-color-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend);
+//
+// ********************************************************
+
+
+///
+/// Colors used to indicate the risk of a task being late. Typically used as a text color when the date itself is presented to the user.
+/// ---
+/// @requires {variable} $zc-red
+/// @requires {variable} $zc-orange-120
+/// @requires {variable} $zc-orange
+/// ---
+/// @prop {Color} defcon  [#ee2724] - For a task that is almost certainly going to be late - due today or tomorrow
+/// @prop {Color} danger  [#f26c21] - For a task that has a high probability of being late - due in less than a week
+/// @prop {Color} warning [#fbad17] - For a task that has a fast-approaching due date - due in 1-2 weeks
+///
+$card-task-due-date-status-colors: (
+    'defcon':  $zc-red,
+    'danger':  $zc-orange-120,
+    'warning': $zc-orange
+) !default;

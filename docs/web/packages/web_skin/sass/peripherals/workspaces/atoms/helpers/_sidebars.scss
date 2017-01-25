@@ -1,0 +1,185 @@
+// ********************************************************
+
+////
+/// Workspaces sidebar component helpers
+/// ---
+/// @since 1.3.0
+/// @access public
+/// @group peripherals.components.workspaces
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/atoms/helpers/sidebars';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   SIDEBAR SIZE / SKIN HELPERS
+//
+// ********************************************************
+    @mixin wksp-sidebar-width($width) {
+        // Add the width of the border so that the contents
+        // are the desired width, not 1px less than the desired width
+        $bd-width: get($wksp-sidebar-config, 'bd-width');
+        $outer-width: to-rem($width + $bd-width);
+
+        @include grid-size($outer-width);
+        min-width: $outer-width;
+    }
+
+    //
+    // Constrain the width / height of top-level nav items
+    // so that they are a square in a minimized sidebar.
+    //
+    @function wksp-sidebar-minimized-hitarea-padding($icon-size: icon-size-base-24(), $bd-width: get($nav-pills-pill-config, 'bd-width')) {
+        $target-size: get($wksp-sidebar-hitarea-config, 'min-width'); // 30px
+        $hitarea-bd-width: $bd-width * 2;
+
+        @return to-rem(round(($target-size - $icon-size - $hitarea-bd-width - 1) / 2));
+    }
+
+    @mixin wksp-sidebar-skin-default {
+        background-color: get($wksp-sidebar-config, 'bg');
+        border-color: get($wksp-sidebar-config, 'bd-color');
+        border-style: solid;
+        border-width: 0;
+    }
+
+
+
+// ********************************************************
+//
+//   SIDEBAR MIN/MAX CONTROL HELPERS
+//
+//   -> The "double chevron" buttons that expand / collapse
+//      the sidebar when clicked.
+//
+// ********************************************************
+    @mixin wksp-sidebar-min-max-control-size() {
+        width: to-rem(get($wksp-sidebar-min-max-control-config, 'width'));
+        height: to-rem(get($wksp-sidebar-min-max-control-config, 'height'));
+    }
+
+    @mixin wksp-sidebar-min-max-control-position() {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    //
+    // Styles shared by both the min-max control
+    // wrapper, and the child `.sidebar-toggle` button.
+    //
+    @mixin wksp-sidebar-min-max-control-base($elem-type) {
+        //
+        // Ensure that the toggle button clickable area is
+        // large enough to easily function on a touch device.
+        //
+        @include wksp-sidebar-min-max-control-size();
+        @include wksp-sidebar-min-max-control-position();
+
+
+        // ----- LEFT SIDEBAR (controls on the right) ----- //
+        .wksp-sidebar-left & {
+            left: auto;
+            right: 0;
+            text-align: right;
+
+            @if $elem-type != 'wrapper' {
+                // Positioning only for the glyph within the toggle button, not the wrapper
+                .icon {
+                    margin-right: .5rem;
+                }
+            }
+        }
+
+
+        // ----- RIGHT SIDEBAR (controls on the left) ----- //
+        .wksp-sidebar-right & {
+            left: 0;
+            text-align: left;
+
+            @if $elem-type != 'wrapper' {
+                // Positioning only for the glyph within the toggle button, not the wrapper
+                .icon {
+                    margin-left: .5rem;
+                }
+            }
+        }
+    }
+
+    @mixin wksp-sidebar-min-max-control-flip-pane-base() {
+        @include wksp-sidebar-min-max-control-size();
+        @include wksp-sidebar-min-max-control-position();
+
+        // Hide the "back" of the pane during swap
+        @include backface-visibility(hidden);
+    }
+
+    @mixin wksp-sidebar-min-max-control-flip-animation() {
+        // Entire container, keeps perspective
+        @include perspective(1000);
+        @include wksp-sidebar-min-max-control-size();
+        @include wksp-sidebar-min-max-control-position();
+
+
+        // ----- FLIPPER CONTAINING BOTH ICONS ----- //
+        .flipper {
+            @include transition-duration(
+                get-deep($wksp-sidebar-min-max-control-config, 'flip.duration')
+            );
+            @include transition-delay(
+                get-deep($wksp-sidebar-min-max-control-config, 'flip.delay')
+            );
+
+            // Make it look like the symbol "collides" with its new boundary, causing the flip
+            @include transform-style(preserve-3d);
+            @include wksp-sidebar-min-max-control-size();
+            @include wksp-sidebar-min-max-control-position();
+
+
+            // ----- MINIMIZED SIDEBAR ----- //
+            .wksp-sidebar-minimized & {
+                // Flip the pane
+                @include rotateY(180deg);
+            }
+        }
+
+        // "Front" pane, shown when sidebar is in maximized state
+        .front-side {
+            @include wksp-sidebar-min-max-control-flip-pane-base();
+            @include rotateY(0deg); // for firefox 31
+
+            z-index: 2; // keep above the back side
+        }
+
+        // "Back" pane, shown when sidebar is in minimized state
+        .back-side {
+            @include wksp-sidebar-min-max-control-flip-pane-base();
+            @include rotateY(180deg);
+        }
+
+
+        // Reverse the direction when in a left sidebar
+        .wksp-sidebar-left & {
+            .front-side {
+                @include wksp-sidebar-min-max-control-flip-pane-base();
+                @include rotateY(180deg);
+
+                z-index: 1; // reset
+            }
+
+            .back-side {
+                @include wksp-sidebar-min-max-control-flip-pane-base();
+                @include rotateY(0deg); // for firefox 31
+
+                z-index: 2; // keep above the back side
+            }
+        }
+    }
+

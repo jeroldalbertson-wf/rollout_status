@@ -1,0 +1,77 @@
+// ********************************************************
+//
+//   WORKSPACES SIDEBAR HOVERABLE SKIN SWITCHING
+//
+//   -> Includes skinning styles for components defined in:
+//       * `workspaces/components/pill-panels`
+//       * `workspaces/components/sidebar-hitareas`
+//
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/components/sidebar-hoverable-skins';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $wksp-module-config:  'peripherals/workspaces/atoms/workspaces-config';
+    $wksp-module-helpers: 'peripherals/workspaces/atoms/workspaces-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $wksp-module-config,
+                                          $wksp-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE STYLES FOR "ALWAYS FULL COLOR" EFFECT
+//
+//   NOTE: These styles are only applied if the
+//         app / platform logic does not add the
+//         `wksp-sidebar-hoverable` CSS class.
+//
+// ********************************************************
+.wksp-sidebar {
+    @include wksp-sidebar-hoverable-full-color-styles($always-full-color: true);
+}
+
+
+// ********************************************************
+//
+//   BASE CSS CLASS USED TO ENABLE THE
+//   "GRAYSCALE -> FULL COLOR" HOVER EFFECT
+//
+//   NOTE: App / platform logic must add this CSS class to
+//         the sidebar(s) based on whether the device is
+//         touch enabled, and whether the sidebar is
+//         minimized (the class should never be applied
+//         when the sidebar is minimized).
+//
+//   ---
+//
+//   "Full Color" Skinning is applied when:
+//
+//   1. A maximized sidebar is hovered in a non-touch UI,
+//      the "full color" skinning effect is applied.
+//
+//   2. A child of a maximized sidebar receives focus
+//      in a non-touch UI, the `wksp-sidebar-active`
+//      CSS class should be  added to the `.wksp-sidebar`
+//      elem in order to add  the "full color" skinning effect.
+//        * In a touch UI, it is always full-color.
+//        * In a minimized sidebar, it is always full-color.
+//
+//   NOTE: The "child elem focus" piece depends on
+//         app / platform logic adding the CSS class
+//         dependent on the conditions described above.
+//
+// ********************************************************
+.wksp-sidebar-hoverable {
+    @include wksp-sidebar-hoverable-grayscale-styles();
+
+    &.wksp-sidebar-active {
+        @include wksp-sidebar-hoverable-full-color-styles();
+    }
+}

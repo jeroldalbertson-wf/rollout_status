@@ -1,0 +1,284 @@
+// ********************************************************
+//
+//   WDESK "GEN 2" SHELL DOCUMENT TABS STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/shell/document-tabs';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+$pane-splitter-color: get($nav-ribbon-base-config, 'bd-bottom-color');
+$pane-splitter-color-hover: shade-of($zc-gray-70, 75%);
+$pane-splitter-color-active: $zc-gray-70;
+
+$tab-margin-right: 0.6rem;
+$tab-hitarea-padding-left: 0.9rem;
+$tab-hitarea-padding-right: 0.7rem;
+
+$shell-content-default-margin: 0.7rem;
+
+$shell-doc-tab-icon-color: $zc-gray-90;
+$shell-doc-tab-area-height: to-rem(component-height($size: base));
+$shell-doc-tab-bd-top-width: .2rem;
+$shell-doc-tab-active-bd-top-color: $link-color-pressed;
+$shell-doc-tab-bg: $zc-gray-40;
+$shell-doc-tab-bg-hover: $zc-gray-30;
+$shell-doc-tab-bg-active: get($nav-base-config, 'bg');
+$shell-doc-tab-color: $shell-doc-tab-icon-color;
+$shell-doc-tab-color-hover: $shell-doc-tab-icon-color;
+$shell-doc-tab-color-active: $zc-gray-120;
+$shell-doc-tab-bd-color: $pane-splitter-color;
+$shell-doc-tab-close-btn-padding: .4rem;
+$shell-doc-tab-close-btn-size: to-rem(icon-size-base-16()) + ($shell-doc-tab-close-btn-padding * 2);
+// Vertically center within the height of the doc tab
+$shell-doc-tab-close-btn-offset-top: (($shell-doc-tab-area-height - $shell-doc-tab-bd-top-width) - $shell-doc-tab-close-btn-size) / 2;
+
+$shell-pane-splitter-width: .2rem;
+
+@mixin shell-doc-tab() {
+    @include display-flex();
+    @include flex(0 1 auto);
+    @include flex-direction(column);
+
+    > .hitarea {
+        @include align-items(center);
+        @include display-flex();
+        @include flex(0 1 auto);
+        @include justify-content(center);
+        @include transition(border-top-color #{$default-fade-speed * 2});
+
+        margin: 0 0 0 -.1rem;
+        padding: 0;
+        height: $shell-doc-tab-area-height - .1rem;
+
+        border: none; // reset
+        border-radius: 0;
+        border-left-width: .1rem;
+        border-left-style: solid;
+        border-right-width: .1rem;
+        border-right-style: solid;
+        border-top-width: $shell-doc-tab-bd-top-width;
+        border-top-style: solid;
+
+        // TODO: Ask why this is used instead of just using right padding on the hitarea
+        .shell-doc-tab-pad {
+            @include flex(1 1 auto); // shrink-to-fit
+
+            height: $shell-doc-tab-bd-top-width;
+            width: $shell-doc-tab-close-btn-size;
+        }
+
+        .shell-nav-doc-tab-icon {
+            color: $shell-doc-tab-icon-color;
+        }
+
+        .shell-nav-doc-tab-title {
+            @include flex(1 1 auto); // shrink-to-fit
+
+            color: $shell-doc-tab-color;
+            font-size: to-rem($font-size-md);
+            font-weight: normal;
+        }
+
+        .shell-nav-doc-tab-close {
+            background-color: $shell-doc-tab-bg-hover;
+            color: $shell-doc-tab-icon-color;
+            cursor: pointer;
+            opacity: 0;
+            border-radius: 50%;
+            height: $shell-doc-tab-close-btn-size;
+            width: $shell-doc-tab-close-btn-size;
+            padding: $shell-doc-tab-close-btn-padding;
+            position: absolute;
+            right: $shell-doc-tab-close-btn-offset-top;
+            top: $shell-doc-tab-close-btn-offset-top;
+
+            .icon {
+                opacity: 0;
+            }
+
+            #{$link-hover-focus} {
+                &, .icon {
+                    opacity: 1;
+                }
+            }
+        }
+
+        #{$link-hover-focus} {
+            background-color: $shell-doc-tab-bg-hover;
+
+            .shell-nav-doc-tab-title {
+                color: $shell-doc-tab-color-hover;
+            }
+
+            .shell-nav-doc-tab-close {
+                opacity: 1.0;
+
+                .icon {
+                    opacity: .75;
+                }
+            }
+        }
+
+        &,
+        #{$link-pressed} {
+            background-color: $shell-doc-tab-bg;
+            border-left-color: $shell-doc-tab-bd-color;
+            border-right-color: $shell-doc-tab-bd-color;
+            border-top-color: transparent;
+        }
+    }
+
+    &.active {
+        border-bottom: .1rem solid $shell-doc-tab-bg-active;
+
+        > .hitarea {
+            background-color: $shell-doc-tab-bg-active !important;
+            border-top-color: $shell-doc-tab-active-bd-top-color !important;
+            border-top-left-radius: .3rem;
+            border-top-right-radius: .3rem;
+            z-index: 1000;
+
+            .shell-nav-doc-tab-icon {
+                color: $shell-doc-tab-active-bd-top-color;
+            }
+
+            .shell-nav-doc-tab-title {
+                color: $shell-doc-tab-color-active;
+            }
+
+            .shell-nav-doc-tab-close {
+                background-color: $shell-doc-tab-bg-active;
+            }
+
+            &.disabled,
+            &[disabled] {
+                background-color: $shell-doc-tab-bg-active !important;
+            }
+        }
+
+        // What is this? .active.muted???
+        &.muted > .hitarea {
+            background-color: $zc-gray-20;
+            border-top-color: $shell-doc-tab-icon-color;
+
+            .icon {
+                color: $shell-doc-tab-icon-color;
+            }
+        }
+
+        // Override Web Skin default which is a blue border *beneath* an active tab
+        &:after {
+            background-color: transparent;
+        }
+    }
+
+    // TODO: Change to .active--unselected
+    &.unselected-active > .hitarea {
+        background-color: $zc-gray-20;
+
+        &:hover {
+            background-color: shade-of($zc-gray-20, 75%);
+
+            .shell-nav-doc-tab-close {
+                background-color: shade-of($zc-gray-20, 75%);
+            }
+        }
+    }
+}
+
+.shell-tabs-area {
+    background-color: $shell-doc-tab-bg;
+
+    .shell-tabs-splitter {
+        @include justify-content(center);
+
+        background-color: transparent;
+
+        .shell-tabs-splitter-ui {
+            background-color: $pane-splitter-color;
+            max-width: .2rem;
+        }
+    }
+
+    // --------------
+    // Tab reordering
+    // --------------
+
+    .shell-reorder-indicator {
+        height: $shell-doc-tab-area-height;
+        position: absolute;
+        width: $tab-margin-right;
+        z-index: 1001;
+
+        .shell-reorder-indicator-line {
+            background-color: $shell-doc-tab-active-bd-top-color;
+            position: absolute;
+            left: $shell-pane-splitter-width / -2;
+            top: 0;
+            height: $shell-doc-tab-area-height;
+            width: $shell-pane-splitter-width;
+        }
+
+        .shell-reorder-indicator-arrow {
+            @include triangle-color-vertical($shell-doc-tab-active-bd-top-color);
+            bottom: 0;
+            left: -.5rem; // TODO: Is this based on the caret width?
+            position: absolute;
+        }
+    }
+
+    .shell-reorder-dropzone {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1002;
+    }
+
+    // ----
+    // Tabs
+    // ----
+    .shell-nav-doc-tabs {
+        border-bottom: .1rem solid $shell-doc-tab-bd-color;
+        margin: 0;
+        height: $shell-doc-tab-area-height;
+
+        > .nav-item {
+            @include shell-doc-tab();
+        }
+    }
+
+    .shell-nav-doc-overflow {
+        border-bottom: .1rem solid $shell-doc-tab-bd-color;
+        padding-right: $shell-content-default-margin;
+
+        // TODO: Just use a ButtonSkin.LIGHT, and then override the default state colors
+        .dropdown-toggle {
+            border-top: none;
+            border-radius: 0;
+            box-shadow: none; // TODO: Just set isFlat to true on the dart component.
+            height: $shell-doc-tab-area-height - .1rem;
+
+            #{$link-hover-focus} {
+                background-color: white;
+                border-color: rgba(get($btn-colors-light, 'bd-rgba-color'), get($btn-colors-light, 'bd-hover-rgba-alpha'));
+            }
+
+            #{$link-pressed} {
+                top: 0 !important; // TODO: Just set isFlat to true on the dart component.
+                background-color: get($btn-colors-light, 'bg-press');
+                border-color: rgba(get($btn-colors-light, 'bd-rgba-color'), get($btn-colors-light, 'bd-press-rgba-alpha'));
+            }
+        }
+    }
+}
+
+.shell-drag-container {
+    > .nav-item {
+        @include shell-doc-tab();
+    }
+}

@@ -1,0 +1,110 @@
+// ********************************************************
+
+////
+/// Default symbol scaffolding / size values
+/// e.g. icons, spinners, etc...
+/// ---
+/// @since 1.0.0
+/// @group core.size.box-model
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/symbol-sizes';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   GLOBAL SYMBOL SIZE CONFIGS
+//
+// ********************************************************
+    ///
+    /// Values that are multipled by `16px` to determine the total height / width of a symbol size variation.
+    /// ---
+    /// @type Map
+    /// ---
+    /// @prop {Number} sm    [.5]
+    /// @prop {Number} md    [1.5]
+    /// @prop {Number} lg    [2]
+    /// @prop {Number} xl    [3]
+    /// @prop {Number} xxl   [6]
+    ///
+    $symbol-base16-multipliers: (
+        'sm': .5,
+        'md': 1.5,
+        'lg': 2,
+        'xl': 3,
+        'xxl': 6
+    );
+
+    ///
+    /// Values that are multipled by `24px` to determine the total height / width of a symbol size variation.
+    /// ---
+    /// @type Map
+    /// ---
+    /// @prop {Number} sm    [.5]
+    /// @prop {Number} md    [1]
+    /// @prop {Number} lg    [2]
+    /// @prop {Number} xl    [3]
+    /// @prop {Number} xxl   [6]
+    ///
+    $symbol-base24-multipliers: (
+        'sm': .5,
+        'md': 1,
+        'lg': 2,
+        'xl': 3,
+        'xxl': 6
+    );
+
+    ///
+    /// Convenience collection that stores both the base16 and base24 symbol multiplier config maps.
+    /// ---
+    /// @type Map
+    /// ---
+    /// @requires {variable} $symbol-base16-multipliers
+    /// @requires {variable} $symbol-base24-multipliers
+    /// ---
+    /// @prop {Map} base16 - `$symbol-base16-multipliers` map
+    /// @prop {Map} base24 - `$symbol-base24-multipliers` map
+    ///
+    $symbol-size-config: (
+        'base16': $symbol-base16-multipliers,
+        'base24': $symbol-base24-multipliers
+    );
+
+
+
+// ********************************************************
+//
+//   GLOBAL SYMBOL SIZE CONFIG ALIASES
+//
+//   -> DO NOT CHANGE THESE VALUES
+//      (change the config map values)
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   BASE 16
+    // ----------------------------------------------------
+        $symbol-size-multiplier-sm:  get($symbol-base16-multipliers, 'sm');
+        $symbol-size-multiplier-md:  get($symbol-base16-multipliers, 'md');
+        $symbol-size-multiplier-lg:  get($symbol-base16-multipliers, 'lg');
+        $symbol-size-multiplier-xl:  get($symbol-base16-multipliers, 'xl');
+        $symbol-size-multiplier-xxl: get($symbol-base16-multipliers, 'xxl');
+
+
+    // ----------------------------------------------------
+    //   BASE 24
+    // ----------------------------------------------------
+        $symbol-size-multiplier-sm-base-24:  get($symbol-base24-multipliers, 'sm');
+        $symbol-size-multiplier-md-base-24:  get($symbol-base24-multipliers, 'md');
+        $symbol-size-multiplier-lg-base-24:  get($symbol-base24-multipliers, 'lg');
+        $symbol-size-multiplier-xl-base-24:  get($symbol-base24-multipliers, 'xl');
+        $symbol-size-multiplier-xxl-base-24: get($symbol-base24-multipliers, 'xxl');

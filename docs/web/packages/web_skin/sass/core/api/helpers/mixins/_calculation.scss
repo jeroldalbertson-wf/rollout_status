@@ -1,0 +1,84 @@
+// ********************************************************
+
+////
+/// Helper mixins pertaining units / value calculations
+/// ---
+/// @access public
+/// @group core.utils.calc
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/calculation';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, mixin experimental-value,
+                                                function is-list,
+                                                function is-arglist,
+                                                function is-number,
+                                                function need-rem-px-fallback,
+                                                function to-rem,
+                                                function append);
+//
+// ********************************************************
+
+
+///
+/// CSS3 Browser Prefixed `calc()` Expressions
+/// ---
+/// @since 0.1.1
+/// ---
+/// @param {String}  $property
+/// @param {String}  $expression - Calculation expression to apply for the given `$property`... MUST BE IN QUOTATIONS IN ORDER TO AVOID INCOMPATIBLE UNIT FAILURES DURING SASS COMPILE.
+///
+@mixin calc($property, $expression) {
+    @include experimental-value($property, calc(#{$expression}));
+}
+
+///
+/// Use `rem` units for any size property, with `px` fallbacks for older browsers.
+/// ---
+/// @deprecated Use `to-rem` function instead. Will be removed in `2.0.0`
+/// @todo Remove in the `2.0.0` release
+/// ---
+/// @param {String}                  $property  - CSS Property you want to use `rem` units on
+/// @param {Arglist | List | Number} $px-values - Number[s] in `px` units you want to convert to `rem`
+///
+@mixin rem($property, $px-values) {
+    // check to see if we should actually be producing
+    // rem font sizes, or straight pixels
+    $rem-units: if($base-elem == 'body', true, false);
+
+    // Print the first line in pixel values
+    // only if we are supporting browsers that don't support rem units
+    @if need-rem-px-fallback($rem-units) {
+        #{$property}: $px-values;
+    }
+
+    @if $rem-units {
+        // produce rem font sizes
+        // If there is only one (numeric) value, return the property/value line for it.
+        @if is-number($px-values) {
+            #{$property}: to-rem($px-values, $html-font-size-px);
+        } @else if is-arglist($px-values) or is-list($px-values) {
+            // Create an empty list that we can dump values into
+            $rem-values: ();
+            @each $value in $px-values {
+                $rem-values: append($rem-values, to-rem($value, $html-font-size-px));
+            }
+
+            // Return the property and its list of converted values
+            #{$property}: $rem-values;
+        } @else {
+            @warn "`rem` mixin expecting a number, arglist or list; #{type-of($px-values)} given. No px->rem conversion will be applied to avoid invalid CSS generation.";
+
+            // if the pixel "fallback" styles have not been applied, apply them now
+            @if not need-rem-px-fallback($rem-units) {
+                #{$property}: $px-values;
+            }
+        }
+    }
+}

@@ -1,0 +1,42 @@
+// ********************************************************
+
+////
+/// Color palette alias config manifest
+/// ---
+/// @access private
+/// @type Color
+/// @group core.internals.color.zesty
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/global-color-map-aliases';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   Zesty Crayon Aliases
+//
+// ********************************************************
+    @import 'aliases/zesty-grays';
+    @import 'aliases/zesty-greens';
+    @import 'aliases/zesty-greens-alt';
+    @import 'aliases/zesty-greens-alt2';
+    @import 'aliases/zesty-blues';
+    @import 'aliases/zesty-oranges';
+    @import 'aliases/zesty-purples';
+    @import 'aliases/zesty-reds';
+
+
+
+// ********************************************************
+//
+//   GLOBAL PALETTE DERIVATIVE COLOR ALIASES
+//
+// ********************************************************
+    @import 'aliases/selection-blues';
+    @import 'aliases/highlight-colors';

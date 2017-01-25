@@ -1,0 +1,31 @@
+// ********************************************************
+//
+//   Base element styles for the
+//   Web Skin core module
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/module-base';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Base "At" References
+//
+//   -> @keyframes
+//   -> @font-face
+// ----------------------------------------------------
+@import "base/keyframes";
+@import "base/font-face";
+
+
+// ----------------------------------------------------
+//   Base Styling
+// ----------------------------------------------------
+@import "base/normalize";
+@import "base/print";
+@import "base/scaffolding";
+@import "base/type";
+@import "base/code";

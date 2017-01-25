@@ -1,0 +1,96 @@
+// ********************************************************
+//
+//   STYLE ADJUSTMENTS FOR LIST GROUPS WITHIN CARDS
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/cards/card-with-list-groups';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $cards-module-config:  'core/components/atoms/cards/cards-config';
+    $cards-module-helpers: 'core/components/atoms/cards/cards-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $cards-module-config,
+                                          $cards-module-helpers);
+//
+// ********************************************************
+
+
+.list-group--flush {
+    margin-bottom: 0;
+}
+
+
+// ----------------------------------------------------
+//   HANDLE BORDERS / BORDER RADII
+// ----------------------------------------------------
+.card__body {
+    > .list-group {
+        // When it is a bordered list group, the child list-group-items handle the top / bottom borders.
+        &:not(.list-group-bordered) {
+            // Add borders above and below the list-group to
+            // separate it from any adjacent content
+            border-top: to-rem(get($list-group-base-config, 'bd-width')) solid get($list-group-base-config, 'bd-color');
+            border-bottom: to-rem(get($list-group-base-config, 'bd-width')) solid get($list-group-base-config, 'bd-color');
+
+            // Necessary to show the bottom border of the parent `.list-group` in the case that the
+            // `.list-group-item` itself has a `background-color` set.
+            &:not(:last-child) > .list-group-item:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        > .list-group-item {
+            // Need the extra specificity to override the list-group size variation
+            // corner rounding selectors.
+            //
+            // TODO: Refactor the specificity of list-group corner rounding in the 2.0.0 release.
+            &,
+            &:first-child,
+            &:last-child {
+                border-radius: 0 !important;
+            }
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+
+            &,
+            > .list-group-item:last-child {
+                // Prevent double bottom borders
+                border-bottom-width: 0;
+
+                // Make the radius of the last `.list-group-item` line up nicely
+                // at the bottom of a rounded card.
+                .card--rounded & {
+                    @include border-bottom-radius(get($card-size-base-config, 'bd-radius-inner') !important);
+                }
+            }
+        }
+
+        &:first-child {
+            &,
+            > .list-group-item:first-child {
+                // Prevent double top borders
+                border-top-width: 0;
+
+                // Make the radius of the first `.list-group-item` line up nicely
+                // at the top of a rounded card.
+                .card--rounded & {
+                    @include border-top-radius(get($card-size-base-config, 'bd-radius-inner') !important);
+                }
+            }
+        }
+    }
+
+    // Prevent double borders
+    > .list-group-bordered {
+        > .list-group-item {
+            border-right-width: 0;
+            border-left-width: 0;
+        }
+    }
+}

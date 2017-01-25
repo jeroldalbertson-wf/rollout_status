@@ -1,0 +1,9 @@
+// ********************************************************
+//
+    $module: 'core/api/module-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+@import "config/module-config-builders";  // helpers used to create complex config values
+@import "config/module-defaults";         // configs shared across multiple components

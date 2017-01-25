@@ -1,0 +1,33 @@
+// ********************************************************
+//
+//   HINT COMPONENT STYLE MODULE
+//
+//   Pure CSS tooltips - using nothing but the `::before`
+//   and `::after` pseudo-elements on elements with the
+//   `.has-hint` CSS class.
+//
+//   Shares core styling with 'core/components/dialogs/tooltips'
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/dialogs/hints';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $dialogs-hints-module-config:  'core/components/atoms/dialogs/hints-config';
+    $dialogs-hints-module-helpers: 'core/components/atoms/dialogs/hints-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $dialogs-hints-module-config,
+                                          $dialogs-hints-module-helpers);
+//
+// ********************************************************
+
+
+@import "./hints/hint-core";
+@import "./hints/hint-position";
+@import "./hints/hint-sizes";
+@import "./hints/hint-skins";
+@import "./hints/hint-show";
+@import "./hints/hint-transitions";

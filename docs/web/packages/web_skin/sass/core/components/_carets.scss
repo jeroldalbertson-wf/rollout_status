@@ -1,0 +1,428 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/carets';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $carets-module-config: 'core/components/atoms/carets/carets-config';
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $carets-module-config);
+//
+// ********************************************************
+
+$caret-bd-width-rem: to-rem($caret-bd-width);
+$caret-sm-bd-width-rem: to-rem($caret-sm-bd-width);
+$caret-xs-bd-width-rem: to-rem($caret-xs-bd-width);
+
+.caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    content: "";
+    vertical-align: top;
+    border-top:   $caret-bd-width-rem solid $caret-color;
+    border-right: $caret-bd-width-rem solid transparent;
+    border-left:  $caret-bd-width-rem solid transparent;
+    // give a little extra contrast for browsers that can handle it
+    opacity: $caret-alpha;
+
+    // Place the caret within dropdown parent
+    .dropdown & {
+        margin-top: to-rem($caret-margin-top);
+        margin-left: to-rem($caret-spacing-horizontal);
+    }
+
+    //
+    // DIRECTION VARIATIONS
+    //
+    &.caret-left  { @include triangle-direction('left',  $caret-color, $width: $caret-width); }
+    &.caret-right { @include triangle-direction('right', $caret-color, $width: $caret-width); }
+    &.caret-up    { @include triangle-direction('up',    $caret-color, $width: $caret-width); }
+
+    .dropup &,
+    .open & {
+        @include triangle-direction('up', $width: $caret-width);
+    }
+
+    .open.dropup & {
+        @include triangle-direction('down', $width: $caret-width);
+    }
+
+    //
+    // SIZE VARIATIONS
+    //
+    &.caret-sm {
+        border-top-width:   $caret-sm-bd-width-rem;
+        border-right-width: $caret-sm-bd-width-rem;
+        border-left-width:  $caret-sm-bd-width-rem;
+
+        &.caret-left  { @include triangle-direction('left',  false, $width: $caret-sm-width); }
+        &.caret-right { @include triangle-direction('right', false, $width: $caret-sm-width); }
+        &.caret-up    { @include triangle-direction('up',    false, $width: $caret-sm-width); }
+
+        .dropup &,
+        .open & {
+            @include triangle-direction('up', $width: $caret-sm-width);
+        }
+
+        .open.dropup & {
+            @include triangle-direction('down', $width: $caret-sm-width);
+        }
+    }
+
+    &.caret-xs {
+        border-top-width:   $caret-xs-bd-width-rem;
+        border-right-width: $caret-xs-bd-width-rem;
+        border-left-width:  $caret-xs-bd-width-rem;
+
+        &.caret-left  { @include triangle-direction('left',  false, $width: $caret-xs-width); }
+        &.caret-right { @include triangle-direction('right', false, $width: $caret-xs-width); }
+        &.caret-up    { @include triangle-direction('up',    false, $width: $caret-xs-width); }
+
+        .dropup &,
+        .open & {
+            @include triangle-direction('up', $width: $caret-xs-width);
+        }
+
+        .open.dropup & {
+            @include triangle-direction('down', $width: $caret-xs-width);
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   CARETS WITHIN BUTTONS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   BASE (UNSKINNED) BUTTONS
+    // ----------------------------------------------------
+    .btn {
+        .caret {
+            // add colors for down and up, so that dropdown triggers
+            // have the correct color in both open / closed states
+            @include triangle-color-vertical($btn-text-base);
+        }
+
+        // ----- HOVER / FOCUS ----- //
+        #{$btn-hover-focus-selectors} {
+            .caret {
+                @if $btn-text-hover != $btn-text-base {
+                    @include triangle-color-vertical($btn-text-hover);
+                }
+                opacity: $caret-alpha-hover;
+            }
+        }
+
+        // ----- PRESSED / ACTIVE ----- //
+        #{$btn-pressed-active-selectors} {
+            .caret {
+                @if $btn-text-press != $btn-text-hover {
+                    @include triangle-color-vertical($btn-text-press);
+                }
+                @if $caret-alpha-press != $caret-alpha-hover {
+                    opacity: $caret-alpha-press;
+                }
+            }
+        }
+
+        // ----- DISABLED ----- //
+        #{$btn-disabled-selectors} {
+            .caret {
+                @include triangle-color-vertical($btn-text-base !important);
+                opacity: $caret-alpha !important;
+            }
+        }
+
+        // ----- ACTIVE / OPEN ----- //
+        &.active,
+        .open & {
+            .caret {
+                @include triangle-color-vertical($btn-text-press);
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   BUTTON SKIN COLOR VARIATIONS
+    // ----------------------------------------------------
+    @each $state-name in reject($btn-state-names, 'link') { @if unquote($state-name) != default {
+        $btn-skin-colors: get($btn-colors, $state-name);
+
+        $color: get($btn-skin-colors, 'text-base');
+        $bg:    get($btn-skin-colors, 'bg-base');
+
+        $color-hover: get($btn-skin-colors, 'text-hover');
+        $bg-hover:    get($btn-skin-colors, 'bg-hover');
+
+        $color-press: get($btn-skin-colors, 'text-press');
+        $bg-press:    get($btn-skin-colors, 'bg-press');
+
+        .btn-#{$state-name} {
+            .caret {
+                @include triangle-color-vertical($color);
+            }
+
+            // ----- HOVER / FOCUS ----- //
+            @if $color-hover != $color or
+                $btn-text-hover != $btn-text-base {
+                #{$btn-hover-focus-selectors} {
+                    .caret {
+                        @include triangle-color-vertical($color-hover);
+                    }
+                }
+            }
+
+            // ----- PRESSED / ACTIVE ----- //
+            @if $color-press != $color-hover or
+                $btn-text-press != $btn-text-hover {
+                #{$btn-pressed-active-selectors} {
+                    .caret {
+                        @include triangle-color-vertical($color-press);
+                    }
+                }
+            }
+
+            // ----- DISABLED ----- //
+            #{$btn-disabled-selectors} {
+                .caret {
+                    @include triangle-color-vertical($color !important);
+                }
+            }
+
+            // ----- ACTIVE / OPEN ----- //
+            &.active,
+            .open & {
+                .caret {
+                    @include triangle-color-vertical($color-press);
+                }
+            }
+        }
+    }}
+
+    // ----------------------------------------------------
+    //   LINK BUTTONS
+    // ----------------------------------------------------
+    .btn-link {
+        .caret {
+            @include triangle-color-vertical($link-color);
+        }
+
+        // ----- HOVER / FOCUS ----- //
+        #{$btn-hover-focus-selectors} {
+            .caret {
+                @include triangle-color-vertical($link-color-hover);
+                text-decoration: none;
+            }
+        }
+
+        // ----- PRESSED / ACTIVE ----- //
+        #{$btn-pressed-active-selectors} {
+            .caret {
+                @include triangle-color-vertical($link-color-pressed);
+            }
+        }
+
+        // ----- DISABLED ----- //
+        #{$btn-disabled-selectors} {
+            .caret {
+                @include triangle-color-vertical($link-color-disabled !important);
+                text-decoration: none !important;
+            }
+        }
+
+        // ----- ACTIVE / OPEN ----- //
+        &.active,
+        .open & {
+            .caret {
+                @include triangle-color-vertical($link-color-pressed);
+            }
+        }
+    }
+
+
+
+// ********************************************************
+//
+//   CARETS WITHIN NAVS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   BASE NAVS
+    // ----------------------------------------------------
+    .nav-item {
+        $nav-caret-color: get($nav-base-config, 'bd-color');
+        $nav-caret-color-hover: get($nav-link-config, 'text-color-hover');
+        $nav-caret-color-press: get($nav-link-config, 'text-color-press');
+        $nav-caret-color-active: get($nav-link-config, 'text-color-active');
+        $nav-caret-color-disabled: get($nav-link-config, 'text-color-disabled');
+
+        > .hitarea {
+            .caret {
+                @include triangle-color-vertical($nav-caret-color);
+            }
+
+            // ----- HOVER / FOCUS HITAREA STATE ----- //
+            #{$link-hover-focus} {
+                .caret {
+                    @if $nav-caret-color-hover != $nav-caret-color {
+                        @include triangle-color-vertical($nav-caret-color-hover);
+                    }
+                    opacity: $caret-alpha-hover;
+                }
+            }
+
+            // ----- PRESSED HITAREA STATE ----- //
+            #{$link-pressed} {
+                .caret {
+                    @if $nav-caret-color-press != $nav-caret-color-hover {
+                        @include triangle-color-vertical($nav-caret-color-press);
+                    }
+                    @if $caret-alpha-press != $caret-alpha-hover {
+                        opacity: $caret-alpha-press;
+                    }
+                }
+            }
+
+            // ----- DISABLED HITAREA STATE ----- //
+            #{$nav-disabled-selectors} {
+                .caret {
+                    @include triangle-color-vertical($nav-caret-color-disabled !important);
+                    opacity: $caret-alpha !important;
+                }
+            }
+        }
+
+
+        // ----- ACTIVE / OPEN NAV STATES ----- //
+        &.active,
+        &.open {
+            > .hitarea {
+                .caret {
+                    @include triangle-color-vertical($nav-caret-color-active !important);
+                }
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   PILL NAVS
+    // ----------------------------------------------------
+    .nav-pills > .nav-item {
+        $nav-pill-caret-color: get($nav-pills-pill-config, 'text-color');
+        $nav-pill-caret-color-hover: get($nav-pills-pill-config, 'text-color-hover');
+        $nav-pill-caret-color-press: get($nav-pills-pill-config, 'text-color-press');
+        $nav-pill-caret-color-active: get($nav-pills-pill-config, 'text-color-active');
+        $nav-pill-caret-color-disabled: get($nav-pills-pill-config, 'text-color-disabled');
+
+        > .hitarea {
+            .caret {
+                @include triangle-color-vertical($nav-pill-caret-color);
+            }
+
+            // ----- HOVER / FOCUS HITAREA STATES ----- //
+            #{$link-hover-focus} {
+                @if $nav-pill-caret-color-hover != $nav-pill-caret-color {
+                    .caret {
+                        @include triangle-color-vertical($nav-pill-caret-color-hover);
+                    }
+                }
+            }
+
+            // ----- PRESSED HITAREA STATE ----- //
+            #{$link-pressed} {
+                @if $nav-pill-caret-color-press != $nav-pill-caret-color-hover {
+                    .caret {
+                        @include triangle-color-vertical($nav-pill-caret-color-press);
+                    }
+                }
+            }
+
+            // ----- DISABLED HITAREA STATE ----- //
+            #{$nav-disabled-selectors} {
+                .caret {
+                    @include triangle-color-vertical($nav-pill-caret-color-disabled !important);
+                }
+            }
+        }
+
+
+        // ----- ACTIVE / OPEN NAV STATES ----- //
+        &.active,
+        &.open {
+            > .hitarea {
+                .caret {
+                    @include triangle-color-vertical($nav-pill-caret-color-active !important);
+                }
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   TAB NAVS
+    // ----------------------------------------------------
+    .nav-tabs > .nav-item {
+        $nav-tab-caret-color: get($nav-tabs-tab-config, 'text-color');
+        $nav-tab-caret-color-hover: get($nav-tabs-tab-config, 'text-color-hover');
+        $nav-tab-caret-color-press: get($nav-tabs-tab-config, 'text-color-press');
+        $nav-tab-caret-color-active: get($nav-tabs-tab-config, 'text-color-active');
+        $nav-tab-caret-color-disabled: get($nav-tabs-tab-config, 'text-color-disabled');
+
+        > .hitarea {
+            .caret {
+                @include triangle-color-vertical($nav-tab-caret-color);
+            }
+
+            // ----- HOVER ONLY HITAREA STATE ----- //
+            #{$hover} {
+                //
+                // Don't show green caret on focus unless its also hovered
+                // since it matches the active state text-color of the tab,
+                // and when clicking on a non-active tab, the state will
+                // remain focused until something else is clicked
+                //
+                @if $nav-tab-caret-color-hover != $nav-tab-caret-color {
+                    .caret {
+                        @include triangle-color-vertical($nav-tab-caret-color-hover);
+                    }
+                }
+            }
+
+            // ----- PRESSED HITAREA STATE ----- //
+            #{$link-pressed} {
+                @if $nav-tab-caret-color-press != $nav-tab-caret-color-hover {
+                    .caret {
+                        @include triangle-color-vertical($nav-tab-caret-color-press);
+                    }
+                }
+            }
+
+            // ----- DISABLED HITAREA STATE ----- //
+            #{$nav-disabled-selectors} {
+                .caret {
+                    @include triangle-color-vertical($nav-tab-caret-color-disabled !important);
+                }
+            }
+        }
+
+
+        // ----- ACTIVE / OPEN NAV STATES ----- //
+        &.active,
+        &.open {
+            > .hitarea {
+                .caret {
+                    @include triangle-color-vertical($nav-tab-caret-color-active !important);
+                }
+            }
+        }
+    }
+

@@ -1,0 +1,389 @@
+// ********************************************************
+//
+//   DEPENDENCIES:
+//
+    @import '../../peripherals/panels-global-jobs/atoms/panels-global-jobs-config';
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-misc';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Fixed Backdrops
+// ----------------------------------------------------
+.ws-example {
+    .backdrop {
+        // cannot use fixed position for backdrops within the examples
+        // or else the entire page will be unusable
+        position: absolute !important;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Images
+// ----------------------------------------------------
+.ws-example-images {
+    > .img-circle,
+    > .img-rounded,
+    > .img-thumbnail {
+        margin: to-rem($docs-spacing-sm);
+    }
+}
+
+
+// ----------------------------------------------------
+//   List groups
+// ----------------------------------------------------
+@include respond-to('screen-sm and up') {
+    .ws-example:not(.grid-block-sm) > .list-group {
+        max-width: 40rem;
+    }
+}
+
+.ws-list-group-size-examples .list-group-item {
+    @include truncate-text();
+}
+
+.ws-example .grid-shrink .list-group-tree {
+    max-width: 25rem;
+}
+
+
+// ----------------------------------------------------
+//   CSS Helper Class Examples
+// ----------------------------------------------------
+
+.ws-spacing-demo {
+    margin: $flex-grid-gutter-width 0 ($flex-grid-gutter-width / 2) 0 !important;
+    color: $grid-v2-demo-block-text-color;
+    font-size: to-rem($font-size-xs);
+
+    code {
+        font-weight: normal;
+        color: $grid-v2-demo-block-text-color;
+        background-color: transparent;
+        padding: 0;
+    }
+
+    @at-root {
+        $spacing-demo-block-bd: .1rem solid rgba($black, .1);
+        $directions: (
+            top: bottom,
+            right: left,
+            bottom: top,
+            left: right
+        );
+
+        .ws-spacing-demo__block {
+            min-height: $grid-demo-min-height - ($grid-v2-demo-block-margin * 2);
+            border: $spacing-demo-block-bd;
+            background-clip: padding-box !important;
+        }
+
+        .ws-spacing-demo__block--padding {
+            @include crosshatch-bg($color: $zc-blue, $alpha: .35);
+
+            // Prevent double border
+            @each $class-key, $bd-side-key in $directions {
+                &.l-padding-#{$class-key}-base {
+                    border-#{$bd-side-key}: none;
+                }
+            }
+        }
+
+        .ws-spacing-demo__block--margin {
+            $base-margin: to-rem(get($component-spacing-config, 'base'));
+
+            &:before {
+                @include crosshatch-bg($color: $zc-orange, $alpha: .35);
+
+                content: "";
+                position: absolute;
+            }
+
+            &.l-margin-base:before {
+                top: -$base-margin;
+                right: -$base-margin;
+                bottom: -$base-margin;
+                left: -$base-margin;
+            }
+
+            @each $direction in map-keys($directions) {
+                &.l-margin-#{$direction}-base:before {
+                    @each $side in map-keys($directions) {
+                        #{$side}: if($side == $direction, -$base-margin, 0);
+                    }
+                }
+            }
+        }
+
+        .ws-spacing-demo__label {
+            @include align-items(center);
+            @include justify-content(center);
+
+            background-color: $docs-body-bg;
+        }
+
+        .ws-spacing-demo__key-swatch {
+            display: inline-block;
+            vertical-align: middle;
+            width: to-rem($line-height-base-px);
+            height: to-rem($line-height-base-px);
+            border-radius: to-rem($border-radius-sm);
+            border: $spacing-demo-block-bd;
+            background-clip: padding-box !important;
+
+            &.ws-spacing-demo__block--margin {
+                @include crosshatch-bg($color: $zc-orange, $alpha: .35);
+            }
+        }
+    }
+}
+
+.nav-stacked-paragraph-height > .nav-item > .hitarea {
+    // ----- Stacked pills for bg-* class examples ----- //
+    $paragraph-height: $line-height-base-px;
+    $nav-pill-font-size: $font-size-base;
+    $vertical-padding-adjusted: to-rem(round(($paragraph-height - $nav-pill-font-size) / 2));
+
+    // modify height so they look good side-by-side with <p> used for text color examples
+    padding: $vertical-padding-adjusted .8rem;
+    margin-top: $vertical-padding-adjusted;
+    // modify font-family so it matches adjacent paragraphs
+    font-family: $font-family-base;
+}
+
+.border-color-utility-class-example > .nav > .nav-item > .hitarea {
+    border-width: .1rem !important;
+    border-style: solid !important;
+}
+
+
+// ----------------------------------------------------
+//   Global jobs panel example
+// ----------------------------------------------------
+.wdesk-jobs-panel-example {
+    min-height: 27.5rem;
+    padding: 0;
+
+    // our crazy docs header styles caused a regression in the
+    // core styles b/c they have position: relative, and were being
+    // applied to the .panel-title element in our global jobs demo
+    .panel-heading .panel-title {
+        position: static;
+    }
+
+    .body-footer {
+        position: absolute;
+        bottom: 0;
+
+         // make it look "flush" against the bottom of the example
+        .global-jobs-panel {
+            bottom: -.1rem;
+        }
+    }
+
+
+    // don't allow it to "intersect" with the show code example button
+    @include respond-to('screen-sm and up') {
+        .global-jobs-panel {
+            right: auto;
+            left: to-rem(get($job-panel-config, 'spacing-horizontal'));
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   Caret examples
+// ----------------------------------------------------
+.caret-examples {
+    h5 {
+        text-align: center;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+    }
+    .caret {
+        display: block;
+        text-align: center;
+        margin: 0 auto;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Scroll utility class examples
+// ----------------------------------------------------
+.scroll-utility-example {
+    // tighten things up
+    $scroll-util-pad: .5rem;
+
+    .row {
+        margin-left: -$scroll-util-pad;
+        margin-right: -$scroll-util-pad;
+    }
+
+    [class*="col-"] {
+        padding: $scroll-util-pad;
+    }
+
+    .well {
+        height: 10rem;
+        padding-left: $scroll-util-pad;
+        padding-right: $scroll-util-pad;
+
+        h4 {
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        // make sure the example does what its supposed to
+        &.scroll,
+        &.scroll-force,
+        &.scroll-x,
+        &.scroll-x-force {
+            white-space: nowrap;
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   Scrollspy demo
+// ----------------------------------------------------
+.scrollspy-example {
+    position: relative;
+    height: 20rem;
+    margin-top: to-rem($docs-spacing-md);
+    overflow: auto;
+}
+
+
+// ----------------------------------------------------
+//   Datepicker plugin demo
+// ----------------------------------------------------
+.dp-form {
+    .clearfix {
+        float: left;
+        width: 100%;
+        height: to-rem($docs-spacing-md * 2);
+    }
+
+    [class*="col-"] {
+        padding-top: to-rem($docs-spacing-md);
+        padding-bottom: to-rem($docs-spacing-md);
+
+        [class*="col-"] {
+            padding-top: 0;
+            padding-bottom: 0;
+
+            .checkbox:first-child {
+                margin-top: 0 !important;
+            }
+        }
+    }
+
+    .checkbox {
+        display: block !important;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Everything else
+// ----------------------------------------------------
+    #global-help-popover_backdrop {
+        z-index: 2; // keep behind static nav examples
+    }
+
+    .breadcrumb + .breadcrumb {
+        margin-top: to-rem($line-height-base-px);
+    }
+
+    // Improve spacing on getting started > download
+    .ws-dl-options .h4 {
+        margin-top: to-rem($docs-spacing-base) !important;
+        margin-bottom: to-rem($docs-spacing-sm) !important;
+
+        &:first-child {
+            margin-top: 6rem !important;
+        }
+    }
+
+    .wdesk-accessibile-components-lists {
+        .ws-heading {
+            margin-bottom: to-rem($line-height-base-px);
+        }
+    }
+
+    .ws-cursor-examples {
+        .ws-example {
+            #{$hover} {
+                &,
+                h4,
+                code {
+                    font-weight: bold;
+                }
+            }
+        }
+
+        .cursor-grab {
+            .show-on-hover { display: none; }
+
+            #{$hover} {
+                .show-on-hover { display: inline; }
+                .dim-on-hover { opacity: .5; }
+            }
+        }
+    }
+
+    .ws-draggable-examples {
+        .is-drop-target {
+            padding: to-rem(get-deep($global-component-padding-config, 'base.all'));
+        }
+    }
+
+    // TODO: should this move into a core Web Skin partial?
+    .panel dl:last-child {
+        margin-bottom: 0;
+    }
+
+    // TODO: should this become a new Web Skin helper class?
+    .text-columns {
+        @include column-gap(1rem);
+    }
+
+    @for $i from 2 through 10 {
+        // at mobile size, cut the number of columns in half
+        .text-columns-#{$i} {
+            @include column-count($i / 2);
+        }
+    }
+
+    @include respond-to('screen-sm and up') {
+        @for $i from 2 through 10 {
+            .text-columns-#{$i} {
+                @include column-count($i);
+            }
+        }
+    }
+
+    .ws-empty-view-example {
+        padding: 0;
+    }
+
+    .ws-badge-outline-in-alert-example {
+        .alert {
+            top: 4rem !important;
+        }
+
+        .alert-flex-content {
+            @include justify-content(flex-start);
+            @include align-items(center);
+        }
+    }

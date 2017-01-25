@@ -1,0 +1,52 @@
+// ********************************************************
+
+////
+/// Zesty Crayon Orange Color Aliases
+/// ---
+/// @access public
+/// @type Color
+/// @group core.color.zesty
+/// ---
+/// @requires {variable} $zc-oranges
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/aliases/zesty-oranges';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+/// Zesty Crayon Orange
+/// @color #fbad17
+$zc-orange: get($zc-oranges, '100');
+
+/// @alias zc-orange
+/// @since 1.6.0
+$zc-orange-100: $zc-orange;
+
+/// Zesty Crayon Orange 120
+/// @since 1.6.0
+/// @color #f26c21
+$zc-orange-120: get($zc-oranges, '120');
+
+/// Zesty Crayon Orange 80
+/// @since 1.6.0
+/// @color #fcbd45
+$zc-orange-80: get($zc-oranges, '80');
+
+/// Zesty Crayon Orange 60
+/// @since 1.6.0
+/// @color #fdce74
+$zc-orange-60: get($zc-oranges, '60');
+
+/// Zesty Crayon Orange 40
+/// @since 1.6.0
+/// @color #fddea2
+$zc-orange-40: get($zc-oranges, '40');

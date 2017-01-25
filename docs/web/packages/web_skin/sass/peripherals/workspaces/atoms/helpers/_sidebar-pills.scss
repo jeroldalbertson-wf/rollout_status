@@ -1,0 +1,226 @@
+// ********************************************************
+
+////
+/// Workspaces sidebar pill nav component helpers
+/// ---
+/// @since 1.3.0
+/// @access public
+/// @group peripherals.components.workspaces
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/atoms/helpers/sidebar-pills';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+@mixin wksp-pill-link-help-skin() {
+    // ----- HOVER / FOCUS / PRESS / ACTIVE STATES ----- //
+    @include pill-skin('link-help', $hover-only: true);
+
+
+    // ----- ACTIVE STATE ----- //
+    &.active,
+    &.open {
+        > .pill-link-help-hover {
+            > .icon:before {
+                color: get($nav-pills-pill-link-global-help-skin-colors, 'text-active');
+            }
+        }
+    }
+}
+
+
+@mixin wksp-pill-link-help-icon-color() {
+    > .pill-link-help-hover {
+        > .icon:before {
+            color: get($nav-pills-pill-link-global-help-skin-colors, 'text-base');
+        }
+
+        // ----- HOVER / FOCUS STATE ----- //
+        #{$link-hover-focus} {
+            > .icon:before {
+                color: get($nav-pills-pill-link-global-help-skin-colors, 'text-hover');
+            }
+        }
+
+        // ----- PRESSED STATE ----- //
+        #{$link-pressed} {
+            > .icon:before {
+                color: get($nav-pills-pill-link-global-help-skin-colors, 'text-press');
+            }
+        }
+    }
+
+    // ----- ACTIVE STATE ----- //
+    &.active > .pill-link-help-hover,
+    &.open > .pill-link-help-hover,
+    > .pill-link-help-hover.active,
+    > .pill-link-help-hover.open {
+        > .icon:before {
+            color: get($nav-pills-pill-link-global-help-skin-colors, 'text-active');
+        }
+    }
+}
+
+
+@mixin wksp-pill-link-skin($is-sidebar-hovered: false) {
+    $text-color: get($list-group-tree-link-colors, 'text-color');
+    $icon-color: get($list-group-tree-group-config, 'icon-color');
+    $bg-color: get($list-group-tree-link-colors, 'bg');
+    $bd-color: get($list-group-tree-link-colors, 'bg');
+
+    //
+    // Apply base pill-link-hover style no matter what
+    //
+    > .pill-link-hover {
+        // ----- DEFAULT STATE ----- //
+        color: $text-color !important;
+        background-color: $bg-color !important;
+        border-color: $bg-color !important;
+
+        // Add a little extra contrast in the default state
+        // between the icon and button label
+        .icon {
+            color: $icon-color;
+        }
+
+        // ----- DISABLED STATE ----- //
+        #{$nav-disabled-selectors} {
+            @include btn-disabled($bg-color, $bd-color, $text-color);
+        }
+    }
+
+
+    //
+    // Colorize the help icon no matter what
+    //
+    @include wksp-pill-link-help-icon-color();
+
+
+    //
+    // Grayscale active state for sidebar pills
+    //
+    @if not $is-sidebar-hovered {
+        &.active > .pill-link-hover,
+        &.open > .pill-link-hover,
+        > .pill-link-hover.active,
+        > .pill-link-hover.open {
+            $skin: get($wksp-sidebar-pill-skin-config, 'grayscale');
+
+            color: get($skin, 'text-active') !important;
+            background-color: get($skin, 'bg-active') !important;
+            border-color: get($skin, 'bd-active') !important;
+
+            .icon {
+                @include reset-icon-colors($important: true);
+            }
+        }
+    } @else {
+        //
+        // Skinning for sidebar pills when sidebar is hovered
+        // (kick in the full color)
+        //
+        // ---
+        //
+        // In workspaces, pill links are typically rendered with a
+        // non-link appearance in default state, and then change to
+        // link blue on hover with the standard reversed "white-on-blue"
+        // appearance in active state like a standard `.pill-link` skin.
+        //
+        //
+        @include pill-skin('link', $hover-only: true, $reset-icon-color: true);
+
+        //
+        // Make the global community / help pill
+        // turn purple on press / active state
+        // instead of the default pill link blue
+        //
+        @include wksp-pill-link-help-skin();
+    }
+}
+
+
+@mixin wksp-pill-panel-heading-skin($is-sidebar-hovered: false, $skin-config: $wksp-sidebar-pill-panel-config) {
+    // ----------------------------------------------------
+    //
+    //  [1] Only declare these styles once since it doesn't
+    //      change based on whether or not the parent
+    //      sidebar is being hovered or not.
+    //      (not part of a skin "variation", but more of a base skin property)
+    //
+    //  [2] Only override the default dark blue bg color if
+    //      the panel-heading is part of a panel that
+    //      actually has collapsible content.
+    //
+    //      NOTE: This logic must be implemented based on
+    //      whether or not the toggle button presented in
+    //      the sidebar is intended to simply load new
+    //      content into main, or expand to reveal children
+    //      that load new content into main.
+    //
+    // ----------------------------------------------------
+    $bg-active: get($skin-config, 'collapsible-heading-bg-active');
+    $bg-active-hover: get($skin-config, 'collapsible-heading-bg-active-hover');
+
+
+    // ----- [2] ----- //
+    &.wksp-pill-panel-is-collapsible {
+        // ----- INACTIVE / COLLAPSED PRESSED STATE ----- //
+        #{$link-pressed} {
+            &,
+            &[data-toggle] {
+                color: get($nav-pills-pill-link-skin-colors, 'text-press') !important;
+                background-color: get($nav-pills-pill-link-skin-colors, 'bg-press') !important;
+                border-color: get($nav-pills-pill-link-skin-colors, 'bg-press') !important;
+            }
+        }
+    }
+
+
+    // ----- OPEN / ACTIVE STATE ----- //
+    &.open,
+    &.active {
+        // ----- [1] ----- //
+        @if not $is-sidebar-hovered {
+            &,
+            #{$link-pressed},
+            #{$focus} {
+                &,
+                &[data-toggle] {
+                    color: get($nav-pills-pill-link-skin-colors, 'text-active') !important; // [3]
+                }
+            }
+        }
+
+        // ----- [2] ----- //
+        &.wksp-pill-panel-is-collapsible {
+            color: get($nav-pills-pill-link-skin-colors, 'text-active') !important;
+            background-color: $bg-active !important;
+            border-color: $bg-active !important;
+
+            // ----- ACTIVE HOVER + FOCUS STATES ----- //
+            #{$link-hover-focus} {
+                &,
+                &[data-toggle] {
+                    color: get($nav-pills-pill-link-skin-colors, 'text-active') !important;
+                    background-color: $bg-active-hover !important;
+                    border-color: $bg-active-hover !important;
+                }
+            }
+
+            // ----- ACTIVE PRESSED STATE ----- //
+            #{$link-pressed} {
+                &,
+                &[data-toggle] {
+                    color: get($nav-pills-pill-link-skin-colors, 'text-active') !important;
+                    background-color: $bg-active !important;
+                    border-color: $bg-active !important;
+                }
+            }
+        }
+    }
+}

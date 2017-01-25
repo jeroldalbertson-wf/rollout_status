@@ -1,0 +1,137 @@
+// ********************************************************
+//
+//   NAV COMPONENTS STYLE MODULE
+//   http://bit.ly/webskin-navs
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/navs/navs';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $navs-module-config:  'core/components/atoms/navs/navs-config';
+    $navs-module-helpers: 'core/components/atoms/navs/navs-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $navs-module-config,
+                                          $navs-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE NAV CONTAINER
+//
+// ********************************************************
+.nav {
+    @include clearfix();
+
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-left: 0; // Override default ul/ol
+    list-style: none;
+}
+
+
+// ********************************************************
+//
+//   BASE NAV ITEMS / ITEM HITAREAS
+//
+// ********************************************************
+.nav > .nav-item {
+    display: block;
+    position: relative;
+    @include disable-user-select(); // Disable nav item text selection
+
+    // ----------------------------------------------------
+    //   NAV ITEM LINKS (`.hitarea`)
+    // ----------------------------------------------------
+    > .hitarea {
+        display: block;
+        position: relative;
+        text-align: left; // necessary to enable the use of `<button>`
+        width: 100%; // necessary to enable the use of `<button>`
+        z-index: get($nav-link-config, 'z-index-active') - 1; // keep below .active > .hitarea
+        padding: to-rem($nav-link-padding);
+        color: get($nav-link-config, 'text-color');
+        @include truncate-text(); // should never overflow its container
+        @include disable-user-select(); // Disable nav item text selection
+
+        * {
+            @include disable-user-select(); // Disable nav item text selection
+        }
+
+
+        // ----- HOVER HITAREA STATE ----- //
+        #{$link-hover-focus} {
+            @include nav-link-hover();
+        }
+
+
+        // ----- PRESSED HITAREA STATE ----- //
+        #{$link-pressed} {
+            @include nav-link-press();
+        }
+
+
+        // ----- DISABLED HITAREA STATE ----- //
+        #{$nav-disabled-selectors} {
+            color: get($nav-link-config, 'text-color-disabled') !important;
+            background-color: get($nav-link-config, 'bg-disabled') !important;
+            text-decoration: none;
+        }
+    }
+
+    // ----------------------------------------------------
+    //   ACTIVE / OPEN NAV ITEM STATES
+    // ----------------------------------------------------
+    &.active,
+    &.open {
+        > .hitarea {
+            // keep above the non-active hitareas (helpful for active dropups for instance)
+            // and keep above the active dropdown/up
+            z-index: get($nav-link-config, 'z-index-active');
+            color: get($nav-link-config, 'text-color-active');
+            background-color: get($nav-link-config, 'bg-active');
+
+            // ----- ACTIVE + HOVER / FOCUS STATES ----- //
+            #{$link-hover-focus} {
+                color: get($nav-link-config, 'text-color-active');
+            }
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   OPTIONAL NAV COMPONENTS
+//
+// ********************************************************
+
+    // ----------------------------------------------------
+    //   DIVIDERS
+    //   -> Essentially an `<hr>` between items
+    // ----------------------------------------------------
+    .nav-item.divider {
+        @include nav-divider-horizontal();
+    }
+
+    // ----------------------------------------------------
+    //   ICON PLACEMENT / SPACING WITHIN NAV ITEMS
+    // ----------------------------------------------------
+    .nav-item .icon {
+        @include nav-link-icon-spacing();
+    }
+
+
+// ********************************************************
+//
+//   NAV "BLOCKS" VARIATION
+//
+// ********************************************************
+.nav-blocks > .nav-item > .hitarea {
+    @include nav-blocks-link-default();
+}

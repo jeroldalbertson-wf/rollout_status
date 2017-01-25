@@ -1,0 +1,453 @@
+@mixin _test-transition-shorthand-return-values($_actual) {
+    $actual-without-delays: inspect(map-get($_actual, 'transitions-without-delays')) !global;
+    $actual-with-delays: inspect(map-get($_actual, 'transitions-with-delays')) !global;
+    $actual-has-delays: inspect(map-get($_actual, 'has-delays')) !global;
+    $actual-delays: inspect(map-get($_actual, 'delays')) !global;
+
+    @content;
+}
+
+@include describe('[_build-transition-shorthand]') {
+    @include it('should return a map with four keys') {
+        $actual: map-keys(_build-transition-shorthand('-webkit', opacity .3s ease-in));
+        $expected: 'has-delays', 'delays', 'transitions-without-delays', 'transitions-with-delays';
+
+        @include should(expect( $actual ), to(be( $expected )));
+    }
+
+    @include describe('when no delay is present') {
+        @include it('should return a map with the has-delays key set to a falsy value') {
+            $actual: _build-transition-shorthand('-webkit', opacity .3s ease-in);
+            $actual-has-delays: map-get($actual, 'has-delays') !global;
+
+            @include should(expect( $actual-has-delays ), to(be-falsy()));
+        }
+    }
+
+    @include describe('when a delay is present') {
+        @include it('should return a map with the has-delays key set to a truthy value') {
+            $actual: _build-transition-shorthand('-webkit', opacity .3s ease-in .1s);
+            $actual-has-delays: map-get($actual, 'has-delays') !global;
+
+            @include should(expect( $actual-has-delays ), to(be-truthy()));
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   SHARED DURATION / DELAY / TIMING
+    // ----------------------------------------------------
+    @include describe('when the transitions argument has a length of one') {
+        // ----- SINGLE PROPERTY ----- //
+        @include describe('and a single transition property is requested that is') {
+            @include describe('non-prefixable') {
+                @include it('should return the correct transition shorthand values') {
+                    $actual: _build-transition-shorthand('-webkit', opacity .3s ease-in .1s);
+
+                    @include _test-transition-shorthand-return-values($actual) {
+                        @include should(expect( $actual-without-delays ), to(be(
+                            'opacity 0.3s ease-in'
+                        )));
+                        @include should(expect( $actual-with-delays ), to(be(
+                            'opacity 0.3s ease-in 0.1s'
+                        )));
+                        @include should(expect( $actual-delays ), to(be(
+                            '0.1s'
+                        )));
+                    }
+                }
+            }
+
+            @include describe('prefixable') {
+                @include describe('and the current prefix is') {
+                    @include describe('-webkit') {
+                        @include it('should return prefixed transition shorthand values') {
+                            $actual: _build-transition-shorthand('-webkit', transform .3s ease-in .1s);
+
+                            @include _test-transition-shorthand-return-values($actual) {
+                                @include should(expect( $actual-without-delays ), to(be(
+                                    '-webkit-transform 0.3s ease-in'
+                                )));
+                                @include should(expect( $actual-with-delays ), to(be(
+                                    '-webkit-transform 0.3s ease-in 0.1s'
+                                )));
+                                @include should(expect( $actual-delays ), to(be(
+                                    '0.1s'
+                                )));
+                            }
+                        }
+                    }
+
+                    @include describe('null') {
+                        @include it('should return un-prefixed transition shorthand values') {
+                            $actual: _build-transition-shorthand(null, transform .3s ease-in .1s);
+
+                            @include _test-transition-shorthand-return-values($actual) {
+                                @include should(expect( $actual-without-delays ), to(be(
+                                    'transform 0.3s ease-in'
+                                )));
+                                @include should(expect( $actual-with-delays ), to(be(
+                                    'transform 0.3s ease-in 0.1s'
+                                )));
+                                @include should(expect( $actual-delays ), to(be(
+                                    '0.1s'
+                                )));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // ----- MULTIPLE PROPERTIES ----- //
+        @include describe('and multiple transition properties are requested that are') {
+            @include describe('non-prefixable') {
+                @include it('should return the correct transition shorthand values') {
+                    $transition-properties: opacity width height;
+                    $actual: _build-transition-shorthand(
+                        '-webkit',
+                        to-list($transition-properties, comma) .3s ease-in .1s
+                    );
+
+                    @include _test-transition-shorthand-return-values($actual) {
+                        @include should(expect( $actual-without-delays ), to(be(
+                            'opacity 0.3s ease-in, width 0.3s ease-in, height 0.3s ease-in'
+                        )));
+                        @include should(expect( $actual-with-delays ), to(be(
+                            'opacity 0.3s ease-in 0.1s, width 0.3s ease-in 0.1s, height 0.3s ease-in 0.1s'
+                        )));
+                        @include should(expect( $actual-delays ), to(be(
+                            '0.1s, 0.1s, 0.1s'
+                        )));
+                    }
+                }
+            }
+
+            @include describe('a mix of prefixable and non-prefixable') {
+                @include describe('and the current prefix is') {
+                    @include describe('-webkit') {
+                        @include it('should return prefixed transition shorthand values') {
+                            $transition-properties: opacity transform;
+                            $actual: _build-transition-shorthand(
+                                '-webkit',
+                                to-list($transition-properties, comma) .3s ease-in .1s
+                            );
+
+                            @include _test-transition-shorthand-return-values($actual) {
+                                @include should(expect( $actual-without-delays ), to(be(
+                                    'opacity 0.3s ease-in, -webkit-transform 0.3s ease-in'
+                                )));
+                                @include should(expect( $actual-with-delays ), to(be(
+                                    'opacity 0.3s ease-in 0.1s, -webkit-transform 0.3s ease-in 0.1s'
+                                )));
+                                @include should(expect( $actual-delays ), to(be(
+                                    '0.1s, 0.1s'
+                                )));
+                            }
+                        }
+                    }
+
+                    @include describe('null') {
+                        @include it('should return un-prefixed transition shorthand values') {
+                            $transition-properties: opacity transform;
+                            $actual: _build-transition-shorthand(
+                                null,
+                                to-list($transition-properties, comma) .3s ease-in .1s
+                            );
+
+                            @include _test-transition-shorthand-return-values($actual) {
+                                @include should(expect( $actual-without-delays ), to(be(
+                                    'opacity 0.3s ease-in, transform 0.3s ease-in'
+                                )));
+                                @include should(expect( $actual-with-delays ), to(be(
+                                    'opacity 0.3s ease-in 0.1s, transform 0.3s ease-in 0.1s'
+                                )));
+                                @include should(expect( $actual-delays ), to(be(
+                                    '0.1s, 0.1s'
+                                )));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   UNIQUE DURATION / DELAY / TIMING
+    // ----------------------------------------------------
+    @include describe('when the transitions argument has a length gt one') {
+        @include describe('and they all have a single property that is') {
+            @include describe('non-prefixable') {
+                @include it('should return the correct transition shorthand values') {
+                    $actual: _build-transition-shorthand(
+                        '-webkit',
+                        opacity .3s ease-in .1s,
+                        width 1s linear
+                    );
+
+                    @include _test-transition-shorthand-return-values($actual) {
+                        @include should(expect( $actual-without-delays ), to(be(
+                            'opacity 0.3s ease-in, width 1s linear'
+                        )));
+                        @include should(expect( $actual-with-delays ), to(be(
+                            'opacity 0.3s ease-in 0.1s, width 1s linear 0s'
+                        )));
+                        @include should(expect( $actual-has-delays ), to(
+                            be-truthy()
+                        ));
+                        @include should(expect( $actual-delays ), to(be(
+                            '0.1s, 0s'
+                        )));
+                    }
+                }
+            }
+
+            @include describe('prefixable') {
+                @include describe('and the current prefix is') {
+                    @include describe('-webkit') {
+                        @include it('should return prefixed transition shorthand values') {
+                            $actual: _build-transition-shorthand(
+                                '-webkit',
+                                transform .3s ease-in .1s,
+                                transform-origin 1s linear
+                            );
+
+                            @include _test-transition-shorthand-return-values($actual) {
+                                @include should(expect( $actual-without-delays ), to(be(
+                                    '-webkit-transform 0.3s ease-in, -webkit-transform-origin 1s linear'
+                                )));
+                                @include should(expect( $actual-with-delays ), to(be(
+                                    '-webkit-transform 0.3s ease-in 0.1s, -webkit-transform-origin 1s linear 0s'
+                                )));
+                                @include should(expect( $actual-delays ), to(be(
+                                    '0.1s, 0s'
+                                )));
+                            }
+                        }
+                    }
+
+                    @include describe('null') {
+                        @include it('should return un-prefixed transition shorthand values') {
+                            $actual: _build-transition-shorthand(
+                                null,
+                                transform .3s ease-in .1s,
+                                transform-origin 1s linear
+                            );
+
+                            @include _test-transition-shorthand-return-values($actual) {
+                                @include should(expect( $actual-without-delays ), to(be(
+                                    'transform 0.3s ease-in, transform-origin 1s linear'
+                                )));
+                                @include should(expect( $actual-with-delays ), to(be(
+                                    'transform 0.3s ease-in 0.1s, transform-origin 1s linear 0s'
+                                )));
+                                @include should(expect( $actual-delays ), to(be(
+                                    '0.1s, 0s'
+                                )));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        @include describe('and they all have a single property, but only one is prefixable') {
+            @include describe('and the current prefix is') {
+                @include describe('-webkit') {
+                    @include it('should return prefixed transition shorthand values') {
+                        $actual: _build-transition-shorthand(
+                            '-webkit',
+                            transform .3s ease-in .1s,
+                            opacity 1s linear
+                        );
+
+                        @include _test-transition-shorthand-return-values($actual) {
+                            @include should(expect( $actual-without-delays ), to(be(
+                                '-webkit-transform 0.3s ease-in, opacity 1s linear'
+                            )));
+                            @include should(expect( $actual-with-delays ), to(be(
+                                '-webkit-transform 0.3s ease-in 0.1s, opacity 1s linear 0s'
+                            )));
+                            @include should(expect( $actual-delays ), to(be(
+                                '0.1s, 0s'
+                            )));
+                        }
+                    }
+                }
+
+                @include describe('null') {
+                    @include it('should return un-prefixed transition shorthand values') {
+                        $actual: _build-transition-shorthand(
+                            null,
+                            transform .3s ease-in .1s,
+                            opacity 1s linear
+                        );
+
+                        @include _test-transition-shorthand-return-values($actual) {
+                            @include should(expect( $actual-without-delays ), to(be(
+                                'transform 0.3s ease-in, opacity 1s linear'
+                            )));
+                            @include should(expect( $actual-with-delays ), to(be(
+                                'transform 0.3s ease-in 0.1s, opacity 1s linear 0s'
+                            )));
+                            @include should(expect( $actual-delays ), to(be(
+                                '0.1s, 0s'
+                            )));
+                        }
+                    }
+                }
+            }
+        }
+
+        @include describe('and one has multiple properties') {
+            @include it('should return the correct transition shorthand values') {
+                $transition1-properties: opacity width height;
+                $actual: _build-transition-shorthand(
+                    '-webkit',
+                    to-list($transition1-properties, comma) .3s ease-in .1s,
+                    background-color 1s linear 5s
+                );
+
+                @include _test-transition-shorthand-return-values($actual) {
+                    @include should(expect( $actual-without-delays ), to(be(
+                        'opacity 0.3s ease-in, width 0.3s ease-in, height 0.3s ease-in, background-color 1s linear'
+                    )));
+                    @include should(expect( $actual-with-delays ), to(be(
+                        'opacity 0.3s ease-in 0.1s, width 0.3s ease-in 0.1s, height 0.3s ease-in 0.1s, background-color 1s linear 5s'
+                    )));
+                    @include should(expect( $actual-delays ), to(be(
+                        '0.1s, 0.1s, 0.1s, 5s'
+                    )));
+                }
+            }
+
+            @include describe('and one of those properties is prefixable') {
+                @include describe('and the current prefix is') {
+                    @include describe('-webkit') {
+                        @include it('should return prefixed transition shorthand values') {
+                            $transition1-properties: opacity transform;
+                            $actual: _build-transition-shorthand(
+                                '-webkit',
+                                to-list($transition1-properties, comma) .3s ease-in .1s,
+                                width 1s linear
+                            );
+
+                            @include _test-transition-shorthand-return-values($actual) {
+                                @include should(expect( $actual-without-delays ), to(be(
+                                    'opacity 0.3s ease-in, -webkit-transform 0.3s ease-in, width 1s linear'
+                                )));
+                                @include should(expect( $actual-with-delays ), to(be(
+                                    'opacity 0.3s ease-in 0.1s, -webkit-transform 0.3s ease-in 0.1s, width 1s linear 0s'
+                                )));
+                                @include should(expect( $actual-delays ), to(be(
+                                    '0.1s, 0.1s, 0s'
+                                )));
+                            }
+                        }
+                    }
+
+                    @include describe('null') {
+                        @include it('should return un-prefixed transition shorthand values') {
+                            $transition1-properties: opacity transform;
+                            $actual: _build-transition-shorthand(
+                                null,
+                                to-list($transition1-properties, comma) .3s ease-in .1s,
+                                width 1s linear
+                            );
+
+                            @include _test-transition-shorthand-return-values($actual) {
+                                @include should(expect( $actual-without-delays ), to(be(
+                                    'opacity 0.3s ease-in, transform 0.3s ease-in, width 1s linear'
+                                )));
+                                @include should(expect( $actual-with-delays ), to(be(
+                                    'opacity 0.3s ease-in 0.1s, transform 0.3s ease-in 0.1s, width 1s linear 0s'
+                                )));
+                                @include should(expect( $actual-delays ), to(be(
+                                    '0.1s, 0.1s, 0s'
+                                )));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        @include describe('and both have multiple properties') {
+            @include it('should return the correct transition shorthand values') {
+                $transition1-properties: opacity width height;
+                $transition2-properties: background-color border-color;
+                $actual: _build-transition-shorthand(
+                    '-webkit',
+                    to-list($transition1-properties, comma) .3s ease-in .1s,
+                    to-list($transition2-properties, comma) 1s linear 5s
+                );
+
+                @include _test-transition-shorthand-return-values($actual) {
+                    @include should(expect( $actual-without-delays ), to(be(
+                        'opacity 0.3s ease-in, width 0.3s ease-in, height 0.3s ease-in, background-color 1s linear, border-color 1s linear'
+                    )));
+                    @include should(expect( $actual-with-delays ), to(be(
+                        'opacity 0.3s ease-in 0.1s, width 0.3s ease-in 0.1s, height 0.3s ease-in 0.1s, background-color 1s linear 5s, border-color 1s linear 5s'
+                    )));
+                    @include should(expect( $actual-delays ), to(be(
+                        '0.1s, 0.1s, 0.1s, 5s, 5s'
+                    )));
+                }
+            }
+
+            @include describe('and one of those properties is prefixable') {
+                @include describe('and the current prefix is') {
+                    @include describe('-webkit') {
+                        @include it('should return prefixed transition shorthand values') {
+                            $transition1-properties: opacity transform;
+                            $transition2-properties: background-color border-color;
+                            $actual: _build-transition-shorthand(
+                                '-webkit',
+                                to-list($transition1-properties, comma) .3s ease-in .1s,
+                                to-list($transition2-properties, comma) 1s linear 5s
+                            );
+
+                            @include _test-transition-shorthand-return-values($actual) {
+                                @include should(expect( $actual-without-delays ), to(be(
+                                    'opacity 0.3s ease-in, -webkit-transform 0.3s ease-in, background-color 1s linear, border-color 1s linear'
+                                )));
+                                @include should(expect( $actual-with-delays ), to(be(
+                                    'opacity 0.3s ease-in 0.1s, -webkit-transform 0.3s ease-in 0.1s, background-color 1s linear 5s, border-color 1s linear 5s'
+                                )));
+                                @include should(expect( $actual-delays ), to(be(
+                                    '0.1s, 0.1s, 5s, 5s'
+                                )));
+                            }
+                        }
+                    }
+
+                    @include describe('null') {
+                        @include it('should return un-prefixed transition shorthand values') {
+                            $transition1-properties: opacity transform;
+                            $transition2-properties: background-color border-color;
+                            $actual: _build-transition-shorthand(
+                                null,
+                                to-list($transition1-properties, comma) .3s ease-in .1s,
+                                to-list($transition2-properties, comma) 1s linear 5s
+                            );
+
+                            @include _test-transition-shorthand-return-values($actual) {
+                                @include should(expect( $actual-without-delays ), to(be(
+                                    'opacity 0.3s ease-in, transform 0.3s ease-in, background-color 1s linear, border-color 1s linear'
+                                )));
+                                @include should(expect( $actual-with-delays ), to(be(
+                                    'opacity 0.3s ease-in 0.1s, transform 0.3s ease-in 0.1s, background-color 1s linear 5s, border-color 1s linear 5s'
+                                )));
+                                @include should(expect( $actual-delays ), to(be(
+                                    '0.1s, 0.1s, 5s, 5s'
+                                )));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

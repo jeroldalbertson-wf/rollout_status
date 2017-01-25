@@ -1,0 +1,42 @@
+// ********************************************************
+//
+//   Web Skin Core Modules required for Wdesk Login Page(s)
+//
+    $module: 'peripherals/wdesk-login/wdesk-login-dependencies';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   Web Skin Foundation
+//
+// ********************************************************
+    @import "../../../core/foundation/module-base";
+    @import "../../../core/foundation/grid";
+
+
+
+// ********************************************************
+//
+//   Web Skin Required Components
+//
+// ********************************************************
+    @import "../../../core/components/forms/forms";
+    @import "../../../core/components/buttons/buttons";
+    @import "../../../core/components/buttons/buttons-close";
+    @import "../../../core/components/dialogs/alerts";
+    @import "../../../core/components/dialogs/modals";
+    @import "../../../core/components/progress/progress-bars";
+    @import "../../../core/components/progress/progress-spinners";
+
+
+
+// ********************************************************
+//
+//   Web Skin Responsive Layout Helpers
+//
+// ********************************************************
+    @import "../../../core/foundation/tools/component-animations";
+    @import "../../../core/foundation/tools/responsive";

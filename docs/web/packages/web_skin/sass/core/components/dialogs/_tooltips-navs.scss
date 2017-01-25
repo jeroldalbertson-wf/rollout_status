@@ -1,0 +1,106 @@
+// ********************************************************
+//
+//   TOOLTIP "NAV" COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-tooltips-navs
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/dialogs/tooltips-navs';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $dialogs-tooltips-navs-module-config:  'core/components/atoms/dialogs/tooltips-config';
+    $dialogs-tooltips-navs-module-helpers: 'core/components/atoms/dialogs/dialogs-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $dialogs-tooltips-navs-module-config,
+                                          $dialogs-tooltips-navs-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   LOCAL CONFIG ALIASES
+//
+// ********************************************************
+$nav-tooltip-content-padding: nth($tooltip-content-padding, 1);
+$nav-tooltip-bd-radius: get-deep($global-component-size-config, 'bd-radius.lg');
+$nav-tooltip-link-font-size: get-deep($btn-config, 'font-size.lg');
+$nav-tooltip-link-line-height: get-deep($btn-config, 'line-height.base');
+$nav-tooltip-link-height: box-model-height($font-size: $nav-tooltip-link-font-size,
+                                           $line-height: $nav-tooltip-link-line-height,
+                                           $padding-vertical: get-deep($btn-config, 'padding.base.vertical'),
+                                           $bd-width: get($btn-config, 'bd-width')
+                                          );
+
+
+// ********************************************************
+//
+//   BASE NAV TOOLTIP CLASS
+//
+// ********************************************************
+.nav-tooltip {
+    border-radius: to-rem($nav-tooltip-bd-radius);
+    font-size: to-rem(get-deep($global-component-size-config, 'font-size.lg'));
+}
+
+
+// ********************************************************
+//
+//   NAV TOOLTIP CONTENT WRAPPER
+//
+// ********************************************************
+.nav-tooltip .inner {
+    min-width: 0;
+    max-width: none;
+    padding: to-rem($nav-tooltip-content-padding - $tooltip-padding);
+    border-radius: to-rem($nav-tooltip-bd-radius - $tooltip-bd-width);
+}
+
+
+// ********************************************************
+//
+//   NAV TOOLTIP ARROWS IN ALL DIRECTIONS
+//   -> Must redeclare here because these are a larger
+//      size than default `.tooltip` arrows.
+//
+// ********************************************************
+.nav-tooltip {
+    @include triangles($triangle-width: $triangle-lg-width,
+                       $triangle-bg: $dialog-gray-bg,
+                       $outer-bd-width: $tooltip-bd-width,
+                       $outer-bd-color: $dialog-gray-bd-color,
+                       $align-center: true);
+}
+
+
+// ********************************************************
+//
+//   NAV TOOLTIP NAV ITEMS (PILLS)
+//
+// ********************************************************
+.nav-tooltip .nav-pills {
+    // Mimic the size / appearance of a .btn-lg
+    max-height: to-rem($nav-tooltip-link-height);
+
+    > .nav-item {
+        > .hitarea {
+            padding: to-rem(get-deep($btn-config, 'padding.base.all'));
+            font-size: to-rem($nav-tooltip-link-font-size);
+            line-height: to-rem($nav-tooltip-link-line-height);
+            border-radius: to-rem(get-deep($btn-config, 'bd-radius.base'));
+        }
+
+        // match default pill appearance when active
+        &.active > .hitarea {
+            @include nav-pills-pill-active();
+        }
+
+        // Increase space between adjacent pills
+        + .nav-item > .hitarea {
+            margin-left: to-rem($nav-tooltip-content-padding);
+        }
+    }
+}

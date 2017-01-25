@@ -1,0 +1,445 @@
+// ********************************************************
+//
+//   for use with pygments.rb code demos
+//   in jekyll html files anywhere you
+//   see `{% highlight %}`
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/vendor/pygments';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+    $code-container-class: '[class*="language-"]';
+
+// ----------------------------------------------------
+//   Globals / Defaults
+// ----------------------------------------------------
+    pre > #{$code-container-class} {
+        color: $code-ex-default;
+    }
+
+    #{$code-container-class} {
+        .hll { // Highlighted Line
+            background-color: $code-highlight-line;
+        }
+
+        .err { // Error
+            color: $code-error-text;
+            background-color: $code-error-bg;
+        }
+
+        .p { // Punctuation
+            color: $code-punctuation;
+        }
+
+        .o,
+        .ow { // Operator, Operator.Word
+            color: $code-operator;
+            font-weight: bold;
+        }
+
+        .w { // Text.Whitespace
+            color: $code-whitespace;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Comments
+// ----------------------------------------------------
+    #{$code-container-class} {
+        .c { // Comment
+            color: $code-comment;
+            font-style: italic;
+        }
+
+        .cm,
+        .com { // Comment.Multiline
+            color: $code-comment;
+            font-style: italic;
+        }
+
+        .c1 { // Comment.Single
+            color: $code-comment;
+            font-style: italic;
+        }
+
+        .cs { // Comment.Special
+            color: $code-comment;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        .cp { // Comment.Preprocessor
+            color: $code-comment;
+            font-style: italic;
+            font-weight: bold;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Generics
+// ----------------------------------------------------
+    #{$code-container-class} {
+        .gd { // Generic.Deleted
+            background-color: $code-gen-del-bg;
+        }
+
+        .gi { // Generic.Inserted
+            background-color: $code-gen-ins-bg;
+        }
+
+        .gi { // Generic.Emphasis
+            font-style: italic;
+        }
+
+        .gs { // Generic.Strong
+            font-weight: bold;
+        }
+
+        .gr { // Generic.Error
+            color: $code-gen-err;
+        }
+
+        .gh { // Generic.Heading
+            color: $code-gen-heading;
+        }
+
+        .gu { // Generic.Subheading
+            color: $code-gen-subheading;
+        }
+
+        .go { // Generic.Output
+            color: $code-gen-output;
+        }
+
+        .gp { // Generic.Prompt
+            color: $code-gen-prompt;
+        }
+
+        .gt { // Generic.Traceback
+            color: $code-gen-traceback;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Keywords
+// ----------------------------------------------------
+    #{$code-container-class} {
+        .k  { // Keyword
+            color: $code-keyword;
+            font-weight: bold;
+        }
+
+        .kc { // Keyword.Constant
+            color: $code-name-constant;
+            font-weight: normal;
+        }
+
+        .kd { // Keyword.Declaration
+            color: $code-keyword;
+            font-weight: bold;
+        }
+
+        .kn { // Keyword.Namespace
+            color: $code-keyword;
+            font-weight: bold;
+        }
+
+        .kp { // Keyword.Pseudo
+            color: $code-keyword;
+            font-weight: bold;
+        }
+
+        .kr { // Keyword.Reserved
+            color: $code-keyword;
+            font-weight: bold;
+        }
+
+        .kt { // Keyword.Type
+            color: $code-keyword-type;
+            font-weight: bold;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Names
+// ----------------------------------------------------
+    #{$code-container-class} {
+        .na,
+        .atn,
+        .typ,
+        .dec,
+        .var { // Name.Attribute
+            color: $code-name-attr;
+        }
+
+        .nb,
+        .n,
+        .Bool,
+        .Boolean,
+        .Null { // Name.Builtin
+            color: $code-name-builtin;
+        }
+
+        .bp { // Name.Builtin.Pseudo
+            color: $code-name-builtin-ps;
+        }
+
+        .nc { // Name.Class
+            color: $code-name-class;
+            font-weight: bold;
+        }
+
+        .no { // Name.Constant
+            color: $code-name-constant;
+        }
+
+        .nd { // Name.Decorator
+            color: $code-name-decorator;
+            font-weight: bold;
+        }
+
+        .ni { // Name.Entity
+            color: $code-name-entity;
+        }
+
+        .ne { // Name.Exception
+            color: $code-name-exception;
+            font-weight: bold;
+        }
+
+        .nf,
+        .fun { // Name.Function
+            color: $code-name-function;
+            font-weight: bold;
+        }
+
+        .nl { // Name.Label
+            color: $code-name-label;
+        }
+
+        .nn { // Name.Namespace
+            color: $code-name-namespace;
+        }
+
+        .nt,
+        .kwd,
+        .tag { // Name.Tag
+            color: $code-name-tag;
+        }
+
+        .nv { // Name.Variable
+            color: $code-name-variable;
+        }
+
+        .vc { // Name.Variable.Class
+            color: $code-name-variable;
+        }
+
+        .vg { // Name.Variable.Global
+            color: $code-name-variable;
+        }
+
+        .vi { // Name.Variable.Instance
+            color: $code-name-variable;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Literals
+// ----------------------------------------------------
+    #{$code-container-class} {
+        // ----- Numbers ----- //
+        .Number,
+        .List {
+            color: $code-literal-num;
+        }
+
+        .m  { // Literal.Number
+            color: $code-literal-num;
+        }
+
+        .mf { // Literal.Number.Float
+            color: $code-literal-num;
+        }
+
+        .mh,
+        .Color { // Literal.Number.Hex
+            color: $code-literal-num;
+        }
+
+        .mi { // Literal.Number.Integer
+            color: $code-literal-num;
+        }
+
+        .il { // Literal.Number.Integer.Long
+            color: $code-literal-num;
+        }
+
+        .mo { // Literal.Number.Oct
+            color: $code-literal-num;
+        }
+
+        // ----- Strings ----- //
+        .sd { // Literal.String.Doc
+            color: $code-literal-str;
+        }
+
+        .s,
+        .str,
+        .atv,
+        .String { // Literal.String
+            color: $code-literal-str;
+        }
+
+        .sb { // Literal.String.Backtick
+            color: $code-literal-str;
+        }
+
+        .sc { // Literal.String.Char
+            color: $code-literal-str;
+        }
+
+        .s2 { // Literal.String.Double
+            color: $code-literal-str;
+        }
+
+        .s1 { // Literal.String.Single
+            color: $code-literal-str;
+        }
+
+        .sh { // Literal.String.Heredoc
+            color: $code-literal-str;
+        }
+
+        .sx { // Literal.String.Other
+            color: $code-literal-str;
+        }
+
+        .se { // Literal.String.Escape
+            color: $code-literal-str-esc;
+        }
+
+        .si { // Literal.String.Interpol
+            color: $code-literal-str-interp;
+        }
+
+        .ss { // Literal.String.Symbol
+            color: $code-literal-str-sym;
+        }
+
+        .sr { // Literal.String.Regex
+            color: $code-literal-str-rgx;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Language Specific Overrides
+//   -> When nested in a full `.highlight` context
+// ----------------------------------------------------
+    .highlight {
+        .language-html {
+            // Doctype tag
+            .cp {
+                color: $code-name-constant;
+                font-style: normal;
+            }
+        }
+
+        .language-ruby {
+            .n {
+                color: $code-name-attr;
+                font-weight: bold;
+            }
+        }
+
+        .language-scss,
+        .language-css,
+        .scss,
+        .css {
+            // CSS class
+            .nc {
+                color: $code-name-class-css;
+                font-weight: normal;
+            }
+
+            // CSS id
+            .nn {
+                color: $code-name-class-css;
+                font-weight: normal;
+            }
+
+            // CSS property name
+            .na,
+            .nl {
+                color: $code-name-attr;
+            }
+
+            // Things like square brackets around attribute names in selectors
+            // and the ! before important or default are interpreted as
+            // operators, so they look odd being bolded.
+            .o {
+                font-weight: normal;
+            }
+
+            // Sass Variable
+            .nv {
+                color: $code-name-variable-sass;
+            }
+
+            // Sass Variable Declaration (sassdoc api only)
+            [data-item-type="variable"] & {
+                > span:first-child {
+                    color: $code-name-variable-sass-declaration;
+                    font-weight: bold;
+                }
+            }
+
+            // CSS Builtin
+            .nt,
+            .n {
+                color: $code-name-tag;
+            }
+
+            .err,
+            .err + .nt {
+                // most likely a variable used as a param
+                color: $code-name-variable-sass;
+                background-color: inherit;
+            }
+
+            .k + .nd,
+            .nt + .nd {
+                // most likely the name of a mixin, or something like `:hover`
+                color: lighten($code-name-function, 5);
+                font-weight: normal;
+            }
+
+            // account for the `:` in something like `@media (max-width: 0)`
+            .o + .nt + .nd {
+                color: $code-operator;
+            }
+
+            // Keyword.Type in this situation is most likely a css unit associated with a number
+            .kt,
+            .nt + .err {
+                color: $code-css-unit;
+                font-weight: normal;
+            }
+
+            .n-Pseudo,
+            .bp {
+                // In a situation like `$var: false;` or `'map-key': false`
+                // The `false` is interpreted as `.n-Pseudo` or `.bp`
+                color: $code-name-constant;
+            }
+        }
+    }

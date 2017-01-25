@@ -1,0 +1,870 @@
+// ********************************************************
+
+////
+/// Button component state color configuration
+/// ---
+/// @access public
+/// @type Map
+/// @since 1.0.0
+/// @group core.components.buttons
+/// @link http://bit.ly/webskin-btn-colors Button component color option spec
+/// @todo Write unit tests asserting the color constant values
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/buttons/config/button-color-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function extend,
+                                                function to-decimal);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   DEFAULT COLOR CONFIG
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.btn` component's `.btn-default` color variation.
+    /// ---
+    /// @todo Write a unit test that asserts that button bd matches form control bd
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $zc-gray
+    /// @requires {variable} $zc-gray-20
+    /// @requires {variable} $zc-gray-40
+    /// @requires {variable} $zc-gray-50
+    /// @requires {variable} $zc-blue-80
+    /// @requires {variable} $black
+    /// ---
+    /// @prop {Color}  text-base          [#595959] - Default button text color when not in a hovered or pressed state.
+    /// @prop {Color}  bg-base            [#f7f7f7] - Default button background color when not in a hovered or pressed state.
+    /// @prop {Color}  bd-base            [#d8d8d8] - Default button border color when not in a hovered or pressed state. _Added via `@extend`_
+    /// @prop {Color}  bd-rgba-color      [#000000] - Default button border color used-in-combination with `bd-rgba-alpha` for browsers that support `rgba` color
+    /// @prop {Number} bd-rgba-alpha      [.16]     - Default button border opacity used-in-combination with `bd-rgba-color` for browsers that support `rgba` color. _Added via `@extend`_
+    /// @prop {Color}  shadow-base        [#d8d8d8] - Default button shadow color when not in a hovered or pressed state. _Added via `@extend`_
+    /// @prop {Color}  shadow-rgba-color  [#000000] - Default button shadow color used-in-combination with `shadow-rgba-alpha` for browsers that support `rgba` color. _Added via `@extend`_
+    /// @prop {Number} shadow-rgba-alpha  [.16]     - Default button shadow opacity used-in-combination with `shadow-rgba-color` for browsers that support `rgba` color. _Added via `@extend`_
+    ///
+    /// @prop {Color}  text-hover               [#333333] - Default button text color when hovered. _Added via `@extend`_
+    /// @prop {Color}  bg-hover                 [#f3f3f3] - Default button background color when hovered
+    /// @prop {Color}  bd-hover                 [#d8d8d8] - Default button border color when hovered. _Added via `@extend`_
+    /// @prop {Number} bd-hover-rgba-alpha      [.16]     - Default button border opacity used-in-combination with `bd-rgba-color` when hovered for browsers that support `rgba` color. _Added via `@extend`_
+    /// @prop {Color}  shadow-hover             [#d8d8d8] - Default button shadow color when hovered. _Added via `@extend`_
+    ///
+    /// @prop {Color}  toggle-bd-focus          [#33a9ff] - `.btn-toggle` border color when focused
+    ///
+    /// @prop {Color}  text-press               [#333333] - Default button text color when pressed. _Added via `@extend`_
+    /// @prop {Color}  bg-press                 [#ededed] - Default button background color when pressed. _Added via `@extend`_
+    /// @prop {Color}  bd-press                 [#d8d8d8] - Default button border color when pressed. _Added via `@extend`_
+    /// @prop {Number} bd-press-rgba-alpha      [.16]     - Default button border opacity used-in-combination with `bd-rgba-color` when pressed for browsers that support `rgba` color. _Added via `@extend`_
+    /// @prop {Color}  shadow-press             [#d8d8d8] - Default button shadow color when pressed. _Added via `@extend`_
+    ///
+    $btn-colors-default: (
+        'text-base':           $zc-gray,
+        'bg-base':             #f7f7f7,
+        'bd-base':             $zc-gray-50,
+        'bd-rgba-color':       $black,
+        'bd-rgba-alpha':       null, // actual calculated value inserted via @extend
+        'shadow-base':         null, // actual calculated value inserted via @extend
+        'shadow-rgba-color':   null, // actual calculated value inserted via @extend
+        'shadow-rgba-alpha':   null, // actual calculated value inserted via @extend
+        //
+        'text-hover':          null, // actual calculated value inserted via @extend
+        'bg-hover':            $zc-gray-20,
+        'bd-hover':            null, // actual calculated value inserted via @extend
+        'bd-hover-rgba-alpha': null, // actual calculated value inserted via @extend
+        'shadow-hover':        null, // actual calculated value inserted via @extend
+        //
+        'toggle-bd-focus':     $zc-blue-80,
+        //
+        'text-press':          null, // actual calculated value inserted via @extend
+        'bg-press':            null, // actual calculated value inserted via @extend
+        'bd-press':            null, // actual calculated value inserted via @extend
+        'bd-press-rgba-alpha': null, // actual calculated value inserted via @extend
+        'shadow-press':        null  // actual calculated value inserted via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $btn-colors-default
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $btn-colors-default
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $btn-default-bg-hover: get($btn-colors-default, 'bg-hover'); // TODO: Remove in 2.0.0 (kept here to prevent breaking changes via UIP-1711)
+        $btn-default-bg-press: get($btn-colors-default, 'bd-base');
+        $btn-default-bd: $btn-default-bg-press;
+        $btn-default-bd-alpha-rgba: to-decimal(ceil(darkness($btn-default-bd)));
+        $btn-default-bd-hover: $btn-default-bg-press;
+        $btn-default-bd-hover-rgba-alpha: to-decimal(ceil(darkness($btn-default-bd-hover)));
+        $btn-default-bd-press: $btn-default-bd-hover;
+        $btn-default-bd-press-rgba-alpha: to-decimal(ceil(darkness($btn-default-bd-press)));
+        $btn-default-text-hover: darken(get($btn-colors-default, 'text-base'), 15);
+        $btn-default-text-press: $btn-default-text-hover;
+        $btn-default-shadow: $btn-default-bg-press;
+        $btn-default-shadow-rgba: get($btn-colors-default, 'bd-rgba-color');
+        $btn-default-shadow-rgba-alpha: $btn-default-bd-alpha-rgba;
+        $btn-default-shadow-hover: $btn-default-shadow;
+        $btn-default-shadow-press: $btn-default-shadow-hover;
+
+        // ----- EXTEND default colors config with calc'd values ----- //
+        $btn-colors-default: extend($btn-colors-default,
+            (
+                'bd-rgba-alpha':     $btn-default-bd-alpha-rgba,
+                'shadow-base':       $btn-default-shadow,
+                'shadow-rgba-color': $btn-default-shadow-rgba,
+                'shadow-rgba-alpha': $btn-default-shadow-rgba-alpha,
+                //
+                'text-hover':          $btn-default-text-hover,
+                'bd-hover':            $btn-default-bd-hover,
+                'bd-hover-rgba-alpha': $btn-default-bd-hover-rgba-alpha,
+                'shadow-hover':        $btn-default-shadow-hover,
+                //
+                'text-press':          $btn-default-text-press,
+                'bg-press':            $btn-default-bg-press,
+                'bd-press':            $btn-default-bd-press,
+                'bd-press-rgba-alpha': $btn-default-bd-press-rgba-alpha,
+                'shadow-press':        $btn-default-shadow-press
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   DEFAULT "LIGHT" COLOR CONFIG
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.btn` component's `.btn-light` color variation.
+    /// _Extends `$btn-colors-default`_
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $btn-colors-default
+    /// ---
+    /// @prop {Color}  text-base          [#595959] - Light button text color when not in a hovered or pressed state.
+    /// @prop {Color}  bg-base            [#fcfcfc] - Light button background color when not in a hovered or pressed state.
+    /// @prop {Color}  bd-base            [#d8d8d8] - Light button border color when not in a hovered or pressed state. _Added via `@extend`_
+    /// @prop {Color}  bd-rgba-color      [#000000] - Light button border color used-in-combination with `bd-rgba-alpha` for browsers that support `rgba` color
+    /// @prop {Number} bd-rgba-alpha      [.16]     - Light button border opacity used-in-combination with `bd-rgba-color` for browsers that support `rgba` color. _Added via `@extend`_
+    /// @prop {Color}  shadow-base        [#d8d8d8] - Light button shadow color when not in a hovered or pressed state. _Added via `@extend`_
+    /// @prop {Color}  shadow-rgba-color  [#000000] - Light button shadow color used-in-combination with `shadow-rgba-alpha` for browsers that support `rgba` color. _Added via `@extend`_
+    /// @prop {Number} shadow-rgba-alpha  [.16]     - Light button shadow opacity used-in-combination with `shadow-rgba-color` for browsers that support `rgba` color. _Added via `@extend`_
+    ///
+    /// @prop {Color}  text-hover               [#333333] - Light button text color when hovered. _Added via `@extend`_
+    /// @prop {Color}  bg-hover                 [#ffffff] - Light button background color when hovered. _Added via `@extend`_
+    /// @prop {Color}  bd-hover                 [#d8d8d8] - Light button border color when hovered. _Added via `@extend`_
+    /// @prop {Number} bd-hover-rgba-alpha      [.16]     - Light button border opacity used-in-combination with `bd-rgba-color` when hovered for browsers that support `rgba` color. _Added via `@extend`_
+    /// @prop {Color}  shadow-hover             [#d8d8d8] - Light button shadow color when hovered. _Added via `@extend`_
+    /// @prop {Number} shadow-hover-rgba-alpha  [.16]     - Light button shadow opacity used-in-combination with `shadow-rgba-color` when hovered for browsers that support `rgba` color. _Added via `@extend`_
+    ///
+    /// @prop {Color}  toggle-bd-focus          [#33a9ff] - `.btn-toggle` border color when focused
+    ///
+    /// @prop {Color}  text-press               [#333333] - Light button text color when pressed. _Added via `@extend`_
+    /// @prop {Color}  bg-press                 [#f2f2f2] - Light button background color when pressed. _Added via `@extend`_
+    /// @prop {Color}  bd-press                 [#d8d8d8] - Light button border color when pressed. _Added via `@extend`_
+    /// @prop {Number} bd-press-rgba-alpha      [.16]     - Light button border opacity used-in-combination with `bd-rgba-color` when pressed for browsers that support `rgba` color. _Added via `@extend`_
+    /// @prop {Color}  shadow-press             [#d8d8d8] - Light button shadow color when pressed. _Added via `@extend`_
+    /// @prop {Number} shadow-press-rgba-alpha  [.16]     - Light button shadow opacity used-in-combination with `shadow-rgba-color` when pressed for browsers that support `rgba` color. _Added via `@extend`_
+    ///
+    $btn-colors-light: extend($btn-colors-default,
+        (
+            'bg-base': #fcfcfc,
+            'bg-hover': lighten(#fcfcfc, 3),
+            'bg-press': darken(#fcfcfc, 4)
+        )
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   INVERSE COLOR CONFIG
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.btn` component's `.btn-inverse` color variation.
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $white
+    /// @requires {variable} $zc-gray
+    /// @requires {variable} $zc-gray-90
+    /// @requires {variable} $elem-focus-bd-darken-amount-default
+    /// ---
+    /// @prop {Color} text-base      [#ffffff] - Inverse button text color when not in a hovered or pressed state.
+    /// @prop {Color} bg-base        [#707070] - Inverse button background color when not in a hovered or pressed state.
+    /// @prop {Color} bd-base        [#666666] - Inverse button border color when not in a hovered or pressed state. _Added via `@extend`_
+    /// @prop {Color} shadow-base    [#595959] - Inverse button shadow color when not in a hovered or pressed state.
+    ///
+    /// @prop {Color} text-hover     [#ffffff] - Inverse button text color when hovered.
+    /// @prop {Color} bg-hover       [#787878] - Inverse button background color when hovered. _Added via `@extend`_
+    /// @prop {Color} bd-hover       [#666666] - Inverse button border color when hovered. _Added via `@extend`_
+    /// @prop {Color} shadow-hover   [#595959] - Inverse button shadow color when hovered. _Added via `@extend`_
+    ///
+    /// @prop {Color}  toggle-bd-focus [#4c4c4c] - `.btn-toggle` border color when focused. _Added via `@extend`_
+    ///
+    /// @prop {Color} text-press     [#ffffff] - Inverse button text color when pressed.
+    /// @prop {Color} bg-press       [#666666] - Inverse button background color when pressed. _Added via `@extend`_
+    /// @prop {Color} bd-press       [#666666] - Inverse button border color when pressed. _Added via `@extend`_
+    /// @prop {Color} shadow-press   [#595959] - Inverse button shadow color when pressed. _Added via `@extend`_
+    ///
+    $btn-colors-inverse: (
+        // base state
+        'text-base':    $white,
+        'bg-base':      $zc-gray-90,
+        'bd-base':      null, // actual calculated value inserted via @extend
+        'shadow-base':  $zc-gray,
+        //
+        'text-hover':   $white,
+        'bg-hover':     null, // actual calculated value inserted via @extend
+        'bd-hover':     null, // actual calculated value inserted via @extend
+        'shadow-hover': null, // actual calculated value inserted via @extend
+        //
+        'toggle-bd-focus': null, // actual calculated value inserted via @extend
+        //
+        'text-press':   $white,
+        'bg-press':     null, // actual calculated value inserted via @extend
+        'bd-press':     null, // actual calculated value inserted via @extend
+        'shadow-press': null  // actual calculated value inserted via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $btn-colors-inverse
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $btn-colors-inverse
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $btn-inverse-bg-hover: lighten(get($btn-colors-inverse, 'bg-base'), 3);
+        $btn-inverse-bg-press: darken(get($btn-colors-inverse, 'bg-base'), 4);
+        $btn-inverse-bd: $btn-inverse-bg-press;
+        $btn-inverse-bd-hover: $btn-inverse-bd;
+        $btn-inverse-bd-focus: darken($btn-inverse-bd-hover, $elem-focus-bd-darken-amount-default);
+        $btn-inverse-bd-press: $btn-inverse-bd-hover;
+        $btn-inverse-shadow-hover: get($btn-colors-inverse, 'shadow-base');
+        $btn-inverse-shadow-press: $btn-inverse-shadow-hover;
+
+        // ----- EXTEND inverse colors config with calc'd values ----- //
+        $btn-colors-inverse: extend($btn-colors-inverse,
+            (
+                'bd-base':      $btn-inverse-bd,
+                //
+                'bg-hover':     $btn-inverse-bg-hover,
+                'bd-hover':     $btn-inverse-bd-hover,
+                'shadow-hover': $btn-inverse-shadow-hover,
+                //
+                'toggle-bd-focus': $btn-inverse-bd-focus,
+                //
+                'bg-press':     $btn-inverse-bg-press,
+                'bd-press':     $btn-inverse-bd-press,
+                'shadow-press': $btn-inverse-shadow-press
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   PRIMARY / SUCCESS COLOR VARIATIONS
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.btn` component's `.btn-primary` color variation.
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $white
+    /// @requires {variable} $state-primary
+    /// @requires {variable} $elem-focus-bd-darken-amount-default
+    /// ---
+    /// @prop {Color} text-base      [#ffffff] - Primary button text color when not in a hovered or pressed state.
+    /// @prop {Color} bg-base        [#66cc00] - Primary button background color when not in a hovered or pressed state.
+    /// @prop {Color} bd-base        [#61c200] - Primary button border color when not in a hovered or pressed state. _Added via `@extend`_
+    /// @prop {Color} shadow-base    [#61ae13] - Primary button shadow color when not in a hovered or pressed state. _Added via `@extend`_
+    ///
+    /// @prop {Color} text-hover     [#ffffff] - Primary button text color when hovered. _Added via `@extend`_
+    /// @prop {Color} bg-hover       [#6bd600] - Primary button background color when hovered. _Added via `@extend`_
+    /// @prop {Color} bd-hover       [#61c200] - Primary button border color when hovered. _Added via `@extend`_
+    /// @prop {Color} shadow-hover   [#61ae13] - Primary button shadow color when hovered. _Added via `@extend`_
+    ///
+    /// @prop {Color}  toggle-bd-focus [#478f00] - `.btn-toggle` border color when focused. _Added via `@extend`_
+    ///
+    /// @prop {Color} text-press     [#ffffff] - Primary button text color when pressed. _Added via `@extend`_
+    /// @prop {Color} bg-press       [#61c200] - Primary button background color when pressed. _Added via `@extend`_
+    /// @prop {Color} bd-press       [#61c200] - Primary button border color when pressed. _Added via `@extend`_
+    /// @prop {Color} shadow-press   [#61ae13] - Primary button shadow color when pressed. _Added via `@extend`_
+    ///
+    $btn-colors-primary: (
+        // base state
+        'text-base':    $white,
+        'bg-base':      $state-primary,
+        'bd-base':      null, // actual calculated value inserted via @extend
+        'shadow-base':  null, // actual calculated value inserted via @extend
+        //
+        'text-hover':   null, // actual calculated value inserted via @extend
+        'bg-hover':     null, // actual calculated value inserted via @extend
+        'bd-hover':     null, // actual calculated value inserted via @extend
+        'shadow-hover': null, // actual calculated value inserted via @extend
+        //
+        'toggle-bd-focus': null, // actual calculated value inserted via @extend
+        //
+        'text-press':   null, // actual calculated value inserted via @extend
+        'bg-press':     null, // actual calculated value inserted via @extend
+        'bd-press':     null, // actual calculated value inserted via @extend
+        'shadow-press': null  // actual calculated value inserted via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $btn-colors-primary
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $btn-colors-primary
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $btn-primary-bg-hover: lighten(get($btn-colors-primary, 'bg-base'), 2);
+        $btn-primary-bg-press: darken(get($btn-colors-primary, 'bg-base'), 2);
+        $btn-primary-bd: $btn-primary-bg-press;
+        $btn-primary-bd-hover: $btn-primary-bd;
+        $btn-primary-bd-focus: darken($btn-primary-bd-hover, $elem-focus-bd-darken-amount-default);
+        $btn-primary-bd-press: $btn-primary-bd-hover;
+        $btn-primary-text-hover: get($btn-colors-primary, 'text-base');
+        $btn-primary-text-press: $btn-primary-text-hover;
+        $btn-primary-shadow: desaturate($btn-primary-bd, 20);
+        $btn-primary-shadow-hover: $btn-primary-shadow;
+        $btn-primary-shadow-press: $btn-primary-shadow-hover;
+
+        // ----- EXTEND primary colors config with calc'd values ----- //
+        $btn-colors-primary: extend($btn-colors-primary,
+            (
+                'bd-base':      $btn-primary-bd,
+                'shadow-base':  $btn-primary-shadow,
+                //
+                'text-hover':   $btn-primary-text-hover,
+                'bg-hover':     $btn-primary-bg-hover,
+                'bd-hover':     $btn-primary-bd-hover,
+                'shadow-hover': $btn-primary-shadow-hover,
+                //
+                'toggle-bd-focus': $btn-primary-bd-focus,
+                //
+                'text-press':   $btn-primary-text-press,
+                'bg-press':     $btn-primary-bg-press,
+                'bd-press':     $btn-primary-bd-press,
+                'shadow-press': $btn-primary-shadow-press
+            )
+        );
+
+
+    ///
+    /// Colors used by the `.btn` component's `.btn-success` color variation.
+    /// @alias btn-colors-primary
+    ///
+    $btn-colors-success: $btn-colors-primary;
+
+
+
+// ********************************************************
+//
+//   ALTERNATE COLOR VARIATION
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.btn` component's `.btn-alt` color variation.
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $white
+    /// @requires {variable} $state-alt
+    /// @requires {variable} $elem-focus-bd-darken-amount-default
+    /// ---
+    /// @prop {Color} text-base      [#ffffff] - Alternate button text color when not in a hovered or pressed state.
+    /// @prop {Color} bg-base        [#0094ff] - Alternate button background color when not in a hovered or pressed state.
+    /// @prop {Color} bd-base        [#0085e6] - Alternate button border color when not in a hovered or pressed state. _Added via `@extend`_
+    /// @prop {Color} shadow-base    [#167fca] - Alternate button shadow color when not in a hovered or pressed state. _Added via `@extend`_
+    ///
+    /// @prop {Color} text-hover     [#ffffff] - Alternate button text color when hovered. _Added via `@extend`_
+    /// @prop {Color} bg-hover       [#1a9fff] - Alternate button background color when hovered. _Added via `@extend`_
+    /// @prop {Color} bd-hover       [#0085e6] - Alternate button border color when hovered. _Added via `@extend`_
+    /// @prop {Color} shadow-hover   [#167fca] - Alternate button shadow color when hovered. _Added via `@extend`_
+    ///
+    /// @prop {Color}  toggle-bd-focus [#0068b3] - `.btn-toggle` border color when focused. _Added via `@extend`_
+    ///
+    /// @prop {Color} text-press     [#ffffff] - Alternate button text color when pressed. _Added via `@extend`_
+    /// @prop {Color} bg-press       [#0085e6] - Alternate button background color when pressed. _Added via `@extend`_
+    /// @prop {Color} bd-press       [#0085e6] - Alternate button border color when pressed. _Added via `@extend`_
+    /// @prop {Color} shadow-press   [#167fca] - Alternate button shadow color when pressed. _Added via `@extend`_
+    ///
+    $btn-colors-alt: (
+        // base state
+        'text-base':    $white,
+        'bg-base':      $state-alt,
+        'bd-base':      null, // actual calculated value inserted via @extend
+        'shadow-base':  null, // actual calculated value inserted via @extend
+        //
+        'text-hover':   null, // actual calculated value inserted via @extend
+        'bg-hover':     null, // actual calculated value inserted via @extend
+        'bd-hover':     null, // actual calculated value inserted via @extend
+        'shadow-hover': null, // actual calculated value inserted via @extend
+        //
+        'toggle-bd-focus': null, // actual calculated value inserted via @extend
+        //
+        'text-press':   null, // actual calculated value inserted via @extend
+        'bg-press':     null, // actual calculated value inserted via @extend
+        'bd-press':     null, // actual calculated value inserted via @extend
+        'shadow-press': null  // actual calculated value inserted via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $btn-colors-alt
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $btn-colors-alt
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $btn-alt-bg-hover: lighten(get($btn-colors-alt, 'bg-base'), 5);
+        $btn-alt-bg-press: darken(get($btn-colors-alt, 'bg-base'), 5);
+        $btn-alt-bd: $btn-alt-bg-press;
+        $btn-alt-bd-hover: $btn-alt-bd;
+        $btn-alt-bd-focus: darken($btn-alt-bd-hover, $elem-focus-bd-darken-amount-default);
+        $btn-alt-bd-press: $btn-alt-bd-hover;
+        $btn-alt-text-hover: get($btn-colors-alt, 'text-base');
+        $btn-alt-text-press: $btn-alt-text-hover;
+        $btn-alt-shadow: darken(desaturate($btn-alt-bd, 20), 1);
+        $btn-alt-shadow-hover: $btn-alt-shadow;
+        $btn-alt-shadow-press: $btn-alt-shadow-hover;
+
+        // ----- EXTEND alt colors config with calc'd values ----- //
+        $btn-colors-alt: extend($btn-colors-alt,
+            (
+                'bd-base':      $btn-alt-bd,
+                'shadow-base':  $btn-alt-shadow,
+                //
+                'text-hover':   $btn-alt-text-hover,
+                'bg-hover':     $btn-alt-bg-hover,
+                'bd-hover':     $btn-alt-bd-hover,
+                'shadow-hover': $btn-alt-shadow-hover,
+                //
+                'toggle-bd-focus': $btn-alt-bd-focus,
+                //
+                'text-press':   $btn-alt-text-press,
+                'bg-press':     $btn-alt-bg-press,
+                'bd-press':     $btn-alt-bd-press,
+                'shadow-press': $btn-alt-shadow-press
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   WARNING COLOR VARIATION
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.btn` component's `.btn-warning` color variation.
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $white
+    /// @requires {variable} $state-warning
+    /// @requires {variable} $elem-focus-bd-darken-amount-default
+    /// ---
+    /// @prop {Color} text-base      [#ffffff] - Warning button text color when not in a hovered or pressed state.
+    /// @prop {Color} bg-base        [#fbad17] - Warning button background color when not in a hovered or pressed state.
+    /// @prop {Color} bd-base        [#f4a204] - Warning button border color when not in a hovered or pressed state. _Added via `@extend`_
+    /// @prop {Color} shadow-base    [#db9a1d] - Warning button shadow color when not in a hovered or pressed state. _Added via `@extend`_
+    ///
+    /// @prop {Color} text-hover     [#ffffff] - Warning button text color when hovered. _Added via `@extend`_
+    /// @prop {Color} bg-hover       [#fab931] - Warning button background color when hovered. _Added via `@extend`_
+    /// @prop {Color} bd-hover       [#f4a204] - Warning button border color when hovered. _Added via `@extend`_
+    /// @prop {Color} shadow-hover   [#db9a1d] - Warning button shadow color when hovered. _Added via `@extend`_
+    ///
+    /// @prop {Color}  toggle-bd-focus [#c28103] - `.btn-toggle` border color when focused. _Added via `@extend`_
+    ///
+    /// @prop {Color} text-press     [#ffffff] - Warning button text color when pressed. _Added via `@extend`_
+    /// @prop {Color} bg-press       [#f4a204] - Warning button background color when pressed. _Added via `@extend`_
+    /// @prop {Color} bd-press       [#f4a204] - Warning button border color when pressed. _Added via `@extend`_
+    /// @prop {Color} shadow-press   [#db9a1d] - Warning button shadow color when pressed. _Added via `@extend`_
+    ///
+    $btn-colors-warning: (
+        // base state
+        'text-base':    $white,
+        'bg-base':      $state-warning,
+        'bd-base':      null, // actual calculated value inserted via @extend
+        'shadow-base':  null, // actual calculated value inserted via @extend
+        //
+        'text-hover':   null, // actual calculated value inserted via @extend
+        'bg-hover':     null, // actual calculated value inserted via @extend
+        'bd-hover':     null, // actual calculated value inserted via @extend
+        'shadow-hover': null, // actual calculated value inserted via @extend
+        //
+        'toggle-bd-focus': null, // actual calculated value inserted via @extend
+        //
+        'text-press':   null, // actual calculated value inserted via @extend
+        'bg-press':     null, // actual calculated value inserted via @extend
+        'bd-press':     null, // actual calculated value inserted via @extend
+        'shadow-press': null  // actual calculated value inserted via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $btn-colors-warning
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $btn-colors-warning
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $btn-warning-bg-hover: adjust-color(get($btn-colors-warning, 'bg-base'), $hue: 1, $saturation: -1, $lightness: 5);
+        $btn-warning-bg-press: darken(get($btn-colors-warning, 'bg-base'), 5);
+        $btn-warning-bd: $btn-warning-bg-press;
+        $btn-warning-bd-hover: $btn-warning-bd;
+        $btn-warning-bd-focus: darken($btn-warning-bd-hover, $elem-focus-bd-darken-amount-default);
+        $btn-warning-bd-press: $btn-warning-bd-hover;
+        $btn-warning-text-hover: get($btn-colors-warning, 'text-base');
+        $btn-warning-text-press: $btn-warning-text-hover;
+        $btn-warning-shadow: desaturate($btn-warning-bd, 20);
+        $btn-warning-shadow-hover: $btn-warning-shadow;
+        $btn-warning-shadow-press: $btn-warning-shadow-hover;
+
+        // ----- EXTEND warning colors config with calc'd values ----- //
+        $btn-colors-warning: extend($btn-colors-warning,
+            (
+                'bd-base':      $btn-warning-bd,
+                'shadow-base':  $btn-warning-shadow,
+                //
+                'text-hover':   $btn-warning-text-hover,
+                'bg-hover':     $btn-warning-bg-hover,
+                'bd-hover':     $btn-warning-bd-hover,
+                'shadow-hover': $btn-warning-shadow-hover,
+                //
+                'toggle-bd-focus': $btn-warning-bd-focus,
+                //
+                'text-press':   $btn-warning-text-press,
+                'bg-press':     $btn-warning-bg-press,
+                'bd-press':     $btn-warning-bd-press,
+                'shadow-press': $btn-warning-shadow-press
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   ERROR COLOR VARIATION
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.btn` component's `.btn-danger` color variation.
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $white
+    /// @requires {variable} $state-danger
+    /// @requires {variable} $elem-focus-bd-darken-amount-default
+    /// ---
+    /// @prop {Color} text-base      [#ffffff] - Danger button text color when not in a hovered or pressed state.
+    /// @prop {Color} bg-base        [#ee2724] - Danger button background color when not in a hovered or pressed state.
+    /// @prop {Color} bd-base        [#e71512] - Danger button border color when not in a hovered or pressed state. _Added via `@extend`_
+    /// @prop {Color} shadow-base    [#ce2d2b] - Danger button shadow color when not in a hovered or pressed state. _Added via `@extend`_
+    ///
+    /// @prop {Color} text-hover     [#ffffff] - Danger button text color when hovered. _Added via `@extend`_
+    /// @prop {Color} bg-hover       [#f03e3c] - Danger button background color when hovered. _Added via `@extend`_
+    /// @prop {Color} bd-hover       [#e71512] - Danger button border color when hovered. _Added via `@extend`_
+    /// @prop {Color} shadow-hover   [#ce2d2b] - Danger button shadow color when hovered. _Added via `@extend`_
+    ///
+    /// @prop {Color}  toggle-bd-focus [#b7110e] - `.btn-toggle` border color when focused. _Added via `@extend`_
+    ///
+    /// @prop {Color} text-press     [#ffffff] - Danger button text color when pressed. _Added via `@extend`_
+    /// @prop {Color} bg-press       [#e71512] - Danger button background color when pressed. _Added via `@extend`_
+    /// @prop {Color} bd-press       [#e71512] - Danger button border color when pressed. _Added via `@extend`_
+    /// @prop {Color} shadow-press   [#ce2d2b] - Danger button shadow color when pressed. _Added via `@extend`_
+    ///
+    $btn-colors-danger: (
+        // base state
+        'text-base':    $white,
+        'bg-base':      $state-danger,
+        'bd-base':      null, // actual calculated value inserted via @extend
+        'shadow-base':  null, // actual calculated value inserted via @extend
+        //
+        'text-hover':   null, // actual calculated value inserted via @extend
+        'bg-hover':     null, // actual calculated value inserted via @extend
+        'bd-hover':     null, // actual calculated value inserted via @extend
+        'shadow-hover': null, // actual calculated value inserted via @extend
+        //
+        'toggle-bd-focus': null, // actual calculated value inserted via @extend
+        //
+        'text-press':   null, // actual calculated value inserted via @extend
+        'bg-press':     null, // actual calculated value inserted via @extend
+        'bd-press':     null, // actual calculated value inserted via @extend
+        'shadow-press': null  // actual calculated value inserted via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $btn-colors-danger
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $btn-colors-danger
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $btn-danger-bg-hover: lighten(get($btn-colors-danger, 'bg-base'), 5);
+        $btn-danger-bg-press: darken(get($btn-colors-danger, 'bg-base'), 5);
+        $btn-danger-bd: $btn-danger-bg-press;
+        $btn-danger-bd-hover: $btn-danger-bd;
+        $btn-danger-bd-focus: darken($btn-danger-bd-hover, $elem-focus-bd-darken-amount-default);
+        $btn-danger-bd-press: $btn-danger-bd-hover;
+        $btn-danger-text-hover: get($btn-colors-danger, 'text-base');
+        $btn-danger-text-press: $btn-danger-text-hover;
+        $btn-danger-shadow: desaturate($btn-danger-bd, 20);
+        $btn-danger-shadow-hover: $btn-danger-shadow;
+        $btn-danger-shadow-press: $btn-danger-shadow-hover;
+
+        // ----- EXTEND danger colors config with calc'd values ----- //
+        $btn-colors-danger: extend($btn-colors-danger,
+            (
+                'bd-base':      $btn-danger-bd,
+                'shadow-base':  $btn-danger-shadow,
+                //
+                'text-hover':   $btn-danger-text-hover,
+                'bg-hover':     $btn-danger-bg-hover,
+                'bd-hover':     $btn-danger-bd-hover,
+                'shadow-hover': $btn-danger-shadow-hover,
+                //
+                'toggle-bd-focus': $btn-danger-bd-focus,
+                //
+                'text-press':   $btn-danger-text-press,
+                'bg-press':     $btn-danger-bg-press,
+                'bd-press':     $btn-danger-bd-press,
+                'shadow-press': $btn-danger-shadow-press
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   DEFAULT "WHITE" COLOR CONFIG
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.btn` component's `.btn-white` color variation.
+    /// _Extends `$btn-colors-default`_
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $btn-colors-default
+    /// @requires {variable} $btn-colors-alt
+    /// ---
+    /// @prop {Color}  text-base          [#595959] - White button text color when not in a hovered or pressed state.
+    /// @prop {Color}  bg-base            [#ffffff] - White button background color when not in a hovered or pressed state.
+    /// @prop {Color}  bd-base            [#d8d8d8] - White button border color when not in a hovered or pressed state. _Added via `@extend`_
+    /// @prop {Color}  bd-rgba-color      [#000000] - White button border color used-in-combination with `bd-rgba-alpha` for browsers that support `rgba` color
+    /// @prop {Number} bd-rgba-alpha      [.16]     - White button border opacity used-in-combination with `bd-rgba-color` for browsers that support `rgba` color. _Added via `@extend`_
+    /// @prop {Color}  shadow-base        [#d8d8d8] - White button shadow color when not in a hovered or pressed state. _Added via `@extend`_
+    /// @prop {Color}  shadow-rgba-color  [#000000] - White button shadow color used-in-combination with `shadow-rgba-alpha` for browsers that support `rgba` color. _Added via `@extend`_
+    /// @prop {Number} shadow-rgba-alpha  [.16]     - White button shadow opacity used-in-combination with `shadow-rgba-color` for browsers that support `rgba` color. _Added via `@extend`_
+    ///
+    /// @prop {Color}  text-hover               [#333333] - White button text color when hovered. _Added via `@extend`_
+    /// @prop {Color}  bg-hover                 [#f7f7f7] - White button background color when hovered. _Added via `@extend`_
+    /// @prop {Color}  bd-hover                 [#d8d8d8] - White button border color when hovered. _Added via `@extend`_
+    /// @prop {Number} bd-hover-rgba-alpha      [.16]     - White button border opacity used-in-combination with `bd-rgba-color` when hovered for browsers that support `rgba` color. _Added via `@extend`_
+    /// @prop {Color}  shadow-hover             [#d8d8d8] - White button shadow color when hovered. _Added via `@extend`_
+    /// @prop {Number} shadow-hover-rgba-alpha  [.16]     - White button shadow opacity used-in-combination with `shadow-rgba-color` when hovered for browsers that support `rgba` color. _Added via `@extend`_
+    ///
+    /// @prop {Color}  toggle-bd-focus          [#33a9ff] - `.btn-toggle` border color when focused
+    ///
+    /// @prop {Color}  text-press               [#333333] - White button text color when pressed. _Added via `@extend`_
+    /// @prop {Color}  bg-press                 [#ededed] - White button background color when pressed. _Added via `@extend`_
+    /// @prop {Color}  bd-press                 [#d8d8d8] - White button border color when pressed. _Added via `@extend`_
+    /// @prop {Number} bd-press-rgba-alpha      [.16]     - White button border opacity used-in-combination with `bd-rgba-color` when pressed for browsers that support `rgba` color. _Added via `@extend`_
+    /// @prop {Color}  shadow-press             [#d8d8d8] - White button shadow color when pressed. _Added via `@extend`_
+    /// @prop {Number} shadow-press-rgba-alpha  [.16]     - White button shadow opacity used-in-combination with `shadow-rgba-color` when pressed for browsers that support `rgba` color. _Added via `@extend`_
+    ///
+    /// @prop {Color}  bg-active                [#ffffff] - White button background color when active.
+    /// @prop {Color}  text-active              [#0094ff] - White button text color when active.
+    /// @prop {Color}  text-active-hover        [#1a9fff] - White button text color when active and hovered.
+    /// @prop {Color}  text-active-press        [#0085e6] - White button text color when active and pressed.
+    ///
+    $btn-colors-white: extend($btn-colors-default,
+        (
+            'bg-base': #ffffff,
+            'bg-hover': get($btn-colors-default, 'bg-base'),
+            'bg-active': #ffffff,
+            'text-active': get($btn-colors-alt, 'bg-base'),
+            'text-active-hover': get($btn-colors-alt, 'bg-hover'),
+            'text-active-press': get($btn-colors-alt, 'bg-press')
+        )
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   LINK COLOR VARIATION
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.btn` component's `.btn-link` color variation.
+    /// ---
+    /// @requires {variable} $link-color
+    /// @requires {variable} $link-color-hover
+    /// @requires {variable} $link-color-pressed
+    /// @requires {variable} $white
+    /// ---
+    /// @prop {Color}  text-base          [#026dce]     - Link button text color when not in a hovered or pressed state.
+    /// @prop {Color}  bg-base            [transparent] - Link button background color when not in a hovered or pressed state.
+    /// @prop {Color}  bd-base            [transparent] - Link button border color when not in a hovered or pressed state.
+    /// @prop {Color}  bd-rgba-color      [transparent] - Link button border color used-in-combination with `bd-rgba-alpha` for browsers that support `rgba` color
+    /// @prop {Number} bd-rgba-alpha      [0]           - Link button border opacity used-in-combination with `bd-rgba-color` for browsers that support `rgba` color.
+    /// @prop {Color}  shadow-base        [transparent] - Link button shadow color when not in a hovered or pressed state.
+    /// @prop {Color}  shadow-rgba-color  [transparent] - Link button shadow color used-in-combination with `shadow-rgba-alpha` for browsers that support `rgba` color.
+    /// @prop {Number} shadow-rgba-alpha  [0]           - Link button shadow opacity used-in-combination with `shadow-rgba-color` for browsers that support `rgba` color.
+    ///
+    /// @prop {Color}  text-hover               [#0094ff]       - Link button text color when hovered.
+    /// @prop {Color}  bg-hover                 [transparent]   - Link button background color when hovered.
+    /// @prop {Color}  bd-hover                 [transparent]   - Link button border color when hovered.
+    /// @prop {Number} bd-hover-rgba-alpha      [0]             - Link button border opacity used-in-combination with `bd-rgba-color` when hovered for browsers that support `rgba` color.
+    /// @prop {Color}  shadow-hover             [transparent]   - Link button shadow color when hovered.
+    ///
+    /// @prop {Color}  toggle-bd-focus          [transparent]   - `.btn-toggle` border color when focused
+    ///
+    /// @prop {Color}  text-press               [#0085e6]       - Link button text color when pressed.
+    /// @prop {Color}  bg-press                 [transparent]   - Link button background color when pressed.
+    /// @prop {Color}  bd-press                 [transparent]   - Link button border color when pressed.
+    /// @prop {Number} bd-press-rgba-alpha      [0]             - Link button border opacity used-in-combination with `bd-rgba-color` when pressed for browsers that support `rgba` color.
+    /// @prop {Color}  shadow-press             [transparent]   - Link button shadow color when pressed.
+    ///
+    /// @prop {Color}  text-active              [#ffffff] - Link button text color when active.
+    /// @prop {Color}  text-active-hover        [#ffffff] - Link button text color when active and hovered.
+    /// @prop {Color}  text-active-press        [#ffffff] - Link button text color when active and pressed.
+    /// @prop {Color}  bg-active                [#026dce] - Link button background color when active.
+    /// @prop {Color}  bg-active-hover          [#0094ff] - Link button background color when active and hovered.
+    /// @prop {Color}  bg-active-press          [#0085e6] - Link button background color when active and pressed.
+    /// @prop {Color}  bd-active                [#026dce] - Link button border color when active.
+    /// @prop {Color}  bd-active-hover          [#0094ff] - Link button border color when active and hovered.
+    /// @prop {Color}  bd-active-press          [#0085e6] - Link button border color when active and pressed.
+    ///
+    $btn-colors-link: (
+        'text-base':           $link-color,
+        'bg-base':             transparent,
+        'bd-base':             transparent,
+        'bd-rgba-color':       transparent,
+        'bd-rgba-alpha':       0,
+        'shadow-base':         transparent,
+        'shadow-rgba-color':   transparent,
+        'shadow-rgba-alpha':   0,
+        //
+        'text-hover':          $link-color-hover,
+        'bg-hover':            transparent,
+        'bd-hover':            transparent,
+        'bd-hover-rgba-alpha': 0,
+        'shadow-hover':        transparent,
+        //
+        'toggle-bd-focus':     transparent,
+        //
+        'text-press':          $link-color-pressed,
+        'bg-press':            transparent,
+        'bd-press':            transparent,
+        'bd-press-rgba-alpha': 0,
+        'shadow-press':        transparent,
+        //
+        'text-active':         $white,
+        'text-active-hover':   $white,
+        'text-active-press':   $white,
+        'bg-active':           $link-color,
+        'bg-active-hover':     $link-color-hover,
+        'bg-active-press':     $link-color-pressed,
+        'bd-active':           $link-color,
+        'bd-active-hover':     $link-color-hover,
+        'bd-active-press':     $link-color-pressed
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   ALL COLOR VARIATIONS COMBINED
+//
+// ********************************************************
+    ///
+    /// Convenience collection of button colors for each `.btn` color variation's various states.
+    /// Great for building dynamic values within loops, etc...
+    /// ---
+    /// @requires {variable} $btn-colors-default
+    /// @requires {variable} $btn-colors-light
+    /// @requires {variable} $btn-colors-white
+    /// @requires {variable} $btn-colors-link
+    /// @requires {variable} $btn-colors-inverse
+    /// @requires {variable} $btn-colors-alt
+    /// @requires {variable} $btn-colors-primary
+    /// @requires {variable} $btn-colors-success
+    /// @requires {variable} $btn-colors-warning
+    /// @requires {variable} $btn-colors-danger
+    /// ---
+    /// @prop {Map} default  - Color configuration map for `.btn-default` components
+    /// @prop {Map} light    - Color configuration map for `.btn-light` components
+    /// @prop {Map} white    - Color configuration map for `.btn-white` components
+    /// @prop {Map} link     - Color configuration map for `.btn-link` components
+    /// @prop {Map} inverse  - Color configuration map for `.btn-inverse` components
+    /// @prop {Map} alt      - Color configuration map for `.btn-alt` components
+    /// @prop {Map} primary  - Color configuration map for `.btn-primary` components
+    /// @prop {Map} success  - Color configuration map for `.btn-success` components
+    /// @prop {Map} warning  - Color configuration map for `.btn-warning` components
+    /// @prop {Map} danger   - Color configuration map for `.btn-danger` components
+    ///
+    $btn-colors: (
+        'default':  $btn-colors-default,
+        'light':    $btn-colors-light,
+        'white':    $btn-colors-white,
+        'link':     $btn-colors-link,
+        'inverse':  $btn-colors-inverse,
+        'alt':      $btn-colors-alt,
+        'primary':  $btn-colors-primary,
+        'success':  $btn-colors-success,
+        'warning':  $btn-colors-warning,
+        'danger':   $btn-colors-danger
+    ) !default;

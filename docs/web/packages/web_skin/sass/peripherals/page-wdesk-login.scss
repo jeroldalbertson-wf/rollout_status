@@ -1,0 +1,42 @@
+/*!
+ * -------------------------------------
+  * Web Skin Peripheral CSS for Wdesk Login Views
+  * ---
+  * MSIE Support: 10+
+  * ---
+  * Requires
+  *   web-skin v{{ws_css_version}} Libs JS for MSIE
+  *   web-skin v{{ws_css_version}} Login JS (core/web-skin-login.js)
+  * ---
+  * Copyright © {{ws_css_copyright}} Workiva
+  * -------------------------------------
+  */
+
+$module-root: '../';
+
+// ********************************************************
+//
+//   WEB SKIN CORE API
+//
+// ********************************************************
+    @import '../core/api';
+
+
+
+// ********************************************************
+//
+//   LOGIN MODULE
+//
+// ********************************************************
+    @import 'wdesk-login/module-wdesk-login';
+
+
+
+// ********************************************************
+//
+//   WEB SKIN CORE UTILITIES
+//
+//   -> MUST BE IMPORTED LAST
+//
+// ********************************************************
+    @import "../core/foundation/tools/utilities";

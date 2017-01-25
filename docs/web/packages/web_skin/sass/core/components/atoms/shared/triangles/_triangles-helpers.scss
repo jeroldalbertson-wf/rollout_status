@@ -1,0 +1,394 @@
+// ********************************************************
+//
+////
+/// Triangle shape builders / helpers.  Used to build `.arrow` and `.caret` elems.
+/// ---
+/// @since 1.0.0
+/// @access public
+/// @group core.components.shared
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/shared/triangles/triangles-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function to-rem,
+                                                function is-true,
+                                                function is-number);
+//
+// ********************************************************
+
+
+///
+/// Reusable triangle directional variation styles
+/// ---
+/// @since 0.4.0
+/// ---
+/// @param {String}             $direction          ['down']    - Direction the triangle should 'point' in
+/// @param {Boolean | Color}    $color              [false]     - If set to a color, will represent the color of the triangle. Set to false to only chnage the size of the triangle
+/// @param {Boolean | Number}   $width              [false]     - If set to a number, will represent the length of the base of the triangle. Set to `false` to update only a border color value
+/// @param {Boolean | Color}    $fallback-color     [false]     - If using a `rgba()` color for your triangle, set this equal to the down-level browser color fallback
+/// @param {Boolean | Number}   $transition-speed   [false]     - If needing to animate the color of the arrow, set this equal to the speed you want; Typically used to ensure that arrow colors change at the same time as a conditional parent class like `.overlaid`
+/// ---
+/// @throws if `$direction` is not found in `$triangle-bd-config` map
+///
+@mixin triangle-direction($direction: 'down',
+                          $color: false,
+                          $width: false,
+                          $fallback-color: false,
+                          $transition-speed: false
+                         )
+{
+
+    $bd-sides: $triangle-directions;
+
+    @if (is-true($fallback-color) or is-true($color)) and is-true($width) {
+        border-color: transparent;
+    }
+
+    @each $side in $bd-sides {
+        $bd-side-direction: get-deep($triangle-bd-config, '#{$side}.direction');
+
+        @if not is-true($bd-side-direction) {
+            @error "`triangle-direction` mixin cannot find value in `$triangle-bd-config` map for `#{$side}.direction`.";
+        } @else {
+            @if unquote($direction) == top {
+                $direction: down;
+            }
+            @if unquote($direction) == bottom {
+                $direction: up;
+            }
+
+            @if $bd-side-direction == unquote($direction) {
+                $bd-side-config: get($triangle-bd-config, '#{$side}');
+                $visible-side:   get($bd-side-config, 'color');
+                $invisible-side: get($bd-side-config, 'remove-width');
+                $visible-side-color-prop: 'border-#{$visible-side}-color';
+                $invisible-side-width-prop: 'border-#{$invisible-side}-width';
+                //
+                @if is-true($width) {
+                    border-style: solid;
+                    border-width: to-rem(round($width / 2));
+                    #{$invisible-side-width-prop}: 0;
+                }
+                @if is-true($fallback-color) {
+                    #{$visible-side-color-prop}: $fallback-color;
+                }
+                @if is-true($color) {
+                    #{$visible-side-color-prop}: #{$color};
+                }
+                @if is-true($transition-speed) and is-number($transition-speed) {
+                    @include transition(unquote($visible-side-color-prop) $transition-speed linear);
+                }
+            }
+        }
+    }
+}
+
+///
+/// Reusable triangle margin styles (for all directions)
+/// ---
+/// @since 1.9.1
+/// ---
+/// @param {Number}             $triangle-width     [false]     - Length of the base of the triangle
+/// @param {String|Boolean}     $down-parent-selector  ['&.top']    - Set to false to omit styles for a downard facing arrow
+/// @param {String|Boolean}     $up-parent-selector    ['&.bottom'] - Set to false to omit styles for a upward facing arrow
+/// @param {String|Boolean}     $right-parent-selector ['&.left']   - Set to false to omit styles for an arrow facing right
+/// @param {String|Boolean}     $left-parent-selector  ['&.right']  - Set to false to omit styles for an arrow facing left
+/// @param {Boolean}            $use-negative-margins  [false]  - Whether to use negative margins when shifting the parent compensate for the triangle height
+///
+@mixin triangle-margin($triangle-width: false,
+                       $down-parent-selector: '&.top',
+                       $up-parent-selector: '&.bottom',
+                       $right-parent-selector: '&.left',
+                       $left-parent-selector: '&.right',
+                       $use-negative-margins: true
+                      )
+{
+    // ----------------------------------------------------
+    //   NOTES:
+    //
+    //   [1] adjust the margin of the elem containing the
+    //       arrow so that the arrow is factored-in to the
+    //       overall box-model height/width of the arrow container
+    //
+    //   [2] cancel out any margin set by other calls to
+    //       `triangle-margin`, allowing calls with different
+    //       `$use-negative-margins` values to override each other
+    //
+    // ----------------------------------------------------
+
+    $change-size: is-true($triangle-width);
+
+    // sizes (only if $triangle-width != false)
+    $size-ratio: get-deep($triangle-config, 'base.size-ratio');
+    $triangle-height: if($change-size, ceil($triangle-width / $size-ratio), false);
+
+    $is-default-down-parent-selector:   $down-parent-selector   == '&.top';
+    $is-default-up-parent-selector:     $up-parent-selector     == '&.bottom';
+    $is-default-right-parent-selector:  $right-parent-selector  == '&.left';
+    $is-default-left-parent-selector:   $left-parent-selector   == '&.right';
+
+    @if $change-size and $is-default-down-parent-selector {
+        #{$down-parent-selector} {
+            @if ($use-negative-margins) {
+                margin-top: to-rem($triangle-height) * -1; // [1]
+                margin-bottom: 0; // [2]
+            } @else {
+                margin-bottom: to-rem($triangle-height); // [1]
+                margin-top: 0; // [2]
+            }
+        }
+    }
+
+    @if $change-size and $is-default-left-parent-selector {
+        #{$left-parent-selector} {
+            margin-left: to-rem($triangle-height); // [1]
+        }
+    }
+
+    @if $change-size and $is-default-up-parent-selector {
+        #{$up-parent-selector} {
+            margin-top: to-rem($triangle-height); // [1]
+        }
+    }
+
+    @if $change-size and $is-default-right-parent-selector {
+        #{$right-parent-selector} {
+            @if ($use-negative-margins) {
+                margin-left: to-rem($triangle-height) * -1; // [1]
+                margin-right: 0; // [2]
+            } @else {
+                margin-right: to-rem($triangle-height); // [1]
+                margin-left: 0; // [2]
+            }
+        }
+    }
+}
+
+///
+/// Reusable shortcut styles to change the color of triangles that point up _or_ down
+/// ---
+/// @param {Color} $color - Color of the caret
+///
+@mixin triangle-color-vertical($color) {
+    @include triangle-direction($direction: 'up', $color: #{$color}, $width: false);
+    @include triangle-direction($direction: 'down', $color: #{$color}, $width: false);
+}
+
+///
+/// Reusable shortcut styles to change the color of triangles that point left _or_ right
+/// ---
+/// @param {Color} $color - Color of the caret
+///
+@mixin triangle-color-horizontal($color) {
+    @include triangle-direction($direction: 'left', $color: #{$color}, $width: false);
+    @include triangle-direction($direction: 'right', $color: #{$color}, $width: false);
+}
+
+///
+/// Reusable triangle styles (for all directions)
+/// ---
+/// @todo Add unit tests
+/// ---
+/// @param {Number}             $triangle-width     [false]     - Length of the base of the triangle
+/// @param {Color}              $triangle-bg        [false]     - Color of the triangle background
+/// @param {Number}             $outer-bd-width     [false]     - If `$outer-bd-color != $triangle-bg`, how thick is the border that is a different color than the triangle's background?
+/// @param {Color}              $outer-bd-color     [false]     - Color of the "outer" triangle border
+/// @param {Bool}               $align-center       [false]     - Is this triangle going to be attached and centered on an element like a popover?
+/// @param {String}             $triangle-class     ['arrow']   - CSS class name for the triangle
+/// @param {Boolean | Number}   $transition-speed   [false]     - If needing to animate the color of the arrow, set this equal to the speed you want; Typically used to ensure that arrow colors change at the same time as a conditional parent class like `.overlaid`
+/// ---
+/// @param {String|Boolean}     $down-parent-selector  ['&.top']    - Set to false to omit styles for a downward facing arrow
+/// @param {String|Boolean}     $up-parent-selector    ['&.bottom'] - Set to false to omit styles for a upward facing arrow
+/// @param {String|Boolean}     $right-parent-selector ['&.left']   - Set to false to omit styles for an arrow facing right
+/// @param {String|Boolean}     $left-parent-selector  ['&.right']  - Set to false to omit styles for an arrow facing left
+/// @param {Boolean}            $use-negative-margins  [false]  - Whether to use negative margins when shifting the parent compensate for the triangle height
+///
+@mixin triangles($triangle-width: false,
+                 $triangle-bg: false,
+                 $outer-bd-width: false,
+                 $outer-bd-color: false,
+                 $align-center: false,
+                 $triangle-class: 'arrow',
+                 $transition-speed: false,
+                 $down-parent-selector: '&.top',
+                 $up-parent-selector: '&.bottom',
+                 $right-parent-selector: '&.left',
+                 $left-parent-selector: '&.right',
+                 $use-negative-margins: true
+                )
+{
+    @include triangle-margin($triangle-width: $triangle-width,
+                              $down-parent-selector: $down-parent-selector,
+                              $up-parent-selector: $up-parent-selector,
+                              $right-parent-selector: $right-parent-selector,
+                              $left-parent-selector: $left-parent-selector,
+                              $use-negative-margins: $use-negative-margins);
+
+    // ----------------------------------------------------
+    //   NOTES:
+    //
+    //   .#{$triangle-class}        => 'outer' (bd color)
+    //   .#{$triangle-class}:after  => 'inner' (bg color)
+    //
+    //   ---
+    //
+    //   [1]: elems at a 45% angle look lighter when their
+    //        bg color is different because of anti-aliasing,
+    //        so we'll darken it to match the actual bd color
+    //        if the bg color is different.
+    //
+    // ----------------------------------------------------
+
+    $change-size: is-true($triangle-width);
+
+    // colors
+    $triangle-colors: if($outer-bd-color == $triangle-bg, 1, if($triangle-bg == false, 1, 2)); // how many colors?
+    $outer-bd-color: if($triangle-colors > 1, darken($outer-bd-color, $rotated-elem-bd-darken-amount), $outer-bd-color); // [1]
+
+    // sizes (only if $triangle-width != false)
+    $triangle-outer-width: if($change-size, if($triangle-colors > 1, $triangle-width + ($outer-bd-width * 2), $triangle-width), false);
+    $size-ratio: get-deep($triangle-config, 'base.size-ratio');
+    $triangle-height: if($change-size, ceil($triangle-width / $size-ratio), false);
+    $triangle-outer-height: if($change-size, ceil($triangle-outer-width / $size-ratio), false);
+
+
+    @if $down-parent-selector {
+        #{$down-parent-selector} {
+            .#{$triangle-class} {
+                @include triangle-direction($direction: 'down',
+                                            $color: $outer-bd-color,
+                                            $width: $triangle-outer-width,
+                                            $transition-speed: $transition-speed);
+
+                @if $change-size {
+                    bottom: to-rem($triangle-outer-height) * -1;
+                    @if is-true($align-center) {
+                        left: 50%;
+                        margin-left: to-rem($triangle-outer-height) * -1;
+                    }
+                }
+
+                @if $triangle-colors > 1 {
+                    &:after {
+                        @include triangle-direction($direction: 'down',
+                                                    $color: $triangle-bg,
+                                                    $width: $triangle-width,
+                                                    $transition-speed: $transition-speed);
+
+                        @if $change-size {
+                            bottom: to-rem($outer-bd-width);
+                            margin-left: to-rem($triangle-height) * -1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @if $left-parent-selector {
+        #{$left-parent-selector} {
+            .#{$triangle-class} {
+                @include triangle-direction($direction: 'left',
+                                            $color: $outer-bd-color,
+                                            $width: $triangle-outer-width,
+                                            $transition-speed: $transition-speed);
+
+                @if $change-size {
+                    left: to-rem($triangle-outer-height) * -1;
+                    @if is-true($align-center) {
+                        top: 50%;
+                        margin-top: to-rem($triangle-outer-height) * -1;
+                    }
+                }
+
+                @if $triangle-colors > 1 {
+                    &:after {
+                        @include triangle-direction($direction: 'left',
+                                                    $color: $triangle-bg,
+                                                    $width: $triangle-width,
+                                                    $transition-speed: $transition-speed);
+
+                        @if $change-size {
+                            left: to-rem($outer-bd-width);
+                            bottom: to-rem($triangle-height) * -1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @if $up-parent-selector {
+        #{$up-parent-selector} {
+            .#{$triangle-class} {
+                @include triangle-direction($direction: 'up',
+                                            $color: $outer-bd-color,
+                                            $width: $triangle-outer-width,
+                                            $transition-speed: $transition-speed);
+
+                @if $change-size {
+                    top: to-rem($triangle-outer-height) * -1;
+                    @if is-true($align-center) {
+                        left: 50%;
+                        margin-left: to-rem($triangle-outer-height) * -1;
+                    }
+                }
+
+                @if $triangle-colors > 1 {
+                    &:after {
+                        @include triangle-direction($direction: 'up',
+                                                    $color: $triangle-bg,
+                                                    $width: $triangle-width,
+                                                    $transition-speed: $transition-speed);
+
+                        @if $change-size {
+                            top: to-rem($outer-bd-width);
+                            margin-left: to-rem($triangle-height) * -1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @if $right-parent-selector {
+        #{$right-parent-selector} {
+            .#{$triangle-class} {
+                @include triangle-direction($direction: 'right',
+                                            $color: $outer-bd-color,
+                                            $width: $triangle-outer-width,
+                                            $transition-speed: $transition-speed);
+
+                @if $change-size {
+                    right: to-rem($triangle-outer-height) * -1;
+                    @if is-true($align-center) {
+                        top: 50%;
+                        margin-top: to-rem($triangle-outer-height) * -1;
+                    }
+                }
+
+                @if $triangle-colors > 1 {
+                    &:after {
+                        @include triangle-direction($direction: 'right',
+                                                    $color: $triangle-bg,
+                                                    $width: $triangle-width,
+                                                    $transition-speed: $transition-speed);
+
+                        @if $change-size {
+                            right: to-rem($outer-bd-width);
+                            bottom: to-rem($triangle-height) * -1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

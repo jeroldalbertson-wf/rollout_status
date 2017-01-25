@@ -1,0 +1,52 @@
+// ********************************************************
+//
+//   Temporary "Unit" Tests For Sass
+//
+//   TODO: remove once #753 is implemented
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Tests for:
+//   `core/api/config/defaults/component-sizes`
+// ----------------------------------------------------
+    // ----- PADDING ----- //
+    @if $padding-base-horizontal != 12px {
+        @error "$padding-base-horizontal should be `12px`. Was #{$padding-base-horizontal}";
+    }
+    @if $padding-base-vertical != 6px {
+        @error "$padding-base-vertical should be `6px`. Was #{$padding-base-vertical}";
+    }
+    @if $padding-lg-horizontal != 16px {
+        @error "$padding-lg-horizontal should be `16px`. Was #{$padding-lg-horizontal}";
+    }
+    @if $padding-lg-vertical != 10px {
+        @error "$padding-lg-vertical should be `10px`. Was #{$padding-lg-vertical}";
+    }
+    @if $padding-sm-horizontal != 10px {
+        @error "$padding-sm-horizontal should be `10px`. Was #{$padding-sm-horizontal}";
+    }
+    @if $padding-sm-vertical != 5px {
+        @error "$padding-sm-vertical should be `5px`. Was #{$padding-sm-vertical}";
+    }
+    @if $padding-xs-horizontal != 8px {
+        @error "$padding-xs-horizontal should be `8px`. Was #{$padding-xs-horizontal}";
+    }
+    @if $padding-xs-vertical != 4px {
+        @error "$padding-xs-vertical should be `4px`. Was #{$padding-xs-vertical}";
+    }
+
+    // ----- HEIGHT ----- //
+    @if $global-component-height-base != 34px {
+        @error "$global-component-height-base should be `34px`. Was `#{$global-component-height-base}`";
+    }
+    @if $global-component-height-lg != 46px {
+        @error "$global-component-height-lg should be `46px`. Was `#{$global-component-height-lg}`";
+    }
+    @if $global-component-height-sm != 30px {
+        @error "$global-component-height-sm should be `30px`. Was `#{$global-component-height-sm}`";
+    }
+    @if $global-component-height-xs != 24px {
+        @error "$global-component-height-xs should be `24px`. Was `#{$global-component-height-xs}`";
+    }

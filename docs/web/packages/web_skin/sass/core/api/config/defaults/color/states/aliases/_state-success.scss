@@ -1,0 +1,77 @@
+// ********************************************************
+
+////
+/// Success Elem State Color Aliases
+/// ---
+/// @access private
+/// @type Color
+/// @group core.internals.color.state
+/// ---
+/// @requires {variable} $colors-state-success
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/states/aliases/state-success';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+/// Success Elem State Color Alias
+/// @color #66cc00
+$state-success: get($colors-state-success, 'base');
+
+/// Success Elem State Text Color Alias
+/// @color #4d9108
+$state-success-text: get($colors-state-success, 'text');
+
+/// Success Elem State Background Color Alias
+/// @color #fafef5
+$state-success-bg: get($colors-state-success, 'bg');
+
+/// Success Elem State Border Color Alias
+/// @color #94e90c
+$state-success-bd: get($colors-state-success, 'bd');
+
+
+// ----------------------------------------------------
+//   SHARED COMPONENT STATE VARIATION COLORS
+// ----------------------------------------------------
+    ///
+    /// Success Elem State background variation used by "inline" alerts. Cards, panels, list-group items and table rows use this color when hovered.
+    /// ---
+    /// @color #e7f3e0
+    /// @requires {function} shade-of
+    /// @requires {variable} $zc-green
+    ///
+    $component-state-success-bg-hover: shade-of($zc-green, 12%);
+
+    ///
+    /// Success Elem State background variation used by cards, panels, list-group items and table rows.
+    /// ---
+    /// @color #f6fcf0
+    /// @requires {function} shade-of
+    /// @requires {variable} $component-state-success-bg-hover
+    ///
+    $component-state-success-bg: shade-of($component-state-success-bg-hover, 50%);
+
+    ///
+    /// Success Elem State background variation used by cards, panels, list-group items and table rows when pressed.
+    /// ---
+    /// @since 1.4.0
+    /// @color #e1f5cb
+    /// @requires {variable} $component-state-success-bg-hover
+    /// @requires {variable} $elem-pressed-text-darken-amount-default
+    ///
+    $component-state-success-bg-press: darken($component-state-success-bg-hover, $elem-pressed-text-darken-amount-default);
+
+    ///
+    /// Success Elem State border variation used by alerts, cards, panels, list-group items and table rows.
+    /// ---
+    /// @color #70b84d
+    /// @requires {function} shade-of
+    /// @requires {variable} $zc-green-120
+    ///
+    $component-state-success-bd: shade-of($zc-green-120, 70%);

@@ -1,0 +1,154 @@
+// ********************************************************
+
+////
+/// Panel component size variation configuration
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// @access public
+/// @group core.components.panels
+/// @link http://bit.ly/webskin-panel-sizes Panel component size variation spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/panels/config/panel-size-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function extend);
+//
+// ********************************************************
+
+
+///
+/// Size configuration for `.panel` components at their default size, along with the `.panel-heading`, `.panel-title`, `.panel-body` and `.panel-footer` elems nested within them.
+/// ---
+/// @requires {function} get
+/// @requires {function} extend
+/// @requires {variable} $font-size-base
+/// @requires {variable} $headings-line-height
+/// @requires {variable} $dialog-size-sm-config
+/// @requires {variable} $dialog-size-base-config
+/// @requires {variable} $webfont-baseline-offset
+/// ---
+/// @prop {Number} header-line-height        [1.24285]      - Calculated line height for `.panel-heading` used to vertically center the text within the desired min-height of the header, and to ensure that `.panel-heading` elems without a `.panel-title` are the same height as the ones that do. _Added via `@extend`_
+/// @prop {Number} header-height             [34px]         - Calculated height for `.panel-heading`. _Added via `@extend`_
+/// @prop {Number} header-padding-top        [8px]          - Top padding of `.panel-heading`
+/// @prop {Number} header-padding-bottom     [8px]          - Bottom padding of `.panel-heading`
+/// @prop {Number} header-padding-horizontal [16px]         - Horizontal padding of `.panel-heading`
+/// @prop {List}   header-padding            [8px 16px]     - Combination of vertical and horizontal padding values for `.panel-heading` elems. _Added via `@extend`_
+/// @prop {Number} title-font-size           [16px]         - Font size of `.panel-heading > .panel-title`
+/// @prop {String} title-font-weight         [normal]       - Font weight of `.panel-heading > .panel-title`
+/// @prop {Number} body-padding              [16px]         - Font size of `.panel-heading > .panel-title`
+/// @prop {Number} footer-padding-vertical   [8px]          - Vertical padding for `.panel-footer`
+///
+$panel-size-base-config: (
+    'header-line-height': null, // actual calculated value inserted via @extend
+    'header-height': null, // actual calculated value inserted via @extend
+    'header-padding-top': round(get($dialog-size-base-config, 'header-elem-padding-top') / 2) + 1,
+    'header-padding-bottom': round(get($dialog-size-base-config, 'header-elem-padding-top') / 2) + 1,
+    'header-padding-horizontal': null, // actual calculated value inserted via @extend
+    'header-padding': null, // actual calculated value inserted via @extend
+    'title-font-size': 16px,
+    'title-font-weight': normal,
+    'body-padding': get($dialog-size-base-config, 'content-padding'),
+    'footer-padding-vertical': null // actual calculated value inserted via @extend
+) !default;
+
+
+// ----------------------------------------------------
+//   CALCULATED VALUES
+//   -> based on $panel-size-base-config
+//
+//   -> cannot be included in initial map declaration
+//      because the calculations depend on values
+//      within the map, and Sass has no ability to
+//      reference a key in a map from within that map.
+//
+//   -> documented as props of $panel-size-base-config
+//      because they are added via extend() below.
+// ----------------------------------------------------
+    $panel-header-line-height: (get($panel-size-base-config, 'title-font-size') / $font-size-base) + ($headings-line-height - 1);
+    $panel-header-padding-horizontal: get($panel-size-base-config, 'body-padding');
+    $panel-header-padding: get($panel-size-base-config, 'header-padding-top') $panel-header-padding-horizontal get($panel-size-base-config, 'header-padding-bottom');
+    $panel-header-height: floor(get($panel-size-base-config, 'title-font-size') * $panel-header-line-height) + (get($panel-size-base-config, 'header-padding-top') + get($panel-size-base-config, 'header-padding-bottom')) - $global-component-bd-width;
+    $panel-footer-padding-vertical: get($panel-size-base-config, 'header-padding-top');
+
+    // ----- EXTEND panel base size config with calc'd values ----- //
+    $panel-size-base-config: extend($panel-size-base-config,
+        (
+            'header-line-height': $panel-header-line-height,
+            'header-height': $panel-header-height,
+            'header-padding-horizontal': $panel-header-padding-horizontal,
+            'header-padding': $panel-header-padding,
+            'footer-padding-vertical': $panel-footer-padding-vertical
+        )
+    );
+
+
+///
+/// Size configuration for `.panel-condensed` size variation, along with the `.panel-heading`, `.panel-title`, `.panel-body` and `.panel-footer` elems nested within them.
+/// ---
+/// @todo Change `.panel-condensed` to `.panel-sm`
+/// ---
+/// @requires {function} get
+/// @requires {function} extend
+/// @requires {variable} $font-size-base
+/// @requires {variable} $headings-line-height
+/// @requires {variable} $dialog-size-sm-config
+/// ---
+/// @prop {Number} header-line-height          [1.242857143] - Calculated line height for `.panel-heading` used to vertically center the text within the desired min-height of the header, and to ensure that `.panel-heading` elems without a `.panel-title` are the same height as the ones that do. _Added via `@extend`_
+/// @prop {Number} header-height               [26px]        - Calculated height for `.panel-heading`. _Added via `@extend`_
+/// @prop {Number} header-padding-top          [5px]         - Top padding of `.panel-heading`
+/// @prop {Number} header-padding-bottom       [5px]         - Bottom padding of `.panel-heading`
+/// @prop {Number} header-padding-horizontal   [8px]         - Horizontal padding of `.panel-heading`
+/// @prop {List}   header-padding              [5px 8px]     - Combination of top, bottom and horizontal padding values for `.panel-heading` elems. _Added via `@extend`_
+/// @prop {Number} title-font-size             [14px]        - Font size of `.panel-heading > .panel-title`
+/// @prop {String} title-font-weight           [bold]        - Font weight of `.panel-heading > .panel-title`
+/// @prop {Number} body-padding                [8px]         - Font size of `.panel-heading > .panel-title`
+/// @prop {Number} footer-padding-vertical     [5px]         - Vertical padding for `.panel-footer`. _Added via `@extend`_
+///
+$panel-size-sm-config: (
+    'header-line-height': null, // actual calculated value inserted via @extend
+    'header-height': null, // actual calculated value inserted via @extend
+    'header-padding-top': get($dialog-size-sm-config, 'header-padding-vertical'),
+    'header-padding-bottom': get($dialog-size-sm-config, 'header-padding-vertical'),
+    'header-padding-horizontal': get($dialog-size-sm-config, 'header-padding-horizontal'),
+    'header-padding': null, // actual calculated value inserted via @extend
+    'title-font-size': get($dialog-size-sm-config, 'header-font-size'),
+    'title-font-weight': get($dialog-size-sm-config, 'header-font-weight'),
+    'body-padding': get($dialog-size-sm-config, 'content-padding'),
+    'footer-padding-vertical': null // actual calculated value inserted via @extend
+) !default;
+
+
+// ----------------------------------------------------
+//   CALCULATED VALUES
+//   -> based on $panel-size-sm-config
+//
+//   -> cannot be included in initial map declaration
+//      because the calculations depend on values
+//      within the map, and Sass has no ability to
+//      reference a key in a map from within that map.
+//
+//   -> documented as props of $panel-size-sm-config
+//      because they are added via extend() below.
+// ----------------------------------------------------
+    $panel-sm-header-line-height: (get($panel-size-sm-config, 'title-font-size') / $font-size-base) + ($headings-line-height - 1);
+    $panel-sm-header-padding: get($panel-size-sm-config, 'header-padding-top') get($panel-size-sm-config, 'header-padding-horizontal') get($panel-size-sm-config, 'header-padding-bottom');
+    $panel-sm-header-height: ceil(get($panel-size-sm-config, 'title-font-size') * $panel-sm-header-line-height) + (get($panel-size-sm-config, 'header-padding-top') * 2);
+    $panel-sm-footer-padding-vertical: get($panel-size-sm-config, 'header-padding-top');
+
+    // ----- EXTEND panel small size config with calc'd values ----- //
+    $panel-size-sm-config: extend($panel-size-sm-config,
+        (
+            'header-line-height': $panel-sm-header-line-height,
+            'header-height': $panel-sm-header-height,
+            'footer-padding-vertical': $panel-sm-footer-padding-vertical,
+            'header-padding': $panel-sm-header-padding
+        )
+    );

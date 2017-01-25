@@ -1,0 +1,78 @@
+// ********************************************************
+
+////
+/// Alternate Elem State Color Aliases
+/// ---
+/// @access private
+/// @type Color
+/// @group core.internals.color.state
+/// ---
+/// @requires {variable} $colors-state-alt
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/states/aliases/state-alt';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+/// Alternate Elem State Color Alias
+/// @color #0094ff
+$state-alt: get($colors-state-alt, 'base');
+
+/// Alternate Elem State Text Color Alias
+/// @color #0b83da
+$state-alt-text: get($colors-state-alt, 'text');
+
+/// Alternate Elem State Background Color Alias
+/// @color #f5fbff
+$state-alt-bg: get($colors-state-alt, 'bg');
+
+/// Alternate Elem State Border Color Alias
+/// @color #92d8fc
+$state-alt-bd: get($colors-state-alt, 'bd');
+
+// ----------------------------------------------------
+//   SHARED COMPONENT STATE VARIATION COLORS
+// ----------------------------------------------------
+    ///
+    /// Alternate Elem State background variation used by "inline" alerts. Cards, panels, list-group items and table rows use this color when hovered.
+    /// ---
+    /// @color #d6eeff
+    /// @requires {variable} $ws-selection-bg-active
+    ///
+    $component-state-alt-bg-hover: $ws-selection-bg-active;
+
+    ///
+    /// Alternate Elem State background variation used by cards, panels, list-group items and table rows.
+    /// ---
+    /// @color #ebf7ff
+    /// @requires {function} shade-of
+    /// @requires {variable} $component-state-alt-bg-hover
+    ///
+    $component-state-alt-bg: shade-of($component-state-alt-bg-hover, 50%);
+
+    ///
+    /// Alternate Elem State background variation used by cards, panels, list-group items and table rows when pressed.
+    /// ---
+    /// @since 1.4.0
+    /// @color #bde3ff
+    /// @requires {variable} $component-state-alt-bg-hover
+    /// @requires {variable} $elem-pressed-text-darken-amount-default
+    ///
+    $component-state-alt-bg-press: darken($component-state-alt-bg-hover, $elem-pressed-text-darken-amount-default);
+
+    ///
+    /// Alternate Elem State border variation used by alerts, cards, panels, list-group items and table rows.
+    /// ---
+    /// @color #0085e6
+    /// @requires {variable} $link-color-pressed
+    ///
+    $component-state-alt-bd: $link-color-pressed;

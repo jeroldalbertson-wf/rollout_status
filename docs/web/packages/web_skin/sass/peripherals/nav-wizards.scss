@@ -1,0 +1,34 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for Wizard Navigation
+ * ---
+ * MSIE Support: 10+
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ *   web-skin v{{ws_css_version}} Core Plugin JS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import '../core/api';
+
+
+// ----------------------------------------------------
+//   Wizard Navigation Atoms
+// ----------------------------------------------------
+    @import 'nav-wizards/atoms/nav-wizards-config';
+    @import 'nav-wizards/atoms/nav-wizards-helpers';
+
+
+// ----------------------------------------------------
+//   Wizard Navigation Components
+// ----------------------------------------------------
+    @import 'nav-wizards/nav-wizard-base';
+    @import 'nav-wizards/navbar-wizard';

@@ -1,0 +1,661 @@
+// ********************************************************
+
+////
+/// Default component `box-shadow` property value configs
+/// ---
+/// @since 1.3.4
+/// @group core.color.shadow
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/component-shadow-defaults';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function extend,
+                                                function build-box-shadow);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BOX SHADOW CONFIGS
+//
+//   -> To be used within the `build-box-shadow()` fn,
+//      or tweaked using the `extend()` fn
+//
+// ********************************************************
+    ///
+    /// Configuration map for creating default box shadows on Web Skin components.
+    ///
+    /// To be used as an argument passed to the `build-box-shadow()` function.
+    ///
+    /// __For simpler usage as a CSS `box-shadow` property value, use the `$box-shadow-default` variable.__
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @see {variable} $box-shadow-default
+    /// @see {function} build-box-shadow
+    /// @see {function} extend
+    /// ---
+    /// @requires {variable} $black
+    /// ---
+    /// @example scss - Stock Usage
+    ///  .component {
+    ///    box-shadow: build-box-shadow($shadow-default-config);
+    ///  }
+    /// ---
+    /// @example scss - Customizing
+    ///  // Use the `extend()` fn to change some values, while
+    ///  // keeping the rest of the defaults intact.
+    ///  $your-shadow-config: extend($shadow-default-config,
+    ///     (
+    ///         'alpha': .25 // darken it a bit
+    ///     )
+    ///  );
+    ///
+    ///  .component-that-needs-a-darker-shadow {
+    ///    box-shadow: build-box-shadow($your-shadow-config);
+    ///  }
+    /// ---
+    /// @example scss - Accessing Values
+    ///  // Use the `get()` fn to access values within this map
+    ///  // for re-use elsewhere in your styles.
+    ///  $box-shadow-color-base: get($shadow-default-config, 'color');
+    ///  $box-shadow-opacity: get($shadow-default-config, 'alpha');
+    ///  $box-shadow-rgba: rgba($box-shadow-color-base, $box-shadow-opacity);
+    ///
+    ///  .something-that-should-match-box-shadow-color {
+    ///     background-color: $box-shadow-rgba;
+    ///  }
+    /// ---
+    /// @prop {Bool}   inset     [false]
+    /// @prop {Number} offset-x  [0]
+    /// @prop {Number} offset-y  [3px]
+    /// @prop {Number} blur      [0]
+    /// @prop {Number} spread    [0]
+    /// @prop {Color}  color     [#000000]
+    /// @prop {Number} alpha     [.11]
+    ///
+    $shadow-default-config: (
+        'inset': false,
+        'offset-x': 0,
+        'offset-y': 3px,
+        'blur': 0,
+        'spread': 0,
+        'color': $black,
+        'alpha': .11
+    ) !default;
+
+    ///
+    /// Configuration map for creating box shadows for Web Skin components that appear atop a dark backdrop / overlay.
+    ///
+    /// To be used as an argument passed to the `build-box-shadow()` function.
+    ///
+    /// __For simpler usage as a CSS `box-shadow` property value, use the `$box-shadow-on-dark-backdrop` variable.__
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @see {variable} $box-shadow-on-dark-backdrop
+    /// @see {function} build-box-shadow
+    /// ---
+    /// @requires {function} extend
+    /// @requires {variable} $shadow-default-config
+    /// ---
+    /// @example scss - Usage
+    ///  .component {
+    ///    box-shadow: build-box-shadow($shadow-on-dark-backdrop-config);
+    ///  }
+    /// ---
+    /// @prop {Bool}   inset     [false]
+    /// @prop {Number} offset-x  [0]
+    /// @prop {Number} offset-y  [3px]
+    /// @prop {Number} blur      [0]
+    /// @prop {Number} spread    [0]
+    /// @prop {Color}  color     [#000000]
+    /// @prop {Number} alpha     [.25]
+    ///
+    $shadow-on-dark-backdrop-config: extend($shadow-default-config,
+        (
+            'alpha': .25
+        )
+    ) !default;
+
+    ///
+    /// Shared configuration map for creating "soft" box shadows often used to deliniate horizontally adjacent / vertically stacked content regions within a Wdesk application.
+    ///
+    /// __DO NOT USE DIRECTLY.__
+    ///
+    /// Use one of the inheriting vars that casts the shadow in a given direction (e.g. `$shadow-soft-down-config`)
+    /// ---
+    /// @access private
+    /// @group core.internals.color.shadow
+    /// @type Map
+    /// @since 1.7.0
+    /// ---
+    /// @see {function} build-box-shadow
+    /// ---
+    /// @requires {function} extend
+    /// @requires {variable} $shadow-default-config
+    /// ---
+    /// @prop {Bool}   inset     [false]
+    /// @prop {Number} offset-x  [0]
+    /// @prop {Number} offset-y  [0]
+    /// @prop {Number} blur      [4px]
+    /// @prop {Number} spread    [-2px]
+    /// @prop {Color}  color     [#000000]
+    /// @prop {Number} alpha     [.11]
+    ///
+    $_shadow-soft-config: extend($shadow-default-config,
+        (
+            'offset-y': 0,
+            'blur': 4px,
+            'spread': 2px
+        )
+    ) !default;
+
+    ///
+    /// Configuration map for creating "soft" box shadows that cast downward to deliniate vertically stacked - _and often scrollable_ - content regions within a Wdesk application.
+    ///
+    /// To be used as an argument passed to the `build-box-shadow()` function.
+    ///
+    /// __For simpler usage as a CSS `box-shadow` property value, use the `$box-shadow-above-scrollable-area` variable.__
+    /// ---
+    /// @type Map
+    /// @since 1.7.0
+    /// ---
+    /// @see {variable} $box-shadow-above-scrollable-area
+    /// @see {variable} $shadow-soft-up-config
+    /// @see {function} build-box-shadow
+    /// ---
+    /// @requires {function} extend
+    /// @requires {variable} $_shadow-soft-config
+    /// ---
+    /// @example html - Typical Markup Pattern
+    ///  <div class="your-panel">
+    ///    <div class="your-panel__header">Displays above scrollable area</div>
+    ///    <div class="your-panel__content  scroll-y">...</div>
+    ///    <div class="you-panel__footer">Displays below scrollable area</div>
+    ///  </div>
+    /// ---
+    /// @example scss - Usage
+    ///  .your-panel__header {
+    ///    box-shadow: build-box-shadow($shadow-soft-down-config);
+    ///  }
+    ///
+    ///  .your-panel__footer {
+    ///    box-shadow: build-box-shadow($shadow-soft-up-config);
+    ///  }
+    /// ---
+    /// @prop {Bool}   inset     [false]
+    /// @prop {Number} offset-x  [0]
+    /// @prop {Number} offset-y  [4px]
+    /// @prop {Number} blur      [4px]
+    /// @prop {Number} spread    [-2px]
+    /// @prop {Color}  color     [#000000]
+    /// @prop {Number} alpha     [.11]
+    ///
+    $shadow-soft-down-config: extend($_shadow-soft-config,
+        (
+            'offset-y': get($_shadow-soft-config, 'blur')
+        )
+    ) !default;
+
+    ///
+    /// Configuration map for creating box shadows that indicate the top edge above a vertically scrollable area within something like a sidebar panel.
+    ///
+    /// To be used as an argument passed to the `build-box-shadow()` function.
+    ///
+    /// __For simpler usage as a CSS `box-shadow` property value, use the `$box-shadow-above-scrollable-area` variable.__
+    ///
+    /// @alias shadow-soft-down-config
+    /// @since 1.3.4
+    ///
+    $shadow-scrollable-area-top-edge-config: $shadow-soft-down-config !default;
+
+    ///
+    /// Configuration map for creating "soft" box shadows that cast upward to deliniate vertically stacked - _and often scrollable_ - content regions within a Wdesk application.
+    ///
+    /// To be used as an argument passed to the `build-box-shadow()` function.
+    ///
+    /// __For simpler usage as a CSS `box-shadow` property value, use the `$box-shadow-below-scrollable-area` variable.__
+    /// ---
+    /// @type Map
+    /// @since 1.7.0
+    /// ---
+    /// @see {variable} $box-shadow-below-scrollable-area
+    /// @see {variable} $shadow-soft-down-config
+    /// @see {function} build-box-shadow
+    /// ---
+    /// @requires {function} extend
+    /// @requires {variable} $_shadow-soft-config
+    /// ---
+    /// @example html - Typical Markup Pattern
+    ///  <div class="your-panel">
+    ///    <div class="your-panel__header">Displays above scrollable area</div>
+    ///    <div class="your-panel__content  scroll-y">...</div>
+    ///    <div class="you-panel__footer">Displays below scrollable area</div>
+    ///  </div>
+    /// ---
+    /// @example scss - Usage
+    ///  .your-panel__header {
+    ///    box-shadow: build-box-shadow($shadow-soft-down-config);
+    ///  }
+    ///
+    ///  .your-panel__footer {
+    ///    box-shadow: build-box-shadow($shadow-soft-up-config);
+    ///  }
+    /// ---
+    /// @prop {Bool}   inset     [false]
+    /// @prop {Number} offset-x  [0]
+    /// @prop {Number} offset-y  [-4px]
+    /// @prop {Number} blur      [4px]
+    /// @prop {Number} spread    [-2px]
+    /// @prop {Color}  color     [#000000]
+    /// @prop {Number} alpha     [.11]
+    ///
+    $shadow-soft-up-config: extend($_shadow-soft-config,
+        (
+            'offset-y': get($_shadow-soft-config, 'blur') * -1
+        )
+    ) !default;
+
+    ///
+    /// Configuration map for creating box shadows that indicate the bottom edge above a vertically scrollable area within something like a sidebar panel.
+    ///
+    /// To be used as an argument passed to the `build-box-shadow()` function.
+    ///
+    /// __For simpler usage as a CSS `box-shadow` property value, use the `$box-shadow-below-scrollable-area` variable.__
+    ///
+    /// @alias shadow-soft-up-config
+    /// @since 1.3.4
+    ///
+    $shadow-scrollable-area-bottom-edge-config: $shadow-soft-up-config !default;
+
+    ///
+    /// Configuration map for creating "soft" box shadows that cast to the right to deliniate horizontally adjacent - _and often resizable_ - content regions within a Wdesk application.
+    ///
+    /// To be used as an argument passed to the `build-box-shadow()` function.
+    ///
+    /// __For simpler usage as a CSS `box-shadow` property value, use the `$box-shadow-soft-right` variable.__
+    /// ---
+    /// @type Map
+    /// @since 1.7.0
+    /// @link https://github.com/Workiva/web-skin/issues/1199 web-skin/#1199
+    /// ---
+    /// @see {variable} $box-shadow-soft-right
+    /// @see {variable} $shadow-soft-left-config
+    /// @see {function} build-box-shadow
+    /// ---
+    /// @requires {function} extend
+    /// @requires {variable} $_shadow-soft-config
+    /// ---
+    /// @example scss - Usage
+    ///  .your-resizable-left-panel {
+    ///    box-shadow: build-box-shadow($shadow-soft-right-config);
+    ///  }
+    /// ---
+    /// @prop {Bool}   inset     [false]
+    /// @prop {Number} offset-x  [4px]
+    /// @prop {Number} offset-y  [0]
+    /// @prop {Number} blur      [4px]
+    /// @prop {Number} spread    [-2px]
+    /// @prop {Color}  color     [#000000]
+    /// @prop {Number} alpha     [.11]
+    ///
+    $shadow-soft-right-config: extend($_shadow-soft-config,
+        (
+            'offset-x': get($_shadow-soft-config, 'blur')
+        )
+    ) !default;
+
+    ///
+    /// Configuration map for creating "soft" box shadows that cast to the left to deliniate horizontally adjacent - _and often resizable_ - content regions within a Wdesk application.
+    ///
+    /// To be used as an argument passed to the `build-box-shadow()` function.
+    ///
+    /// __For simpler usage as a CSS `box-shadow` property value, use the `$box-shadow-soft-left` variable.__
+    /// ---
+    /// @type Map
+    /// @since 1.7.0
+    /// @link https://github.com/Workiva/web-skin/issues/1199 web-skin/#1199
+    /// ---
+    /// @see {variable} $box-shadow-soft-left
+    /// @see {variable} $shadow-soft-right-config
+    /// @see {function} build-box-shadow
+    /// ---
+    /// @requires {function} extend
+    /// @requires {variable} $_shadow-soft-config
+    /// ---
+    /// @example scss - Usage
+    ///  .your-resizable-right-panel {
+    ///    box-shadow: build-box-shadow($shadow-soft-left-config);
+    ///  }
+    /// ---
+    /// @prop {Bool}   inset     [false]
+    /// @prop {Number} offset-x  [4px]
+    /// @prop {Number} offset-y  [0]
+    /// @prop {Number} blur      [4px]
+    /// @prop {Number} spread    [-2px]
+    /// @prop {Color}  color     [#000000]
+    /// @prop {Number} alpha     [.11]
+    ///
+    $shadow-soft-left-config: extend($_shadow-soft-config,
+        (
+            'offset-x': get($_shadow-soft-config, 'blur') * -1
+        )
+    ) !default;
+
+    ///
+    /// Configuration map for creating "soft" box shadows that cast to the right of a "frozen" spreadsheet column.
+    ///
+    /// To be used as an argument passed to the `build-box-shadow()` function.
+    ///
+    /// __For simpler usage as a CSS `box-shadow` property value, use the `$box-shadow-frozen-data-column` variable.__
+    /// ---
+    /// @type Map
+    /// @since 1.7.0
+    /// @link https://github.com/Workiva/web-skin/issues/1415 web-skin/#1415
+    /// ---
+    /// @see {variable} $box-shadow-frozen-data-column
+    /// @see {variable} $shadow-frozen-data-row-config
+    /// @see {function} build-box-shadow
+    /// ---
+    /// @requires {function} extend
+    /// @requires {variable} $shadow-soft-right-config
+    /// ---
+    /// @example scss - Usage
+    ///  .your-frozen-column {
+    ///    box-shadow: build-box-shadow($shadow-frozen-data-column-config);
+    ///  }
+    /// ---
+    /// @prop {Bool}   inset     [false]
+    /// @prop {Number} offset-x  [4px]
+    /// @prop {Number} offset-y  [0]
+    /// @prop {Number} blur      [4px]
+    /// @prop {Number} spread    [-2px]
+    /// @prop {Color}  color     [#000000]
+    /// @prop {Number} alpha     [.18]
+    ///
+    $shadow-frozen-data-column-config: extend($shadow-soft-right-config,
+        (
+            'alpha': .18
+        )
+    ) !default;
+
+    ///
+    /// Configuration map for creating "soft" box shadows that cast below a "frozen" spreadsheet row.
+    ///
+    /// To be used as an argument passed to the `build-box-shadow()` function.
+    ///
+    /// __For simpler usage as a CSS `box-shadow` property value, use the `$box-shadow-frozen-data-row` variable.__
+    /// ---
+    /// @type Map
+    /// @since 1.7.0
+    /// @link https://github.com/Workiva/web-skin/issues/1415 web-skin/#1415
+    /// ---
+    /// @see {variable} $box-shadow-frozen-data-column
+    /// @see {variable} $shadow-frozen-data-row-config
+    /// @see {function} build-box-shadow
+    /// ---
+    /// @requires {function} extend
+    /// @requires {variable} $shadow-soft-down-config
+    /// ---
+    /// @example scss - Usage
+    ///  .your-frozen-row {
+    ///    box-shadow: build-box-shadow($shadow-frozen-data-row-config);
+    ///  }
+    /// ---
+    /// @prop {Bool}   inset     [false]
+    /// @prop {Number} offset-x  [0]
+    /// @prop {Number} offset-y  [4px]
+    /// @prop {Number} blur      [4px]
+    /// @prop {Number} spread    [-2px]
+    /// @prop {Color}  color     [#000000]
+    /// @prop {Number} alpha     [.18]
+    ///
+    $shadow-frozen-data-row-config: extend($shadow-soft-down-config,
+        (
+            'alpha': .18
+        )
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   BOX SHADOW PROPERTY VALUES
+//
+//   -> Arglists that have already been built using the
+//      configs in the above section via `build-box-shadow()`
+//
+// ********************************************************
+
+    ///
+    /// Default `box-shadow` value for Web Skin components.
+    ///
+    /// The values output as an `Arglist` by this variable are documented within `$shadow-default-config`.
+    /// ---
+    /// @type Arglist
+    /// @since 1.0.0
+    /// ---
+    /// @see {variable} $shadow-default-config
+    /// ---
+    /// @requires {function} build-box-shadow
+    /// @requires {variable} $shadow-default-config
+    /// ---
+    /// @example scss - Usage
+    ///  .component {
+    ///    box-shadow: $box-shadow-default;
+    ///  }
+    ///
+    $box-shadow-default: build-box-shadow($shadow-default-config) !default;
+
+    ///
+    /// The `box-shadow` value for Web Skin components that appear atop a dark backdrop / overlay.
+    ///
+    /// The values output as an `Arglist` by this variable are documented within `$shadow-on-dark-backdrop-config`.
+    /// ---
+    /// @type Arglist
+    /// @since 1.3.4
+    /// ---
+    /// @see {variable} $shadow-on-dark-backdrop-config
+    /// ---
+    /// @requires {function} build-box-shadow
+    /// @requires {variable} $shadow-on-dark-backdrop-config
+    /// ---
+    /// @example scss - Usage
+    ///  .component {
+    ///    box-shadow: $box-shadow-on-dark-backdrop;
+    ///  }
+    ///
+    $box-shadow-on-dark-backdrop: build-box-shadow($shadow-on-dark-backdrop-config) !default;
+
+    ///
+    /// The `box-shadow` value for Web Skin components that indicate the top edge above a vertically scrollable area within something like a sidebar panel.
+    ///
+    /// The values output as an `Arglist` by this variable are documented within `$shadow-scrollable-area-top-edge-config`.
+    /// ---
+    /// @type Arglist
+    /// @since 1.3.4
+    /// @link https://github.com/Workiva/web-skin/issues/1199 web-skin/#1199
+    /// ---
+    /// @see {variable} $shadow-scrollable-area-top-edge-config
+    /// @see {variable} $box-shadow-below-scrollable-area
+    /// ---
+    /// @requires {function} build-box-shadow
+    /// @requires {variable} $shadow-scrollable-area-top-edge-config
+    /// ---
+    /// @example html - Typical Markup Pattern
+    ///  <div class="your-panel">
+    ///    <div class="your-panel__header">Displays above scrollable area</div>
+    ///    <div class="your-panel__content  scroll-y">...</div>
+    ///    <div class="you-panel__footer">Displays below scrollable area</div>
+    ///  </div>
+    /// ---
+    /// @example scss - Usage
+    ///  .your-panel__header {
+    ///    box-shadow: $box-shadow-above-scrollable-area;
+    ///  }
+    ///
+    ///  .your-panel__footer {
+    ///    box-shadow: $box-shadow-below-scrollable-area;
+    ///  }
+    ///
+    $box-shadow-above-scrollable-area: build-box-shadow($shadow-scrollable-area-top-edge-config) !default;
+
+    ///
+    /// The `box-shadow` value for Web Skin components that indicate the bottom edge below a vertically scrollable area within something like a sidebar panel.
+    ///
+    /// The values output as an `Arglist` by this variable are documented within `$shadow-scrollable-area-bottom-edge-config`.
+    /// ---
+    /// @type Arglist
+    /// @since 1.3.4
+    /// @link https://github.com/Workiva/web-skin/issues/1199 web-skin/#1199
+    /// ---
+    /// @see {variable} $shadow-scrollable-area-bottom-edge-config
+    /// @see {variable} $box-shadow-above-scrollable-area
+    /// ---
+    /// @requires {function} build-box-shadow
+    /// @requires {variable} $shadow-scrollable-area-bottom-edge-config
+    /// ---
+    /// @example html - Typical Markup Pattern
+    ///  <div class="your-panel">
+    ///    <div class="your-panel__header">Displays above scrollable area</div>
+    ///    <div class="your-panel__content  scroll-y">...</div>
+    ///    <div class="you-panel__footer">Displays below scrollable area</div>
+    ///  </div>
+    /// ---
+    /// @example scss - Usage
+    ///  .your-panel__header {
+    ///    box-shadow: $box-shadow-above-scrollable-area;
+    ///  }
+    ///
+    ///  .your-panel__footer {
+    ///    box-shadow: $box-shadow-below-scrollable-area;
+    ///  }
+    ///
+    $box-shadow-below-scrollable-area: build-box-shadow($shadow-scrollable-area-bottom-edge-config) !default;
+
+    ///
+    /// @type Arglist
+    /// @alias box-shadow-below-scrollable-area
+    /// @since 1.7.0
+    ///
+    $box-shadow-soft-up: $box-shadow-below-scrollable-area !default;
+
+    ///
+    /// @type Arglist
+    /// @alias box-shadow-above-scrollable-area
+    /// @since 1.7.0
+    ///
+    $box-shadow-soft-down: $box-shadow-above-scrollable-area !default;
+
+    ///
+    /// The `box-shadow` value for creating "soft" box shadows that cast to the right to deliniate horizontally adjacent - _and often resizable_ - content regions within a Wdesk application.
+    ///
+    /// The values output as an `Arglist` by this variable are documented within `$shadow-soft-right-config`.
+    /// ---
+    /// @type Arglist
+    /// @since 1.7.0
+    /// @link https://github.com/Workiva/web-skin/issues/1421 web-skin/#1421
+    /// ---
+    /// @see {variable} $shadow-soft-right-config
+    /// @see {variable} $box-shadow-soft-left
+    /// ---
+    /// @requires {function} build-box-shadow
+    /// @requires {variable} $shadow-soft-right-config
+    /// ---
+    /// @example scss - Usage
+    ///  .your-resizable-left-panel {
+    ///    box-shadow: $box-shadow-soft-right;
+    ///  }
+    ///
+    $box-shadow-soft-right: build-box-shadow($shadow-soft-right-config) !default;
+
+    ///
+    /// The `box-shadow` value for creating "soft" box shadows that cast to the left to deliniate horizontally adjacent - _and often resizable_ - content regions within a Wdesk application.
+    ///
+    /// The values output as an `Arglist` by this variable are documented within `$shadow-soft-left-config`.
+    /// ---
+    /// @type Arglist
+    /// @since 1.7.0
+    /// @link https://github.com/Workiva/web-skin/issues/1421 web-skin/#1421
+    /// ---
+    /// @see {variable} $shadow-soft-left-config
+    /// @see {variable} $box-shadow-soft-right
+    /// ---
+    /// @requires {function} build-box-shadow
+    /// @requires {variable} $shadow-soft-left-config
+    /// ---
+    /// @example scss - Usage
+    ///  .your-resizable-right-panel {
+    ///    box-shadow: $box-shadow-soft-left;
+    ///  }
+    ///
+    $box-shadow-soft-left: build-box-shadow($shadow-soft-left-config) !default;
+
+    ///
+    /// The `box-shadow` value for creating "soft" box shadows that cast to the right of a "frozen" spreadsheet column.
+    ///
+    /// The values output as an `Arglist` by this variable are documented within `$shadow-frozen-data-column-config`.
+    /// ---
+    /// @type Arglist
+    /// @since 1.7.0
+    /// @link https://github.com/Workiva/web-skin/issues/1415 web-skin/#1415
+    /// ---
+    /// @see {variable} $shadow-frozen-data-column-config
+    /// @see {variable} $box-shadow-frozen-data-row
+    /// ---
+    /// @requires {function} build-box-shadow
+    /// @requires {variable} $shadow-frozen-data-column-config
+    /// ---
+    /// @example scss - Usage
+    ///  .your-frozen-column {
+    ///    box-shadow: $box-shadow-frozen-data-column;
+    ///  }
+    ///
+    $box-shadow-frozen-data-column: build-box-shadow($shadow-frozen-data-column-config) !default;
+
+    ///
+    /// The `box-shadow` value for creating "soft" box shadows that cast below a "frozen" spreadsheet row.
+    ///
+    /// The values output as an `Arglist` by this variable are documented within `$shadow-frozen-data-row-config`.
+    /// ---
+    /// @type Arglist
+    /// @since 1.7.0
+    /// @link https://github.com/Workiva/web-skin/issues/1415 web-skin/#1415
+    /// ---
+    /// @see {variable} $shadow-frozen-data-row-config
+    /// @see {variable} $box-shadow-frozen-data-column
+    /// ---
+    /// @requires {function} build-box-shadow
+    /// @requires {variable} $shadow-frozen-data-row-config
+    /// ---
+    /// @example scss - Usage
+    ///  .your-frozen-row {
+    ///    box-shadow: $box-shadow-frozen-data-row;
+    ///  }
+    ///
+    $box-shadow-frozen-data-row: build-box-shadow($shadow-frozen-data-row-config) !default;
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED BOX SHADOW CONFIG ALIASES
+//
+// ********************************************************
+    $shadow-default-color: get($shadow-default-config, 'color');
+    $shadow-default-alpha: get($shadow-default-config, 'alpha');
+    $shadow-default-horizontal: get($shadow-default-config, 'offset-x');
+    $shadow-default-vertical: get($shadow-default-config, 'offset-y');
+    $shadow-default-blur: get($shadow-default-config, 'blur');
+    $shadow-default-spread: get($shadow-default-config, 'spread');

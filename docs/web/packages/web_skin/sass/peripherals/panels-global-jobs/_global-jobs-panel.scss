@@ -1,0 +1,92 @@
+// ********************************************************
+//
+    $module: 'peripherals/panels-global-jobs/global-jobs-panel';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   JOBS PANEL
+// ----------------------------------------------------
+.global-jobs-panel {
+    position: absolute;
+    top: auto;
+    bottom: 0; // panel should "collapse" upward
+
+    // mobile-first-defaults
+    left: to-rem(get($job-panel-config, 'spacing-horizontal'));
+    right: to-rem(get($job-panel-config, 'spacing-horizontal'));
+    width: auto;
+
+    @include respond-to('screen-sm and up') {
+        width: to-rem(get($job-panel-config, 'width'));
+        right: to-rem(get($job-panel-config, 'spacing-horizontal'));
+        left: auto;
+    }
+}
+
+
+// ----------------------------------------------------
+//   JOBS PANEL HEADING
+// ----------------------------------------------------
+.global-jobs-panel .panel-heading {
+
+    .panel-title {
+        font-weight: normal;
+    }
+
+    // Reverse the caret direction
+    // since this collapses upward
+    .caret {
+        border-top-width: 0;
+        border-bottom-width: to-rem($caret-bd-width);
+        border-bottom-style: solid;
+        // panel headings are inverse contrast
+        border-bottom-color: get($panel-colors-default-inverse, 'header-text-color');
+    }
+
+    &[data-toggle].open {
+        .caret {
+            border-bottom-width: 0;
+            border-top-width: to-rem($caret-bd-width);
+            border-top-style: solid;
+            // panel headings are inverse contrast
+            border-top-color: get($panel-colors-default-inverse, 'header-text-color');
+        }
+    }
+
+    // line up the progress spinner / icons with the title
+    .progress-spinner,
+    .icon {
+        position: absolute;
+        top: to-rem(get($job-panel-config, 'heading-icon-offset-vertical'));
+        left: to-rem(get-deep($panel-config, 'sm.body-padding')); // line up with job item icon
+
+        + .title-text {
+            margin-left: to-rem(get($job-panel-config, 'heading-icon-size') + get($job-panel-config, 'item-padding')); // line up with job itme name
+        }
+    }
+
+    // line up the caret / close button
+    .panel-actions {
+        .caret {
+            right: to-rem(get($job-panel-config, 'heading-close-btn-width') + get($job-panel-config, 'heading-icon-offset-vertical'));
+        }
+        .close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: to-rem(get($job-panel-config, 'heading-close-btn-width'));
+            height: to-rem(get-deep($panel-config, 'sm.header-height'));
+            padding-bottom: .8rem; // vertical align adjustment because of funky &times;
+            color: get($panel-colors-default-inverse, 'header-text-color');
+            text-shadow: 0 .1rem 0 rgba($black, .2);
+            opacity: $caret-alpha;
+
+            #{$hover} {
+                opacity: 1;
+            }
+        }
+    }
+}

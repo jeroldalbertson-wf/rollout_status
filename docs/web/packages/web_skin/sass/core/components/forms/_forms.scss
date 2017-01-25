@@ -1,0 +1,716 @@
+// ********************************************************
+//
+//   FORMS STYLE MODULE
+//   http://bit.ly/webskin-form-controls
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/forms/forms';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $forms-module-config:  'core/components/atoms/forms/forms-config';
+    $forms-module-helpers: 'core/components/atoms/forms/forms-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $forms-module-config,
+                                          $forms-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   NORMALIZE NON-CONTROLS
+//   -> Restyle and baseline non-control form elements.
+//
+// ********************************************************
+    fieldset {
+        padding: 0;
+        margin: 0;
+        border: 0;
+        // Chrome and Firefox set a `min-width: -webkit-min-content;` on fieldsets,
+        // so we reset that to ensure it behaves more like a standard block element.
+        min-width: 0;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: get($form-config, 'legend-margin-bottom');
+        font-family: get($form-config, 'legend-font-family');
+        font-size: to-rem(get($form-config, 'legend-font-size'));
+        font-weight: normal;
+        line-height: inherit;
+        color: get($form-config, 'legend-text-color');
+        border: 0;
+        border-bottom: to-rem(get($form-config, 'legend-bd-width')) solid get($form-config, 'legend-bd-color');
+
+        // typically added using an <em> elem
+        .sub-legend {
+            font-family: get($form-control-config, 'font-family');
+            font-size: to-rem(get-deep($form-control-config, 'font-size.base'));
+            font-style: normal;
+            font-weight: normal;
+        }
+
+        @include safari-support {
+            // strange margin collapse bug that only presents in safari
+            // http://bit.ly/12eMCcW
+            + label {
+                margin-top: get($form-config, 'legend-margin-bottom');
+                -webkit-margin-top-collapse: separate;
+            }
+        }
+
+        //
+        // Add vertical spacing between groups that contain their own legend titles
+        // https://api.atl.workiva.net/WebSkin/docs/build/html/css/#forms-example-control-groupings
+        //
+        .form-group + .form-group > & {
+            margin-top: to-rem(get($form-config, 'group-margin-bottom') * 3);
+        }
+    }
+
+    label,
+    .control-label {
+        display: inline-block;
+        max-width: 100%; // Force IE8 to wrap long content
+        margin-bottom: to-rem(get($form-config, 'label-margin-bottom'));
+        font-weight: bold;
+        line-height: get($form-config, 'label-line-height');
+        // Apply a font-size to the label so that it doesn't automatically inherit the font-size of
+        // it's parent element.  This is done to prevent parent elements like `.btn-group`
+        // from causing the label to render with a font size of 0.
+        // @see: UIP-1441
+        font-size: to-rem(get-deep($form-control-config, 'font-size.base'));
+        // Use a min-height to ensure that labels, even those that lack any text nodes -
+        // like a `.checkbox` with no visible label - can be centered vertically within
+        // a flexbox layout using `align-items: center`.
+        // @see: UIP-1129
+        min-height: to-rem(get($form-config, 'label-line-height') * $font-size-base);
+
+        .disabled & {
+            @include form-control-label-disabled();
+        }
+    }
+
+
+// ********************************************************
+//
+//   NORMALIZE FORM CONTROLS
+//   -> While most of our form styles require extra
+//      classes, some basic normalization is required to
+//      ensure optimum display with or without those
+//      classes to better address browser inconsistencies.
+//
+// ********************************************************
+    input[type="file"] {
+        display: block;
+        // match the portion of the control that we cannot style
+        font-size: 1.2rem;
+        border: 0;
+
+        //
+        // do our best to give this input type a focus style that
+        // is reasonably similar to other form controls
+        //
+        &:focus,
+        &#{$focus-class} {
+            // use outline since we cannot use a border on this element
+            @include focus-outline();
+        }
+    }
+
+    @include normalize-range-input();
+
+    // Make multiple select elements height not fixed,
+    // and make them look like an inlined dropdown menu.
+    select[multiple],
+    select[size] {
+        height: auto;
+        padding-left: 0;
+        padding-right: 0;
+
+        // Make nested options appear like dropdown menu items
+        option {
+            font-size: to-rem(get($dropdown-menu-base-size-config, 'font-size'));
+            padding: to-rem(get($dropdown-menu-base-size-config, 'link-padding'));
+            line-height: to-rem(get($dropdown-menu-base-size-config, 'line-height'));
+            color: get($nav-secondary-link-config, 'text-color');
+        }
+    }
+
+    // Adjust cursor for select option element
+    select option {
+        cursor: pointer;
+    }
+
+    // Adjust output element
+    output {
+        display: block;
+        padding-top: to-rem(get-deep($form-control-config, 'padding.base.vertical') + 1);
+        font-size: to-rem(get-deep($form-control-config, 'font-size.base'));
+        line-height: to-rem(get-deep($form-control-config, 'line-height.base'));
+        color: get-deep($form-control-config, 'colors.text-base');
+    }
+
+
+// ********************************************************
+//
+//   FORM GROUPS (formerly `.control-group`)
+//   -> Designed to help with the organization and spacing
+//      of vertically stacked form controls.
+//   -> For horizontally arranged form controls, use
+//      pre-defined grid column classes.
+//
+// ********************************************************
+    .form-group {
+        position: relative; // To position validation state icons
+        margin-bottom: to-rem(get($form-config, 'group-margin-bottom'));
+
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+    }
+
+
+// ********************************************************
+//
+//   FORM CONTROL WRAPPERS
+//   -> Designed to surround the `.form-control` / `.help-block`
+//      and / or `.form-control-feedback` element to provide
+//      separation between them and the `.control-label`.
+//
+//   -> `.form-control-inner-wrapper` is required to
+//      display the feedback icon in the correct position
+//      when input groups are being utilized.
+//
+// ********************************************************
+    .form-control-wrapper,
+    .form-control-inner-wrapper {
+        position: relative;
+    }
+
+
+// ********************************************************
+//
+//   BASE FORM CONTROL STYLES
+//   -> Shared size and type resets for form controls.
+//      Apply `.form-control` to any of the following
+//      form controls:
+//
+//      `select`
+//      `textarea`
+//      `input[type="text"]`
+//      `input[type="password"]`
+//      `input[type="datetime"]`
+//      `input[type="datetime-local"]`
+//      `input[type="date"]`
+//      `input[type="month"]`
+//      `input[type="time"]`
+//      `input[type="week"]`
+//      `input[type="number"]`
+//      `input[type="range"]`
+//      `input[type="email"]`
+//      `input[type="url"]`
+//      `input[type="search"]`
+//      `input[type="tel"]`
+//      `input[type="color"]`
+//      `input[type="search"]`
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   COMMON / SHARED FORM CONTROL STYLES
+    // ----------------------------------------------------
+    .form-control {
+        @include form-control-base();
+
+        // ----- FOCUSED STATE ----- //
+        &:focus,
+        &#{$focus-class} {
+            @include form-control-focus();
+        }
+
+        // ----- DISABLED / READONLY STATE ----- //
+        &[readonly] {
+            @include form-control-disabled($disable-text-selection: false, $set-text-color: false);
+            @include enable-user-select(text !important);
+
+            cursor: text !important; // NOTE: Must declare without :pseudo for IE8 when using [readonly]
+            color: get-deep($form-control-config, 'colors.text-base') !important;
+        }
+
+        &[disabled],
+        .disabled & {
+            @include form-control-disabled();
+        }
+    }
+
+    // ----------------------------------------------------
+    //   `<textarea>` FORM CONTROL STYLES
+    // ----------------------------------------------------
+    textarea.form-control {
+        @include textarea-base();
+    }
+
+    // ----------------------------------------------------
+    //   `<select>` FORM CONTROL STYLES
+    //   -> Make non-multiple `<select>` controls look/feel
+    //      like our buttons as much as possible for
+    //      browsers that can handle it.
+    //
+    //   [1] The way `<select>` elems "inherit" colors,
+    //       borders, etc... is a little different so we
+    //       cannot simply omit the style just because our
+    //       value is `inherit`. We must redeclare it as
+    //       the default.
+    // ----------------------------------------------------
+    select:not([multiple]).form-control {
+        $btn-bd-width-rem: to-rem(get($btn-config, 'bd-width'));
+        $btn-shadow-depth-rem: to-rem(get($btn-config, 'shadow-depth'));
+
+        padding-right: to-rem(get-deep($btn-config, 'padding.base.vertical'));
+        cursor: pointer;
+        background-color: get($btn-colors-default, 'bg-base');
+        border: $btn-bd-width-rem solid get($btn-colors-default, 'bd-base');
+        box-shadow: 0 $btn-shadow-depth-rem 0 0 get($btn-colors-default, 'shadow-base');
+
+        // ----- HOVER STATE ----- //
+        #{$hover} {
+            // [1]
+            color: get($btn-colors-default, 'text-hover');
+            background-color: get($btn-colors-default, 'bg-hover');
+            border-color: get($btn-colors-default, 'bd-hover');
+            box-shadow: 0 $btn-shadow-depth-rem 0 0 get($btn-colors-default, 'shadow-hover');
+        }
+
+        // ----- FOCUS STATE ----- //
+        &:focus,
+        &#{$focus-class} {
+            // [1]
+            color: get($btn-colors-default, 'text-press');
+            background-color: get($btn-colors-default, 'bg-press');
+            border-color: get($btn-colors-default, 'bd-press');
+            box-shadow: 0 $btn-shadow-depth-rem 0 0 get($btn-colors-default, 'shadow-press');
+        }
+    }
+
+    // ----------------------------------------------------
+    //   `<input type="range">` CONTROL STYLES
+    // ----------------------------------------------------
+    .form-control[type="range"] {
+        @include range-input();
+    }
+
+    // ----------------------------------------------------
+    //   UNSKINNED "STATIC" FORM CONTROL
+    //   -> Spit out the value of an input without any
+    //      skinning, only structure.  Works great on
+    //      `[readonly]` or `[disabled]` controls.
+    //
+    //   -> Extra selector specificity necessary to overrule
+    //      background color styles for readonly / disabled
+    //      form controls.
+    // ----------------------------------------------------
+    .form-control.form-control-static {
+        border-color: transparent !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+    }
+
+    // ----------------------------------------------------
+    //   TRUNCATE TEXT ON "STATIC" SINGLE LINE FORM CONTROL
+    //
+    //   -> Since an `<input>` is always displayed on a
+    //      single line, we can assume that truncation
+    //      is desired when the field is not editable.
+    //
+    //   -> Declared using the `input` selector since we
+    //      don't want this behavior on `textarea`.
+    // ----------------------------------------------------
+    input.form-control-static,
+    .form-control-static--single-line {
+        @include truncate-text();
+    }
+
+
+
+// ********************************************************
+//
+//  FORM CONTROL ICON ADDONS
+//
+//   -> Styles require / assume the following markup:
+//
+//      ```
+//      <div class="form-control-inner-wrapper">
+//        <input class="form-control form-control--has-icon-{before|after}">
+//        <i class="icon icon-{glyph-name} form-control-icon form-control-icon--{before|after}"></i>
+//      </div>
+//      ```
+//
+//   -> Similar to an `.input-group-addon`, except that
+//      these icons are "placed" atop the field without
+//      modifying the `border-radius`, etc. of the field
+//      itself.
+//
+//   -> These styles will be all that is necessary for
+//      rendering form validation "feedback" icons AND
+//      search input icons once `2.0.0` is released.
+//
+//  [1] So the `.form-control-icon` element can be nested
+//      before OR after the `.form-control`, even when the
+//      `.form-control` received a `z-index` of `2` when
+//      nested in an `.input-group`.
+//
+// ********************************************************
+    .form-control--has-icon-before {
+        z-index: 1; // [1]
+        padding-left: get($form-control-icon-addon-config, 'width');
+    }
+
+    .form-control--has-icon-after {
+        z-index: 1; // [1]
+        padding-right: get($form-control-icon-addon-config, 'width');
+    }
+
+    .form-control-icon {
+        position: absolute;
+        top: to-rem(get($form-control-config, 'bd-width'));
+        z-index: get($form-control-config, 'icon-z-index'); // [1]
+        display: block;
+        width: get($form-control-icon-addon-config, 'width');
+        height: get($form-control-icon-addon-config, 'height');
+        line-height: get($form-control-icon-addon-config, 'height');
+        text-align: center;
+        pointer-events: none;
+        color: darken(get-deep($form-control-config, 'colors.placeholder-text-base'), 10);
+
+        &:before,
+        &:after {
+            // Has to be `em` instead of `rem` because MSIE 10
+            // doesn't support `rem` units on `line-height` or `font-size` properties.
+            line-height: to-em(get($form-control-icon-addon-config, 'height'), icon-size-base-16());
+        }
+
+        // Icon on the left (for use alongside `.form-control--has-icon-before`)
+        @at-root .form-control-icon--before {
+            right: auto;
+            left: to-rem(get($form-control-config, 'bd-width'));
+        }
+
+        // Icon on the left (for use alongside `.form-control--has-icon-after`)
+        @at-root .form-control-icon--after {
+            right: to-rem(get($form-control-config, 'bd-width'));
+            left: auto;
+        }
+    }
+
+
+
+// ********************************************************
+//
+//   FORM CONTROL FEEDBACK ICONS
+//
+//   DEPRECATED IN `1.8.0` via UIP-1326.
+//
+//   TODO: Remove in `2.0.0` since we can use the new
+//         "Form Control Icon Addons" styles instead.
+//
+//   NOTE: The `form-control-feedback` CSS class will
+//         still be utilized to apply color to an icon
+//         based on the `has-{state}` validation clas
+//         on the parent `.form-group`.
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   FORM CONTROL FEEDBACK MODIFIER CLASS
+    //
+    //   DEPRECATED IN `1.4.0` VIA UIP-871
+    //   TODO: Remove in `2.0.0`. (Adding icons / spacing is now default behavior)
+    // ----------------------------------------------------
+        .has-feedback {
+            // Enable absolute positioning for icon
+            position: relative;
+
+            // Ensure icons don't overlap text
+            .form-control {
+                padding-right: get($form-control-icon-addon-config, 'width');
+            }
+        }
+
+
+    // ----------------------------------------------------
+    //   FEEDBACK ICON
+    //
+    //   TODO: Remove in `2.0.0` since we can use the new
+    //         `.form-control-icon` styles instead.
+    // ----------------------------------------------------
+        .form-control-feedback {
+            @extend .form-control-icon;
+            @extend .form-control-icon--after;
+        }
+
+        // Reposition feedback icon if input has visible label above
+        .form-group label {
+            & ~ .form-control-feedback {
+                top: to-rem($line-height-base-px + get($form-config, 'label-margin-bottom'));
+            }
+
+            // Reset if the label is hidden
+            &.sr-only ~ .form-control-feedback {
+                top: 0;
+            }
+        }
+
+        // Reset if the label is not stacked above the control vertically.
+        .form-inline .form-group label ~ .form-control-feedback,
+        .form-horizontal .form-group label ~ .form-control-feedback {
+            top: 0;
+        }
+
+        // Reposition feedback icon within checkbox / radio controls
+        .checkbox .form-control-feedback,
+        .radio .form-control-feedback {
+            $icon-size-base-16-rem: to-rem(icon-size-base-16());
+
+            text-indent: 0; // Override inherited value from `.checkbox` / `.radio`
+            display: inline-block;
+            position: relative;
+            margin-left: .6rem;
+            top: 0;
+            left: 0;
+            right: auto;
+            width: $icon-size-base-16-rem;
+            height: $icon-size-base-16-rem;
+            line-height: $icon-size-base-16-rem;
+
+            &:before,
+            &:after {
+                // Has to be `em` instead of `rem` because MSIE 10
+                // doesn't support `rem` units on `line-height` or `font-size` properties.
+                line-height: to-em($icon-size-base-16-rem, icon-size-base-16());
+            }
+        }
+
+
+// ********************************************************
+//
+//   FORM CONTROL SIZE VARIATIONS
+//
+// ********************************************************
+@each $size-name in $form-control-size-variation-names {
+    @include form-control-size($size-name, $group: false); // .input-#{$size-name}
+    @include form-control-size($size-name, $group: true);  // .form-group-#{$size-name} .form-control
+}
+
+
+// ********************************************************
+//
+//   FORM CONTROL SKIN VARIATIONS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   VALIDATION STATE CLASSES
+    //   -> Applied to `.form-group`
+    // ----------------------------------------------------
+    @each $state, $color-config in $form-group-states {
+        .has-#{$state} {
+            @include form-group-variant($state);
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   REQUIRED FIELD INDICATOR(S)
+    //
+    //   [1] `is-required-field` CSS class can be placed on a
+    //       `.control-label` or a `.form-control-wrapper` elem.
+    //
+    //   [2] Use absolute positioning to place the asterisk
+    //       just inside the top left corner of the control
+    //       wrapped in its own form-control-wrapper div.
+    //       (using wrapperClassName in WSR)
+    //
+    //   [3] Deprecated `required` CSS class can be placed
+    //       on a `.control-label` only.
+    //
+    //       NOTE: `required` CSS class will be removed
+    //             no later than the `2.0.0` release.
+    // ----------------------------------------------------
+    %required-field-indicator {
+        margin-left: to-rem(get-deep($form-control-config, 'bd-radius.base'));
+        font-size: 1em;
+        font-weight: normal;
+        color: $zc-orange-120;
+        content: "*";
+    }
+
+    // ----- [1] ----- //
+    .is-required-field:after {
+        @extend %required-field-indicator;
+    }
+
+    // ----- [2] ----- //
+    .form-control-wrapper.is-required-field {
+        &:after {
+            position: absolute;
+            left: 0;
+            top: 0;
+            //
+            // Keep above `.form-control-file__custom-input` and
+            // appended input-group-addon when .form-control-wrapper.is-required-field
+            // is placed on an input-group instead of a label or a wrapper div
+            // directly around the input.
+            //
+            z-index: max(
+                get($form-control-config, 'z-index-within-input-group'),
+                get($file-browser-config, 'file-custom-zindex')
+            ) + 1;
+        }
+    }
+
+    // ----- [3] ----- //
+    label.required,
+    .control-label.required {
+        &:after {
+            @extend %required-field-indicator;
+        }
+    }
+
+
+// ********************************************************
+//
+//   HELP TEXT
+//   -> Apply to any element you wish to create light text
+//      for placement immediately below a form control.
+//      Use for general help, formatting, or
+//      instructional text.
+//
+// ********************************************************
+    .help-block {
+        display: block; // account for any element using help-block
+        margin-top: to-rem(get($form-config, 'help-margin-top'));
+        margin-bottom: to-rem(get($form-config, 'help-margin-bottom'));
+        font-style: italic;
+        @include text-muted();
+    }
+
+    .help-inline {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: to-rem(get($form-config, 'inline-help-line-height'));
+        font-style: italic;
+        @include text-muted();
+
+        .form-control + & {
+            // Space out adjacent controls / help text
+            padding-left: to-rem(get($form-config, 'inline-help-padding-left'));
+        }
+    }
+
+    .disabled {
+        .help-block,
+        .help-inline {
+            @include form-control-label-disabled();
+        }
+    }
+
+
+// ********************************************************
+//
+//   FORM LAYOUT VARIATIONS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   INLINE
+    //   -> Make forms appear inline(-block) by adding the
+    //   `.form-inline` class. Inline forms begin stacked
+    //   on extra small (mobile) devices and then go inline
+    //   when viewports reach <768px.
+    //
+    //   -> Requires wrapping inputs and labels with
+    //      `.form-group` for proper display of default
+    //      HTML form controls and our custom form
+    //      controls (e.g., input groups).
+    // ----------------------------------------------------
+    .form-inline {
+        @include form-inline();
+    }
+
+    // ----------------------------------------------------
+    //   HORIZONTAL
+    //   -> Horizontal forms are built using grid classes
+    //      and allow you to create forms with labels on
+    //      the left and inputs on the right.
+    // ----------------------------------------------------
+    .form-horizontal {
+        //
+        // Consistent vertical alignment of radios and checkboxes
+        // Labels also get some reset styles, but that is scoped to a media query below.
+        //
+        .radio,
+        .checkbox {
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-top: to-rem(get($form-config, 'horizontal-label-padding-top'));
+            //
+            // Account for padding we're adding to ensure the alignment
+            // of help text and other content below items
+            //
+            min-height: to-rem(get-deep($form-control-config, 'height.base'));
+        }
+
+        //
+        // Make form groups behave like grid rows
+        //
+        .form-group {
+            @include grid-row-base();
+        }
+
+        //
+        // Validation states
+        //
+        // Reposition the icon because it's now within a grid column and columns have
+        // `position: relative;` on them. Also accounts for the grid gutter padding.
+        //
+        .form-control-feedback {
+            right: to-rem($grid-gutter-width / 2);
+        }
+
+        //
+        // Labels are side-by-side with form controls
+        //
+        @include respond-to('screen-#{$grid-float-breakpoint} and up') {
+            $form-control-bd-width: get-deep($form-control-config, 'bd-width');
+
+            .control-label {
+                text-align: right;
+                margin-bottom: 0;
+                // Vertically center labels
+                padding-top: to-rem(get-deep($form-control-config, 'padding.base.vertical') + $form-control-bd-width);
+            }
+
+
+            //
+            // Size variation label valign adjustments
+            //
+            // The `.form-horizontal` element can be a parent, or child of any `.form-group-#{$size-name}` element.
+            //
+            @each $size-name in $form-control-size-variation-names {
+                $padding-top: to-rem(get-deep($form-control-config, 'padding.#{$size-name}.vertical') + $form-control-bd-width);
+
+                .form-group-#{$size-name} .control-label {
+                    padding-top: $padding-top;
+                }
+
+                @at-root {
+                    .form-group-#{$size-name} .form-horizontal .control-label {
+                        padding-top: $padding-top;
+                    }
+                }
+            }
+        }
+    }

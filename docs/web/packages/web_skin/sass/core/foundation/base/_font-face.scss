@@ -1,0 +1,52 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/base/font-face';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+//
+// TYPE
+//
+    // LATO
+    $lato-font-faces: get($lato-font, 'faces');
+
+    @each $font-face, $attrs in $lato-font-faces {
+        // same name no matter what, use style/weight to differentiate
+        // http://bit.ly/1fjY4H8
+        $font-face-name:    $lato-font-family-name;
+        $font-face-file:    get($attrs, 'file');
+        $font-face-weight:  get($attrs, 'weight');
+        $font-face-style:   get($attrs, 'style');
+
+        @include ws-font-face($font-face-name,
+                               $font-face-file,
+                               $font-face-weight,
+                               $font-face-style
+                              );
+    }
+
+
+//
+// WF ICONS
+//
+    @include ws-font-face($icon-font-name-main, $icon-font-path-main);
+
+
+//
+// WF COLOR ICONS
+//
+    @include ws-font-face($icon-font-name-color, $icon-font-path-color);
+
+
+//
+// WF DOCTYPE ICONS
+//
+    @include ws-font-face($icon-font-name-doctype, $icon-font-path-doctype);

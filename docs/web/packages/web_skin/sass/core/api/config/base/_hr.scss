@@ -1,0 +1,29 @@
+// ********************************************************
+
+////
+/// Base `<hr>` divider styles
+/// ---
+/// @access private
+/// @type Number
+/// @group core.internals.typography
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/base/hr';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+///
+/// Default border width for a `<hr>` element.
+///
+$hr-bd-width: 1px;
+
+///
+/// Default border color for a `<hr>` element.
+/// ---
+/// @requires {variable} $zc-gray-70
+///
+$hr-bd-color: $zc-gray-70;

@@ -1,0 +1,198 @@
+// ********************************************************
+//
+//   NAVBAR "GLOBAL SUPPORT" TAB COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-navbars
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/navs/navbar-global-support-tab';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $navs-navbar-global-support-tab-module-config:  'core/components/atoms/navs/navbars-config';
+    $navs-navbar-global-support-tab-module-helpers: 'core/components/atoms/navs/navbars-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $navs-navbar-global-support-tab-module-config,
+                                          $navs-navbar-global-support-tab-module-helpers);
+//
+// ********************************************************
+
+
+
+// ********************************************************
+//
+//   TAB HITAREA PARENT MENU ALIGNMENT
+//
+// ********************************************************
+.wdesk-global-navbar-nav.navbar-right {
+    @include uncollapsed-navbar-mq {
+        margin-right: to-rem(get($navbar-base-config, 'padding-right')) * -1;
+
+        .container-wide & {
+            // @see https://github.com/Workiva/web-skin/issues/984
+            margin-right: to-rem(get($navbar-base-config, 'padding-right-wide')) * -1;
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   TAB HITAREA
+//
+// ********************************************************
+.navbar .wdesk-global-navbar-nav .dropdown .global-help-tab {
+    @include uncollapsed-navbar-mq {
+        //
+        // make the button allow for the icon to
+        // show flush top/left in the navbar
+        // while still keeping adequate distance
+        // from the rest of the dd menu buttons to the left
+        //
+        padding: 0 0 0 to-rem(round(get($navbar-link-config, 'padding-horizontal') * 1.5));
+        border-width: 0 !important;
+        overflow: visible; // See: https://github.com/Workiva/web-skin/issues/1040
+
+        //
+        // make sure the dd menu border extends all the
+        // way to the perceived "edge" of the icon glyph
+        //
+        background-color: transparent !important;
+        line-height: to-rem($navbar-height);
+
+
+        // ----- HOVER / FOCUS STATES ----- //
+        #{$link-hover-focus} {
+            @include remove-focus-outline();
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   TAB ICON
+//
+// ********************************************************
+.wdesk-global-navbar-nav {
+    .global-help-tab {
+        text-align: left !important; // Override `.no-text` as mobile-first defaults (when the "Help" label actually displays)
+
+        > .icon {
+            @include uncollapsed-navbar-mq {
+                // make the icon appear flush top/left in the navbar
+                vertical-align: top;
+            }
+
+            //
+            // only modify the colors of the :before glyph
+            // because the :after glyph is a white question mark
+            // to prevent the colors of the menu beneath it from
+            // showing through the icon (can only be implemented as two-color)
+            //
+            &:before {
+                color: $navbar-global-help-icon-color !important;
+            }
+        }
+
+
+        // ----- HOVER / FOCUS STATES ----- //
+        #{$link-hover-focus} {
+            > .icon:before {
+                color: $navbar-global-help-icon-color-hover !important;
+            }
+        }
+    }
+
+
+    // ----- OPEN STATE ----- //
+    .open .global-help-tab > .icon:before {
+        color: $navbar-global-help-icon-color-hover !important;
+    }
+}
+
+
+
+// ********************************************************
+//
+//   TAB / TAB ICON IN A COLLAPSED NAVBAR
+//
+//   -> When navbar is collapsed, align / stack just like
+//      the other `.navbar-nav` buttons, and use the
+//      `.sr-only` contents as a text label, while hiding
+//      the icon completely, using the purple color of the
+//      help icon to signify the special "help" status
+//      of the label.
+//
+        $help-label-color: $navbar-global-help-icon-color-hover;
+//
+// ********************************************************
+.wdesk-global-navbar-nav {
+    @include collapsed-navbar-mq {
+        // ------------------------------------------------
+        //   Show the label / hide the icon
+        // ------------------------------------------------
+        .global-help-tab {
+            .sr-only {
+                @include sr-only-reveal(); // Show the label
+
+                font-weight: bold;
+                color: $help-label-color !important;
+            }
+
+            > .icon {
+                display: none !important;
+            }
+        }
+
+
+        // ------------------------------------------------
+        //   Adjust caret color
+        // ------------------------------------------------
+        .global-help-tab {
+            .sr-only .caret {
+                @include triangle-color-vertical($help-label-color !important);
+            }
+        }
+
+
+        // ----- OPEN STATE ----- //
+        .open > .global-help-tab {
+            .sr-only .caret {
+                @include triangle-color-vertical($help-label-color !important);
+            }
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   TAB DROPDOWN MENU
+//
+// ********************************************************
+.navbar .wdesk-global-navbar-nav .global-help-tab + .dropdown-menu {
+    @include uncollapsed-navbar-mq {
+        top: 0;
+        right: .2rem;
+    }
+}
+
+
+
+// ********************************************************
+//
+//   SUCCESS CENTER HEADER ITEM
+//
+// ********************************************************
+.global-community > .dropdown-menu > .dropdown-header:first-child {
+    @include uncollapsed-navbar-mq {
+        // See: https://github.com/Workiva/web-skin/issues/1103
+        min-width: 14.8rem;
+    }
+}

@@ -1,0 +1,38 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for Comments Components
+ * ---
+ * MSIE Support: 10+
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ *   web-skin v{{ws_css_version}} Core Plugin JS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+
+// ----------------------------------------------------
+//   Shared Components (gets core api import from here)
+// ----------------------------------------------------
+    @import 'form-toggle-switches';
+
+
+// ----------------------------------------------------
+//   Comment Atoms
+// ----------------------------------------------------
+    @import 'comments/atoms/comments-config';
+    @import 'comments/atoms/comments-panel-config';
+    @import 'comments/atoms/comments-popover-config';
+    @import 'comments/atoms/comments-helpers';
+
+
+// ----------------------------------------------------
+//   Comment Components
+// ----------------------------------------------------
+    @import 'comments/comments-resets';
+    @import 'comments/comments-panels';
+    @import 'comments/comments-popovers';
+    @import 'comments/comments-xy-annotations';
+    @import 'comments/comments-shared';

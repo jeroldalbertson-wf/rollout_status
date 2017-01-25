@@ -1,0 +1,179 @@
+// ********************************************************
+
+////
+/// Config values for global animations
+/// ---
+/// @access public
+/// @group core.animation
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/animation';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   ANIMATION TIMING
+//
+// ********************************************************
+    ///
+    /// Default amount of time it takes for an element containing the `.fade` CSS class to fade in / out of view.
+    /// ---
+    /// @type Number
+    /// @since 0.1.2
+    ///
+    $default-fade-speed: .15s;
+
+    ///
+    /// Default amount of time it takes for an element containing the `.slide` CSS class to slide in / out of view.
+    /// ---
+    /// @type Number
+    /// @since 1.0.0
+    ///
+    $default-slide-speed: .3s;
+
+    ///
+    /// Default amount of time to wait before starting a slide animation using the `.slide` CSS class.
+    /// ---
+    /// @type Number
+    /// @since 1.0.0
+    ///
+    $default-slide-delay: .1s;
+
+    ///
+    /// Default amount of time it takes for an element containing the `.collapse` CSS class to collapse / expand using the Web Skin [Collapse JS Plugin](http://bit.ly/webskin-js-collapse).
+    /// ---
+    /// @type Number
+    /// @since 1.0.0
+    /// @link http://bit.ly/webskin-js-collapse Web Skin Collapse JS Plugin
+    ///
+    $default-collapse-speed: .3s;
+
+
+// ********************************************************
+//
+//   ANIMATION BASE CLASSES
+//
+// ********************************************************
+    ///
+    /// CSS selectors used by the collapse plugin for controlling collapsible containers.
+    /// ---
+    /// @type Map
+    /// @since 1.2.0
+    /// ---
+    /// @prop {String} base         ['.collapse']   Selector for the CSS class that is omni-present on a collapsible container in all states
+    /// @prop {String} transition   ['.collapsing'] Selector for the CSS class that is added to the `base` selector when a collapsible container is in the process of being expanded
+    /// @prop {String} expanded     ['.in']         Selector for the CSS class that is added to the `base` selector on a collapsible container when it is fully expanded
+    ///
+    $collapsing-selectors: (
+        'base': '.collapse',
+        'transition': '.collapsing',
+        'expanded': '.in'
+    );
+
+
+// ********************************************************
+//
+//   KEYFRAME ANIMATION CONFIGS
+//
+// ********************************************************
+    ///
+    /// Keyframe animation configuration for a clockwise rotation animation.
+    /// ---
+    /// @access private
+    /// @group core.internals.animation
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @prop {String}  name [rotate-clockwise]
+    /// @prop {Map}     keys - Key / value pairs used for the keyframe animation
+    ///
+    $rotate-clockwise-config: (
+        'name': rotate-clockwise,
+        'keys': (
+            'to': (
+                'transform': rotate(360deg)
+            )
+        )
+    );
+
+    ///
+    /// Keyframe animation configuration for a counter-clockwise rotation animation.
+    /// ---
+    /// @access private
+    /// @group core.internals.animation
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @prop {String}  name [rotate-counter-clockwise]
+    /// @prop {Map}     keys - Key / value pairs used for the keyframe animation
+    ///
+    $rotate-counter-clockwise-config: (
+        'name': rotate-counter-clockwise,
+        'keys': (
+            'to': (
+                'transform': rotate(-360deg)
+            )
+        )
+    );
+
+    ///
+    /// Convenience collection of Keyframe animation configurations for a various rotation animations.
+    /// ---
+    /// @access private
+    /// @group core.internals.animation
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {variable} $rotate-clockwise-config
+    /// @requires {variable} $rotate-counter-clockwise-config
+    /// ---
+    /// @prop {Map} right - `$rotate-clockwise-config` map
+    /// @prop {Map} left  - `$rotate-counter-clockwise-config` map
+    ///
+    $rotate-config: (
+        'right': $rotate-clockwise-config,
+        'left': $rotate-counter-clockwise-config
+    );
+
+    ///
+    /// Default rotation direction value that refers to a key within `$rotate-config`.
+    /// ---
+    /// @access private
+    /// @group core.internals.animation
+    /// @type String
+    /// @since 1.0.0
+    /// @see {variable} rotate-config
+    ///
+    $rotate-direction-default: right;
+
+    ///
+    /// Convenience collection of keyframe animation type configurations.
+    /// ---
+    /// @access private
+    /// @group core.internals.animation
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {variable} $rotate-config
+    /// @prop {Map} rotate - `$rotate-config` map
+    ///
+    $global-keyframe-config: (
+        'rotate': $rotate-config
+    );
+
+    ///
+    /// Available keyframe animation types.
+    /// ---
+    /// @access private
+    /// @group core.internals.animation
+    /// @type List
+    /// @since 1.0.0
+    /// @requires {variable} $global-keyframe-config
+    ///
+    $global-keyframe-types: map-keys($global-keyframe-config);

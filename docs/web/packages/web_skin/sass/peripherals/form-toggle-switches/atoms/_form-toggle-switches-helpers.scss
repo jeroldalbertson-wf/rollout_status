@@ -1,0 +1,70 @@
+// ********************************************************
+
+////
+/// Form toggle switch component helpers
+/// ---
+/// @group peripherals.components.form-controls
+/// @todo add a link to the component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/form-toggle-switches/atoms/form-toggle-switches-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCIES:
+//
+    @import 'form-toggle-switches-config';
+//
+// ********************************************************
+
+
+// @private
+@mixin focused-switch-label() {
+    // (BUTTON)
+    &:after {
+        @include focus-shadow($global: false);
+        border-color: $white;
+    }
+}
+
+// @private
+@mixin disabled-switch-label() {
+    @include disabled-cursor();
+
+    opacity: $disabled-alpha-default;
+}
+
+// @private
+@mixin checked-switch-label {
+    // (SLIDER)
+    &:before {
+        background-color: get-deep($cbox-switch-skin-config, 'default.void-bg-active');
+    }
+
+    // (BUTTON)
+    &:after {
+        // Slide to the right
+        @include translateX(to-rem(get($cbox-switch-config, 'width') - get($cbox-switch-config, 'btn-width')));
+
+        background-color: get-deep($cbox-switch-skin-config, 'default.btn-bg-active');
+        border-color: get-deep($cbox-switch-skin-config, 'default.btn-bd-active');
+    }
+}
+
+// @private
+@mixin unchecked-switch-label {
+    // (SLIDER)
+    &:before {
+        background-color: get-deep($cbox-switch-skin-config, 'default.void-bg');
+    }
+
+    // (BUTTON)
+    &:after {
+        @include translateX(0);
+
+        background-color: get-deep($cbox-switch-skin-config, 'default.btn-bg');
+        border-color: get-deep($cbox-switch-skin-config, 'default.btn-bd');
+    }
+}

@@ -1,0 +1,312 @@
+// ********************************************************
+
+////
+/// Button component size configuration
+/// ---
+/// @access private
+/// @group core.internals.components.buttons
+/// @link http://bit.ly/webskin-button-sizes Button component size variation spec
+////
+
+//
+//   DEPENDENCIES:
+//
+@import '../../../../foundation/icons/atoms/icons-config';
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/buttons/config/button-size-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function component-width,
+                                                function reject);
+//
+// ********************************************************
+
+
+///
+/// @since 1.1.3
+/// @type Number
+///
+$default-icon-vertical-offset: -2px;
+
+
+///
+/// Collection of size properties for `.icon` components nested within `.btn` components.
+/// ---
+/// @since 1.0.0
+/// @type Map
+/// @requires {variable} $spacing-base
+/// ---
+/// @prop {Map} base
+/// @prop {Number} base.margin-horizontal   [5px]   - Amount of horizontal margin that is applied to a `.icon` component nested within `.btn` component
+/// @prop {String} base.size-name-16        [base]  - `.icon` size variation that should be used in a `.btn` component
+/// @prop {String} base.size-name-24        [base]  - `.icon-twfr` size variation that should be used in a `.btn` component
+///
+/// @prop {Map} xs
+/// @prop {Number} xs.margin-horizontal [3px]   - Amount of horizontal margin that is applied to a `.icon` component nested within `.btn-xs` component
+/// @prop {String} xs.size-name-16      [base]  - `.icon` size variation that should be used in a `.btn-xs` component
+/// @prop {String} xs.size-name-24      [base]  - `.icon-twfr` size variation that should be used in a `.btn-xs` component
+///
+/// @prop {Map} sm
+/// @prop {Number} sm.margin-horizontal [5px]   - Amount of horizontal margin that is applied to a `.icon` component nested within `.btn-sm` component
+/// @prop {String} sm.size-name-16      [base]  - `.icon` size variation that should be used in a `.btn-sm` component
+/// @prop {String} sm.size-name-24      [base]  - `.icon-twfr` size variation that should be used in a `.btn-sm` component
+///
+/// @prop {Map} lg
+/// @prop {Number} lg.margin-horizontal [8px]   - Amount of horizontal margin that is applied to a `.icon` component nested within `.btn-lg` component
+/// @prop {String} lg.size-name-16      [md]    - `.icon` size variation that should be used in a `.btn-lg` component
+/// @prop {String} lg.size-name-24      [base]  - `.icon-twfr` size variation that should be used in a `.btn-lg` component
+///
+$btn-icon-sizes: (
+    // top-level keys refer to the size-variation of the .btn
+    // additional size keys within those keys refer to the size
+    // variation of the .icon nested within the .btn
+    'base': (
+        'margin-horizontal': $spacing-base,
+        'size-name-16': base,
+        'size-name-24': base
+    ),
+    'xs': (
+        'margin-horizontal': round($spacing-base / 2),
+        'size-name-16': base,
+        'size-name-24': base
+    ),
+    'sm': (
+        'margin-horizontal': $spacing-base,
+        'size-name-16': base,
+        'size-name-24': base
+    ),
+    'lg': (
+        'margin-horizontal': round($spacing-base * 1.5),
+        'size-name-16': md,
+        'size-name-24': base
+    )
+) !default;
+
+///
+/// Collection of top margin values `.caret` components nested within `.btn` components use to remain vertically centered.
+/// ---
+/// @since 1.0.0
+/// @type Map
+/// @requires {variable} $caret-component-valign-margins
+/// ---
+/// @prop {Number} base [8px]   - Top offset used to vertically center `.caret` components within a `.btn` component's default size
+/// @prop {Number} xs   [5px]   - Top offset used to vertically center `.caret` components within a `.btn` component's extra small size variation
+/// @prop {Number} sm   [7px]   - Top offset used to vertically center `.caret` components within a `.btn` component's small size variation
+/// @prop {Number} lg   [10px]  - Top offset used to vertically center `.caret` components within a `.btn` component's large size variation
+///
+$btn-caret-top-margins: $caret-component-valign-margins !default;
+
+///
+/// Calculated widths of `.btn` components that only have a `.caret` elem within it.
+/// ---
+/// @since 1.0.0
+/// @type Map
+/// ---
+/// @requires {function} component-width
+/// @requires {function} get-deep
+/// @requires {variable} $caret-size-config
+/// ---
+/// @prop {Number} base [36px]  - Calculated width of a `.btn` comopnent that has only a `.caret` elem within it
+/// @prop {Number} xs   [28px]  - Calculated width of a `.btn-xs` comopnent that has only a `.caret` elem within it
+/// @prop {Number} sm   [32px]  - Calculated width of a `.btn-sm` comopnent that has only a `.caret` elem within it
+/// @prop {Number} lg   [44px]  - Calculated width of a `.btn-lg` comopnent that has only a `.caret` elem within it
+///
+$caret-only-btn-widths: (
+    // top-level keys refer to the size-variation of the .btn
+    'base': component-width(get-deep($caret-size-config, 'base.width'), 'base'),
+    'xs': component-width(get-deep($caret-size-config, 'base.width'), 'xs'),
+    'sm': component-width(get-deep($caret-size-config, 'base.width'), 'sm'),
+    'lg': component-width(get-deep($caret-size-config, 'base.width'), 'lg')
+) !default;
+
+///
+/// Collection of calculated "inner" heights of a `.btn` component. Inner refers to the height of the button minus the width of the button border.
+/// ---
+/// @since 1.0.0
+/// @type Map
+/// ---
+/// @requires {function} get
+/// @requires {variable} $global-component-bd-width
+/// @requires {variable} $global-component-height-config
+/// ---
+/// @prop {Number} base [32px] - Default inner height of 'base' `.btn` components.
+/// @prop {Number} xs   [22px] - Default inner height of 'extra small' `.btn` components.
+/// @prop {Number} sm   [28px] - Default inner height of 'small' `.btn` components.
+/// @prop {Number} lg   [44px] - Default inner height of 'large' `.btn` components.
+///
+$btn-inner-height-config: (
+    'base': get($global-component-height-config, 'base') - ($global-component-bd-width * 2),
+    'xs':   get($global-component-height-config, 'xs')   - ($global-component-bd-width * 2),
+    'sm':   get($global-component-height-config, 'sm')   - ($global-component-bd-width * 2),
+    'lg':   get($global-component-height-config, 'lg')   - ($global-component-bd-width * 2)
+) !default;
+
+///
+/// Collection of calculated "text" heights of a `.btn` component. Text refers to the "inner" height of the button minus the top and bottom padding.
+/// ---
+/// @since 1.0.0
+/// @type Map
+/// ---
+/// @requires {function} get
+/// @requires {function} get-deep
+/// @requires {variable} $btn-inner-height-config
+/// @requires {variable} $global-component-padding-config
+/// ---
+/// @prop {Number} base [20px] - Default text height of 'base' `.btn` components.
+/// @prop {Number} xs   [14px] - Default text height of 'extra small' `.btn` components.
+/// @prop {Number} sm   [18px] - Default text height of 'small' `.btn` components.
+/// @prop {Number} lg   [24px] - Default text height of 'large' `.btn` components.
+///
+$btn-text-height-config: (
+    'base': get($btn-inner-height-config, 'base') - (get-deep($global-component-padding-config, 'base.vertical') * 2),
+    'xs':   get($btn-inner-height-config, 'xs')   - (get-deep($global-component-padding-config, 'xs.vertical') * 2),
+    'sm':   get($btn-inner-height-config, 'sm')   - (get-deep($global-component-padding-config, 'sm.vertical') * 2),
+    'lg':   get($btn-inner-height-config, 'lg')   - (get-deep($global-component-padding-config, 'lg.vertical') * 2)
+) !default;
+
+///
+/// Helper function for `$btn-icon-vertical-offsets`.
+/// ---
+/// @since 1.1.3
+/// @link http://bit.ly/webskin-icons-in-buttons Button component icon spec
+/// ---
+/// @param {String} $icon-size-name - CSS class suffix used to identify the icon size variation
+/// @param {String} $btn-size-name  - CSS class suffix used to identify the btn size variation
+/// ---
+/// @returns {Number} - Top offset amount that can be used to vertically center an icon of a given size within a button of a given size
+///
+@function _calc-btn-icon-valign($btn-size-name, $icon-size-name) {
+    // ERROR CHECKING
+    @if not map-has-key($btn-icon-sizes, $btn-size-name) {
+        @error "`#{$btn-size-name}` is not a valid size variation name for `.btn`";
+    }
+    //
+    $icon-size: get($icon-base16-size-config, $icon-size-name);
+    $this-btn-bd-width: $global-component-bd-width;
+    $this-btn-height-text: get($btn-text-height-config, $btn-size-name);
+    $this-btn-font-size: get-deep($global-component-size-config, 'font-size.#{$btn-size-name}');
+
+    $vertical-offset: $default-icon-vertical-offset; // default return value
+
+    // icon larger than box model height will allow
+    @if $icon-size >= ($this-btn-height-text) {
+        $vertical-offset: floor(($this-btn-height-text - $icon-size) / 2);
+    }
+
+    @return if(remove-unit($vertical-offset) == 0, $default-icon-vertical-offset, $vertical-offset);
+}
+
+///
+/// Collection of vertical offsets used to center icons of all sizes within buttons of all sizes.
+/// The map key format is `[btn-size]_icon-[icon-size]`
+/// ---
+/// @since 1.1.3
+/// @type Map
+/// @link http://bit.ly/webskin-icons-in-buttons Button component icon spec
+/// ---
+/// @requires {function} _calc-btn-icon-valign
+/// ---
+/// @prop {Map} base_icon-base
+/// @prop {Number} base_icon-base.top           [-2px]  - Amount of relative top offset for base size icons nested within base size buttons
+/// @prop {Number} base_icon-base.top-floated   [2px]   - Amount of relative top offset for base size icons floating within base size buttons
+/// @prop {Number} base_icon-base.bottom        [-2px]  - Amount of bottom margin for base size icons nested within base size buttons
+///
+/// @prop {Map} base_icon-md
+/// @prop {Number} base_icon-md.top             [-4px]  - Amount of relative top offset for medium size icons nested within base size buttons
+/// @prop {Number} base_icon-md.top-floated     [-2px]  - Amount of relative top offset for medium size icons floating within base size buttons
+/// @prop {Number} base_icon-md.bottom          [-8px]  - Amount of bottom margin for medium size icons nested within base size buttons
+///
+/// @prop {Map} xs_icon-base
+/// @prop {Number} xs_icon-base.top             [-2px]  - Amount of relative top offset for base size icons nested within xs size buttons
+/// @prop {Number} xs_icon-base.top-floated     [-1px]  - Amount of relative top offset for base size icons floating within xs size buttons
+/// @prop {Number} xs_icon-base.bottom          [-4px]  - Amount of bottom margin for base size icons nested within xs size buttons
+///
+/// @prop {Map} sm_icon-base
+/// @prop {Number} sm_icon-base.top             [-3px]  - Amount of relative top offset for base size icons nested within small size buttons
+/// @prop {Number} sm_icon-base.top-floated     [1px]   - Amount of relative top offset for base size icons floating within small size buttons
+/// @prop {Number} sm_icon-base.bottom          [-4px]  - Amount of bottom margin for base size icons nested within small size buttons
+///
+/// @prop {Map} sm_icon-md
+/// @prop {Number} sm_icon-md.top               [-3px]  - Amount of relative top offset for medium size icons nested within small size buttons
+/// @prop {Number} sm_icon-md.top-floated       [-3px]  - Amount of relative top offset for medium size icons floating within small size buttons
+/// @prop {Number} sm_icon-md.bottom            [-8px]  - Amount of bottom margin for medium size icons nested within small size buttons
+///
+/// @prop {Map} lg_icon-base
+/// @prop {Number} lg_icon-base.top             [-4px]  - Amount of relative top offset for base size icons nested within large size buttons
+/// @prop {Number} lg_icon-base.top-floated     [4px]   - Amount of relative top offset for base size icons floating within large size buttons
+/// @prop {Number} lg_icon-base.bottom          [-2px]  - Amount of bottom margin for base size icons nested within large size buttons
+///
+/// @prop {Map} lg_icon-md
+/// @prop {Number} lg_icon-md.top               [0]     - Amount of relative top offset for medium size icons nested within large size buttons
+/// @prop {Number} lg_icon-md.top-floated       [0]     - Amount of relative top offset for medium size icons floating within large size buttons
+/// @prop {Number} lg_icon-md.bottom            [-2px]  - Amount of bottom margin for medium size icons nested within large size buttons
+///
+/// @prop {Map} lg_icon-lg
+/// @prop {Number} lg_icon-lg.top               [-4px]  - Amount of relative top offset for large size icons nested within large size buttons
+/// @prop {Number} lg_icon-lg.top-floated       [-4px]  - Amount of relative top offset for large size icons floating within large size buttons
+/// @prop {Number} lg_icon-lg.bottom            [-10px] - Amount of bottom margin for large size icons nested within large size buttons
+///
+$btn-icon-vertical-offsets: (
+    // ----- DEFAULT BUTTON SIZE ----- //
+    'base_icon-base': (
+        'top': _calc-btn-icon-valign('base', 'base'),
+        'top-floated': abs(_calc-btn-icon-valign('base', 'base')),
+        'bottom': _calc-btn-icon-valign('base', 'base'),
+    ),
+    'base_icon-md': (
+        'top': _calc-btn-icon-valign('base', 'md') - 2,
+        'top-floated': _calc-btn-icon-valign('base', 'md'),
+        'bottom': abs(_calc-btn-icon-valign('base', 'md') - 2) * -2,
+    ),
+
+    // ----- XS BUTTON SIZE ----- //
+    'xs_icon-base': (
+        'top': _calc-btn-icon-valign('xs', 'base') - 1,
+        'top-floated': _calc-btn-icon-valign('xs', 'base'),
+        'bottom': _calc-btn-icon-valign('xs', 'base') - 3,
+    ),
+
+    // ----- SM BUTTON SIZE ----- //
+    'sm_icon-base': (
+        'top': _calc-btn-icon-valign('sm', 'base') - 1,
+        'top-floated': abs(_calc-btn-icon-valign('sm', 'base') + 1),
+        'bottom': _calc-btn-icon-valign('sm', 'base') - 2,
+    ),
+    'sm_icon-md': (
+        'top': _calc-btn-icon-valign('sm', 'md'),
+        'top-floated': _calc-btn-icon-valign('sm', 'md'),
+        'bottom': abs(_calc-btn-icon-valign('sm', 'md') - 1) * -2,
+    ),
+
+    // ----- LG BUTTON SIZE ----- //
+    'lg_icon-base': (
+        'top': _calc-btn-icon-valign('lg', 'base') - 2,
+        'top-floated': abs(_calc-btn-icon-valign('lg', 'base') - 2),
+        'bottom': _calc-btn-icon-valign('lg', 'base'),
+    ),
+    'lg_icon-md': (
+        'top': _calc-btn-icon-valign('lg', 'md') + 2,
+        'top-floated': _calc-btn-icon-valign('lg', 'md') + 2,
+        'bottom': _calc-btn-icon-valign('lg', 'md'),
+    ),
+    'lg_icon-lg': (
+        'top': _calc-btn-icon-valign('lg', 'lg'),
+        'top-floated': _calc-btn-icon-valign('lg', 'lg'),
+        'bottom': abs(_calc-btn-icon-valign('lg', 'lg') - 1) * -2,
+    )
+) !default;
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED CONFIGS
+//
+// ********************************************************
+$btn-size-variation-names: reject(map-keys($btn-inner-height-config), 'base');

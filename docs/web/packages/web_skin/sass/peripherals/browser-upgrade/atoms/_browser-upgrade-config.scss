@@ -1,0 +1,26 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/browser-upgrade/atoms/browser-upgrade-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Browser logo sprite creation
+//   -> browser-upgrade/ refers to
+//      `static/assets/img/browser-upgrade`
+// ----------------------------------------------------
+@import '_generated/sprite';
+
+
+$browsers:              chrome, firefox, safari, msie;
+$logo-pad:              $spacing-base * 2;
+$group-heading-margin-top: to-px($headings-margin-top, $h2-font-size);
+$group-heading-margin-bottom: to-px($headings-margin-bottom, $h2-font-size);
+$group-heading-height:  $h2-font-size + $group-heading-margin-top + $group-heading-margin-bottom + 2;
+$group-heading-color:   $zc-green;
+$group-bg-best:         $zc-gray-20;
+$group-bg:              lighten($group-bg-best, 2);

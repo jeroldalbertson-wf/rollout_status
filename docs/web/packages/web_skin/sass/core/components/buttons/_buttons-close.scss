@@ -1,0 +1,46 @@
+// ********************************************************
+//
+//   CLOSE BUTTON COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-close-button
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/buttons/buttons-close';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $buttons-close-module-config:  'core/components/atoms/buttons/config/close-button-config';
+    $buttons-close-module-helpers: 'core/components/atoms/buttons/buttons-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $buttons-close-module-config,
+                                          $buttons-close-module-helpers);
+//
+// ********************************************************
+
+
+.close {
+    @include close-button-base();
+    font-size: to-rem(get($close-btn-config, 'font-size'));
+    float: right;
+
+    #{$link-hover-focus} {
+        @include close-button-hover();
+    }
+    #{$link-pressed} {
+        @include close-button-press();
+    }
+}
+
+// a "delete" button is essentially just a "red" close button
+.close-delete {
+    color: $zc-red;
+
+    #{$link-hover-focus} {
+        color: $zc-red;
+    }
+    #{$link-pressed} {
+        color: darken($zc-red, $elem-pressed-text-darken-amount-default);
+    }
+}

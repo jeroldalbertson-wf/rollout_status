@@ -1,0 +1,165 @@
+@include describe('[comma-list]') {
+    @include it('should convert a space delimited list to a comma delimited list') {
+        $actual: comma-list(a b c);
+
+        @include should(expect( $actual ), to(have-type-of( 'list' )));
+        @include should(expect( $actual ), to(have-length-of( 3 )));
+        @include should(expect( inspect($actual) ), to(be( 'a, b, c' )));
+    }
+}
+
+@include describe('[purge]') {
+    @include it('should remove null values from a list') {
+        $actual: purge(a null b c);
+
+        @include should(expect( $actual ), to(have-type-of( 'list' )));
+        @include should(expect( $actual ), to(have-length-of( 3 )));
+        @include should(expect( $actual ), to(be( a b c )));
+    }
+
+    @include it('should remove false values from a list') {
+        $actual: purge(a b false c);
+
+        @include should(expect( $actual ), to(have-type-of( 'list' )));
+        @include should(expect( $actual ), to(have-length-of( 3 )));
+        @include should(expect( $actual ), to(be( a b c )));
+    }
+
+    @include it('should remove all falsy values from a list') {
+        $actual: purge(a null b false c);
+
+        @include should(expect( $actual ), to(have-type-of( 'list' )));
+        @include should(expect( $actual ), to(have-length-of( 3 )));
+        @include should(expect( $actual ), to(be( a b c )));
+    }
+}
+
+@include describe('[replace]') {
+    @include describe('when [old] param is') {
+        @include describe('found') {
+            @include it('should return a new list with the replaced value') {
+                $actual: replace(a b c, b, z);
+
+                @include should(expect( $actual ), to(have-type-of( 'list' )));
+                @include should(expect( $actual ), to(have-length-of( 3 )));
+                @include should(expect( $actual ), to(be( a z c )));
+            }
+        }
+
+        @include describe('not found') {
+            @include it('should return the original list') {
+                $actual: replace(a b c, y, z);
+
+                @include should(expect( $actual ), to(have-type-of( 'list' )));
+                @include should(expect( $actual ), to(have-length-of( 3 )));
+                @include should(expect( $actual ), to(be( a b c )));
+            }
+        }
+    }
+}
+
+@include describe('[reject]') {
+    @include it('should remove a single key from a space separated list') {
+        $original: a b c;
+        $actual: reject($original, b);
+
+        @include should(expect( $actual ), to(have-type-of( 'list' )));
+        @include should(expect( $actual ), to(have-length-of( 2 )));
+        @include should(expect( list-separator($actual) ), to(be( list-separator($original) )));
+        @include should(expect( $actual ), to(be( a c )));
+    }
+
+    @include it('should remove a single key from a comma separated list') {
+        $original: (a, b, c);
+        $actual: reject($original, b);
+
+        @include should(expect( $actual ), to(have-type-of( 'list' )));
+        @include should(expect( $actual ), to(have-length-of( 2 )));
+        @include should(expect( list-separator($actual) ), to(be( list-separator($original) )));
+        @include should(expect( inspect($actual) ), to(be( 'a, c' )));
+    }
+
+    @include it('should remove multiple keys from a space separated list') {
+        $original: a b c d;
+        $actual: reject($original, b, a);
+
+        @include should(expect( $actual ), to(have-type-of( 'list' )));
+        @include should(expect( $actual ), to(have-length-of( 2 )));
+        @include should(expect( list-separator($actual) ), to(be( list-separator($original) )));
+        @include should(expect( $actual ), to(be( c d )));
+    }
+
+    @include it('should remove multiple keys from a comma separated list') {
+        $original: (a, b, c, d);
+        $actual: reject($original, b, a);
+
+        @include should(expect( $actual ), to(have-type-of( 'list' )));
+        @include should(expect( $actual ), to(have-length-of( 2 )));
+        @include should(expect( list-separator($actual) ), to(be( list-separator($original) )));
+        @include should(expect( inspect($actual) ), to(be( 'c, d' )));
+    }
+}
+
+@include describe('[compact]') {
+    @include describe('when [items] are both comma separated lists') {
+        @include it('should return a single space separated list') {
+            $item1: a, b, c;
+            $item2: d, e, f;
+            $actual: compact($item1, $item2);
+
+            @include should(expect( $actual ), to(have-type-of( 'list' )));
+            @include should(expect( $actual ), to(have-length-of( length($item1) + length($item2) )));
+            @include should(expect( $actual ), to(be( a b c d e f )));
+        }
+    }
+
+    @include describe('when one [item] is a comma separated list, and the other is a space separated list') {
+        @include it('should return a single space separated list') {
+            $item1: a, b, c;
+            $item2: d e f;
+            $actual: compact($item1, $item2);
+
+            @include should(expect( $actual ), to(have-type-of( 'list' )));
+            @include should(expect( $actual ), to(have-length-of( length($item1) + length($item2) )));
+            @include should(expect( $actual ), to(be( a b c d e f )));
+        }
+    }
+
+    @include describe('when [items] are not lists') {
+        @include it('should return a single space separated list') {
+            $item1: 'hello';
+            $item2: 2;
+            $actual: compact($item1, $item2);
+
+            @include should(expect( $actual ), to(have-type-of( 'list' )));
+            @include should(expect( $actual ), to(have-length-of( length($item1) + length($item2) )));
+            @include should(expect( $actual ), to(be( hello 2 )));
+        }
+    }
+
+    @include describe('when one [item] is a comma separated list, one is a space separated list, and the other is a string') {
+        @include it('should return a single space separated list') {
+            $item1: a, b, c;
+            $item2: d e f;
+            $item3: 'hello';
+            $actual: compact($item1, $item2, $item3);
+
+            @include should(expect( $actual ), to(have-type-of( 'list' )));
+            @include should(expect( $actual ), to(have-length-of( length($item1) + length($item2) + length($item3) )));
+            @include should(expect( $actual ), to(be( a b c d e f hello )));
+        }
+    }
+
+    @include describe('when one [item] is a comma separated list, one is a space separated list, and the other is falsy') {
+        @include it('should return a single space separated list without the falsy value') {
+            $item1: a, b, c;
+            $item2: d e f;
+            $item3: null;
+            $actual: compact($item1, $item2, $item3);
+
+            @include should(expect( $actual ), to(have-type-of( 'list' )));
+            @include should(expect( $actual ), to(have-length-of( length($item1) + length($item2) )));
+            @include should(expect( $actual ), to(be( a b c d e f )));
+        }
+    }
+}

@@ -1,0 +1,192 @@
+// ********************************************************
+//
+//   FILE BROWSER COMPONENT STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/forms/form-file-browser';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $file-browser-module-config:  'core/components/atoms/forms/config/form-file-browser-config';
+    $file-browser-module-helpers: 'core/components/atoms/forms/form-file-browser-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $file-browser-module-config,
+                                          $file-browser-module-helpers);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   BASE `<label>` ELEMENT THAT WRAPS THE COMPONENT
+//
+//   [1] Reset the `margin` we add to `<label>`
+//       elements.
+//
+//   [2] Reset the `font-weight` since we bold
+//       `<label>` elements.
+//
+//   [3] Set the min-width so that the custom file
+//       input resembles the browser default, and
+//       so that there is room for typical placeholder
+//       text within the input.
+// ----------------------------------------------------
+.form-control-file {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    min-width: get-deep($file-browser-config, 'min-width.base'); // [3]
+    height: to-rem(get-deep($form-control-config, 'height.base'));
+    margin: 0; // [1]
+    cursor: pointer;
+    font-weight: normal; // [2]
+}
+
+
+// ----------------------------------------------------
+//   HIDDEN `<input type="file">` ELEMENT
+//
+//   [1] Use opacity to hide the input, so that it can
+//       still receive the necessary click events.
+//
+//   [2] Set the width / height to `0` so that the custom file
+//       input does not show a blinking cursor in MSIE
+//       when a file is uploaded.
+// ----------------------------------------------------
+.form-control-file input {
+    @include opacity(0); // [1]
+
+    width: 0; // [2]
+    height: 0; // [2]
+    line-height: 0; // [2]
+    font-size: 0; // [2]
+    margin: 0;
+}
+
+
+// ----------------------------------------------------
+//   ELEMENT THAT RENDERS THE "FAKE" INPUT / BUTTON
+//
+//   -> `::before` elem is the "button"
+//   -> `::after` elem is the "input"
+// ----------------------------------------------------
+.form-control-file__custom-input {
+    @include form-control-base($include-placeholder-styles: false);
+    @include disable-user-select();
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: get($file-browser-config, 'file-custom-zindex');
+
+
+    // ------------------------------------------------
+    //   FILE BUTTON
+    // ------------------------------------------------
+    &#{$file-browser-btn-selector} {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: get($file-browser-config, 'file-custom-zindex') + 1;
+        box-sizing: inherit;
+        display: block;
+        height: to-rem(get-deep($form-control-config, 'height.base') - (get($form-control-config, 'bd-width') * 2));
+        padding: to-rem(get-deep($form-control-config, 'padding.base.all'));
+        line-height: inherit;
+        color: get($btn-colors-default, 'text-base');
+        background-color: get($btn-colors-default, 'bg-base');
+        border-left: to-rem(get($form-control-config, 'bd-width')) solid get-deep($form-control-config, 'colors.bd-fallback');
+        @include border-right-radius(to-rem(get-deep($form-control-config, 'bd-radius.base') - get($form-control-config, 'bd-width')));
+
+        content: get($file-browser-config, 'default-button-text');
+    }
+
+    &[data-button-text]#{$file-browser-btn-selector} {
+        content: attr(data-button-text);
+    }
+
+    // ------------------------------------------------
+    //   INPUT DISPLAY PLACEHOLDER TEXT / FILE NAME
+    // ------------------------------------------------
+    &#{$file-browser-input-text-selector} {
+        content: get($file-browser-config, 'default-placeholder-text');
+        display: inline-block;
+        position: absolute;
+        box-sizing: inherit;
+        left: to-rem(get-deep($form-control-config, 'padding.base.horizontal'));
+        right: get-deep($file-browser-config, 'default-button-width.base');
+        @include truncate-text();
+    }
+
+    &[data-file-name]#{$file-browser-input-text-selector} {
+        content: attr(data-file-name);
+    }
+
+    // ----- HOVERED STATE ----- //
+    #{$hover} {
+        &#{$file-browser-btn-selector} {
+            background-color: get($btn-colors-default, 'bg-hover');
+        }
+    }
+
+    // ----- FOCUSED STATE ----- //
+    .form-control-file input:focus + & {
+        @include form-control-focus();
+
+        &#{$file-browser-btn-selector} {
+            background-color: get($btn-colors-default, 'bg-hover');
+        }
+    }
+
+    // ----- PRESSED STATE ----- //
+    #{$link-pressed} {
+        &#{$file-browser-btn-selector} {
+            background-color: get($btn-colors-default, 'bg-press');
+        }
+    }
+
+    // ----- DISABLED STATE ----- //
+    .form-control-file input[disabled] + &,
+    .disabled & {
+        @include form-control-disabled();
+        @include disabled-cursor();
+
+        &#{$file-browser-btn-selector} {
+            background-color: get($btn-colors-default, 'bg-base') !important;
+            @include opacity(get($btn-config, 'disabled-alpha'));
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   SIZE VARIATIONS
+// ----------------------------------------------------
+@each $size-name in $form-control-size-variation-names {
+    @include file-browser-size($size-name, $group: false); // .form-control-file-#{$size-name}
+    @include file-browser-size($size-name, $group: true);  // .form-group-#{$size-name} .form-control-file
+}
+
+
+// ----------------------------------------------------
+//   WITHIN FORM LAYOUT VARIATIONS
+// ----------------------------------------------------
+.form-horizontal .form-control-wrapper .form-control-file {
+    width: 100%;
+}
+
+
+// ----------------------------------------------------
+//   VALIDATION STATE SKINS
+//
+//   -> Apply to a `.form-group` element that wraps
+//      around the `.form` component.
+// ----------------------------------------------------
+@each $state, $color-config in $form-group-states {
+    .has-#{$state} {
+        @include file-browser-state-skin($state);
+    }
+}

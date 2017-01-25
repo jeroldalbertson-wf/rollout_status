@@ -1,0 +1,87 @@
+// ********************************************************
+
+////
+/// Block nav component configuration
+/// ---
+/// @group core.components.navs
+/// @link http://bit.ly/webskin-navbar-nav-blocks Block navigation spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/config/nav-block-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function extend);
+//
+// ********************************************************
+
+
+///
+/// Configuration for `.hitarea` elems within `.nav-block` components.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {function} extend
+/// @requires {variable} $nav-link-config
+/// @requires {variable} $zc-green
+/// ---
+/// @prop {Color}  bg          [transparent]     - Default background color
+/// @prop {Color}  bg-hover                      - Hovered `rgba()` background color. _Added via `@extend`_
+/// @prop {Color}  bg-press    [#66cc00]         - Pressed background color
+/// @prop {Color}  bg-active   [#66cc00]         - Active background color
+/// @prop {Color}  bg-disabled [transparent]     - Disabled background color
+///
+/// @prop {Number} bg-alpha-hover    [.1]        - Amount of transparency for the hovered background color
+///
+/// @prop {Color}  text-color          [#595959] - Default text color
+/// @prop {Color}  text-color-hover    [#3f3f3f] - Calculated hovered text color. _Added via `@extend`_
+/// @prop {Color}  text-color-press    [#ffffff] - Pressed text color
+/// @prop {Color}  text-color-active   [#ffffff] - Active text color
+/// @prop {Color}  text-color-disabled [#cecece] - Disabled text color
+///
+$nav-block-link-config: (
+    'bg': get($nav-link-config, 'bg'),
+    'bg-hover': null, // actual calculated value inserted via @extend
+    'bg-press': $zc-green,
+    'bg-active': $zc-green,
+    'bg-disabled': get($nav-link-config, 'bg-disabled'),
+    //
+    'bg-alpha-hover': .1,
+    //
+    'text-color': get($nav-link-config, 'text-color'),
+    'text-color-hover': null, // actual calculated value inserted via @extend
+    'text-color-press': #ffffff,
+    'text-color-active': #ffffff,
+    'text-color-disabled': get($nav-link-config, 'text-color-disabled')
+) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $nav-block-link-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $nav-block-link-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $nav-block-color-hover: darken(get($nav-block-link-config, 'text-color'), percentage(get($nav-block-link-config, 'bg-alpha-hover')));
+        $nav-block-bg-hover: rgba($black, get($nav-block-link-config, 'bg-alpha-hover'));
+
+        // ----- EXTEND block link config with calc'd values ----- //
+        $nav-block-link-config: extend($nav-block-link-config,
+            (
+                'text-color-hover': $nav-block-color-hover,
+                'bg-hover': $nav-block-bg-hover,
+            )
+        );

@@ -1,0 +1,26 @@
+// ********************************************************
+//
+//  HINT MANUAL SHOW / PERSISTENT VISIBILITY UTILITY
+//
+//  Manually show a hint regardless of hover / focus state
+//  using the hint--show CSS class.
+//
+// ********************************************************
+
+.hint--show {
+    #{$hint-body},
+    #{$hint-arrow} {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    // Set the positioning to the position that would otherwise only
+    // be set on hover / focus.
+    @each $hint-direction-key, $hint-direction-cfg in $hint-position-configs {
+        &.hint--#{$hint-direction-key} {
+            // Generate box-model positioning / offsets and default arrow colors
+            // for all possible positions
+            @include _hint-direction($hint-direction-key, $hint-direction-cfg, $is-persistent: true);
+        }
+    }
+}

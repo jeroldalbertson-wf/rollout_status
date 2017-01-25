@@ -1,0 +1,474 @@
+// ********************************************************
+
+////
+/// Atoms (building blocks / API methods) for the grid system
+/// ---
+/// @access public
+/// @group core.grid
+/// @since 0.1.0
+/// @deprecated since `1.1.0`: Will require peripheral CSS module `grid-v1.css` after the `2.0.0` release. Being replaced by the v2 flexbox grid.
+/// @link http://bit.ly/webskin-grid Grid Column Layout Spec
+/// @link http://bit.ly/webskin-container Default Layout Container Spec
+/// @link http://bit.ly/webskin-container-wide Wide Layout Container Spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/grid/grid-atoms';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function is-number,
+                                                function list-has,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   GRID SYSTEM LOGIC / GROUPING / LOOPING HELPERS
+//
+//   -> Helpers that are used to generate selector
+//      groups for complete grid systems based on a
+//      specified number of columns
+// ----------------------------------------------------
+
+///
+/// Generates all selectors and styles necessary to build a grid system based on a specified number of columns, and gutter width between them.
+/// Web Skin provides a 12 column grid out-of-the-box, but this helper can be used to create a custom grid for your app with any number of
+/// columns you want, and any amount of gutter spacing between your column content.
+/// ---
+/// @since 1.0.0
+/// @requires {function} get
+/// @requires {function} to-rem
+/// @requires {function} $html-font-size-px
+/// @requires {variable} $grid-config
+/// ---
+/// @param {Number} $columns     [12]   - Total number of columns in the grid system
+/// @param {Number} $gutter      [3rem] - Amount of negative space between content in adjacent columns
+///
+@mixin make-grid($columns: get($grid-config, 'columns'),
+                 $gutter: to-rem(get($grid-config, 'gutter-width'), $html-font-size-px)
+                )
+{
+    // ------------------------------------------------
+    //   GRID ROW
+    //   -> Rows contain and clear the floats of columns
+    // ------------------------------------------------
+    .row {
+        @include grid-row-base($gutter);
+    }
+
+
+    // ------------------------------------------------
+    //   GRID COLUMNS BASE
+    //   -> Common styles for grid columns of all sizes
+    // ------------------------------------------------
+    @include make-grid-columns-base($columns);
+
+
+    // ------------------------------------------------
+    //   GRID COLUMN SIZE GROUPS
+    //   -> column widths, offsets, pushes and pulls
+    // ------------------------------------------------
+        // --------------------------------------------
+        //   EXTRA SMALL GRID
+        //   -> Columns, offsets, pushes, and pulls for
+        //      extra small devices like smartphones
+        //   -> "Mobile First" (no media query)
+        // --------------------------------------------
+        @include make-grid-column-sizes(xs);
+
+        // --------------------------------------------
+        //   SMALL GRID SIZE GROUP
+        //   -> Columns, offsets, pushes, and pulls for
+        //      the small device range, from
+        //      phones to tablets
+        // --------------------------------------------
+        @include respond-to('screen-sm and up') {
+            @include make-grid-column-sizes(sm);
+        }
+
+        // --------------------------------------------
+        //   MEDIUM GRID SIZE GROUP
+        //   -> Columns, offsets, pushes, and pulls for
+        //   the desktop device range.
+        // --------------------------------------------
+        @include respond-to('screen-md and up') {
+            @include make-grid-column-sizes(md);
+        }
+
+        // --------------------------------------------
+        //   LARGE GRID SIZE GROUP
+        //   -> Columns, offsets, pushes, and pulls for
+        //      the large desktop device range.
+        // --------------------------------------------
+        @include respond-to('screen-lg and up') {
+            @include make-grid-column-sizes(lg);
+        }
+}
+
+
+///
+/// Generates a CSS rule containing every individual column size selector based on the number of columns in a grid system, and the number of column size groups.
+/// ---
+/// @since 1.0.0
+/// @access private
+/// @group core.internals.grid
+/// ---
+/// @requires {external} SassScript/append <http://bit.ly/sass-append-fn>
+/// @requires {function} get
+/// @requires {variable} $grid-config
+/// ---
+/// @param {Number} $columns     [12]             - Total number of columns in the grid system
+/// @param {List}   $size-groups [xs, sm, md, lg] - List of size groups used to determine which columns float in specific viewport sizes
+///
+@mixin make-grid-columns-base($columns: get($grid-config, 'columns'),
+                              $size-groups: get($grid-config, 'column-size-groups')
+                             )
+{
+    $column-selectors: ();
+
+    @each $size-group in $size-groups {
+        $column-selectors: append($column-selectors, '[class*="col-#{$size-group}-"]', comma);
+    }
+
+    #{$column-selectors} {
+        @include grid-column-base();
+    }
+}
+
+
+///
+/// Generates all selectors necessary to size and place every individual column size given a specified size grouping and total number of columns.
+/// ---
+/// @since 1.0.0
+/// @access private
+/// @group core.internals.grid
+/// ---
+/// @requires {function} get
+/// @requires {variable} $grid-config
+/// ---
+/// @param {String} $size-group         - Size grouping used to define when a column floats based on a viewport size
+/// @param {Number} $columns     [12]   - Total number of columns in the grid system
+///
+@mixin make-grid-column-sizes($size-group, $columns: get($grid-config, 'columns')) {
+    @include loop-grid-columns($size-group, width, $columns);
+    @include loop-grid-columns($size-group, push, $columns);
+    @include loop-grid-columns($size-group, pull, $columns);
+    @include loop-grid-columns($size-group, offset, $columns);
+}
+
+
+///
+/// Utility mixin used by `make-grid-column-sizes` to loop through the number of columns in a grid system.
+/// ---
+/// @since 1.0.0
+/// @access private
+/// @group core.internals.grid
+/// ---
+/// @requires {function} get
+/// @requires {variable} $grid-config
+/// ---
+/// @param {String} $size-group         - Size grouping used to define when a column floats based on a viewport size
+/// @param {Number} $columns     [12]   - Total number of columns in the grid system
+///
+@mixin loop-grid-columns($size-group, $type, $columns: get($grid-config, 'columns')) {
+    @for $i from 0 through $columns {
+        @include make-grid-column-calc($i, $size-group, $type, $columns);
+    }
+}
+
+
+
+// ----------------------------------------------------
+//   INDIVIDUAL GRID ELEMENT SELECTOR HELPERS
+//
+//   -> Helpers that are used to generate a single selector,
+//      or base styles to deliver to a single selector
+// ----------------------------------------------------
+
+///
+/// Base styles to be used in a CSS rule for a centered grid container element.
+/// ---
+/// @requires {function} get
+/// @requires {function} to-rem
+/// @requires {variable} $html-font-size-px
+/// @requires {variable} $grid-config
+/// ---
+/// @param {Number} $gutter [3rem] - Amount of negative space between content in adjacent columns
+///
+@mixin grid-container-base($gutter: to-rem(get($grid-config, 'gutter-width'), $html-font-size-px)) {
+    @include clearfix();
+
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: to-rem($gutter / 2);
+    padding-right: to-rem($gutter / 2);
+}
+
+
+///
+/// Base styles to be used in a CSS rule for a wrapper that contains a series of columns.
+/// ---
+/// @requires {function} get
+/// @requires {function} to-rem
+/// @requires {variable} $html-font-size-px
+/// @requires {variable} $grid-config
+/// ---
+/// @param {Number} $gutter [3rem] - Amount of negative space between content in adjacent columns
+///
+@mixin grid-row-base($gutter: to-rem(get($grid-config, 'gutter-width'), $html-font-size-px)) {
+    @include clearfix();
+
+    margin-left: to-rem($gutter / -2);
+    margin-right: to-rem($gutter / -2);
+}
+
+
+///
+/// Base styles to be used in a CSS rule for a single grid column.
+/// ---
+/// @since 1.0.0
+/// @requires {function} get
+/// @requires {function} to-rem
+/// @requires {variable} $html-font-size-px
+/// @requires {variable} $grid-config
+/// ---
+/// @param {Number} $gutter [3rem] - Amount of negative space between content in adjacent columns; Half of this value is applied as left/right padding for each column creating the full-width of the gutter
+///
+@mixin grid-column-base($gutter: to-rem(get($grid-config, 'gutter-width'), $html-font-size-px)) {
+    display: block;
+    position: relative;
+    // Prevent columns from collapsing when empty
+    min-height: to-rem(1px);
+    // Inner content gutter via padding
+    padding-right: to-rem($gutter / 2);
+    padding-left: to-rem($gutter / 2);
+}
+
+
+///
+/// Generates a CSS rule containing a single selector for a specific column size or placement calculated style.
+/// ---
+/// @since 1.0.0
+/// @access private
+/// @group core.internals.grid
+/// ---
+/// @requires {external} SassScript/unquote     <http://bit.ly/sass_unquote>
+/// @requires {external} SassScript/percentage  <http://bit.ly/sass_percentage>
+/// @requires {function} get
+/// @requires {mixin}    grid-column-base
+/// @requires {variable} $grid-config
+/// ---
+/// @param {Number} $columns [12] - Total number of columns in the grid setup
+///
+@mixin make-grid-column-calc($index, $size-group, $type, $columns: get($grid-config, 'columns')) {
+    $type: unquote($type);
+    $class-type-str: if($type == width, '-', '-#{$type}-');
+    $selector: '.col-#{$size-group}#{$class-type-str}#{$index}';
+    $column-pct: percentage($index / $columns);
+
+    #{$selector} {
+        @if $type == width and $index > 0 {
+            float: left;
+            width: $column-pct;
+        }
+
+        @if $type == push {
+            left: if($index > 0, $column-pct, auto);
+        }
+
+        @if $type == pull {
+            right: if($index > 0, $column-pct, auto);
+        }
+
+        @if $type == offset {
+            margin-left: $column-pct;
+        }
+    }
+}
+
+
+///
+/// Generates styles that can be used to make any selector float as a grid column of a given `$column-size`.
+/// Not to be used in the creation of an entire grid system.
+/// ---
+/// @since 1.0.0
+/// @see {mixin} make-grid-column-offset
+/// @see {mixin} make-grid-column-push
+/// @see {mixin} make-grid-column-pull
+/// ---
+/// @requires {external} SassScript/unquote     <http://bit.ly/sass_unquote>
+/// @requires {function} get
+/// @requires {function} to-rem
+/// @requires {variable} $html-font-size-px
+/// @requires {variable} $grid-config
+/// ---
+/// @param {String} $size-group             - Size grouping used to define when a column floats based on a viewport size
+/// @param {Number} $column-size            - The colspan of this particular column
+/// @param {Number} $columns        [12]    - The total number of columns in your grid
+/// @param {Number} $gutter         [3rem]  - Amount of negative space between content in adjacent columns; Half of this value is applied as left/right padding for each column creating the full-width of the gutter
+///
+@mixin make-grid-column($size-group, $column-size,
+                        $columns: get($grid-config, 'columns'),
+                        $gutter: to-rem(get($grid-config, 'gutter-width'), $html-font-size-px)
+                       )
+{
+    $valid-size-groups: get($grid-config, 'column-size-groups');
+    $size-group: unquote($size-group);
+    $use-media-query: $size-group != xs;
+
+    // ----- ERROR CHECKING ----- //
+    @if not is-number($column-size) or $column-size == 0 {
+        @error "`make-grid-column` mixin expecting a number greater than 0 for `$column-size` parameter. Was `#{$column-size}`.";
+    }
+    @if not list-has($valid-size-groups, $size-group) {
+        @error "`make-grid-column` mixin expecting a valid column size group (#{$valid-size-groups}). Was `#{$size-group}`.";
+    }
+    // ----- END ERROR CHECKING ----- //
+
+    // ----- BASE COLUMN STYLING ----- //
+    @include grid-column-base();
+
+    // ----- COLUMN WIDTH ----- //
+    @if $use-media-query {
+        @include respond-to('screen-#{$size-group} and up') {
+    }
+
+        float: left;
+        @include make-grid-column-calc($column-size, $size-group, width, $columns);
+
+    @if $use-media-query {
+        }
+    }
+}
+
+
+///
+/// Generates styles that can be used to make any selector act like a grid offset given a `$offset-size`.
+/// Not to be used in the creation of an entire grid system.
+/// ---
+/// @since 1.0.0
+/// @see {mixin} make-grid-column
+/// @see {mixin} make-grid-column-push
+/// @see {mixin} make-grid-column-pull
+/// ---
+/// @requires {external} SassScript/unquote     <http://bit.ly/sass_unquote>
+/// ---
+/// @param {String} $size-group             - Size grouping used to define when a column offset is valid based on a viewport size
+/// @param {Number} $offset-size            - The colspan of this particular offset
+/// @param {Number} $columns        [12]    - The total number of columns in your grid
+///
+@mixin make-grid-column-offset($size-group, $offset-size, $columns: get($grid-config, 'columns')) {
+    $valid-size-groups: get($grid-config, 'column-size-groups');
+    $size-group: unquote($size-group);
+    $use-media-query: $size-group != xs;
+
+    // ----- ERROR CHECKING ----- //
+    @if not is-number($offset-size) {
+        @error "`make-grid-column-offset` mixin expecting a number for `$offset-size` parameter. Was `#{type-of($offset-size)}`.";
+    }
+    @if not list-has($valid-size-groups, $size-group) {
+        @error "`make-grid-column-offset` mixin expecting a valid column size group (#{$valid-size-groups}). Was `#{$size-group}`.";
+    }
+    // ----- END ERROR CHECKING ----- //
+
+    // ----- OFFSET ----- //
+    @if $use-media-query {
+        @include respond-to('screen-#{$size-group} and up') {
+    }
+
+        @include make-grid-column-calc($offset-size, $size-group, offset, $columns);
+
+    @if $use-media-query {
+        }
+    }
+}
+
+
+///
+/// Generates styles that can be used to make any selector act like a grid push given a `$push-size`.
+/// Not to be used in the creation of an entire grid system.
+/// ---
+/// @since 1.0.0
+/// @see {mixin} make-grid-column
+/// @see {mixin} make-grid-column-pull
+/// @see {mixin} make-grid-column-offset
+/// ---
+/// @requires {external} SassScript/unquote     <http://bit.ly/sass_unquote>
+/// ---
+/// @param {String} $size-group             - Size grouping used to define when a column push is valid based on a viewport size
+/// @param {Number} $push-size              - The colspan of this particular push
+/// @param {Number} $columns        [12]    - The total number of columns in your grid
+///
+@mixin make-grid-column-push($size-group, $push-size, $columns: get($grid-config, 'columns')) {
+    $valid-size-groups: get($grid-config, 'column-size-groups');
+    $size-group: unquote($size-group);
+    $use-media-query: $size-group != xs;
+
+    // ----- ERROR CHECKING ----- //
+    @if not is-number($push-size) {
+        @error "`make-grid-column-push` mixin expecting a number for `$push-size` parameter. Was `#{type-of($push-size)}`.";
+    }
+    @if not list-has($valid-size-groups, $size-group) {
+        @error "`make-grid-column-push` mixin expecting a valid column size group (#{$valid-size-groups}). Was `#{$size-group}`.";
+    }
+    // ----- END ERROR CHECKING ----- //
+
+    // ----- PUSH ----- //
+    @if $use-media-query {
+        @include respond-to('screen-#{$size-group} and up') {
+    }
+
+        @include make-grid-column-calc($push-size, $size-group, push, $columns);
+
+    @if $use-media-query {
+        }
+    }
+}
+
+
+///
+/// Generates styles that can be used to make any selector act like a grid pull given a `$pull-size`.
+/// Not to be used in the creation of an entire grid system.
+/// ---
+/// @since 1.0.0
+/// @see {mixin} make-grid-column
+/// @see {mixin} make-grid-column-push
+/// @see {mixin} make-grid-column-offset
+/// ---
+/// @requires {external} SassScript/unquote     <http://bit.ly/sass_unquote>
+/// ---
+/// @param {String} $size-group             - Size grouping used to define when a column pull is valid based on a viewport size
+/// @param {Number} $pull-size              - The colspan of this particular pull
+/// @param {Number} $columns        [12]    - The total number of columns in your grid
+///
+@mixin make-grid-column-pull($size-group, $pull-size, $columns: get($grid-config, 'columns')) {
+    $valid-size-groups: get($grid-config, 'column-size-groups');
+    $size-group: unquote($size-group);
+    $use-media-query: $size-group != xs;
+
+    // ----- ERROR CHECKING ----- //
+    @if not is-number($pull-size) {
+        @error "`make-grid-column-pull` mixin expecting a number for `$pull-size` parameter. Was `#{type-of($pull-size)}`.";
+    }
+    @if not list-has($valid-size-groups, $size-group) {
+        @error "`make-grid-column-pull` mixin expecting a valid column size group (#{$valid-size-groups}). Was `#{$size-group}`.";
+    }
+    // ----- END ERROR CHECKING ----- //
+
+    // ----- PUSH ----- //
+    @if $use-media-query {
+        @include respond-to('screen-#{$size-group} and up') {
+    }
+
+        @include make-grid-column-calc($pull-size, $size-group, pull, $columns);
+
+    @if $use-media-query {
+        }
+    }
+}

@@ -1,0 +1,59 @@
+// ********************************************************
+
+////
+/// Global functions to help with font / webfont related needs
+/// ---
+/// @access private
+/// @since 0.4.0
+/// @group core.internals.typography
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/functions/fonts';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function remove-unit,
+                                                function comma-list,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+///
+/// Build a relative asset uri for a webfont.
+/// ---
+/// @since 1.1.0
+/// ---
+/// @param {String} $file - webfont file name
+/// ---
+/// @returns {String} - relative uri of a give webfont `$file`
+///
+@function font-url($file) {
+    @return url("#{$webfont-directory}#{$file}");
+}
+
+
+///
+/// Build a bulletproof cross-browser list of webfonts.
+/// ---
+/// @since 1.1.0
+/// ---
+/// @param {String...} $files - One or more space-separated lists of files and their formats
+///
+@function font-files($files...) {
+    $file-list: comma-list();
+
+    @each $file in $files {
+        @if length($file) == 2 {
+            $file-list: append($file-list, font-url(nth($file, 1)) format('#{nth($file, 2)}'));
+        } @else {
+            $file-list: append($file-list, font-url($file));
+        }
+    }
+
+    @return $file-list;
+}

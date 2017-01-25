@@ -1,0 +1,35 @@
+// ********************************************************
+//
+    $module: 'core/api';
+//
+//   Collection of configs and helpers that
+//   when imported, provide access to the
+//   Web Skin Core Sass API
+//
+//   DEPENDENCIES:
+//
+    @import 'api/helpers/functions/global-utilities';
+//
+// ********************************************************
+
+// ----------------------------------------------------
+//   SHARED
+// ----------------------------------------------------
+@import "api/module-config";
+@import "api/module-helpers";
+
+// ----------------------------------------------------
+//   COMPONENTS
+// ----------------------------------------------------
+@import "api/module-component-api";
+
+// ----------------------------------------------------
+//   DEPRECATED MODULES / CONSTANTS
+//   @todo remove no later than 2.0.0
+// ----------------------------------------------------
+@import "module-deprecated";
+
+// ----------------------------------------------------
+//   DEBUG API MODULES
+// ----------------------------------------------------
+@import "api/debug";

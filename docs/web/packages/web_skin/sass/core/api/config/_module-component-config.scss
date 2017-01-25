@@ -1,0 +1,125 @@
+// ********************************************************
+//
+//   Imports config modules from `core/components/atoms`
+//   to make them available within `core/api`
+//
+//   DEPENDENCIES:
+//
+    @import 'defaults/component-sizes';
+    @import 'defaults/color/component-color-defaults';
+    @import 'defaults/color/component-color-variations';
+    @import 'defaults/color/component-shadow-defaults';
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/module-component-configs';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   SHARED
+//   -> used to build other components, or contain the
+//      genesis of core concepts shared by other components
+// ----------------------------------------------------
+@import '../../components/atoms/shared/triangles/triangles-config';
+@import '../../components/atoms/navs/navs-config';
+@import '../../components/atoms/navs/dropdowns-config';
+@import '../../components/atoms/buttons/config/close-button-config';
+@import '../../components/atoms/dialogs/dialogs-shared-config';
+@import '../../components/atoms/dialogs/dialogs-shared-helpers';
+
+
+// ----------------------------------------------------
+//   COMMON
+//   -> often found nested w/in other components
+// ----------------------------------------------------
+@import '../../components/atoms/carets/carets-config';
+@import '../../components/atoms/labels/labels-config';
+@import '../../components/atoms/badges/badges-config';
+@import '../../components/atoms/avatars/avatars-config';
+
+
+// ----------------------------------------------------
+//   TABLES
+// ----------------------------------------------------
+@import '../../components/atoms/tables/tables-config';
+
+
+// ----------------------------------------------------
+//   FORMS
+// ----------------------------------------------------
+@import '../../components/atoms/forms/forms-config';
+
+
+// ----------------------------------------------------
+//   BUTTONS
+// ----------------------------------------------------
+@import '../../components/atoms/buttons/buttons-config';
+
+
+// ----------------------------------------------------
+//   LISTS
+// ----------------------------------------------------
+@import '../../components/atoms/list-groups/list-groups-config';
+
+
+// ----------------------------------------------------
+//   NAVS
+// ----------------------------------------------------
+@import '../../components/atoms/navs/navbars-config';
+@import '../../components/atoms/navs/navbars-ribbon-config';
+
+
+// ----------------------------------------------------
+//   PANELS / WELLS / CARDS
+// ----------------------------------------------------
+@import '../../components/atoms/panels/panels-config';
+@import '../../components/atoms/wells/wells-config';
+@import '../../components/atoms/cards/cards-config';
+
+
+// ----------------------------------------------------
+//   DIALOGS
+// ----------------------------------------------------
+@import '../../components/atoms/dialogs/modals-config';
+@import '../../components/atoms/dialogs/lightbox-config';
+@import '../../components/atoms/dialogs/alerts-config';
+@import '../../components/atoms/dialogs/tooltips-config';
+@import '../../components/atoms/dialogs/popovers-shared-config';
+@import '../../components/atoms/dialogs/popovers-datepicker-config';
+@import '../../components/atoms/dialogs/popovers-tour-config';
+@import '../../components/atoms/dialogs/color-picker-config';
+@import '../../components/atoms/dialogs/hints-config';
+
+
+// ----------------------------------------------------
+//   MISC
+// ----------------------------------------------------
+@import '../../components/atoms/progress/progress-config';
+@import '../../components/atoms/thumbnails/thumbnails-config';
+@import '../../components/atoms/breadcrumbs/breadcrumbs-config';
+@import '../../components/atoms/carousels/carousels-config';
+@import '../../components/atoms/empty-view/empty-view-config';
+@import '../../components/atoms/media/media-config';
+
+
+// ----------------------------------------------------
+//   PERIPHERAL COMPONENT API CONFIGS
+//
+//   -> Even though these modules require separate
+//      imports to get the rendered styles, they should
+//      still get the peripheral component API access
+//      when they import the "core" api.
+// ----------------------------------------------------
+@import '../../../peripherals/form-toggle-switches/atoms/form-toggle-switches-config';
+@import '../../../peripherals/comments/atoms/comments-config';
+@import '../../../peripherals/comments/atoms/comments-panel-config';
+@import '../../../peripherals/comments/atoms/comments-popover-config';
+@import '../../../peripherals/form-click-to-edit/atoms/form-click-to-edit-config';
+@import '../../../peripherals/nav-wizards/atoms/nav-wizards-config';
+@import '../../../peripherals/panels-global-jobs/atoms/panels-global-jobs-config';
+@import '../../../peripherals/workspaces/atoms/workspaces-config';
+
+

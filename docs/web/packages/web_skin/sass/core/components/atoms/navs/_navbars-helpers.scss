@@ -1,0 +1,720 @@
+// ********************************************************
+
+////
+/// Navbar component helpers
+/// ---
+/// @since 1.0.0
+/// @access public
+/// @group core.components.navbars
+/// @link http://bit.ly/webskin-navbars Navbar component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/navbars-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function mod,
+                                                function to-rem,
+                                                function unitless-zero);
+//
+// ********************************************************
+
+
+///
+/// Semantic navbar component media query convenience mixin
+/// ---
+/// @output Contents wrapped in a media query matching the viewport size where we "uncollapse" the navbar component
+///
+@mixin uncollapsed-navbar-mq {
+    @include respond-to(get($navbar-base-config, 'collapse-breakpoint')) {
+        @content;
+    }
+}
+
+
+///
+/// Semantic navbar component media query convenience mixin
+/// ---
+/// @output Contents wrapped in a media query matching the viewport size where we "collapse" the navbar component
+///
+@mixin collapsed-navbar-mq {
+    @include respond-to(get($navbar-base-config, 'collapse-breakpoint-max')) {
+        @content;
+    }
+}
+
+
+///
+/// Reusable styles for dropdown toggles originating from navbar components / tabbed toolbar buttons.
+/// ---
+/// @access private
+/// @group core.internals.components.navbars
+/// ---
+/// @requires {function} get
+/// @requires {variable} $navbar-base-config
+/// ---
+/// @param {Color} $bd-color [#e3e3e3]
+/// @param {Color} $bg       [#ffffff]
+/// ---
+/// @output Styles that make navbar dropdown toggle buttons appear "connected" to the menu by adding vertical borders that match the bd color of the dd menu, and by "removing" the horizontal border between the toggle and the dd menu.
+///
+@mixin navbar-dropdown-link-active($bd-color: get($navbar-base-config, 'bd-color'),
+                                   $bg: get($navbar-base-config, 'bg')
+                                  )
+{
+    background-color: $bg;
+    border-top-color: $bg !important;
+    border-right-color: $bd-color !important;
+    border-bottom-color: $bg !important;
+    border-left-color: $bd-color !important;
+}
+
+
+//
+// Shared styles for both `.navbar-fixed-top` and `.navbar-fixed-bottom`
+//
+// @todo document
+//
+@mixin navbar-fixed-shared-styles() {
+    position: fixed;
+    right: 0;
+    left: 0;
+    z-index: z('fixed-navbar');
+    margin: 0;
+
+
+    @include uncollapsed-navbar-mq {
+        border-radius: 0;
+    }
+}
+
+
+//
+// .nav-blocks nested within .navbar icon buttons like those used in tablet viewers
+// nest inside of the element that is the immediate parent of .hitarea
+//
+// @todo document parameters
+//
+@mixin navbar-link-block-skin($block-link-skin-config: $nav-block-link-config,
+                              $navbar-skin-config: $navbar-base-config) {
+    > .hitarea {
+        color: get($block-link-skin-config, 'text-color');
+        background-color: get($block-link-skin-config, 'bg');
+
+        // ----- HOVER STATE ----- //
+        #{$link-hover-focus} {
+            color: get($block-link-skin-config, 'text-color-hover');
+            @if get($block-link-skin-config, 'bg-alpha-hover') < 1 {
+                background-color: mix($black, get($navbar-skin-config, 'bg'), percentage(get($block-link-skin-config, 'bg-alpha-hover'))); // fallback
+            }
+            background-color: get($block-link-skin-config, 'bg-hover');
+        }
+
+        // ----- PRESSED STATE ----- //
+        #{$link-pressed} {
+            color: get($block-link-skin-config, 'text-color-press');
+            background-color: get($block-link-skin-config, 'bg-press');
+        }
+    }
+
+    // ----- ACTIVE STATE ----- //
+    &.active > .hitarea,
+    &.open > .hitarea,
+    & > .hitarea.active,
+    & > .hitarea.open {
+        cursor: pointer !important; // can still be clicked in this case
+        color: get($block-link-skin-config, 'text-color-active') !important;
+        background-color: get($block-link-skin-config, 'bg-active') !important;
+    }
+
+    // ----- DISABLED STATE ----- //
+    > .hitarea.disabled,
+    > .hitarea[disabled] {
+        background-color: get($block-link-skin-config, 'bg-disabled') !important;
+        color: get($block-link-skin-config, 'text-color-disabled') !important;
+    }
+}
+
+
+//
+// Reusable styles to change the skinning of a .navbar
+// @todo document params
+//
+@mixin navbar-skin($base-config: $navbar-base-config,
+                   $link-config: $navbar-link-config,
+                   $block-link-config: $navbar-block-link-config
+                  )
+{
+    $is-default-skin: if($base-config == $navbar-base-config, true, false);
+
+    background-color: get($base-config, 'bg');
+    border-color: get($base-config, 'bd-color');
+    color: get($base-config, 'text-color');
+
+
+    // ----------------------------------------------------
+    //   Navbar Collapse Container
+    // ----------------------------------------------------
+    .navbar-collapse {
+        background-color: get($base-config, 'bg');
+    }
+
+
+    // ----------------------------------------------------
+    //   Navbar Toggle Button Skin
+    //
+    //   -> Essentially a `.navbar-block .hitarea`
+    // ----------------------------------------------------
+    .navbar-toggle {
+        color: get($block-link-config, 'text-color');
+        background-color: get($block-link-config, 'bg');
+
+
+        // ----- HOVER / FOCUS STATES ----- //
+        #{$link-hover-focus} {
+            color: get($block-link-config, 'text-color-hover');
+            background-color: get($block-link-config, 'bg-hover');
+            text-decoration: none;
+        }
+
+
+        // ----- PRESSED STATE ----- //
+        #{$link-pressed} {
+            color: get($block-link-config, 'text-color-press');
+            background-color: get($block-link-config, 'bg-press');
+        }
+
+
+        // ----- ACTIVE STATE ----- //
+        &.active,
+        &[aria-expanded="true"] {
+            // mimic a `.navbar .dropdown-toggle` button
+            @include navbar-dropdown-link-active($bd-color: get($base-config, 'bd-color'),
+                                                 $bg: get($base-config, 'bg')
+                                                );
+
+            color: get($block-link-config, 'text-color-active');
+        }
+
+
+        // ----- DISABLED STATE ----- //
+        &.disabled,
+        &[disabled] {
+            background-color: get($block-link-config, 'bg-disabled') !important;
+            color: get($block-link-config, 'text-color-disabled') !important;
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   Navbar Nav Links
+    // ----------------------------------------------------
+    @include uncollapsed-navbar-mq {
+        .navbar-nav {
+            border-bottom-color: get($base-config, 'bd-color');
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   Navbar Nav Link Dropdown Menus
+    // ----------------------------------------------------
+
+    @if $is-default-skin {
+        //
+        // Leave off the skin to prevent too much specificity
+        // to ensure that the .nav > .dropodown > .hitarea .caret
+        // styles are inherited properly in `:hover` / `:focus` states
+        //
+        @at-root {
+            //
+            // Adjust color of the caret in navbar link
+            // default state; All other states will inherit
+            // from base `.nav` link states
+            //
+            .nav-item > .hitarea .caret {
+                @include triangle-color-vertical(get($link-config, 'caret-color'));
+                @include opacity(1); // instead of using opacity, we're using a lighter color
+            }
+        }
+    }
+
+    .navbar-nav {
+        //
+        // The default navbar doesn't need these styles
+        // because e'thing is inherited from default `.nav`
+        //
+        @if not $is-default-skin {
+            > .nav-item {
+                > .hitarea {
+                    background-color: get($link-config, 'bg');
+                    color: get($link-config, 'text-color');
+
+
+                    // ----- HOVER / FOCUS STATES ----- //
+                    #{$link-hover-focus} {
+                        background-color: get($link-config, 'bg-hover');
+                        color: get($link-config, 'text-color-hover');
+                    }
+
+
+                    // ----- PRESSED STATE ----- //
+                    #{$link-pressed} {
+                        background-color: get($link-config, 'bg-press');
+                        color: get($link-config, 'text-color-press');
+                    }
+
+
+                    // ----- DISABLED STATE ----- //
+                    &.disabled,
+                    &[disabled] {
+                        background-color: get($link-config, 'bg-disabled') !important;
+                        color: get($link-config, 'text-color-disabled') !important;
+                    }
+                }
+
+
+                // ----- ACTIVE STATE  ----- //
+                &.active > .hitarea {
+                    background-color: get($link-config, 'bg-active') !important;
+                    color: get($link-config, 'text-color-active') !important;
+                }
+            }
+        }
+
+
+        @include uncollapsed-navbar-mq {
+            > .dropdown {
+                > .dropdown-menu {
+                    border-color: get($base-config, 'bd-color');
+                    border-top-color: get($base-config, 'bg');
+
+                    .divider {
+                        border-top-color: lighten(get($base-config, 'bd-color'), 4);
+                    }
+                }
+            }
+
+            //
+            // make the dropdown toggle look "connected"
+            // to the dropdown menu when its revealed
+            //
+            > .open > .hitarea {
+                @include navbar-dropdown-link-active($bd-color: get($base-config, 'bd-color'), $bg: get($base-config, 'bg'));
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   Navbar block links
+    // ----------------------------------------------------
+    .nav-blocks > .nav-item {
+        @include navbar-link-block-skin($block-link-skin-config: $block-link-config,
+                                        $navbar-skin-config: $base-config
+                                       );
+    }
+
+
+    // ----------------------------------------------------
+    //   Navbar links
+    // ----------------------------------------------------
+    .navbar-link,
+    .btn-link {
+        color: get($link-config, 'text-color');
+
+
+        // ----- HOVER / FOCUS STATES ----- //
+        #{$link-hover-focus} {
+            color: get($link-config, 'text-color-hover');
+        }
+
+
+        // ----- PRESSED STATE ----- //
+        #{$link-pressed} {
+            color: get($link-config, 'text-color-press');
+        }
+
+
+        // ----- DISABLED STATE ----- //
+        &.disabled,
+        &[disabled] {
+            color: get($link-config, 'text-color-disabled') !important;
+        }
+    }
+}
+
+
+///
+/// Vertically center an element within the navbar component.
+/// ---
+/// @param {Number} $element-height - The height of the element you are placing in the `.navbar`
+/// ---
+/// @output Top and bottom margin values that will vertically center the element.
+///
+@mixin navbar-valign($element-height) {
+    $navbar-elem-valign-numerator: get($navbar-base-config, 'height-inner-fixed') - $element-height;
+    $navbar-elem-valign-margin: floor($navbar-elem-valign-numerator / 2);
+    $navbar-elem-valign-margin-bottom: $navbar-elem-valign-margin;
+
+    //
+    // check to see if the number divided evenly...
+    // if not - adjust one of the two margins to avoid half-pixels
+    //
+    $navbar-elem-valign-margin-top: if(mod($navbar-elem-valign-numerator, 2), $navbar-elem-valign-margin-bottom, $navbar-elem-valign-margin-bottom + 1);
+
+    //
+    // double-check to make sure this
+    // won't cause the navbar to exceed it's target height
+    //
+    @if ($element-height + $navbar-elem-valign-margin-top + $navbar-elem-valign-margin-bottom) > get($navbar-base-config, 'height') {
+        @warn "The navbar element being vertically centered will cause the parent `.navbar` to exceed `#{get($navbar-base-config, "height")}`.";
+    }
+
+    margin-top: to-rem($navbar-elem-valign-margin-top);
+    margin-bottom: to-rem($navbar-elem-valign-margin-bottom);
+}
+
+// @todo document params
+@mixin navbar-ribbon-share-btn-container-width($padding-right, $padding-left: 0) {
+    // center horizontally based on width of Wdesk logo above it
+    $navbar-logo-width: calc-img-retina-width($file-1x: '#{$wdesk-logo-dir}#{$wdesk-logo-name}.png');
+    // ensure that the first btn-vertical to the right of the share
+    // button is aligned horizontally with the first navbar tab label
+    // above it.
+    $padding-right-adjust: round(get($navbar-link-config, 'padding-horizontal') / 2) - get($btn-config, 'bd-width'); // adjust our calculation for pixel perfection
+    $padding-right: $padding-right + $padding-right-adjust;
+
+    padding-right: to-rem($padding-right);
+    padding-left: to-rem($padding-left);
+    width: to-rem($padding-left + $padding-right + $navbar-logo-width);
+}
+
+// @todo document params
+@mixin ribbon-action-group-divider($order: after) {
+    &:after {
+        position: absolute;
+        top: to-rem(get($nav-ribbon-btn-group-config, 'divider-offset-top'));
+        @if $order == after {
+            right: 0;
+        } @else {
+            left: 0;
+        }
+        display: block;
+        width: to-rem(get($nav-ribbon-btn-group-config, 'divider-bd-width'));
+        // should be as tall as the icons within the buttons
+        height: to-rem(get($nav-ribbon-btn-group-config, 'divider-height'));
+        background-color: get($nav-ribbon-btn-group-config, 'divider-bd-color');
+        content: "";
+    }
+
+    @if $order == after {
+        &:last-child {
+            &:after {
+                width: 0;
+            }
+        }
+    } @else {
+        &:first-child {
+            &:after {
+                width: 0;
+            }
+        }
+    }
+}
+
+
+//
+// [1] Make the content blocks a "shrink-to-fit" block by default. (sensible default)
+//
+// [2] Make sure the groups with vertical buttons align so that their button labels
+//     match up to to `.ribbon-action-group-label` elems in non-vertical containers.
+//
+// [3] Use the larger padding amount on the left even if this group doesn't use a divider
+//
+// NOTE: We are currently using `!important` on all padding values since the original
+//       implementation of ribbon action groups required the presence of a standalone
+//       `grid-content` CSS class.  Since we removed that requirement in `1.4.0` (via #1241)
+//       we need to be sure to trump any padding that would otherwise be added by `grid-content`
+//       until we update our Web Skin Dart componentry, and verify that all consumers have
+//       stopped using outdated componentry that still uses the standalone grid CSS classes.
+//
+//       TODO: Remove `!important` in the `2.0.0` release
+//
+@mixin ribbon-action-group-padding($include-grid-size-styles: true) {
+    @each $viewport-size-key, $breakpoint-key in get($nav-ribbon-base-config, 'viewport-breakpoint-keys') {
+        @include _breakpoint-respond-to($breakpoint-key) {
+            $ribbon-action-group-padding: to-rem(get-deep($nav-ribbon-btn-config, 'padding-horizontal.#{$viewport-size-key}'));
+            $ribbon-action-group-padding-lg: $ribbon-action-group-padding * 2;
+            $ribbon-action-group-padding-top: $ribbon-action-group-padding - .3rem; // [2]
+
+            // Stuff that is not viewport size-dependent (only implement once)
+            @if $breakpoint-key == null {
+                @if $include-grid-size-styles {
+                    @include grid-size(shrink); // [1]
+                }
+                padding: $ribbon-action-group-padding-top $ribbon-action-group-padding 0 $ribbon-action-group-padding !important;
+
+                &.has-vertical-buttons {
+                    padding-top: $ribbon-action-group-padding-top - .1rem !important; // [2]
+                }
+            } @else {
+                padding-right: $ribbon-action-group-padding !important;
+                padding-left: $ribbon-action-group-padding !important;
+            }
+
+            &.divider-after {
+                @if $breakpoint-key == null {
+                    @include ribbon-action-group-divider(after);
+                }
+
+                padding-right: $ribbon-action-group-padding-lg !important;
+                padding-left: $ribbon-action-group-padding-lg !important;
+
+                + .ribbon-action-group {
+                    padding-left: $ribbon-action-group-padding-lg !important; // [3]
+                }
+            }
+
+            &.divider-before {
+                @if $breakpoint-key == null {
+                    @include ribbon-action-group-divider(before);
+                }
+
+                padding-right: $ribbon-action-group-padding-lg !important;
+                padding-left: $ribbon-action-group-padding-lg !important;
+            }
+
+
+            // ------------------------------------------------
+            //   ADJUST DIVIDER SPACING WHEN
+            //   GROUP CONTAINS UN-SKINNED BUTTONS
+            //
+            //   Since un-skinned buttons have no visible "edge"
+            //   the normal horizontal padding amount gives the
+            //   appearance that there is more space between
+            //   the edges of those groups.
+            //
+            //   To normalize this, add the `.has-unskinned-buttons`
+            //   CSS class to any `.ribbon-action-group`
+            // ------------------------------------------------
+            &.has-unskinned-buttons {
+                &.divider-after,
+                &.divider-before {
+                    > .btn-group,
+                    > .btn {
+                        &:first-child {
+                            // cut the perceived "padding" in half
+                            margin-left: $ribbon-action-group-padding * -1;
+                        }
+
+                        &:last-child {
+                            // cut the perceived "padding" in half
+                            margin-right: $ribbon-action-group-padding * -1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+// @todo document params
+@mixin navbar-ribbon-breakpoints() {
+    @each $viewport-size-key, $breakpoint-key in get($nav-ribbon-base-config, 'viewport-breakpoint-keys') {
+        @include _breakpoint-respond-to($breakpoint-key) {
+            // Stuff that is not viewport size-dependent (only implement once)
+            @if $breakpoint-key == null {
+                margin-left: 0; // override .btn-toolbar default
+                position: relative;
+                z-index: 1;
+
+                //
+                // Share button wrapper
+                // TODO: Deprecate / Remove in 2.0.0
+                //
+                > .btn-share {
+                    // just like a button group
+                    position: relative;
+                    top: 0;
+                    float: left;
+                    min-height: to-rem($nav-ribbon-tab-content-min-height);
+                    padding-top: .7rem; // center vertically with the icons within .btn-vertical
+                    display: inline-block;
+                    text-align: center;
+                    white-space: nowrap;
+                    vertical-align: middle;
+
+                    //
+                    // The actual share button within the .btn-share wrapper
+                    //
+                    .btn {
+                        // Give share button slightly more
+                        // horizontal affordance than a standard xs btn
+                        padding-left:  to-rem(round($padding-xs-horizontal * 1.5));
+                        padding-right: to-rem(round($padding-xs-horizontal * 1.5));
+                        margin: 0 auto;
+                        font-weight: bold;
+                        text-transform: uppercase;
+                    }
+                }
+            } @else {
+                // Stuff that is viewport size-dependent (implement once per $viewport-size-key)
+                > .btn-share {
+                    @include navbar-ribbon-share-btn-container-width($padding-right: get($navbar-brand-config, 'link-padding-right') - get-deep($nav-ribbon-btn-config, 'padding-horizontal.#{$viewport-size-key}'));
+                }
+
+                .btn-vertical {
+                    $padding-horizontal: to-rem(get-deep($nav-ribbon-btn-config, 'padding-horizontal.#{$viewport-size-key}'));
+                    padding-left: $padding-horizontal;
+                    padding-right: $padding-horizontal;
+
+                    .caret {
+                        right: $padding-horizontal;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   RIBBON ACTION TOOLBAR / GROUP / GROUP ROW GRID BLOCKS
+//
+//   @since 1.4.0
+//   We are applying grid-block styling without requiring
+//   standalone `grid-block` / `grid-shrink` / `grid-content`
+//   CSS classes on the `.ribbona-action-toolbar` and
+//   `.ribbon-action-group` elements.
+//
+// ********************************************************
+
+    //
+    // Grid block styling for `.ribbon-action-toolbar` elems
+    //
+    // [1] Ensure that dropdowns work.
+    //
+    // [2] Override overflow of potential `grid-block` CSS class on the elem.
+    //     TODO: Remove `!important` in the `2.0.0` release
+    //
+    @mixin ribbon-action-toolbar-grid-block() {
+        @include grid-block(
+            $size: grow,
+            $orientation: horizontal,
+            $align: false,
+            $order: false,
+            $allow-nested-vblocks: false
+        );
+        @include force-overflow(visible !important); // [1] / [2]
+    }
+
+    //
+    // Grid block styling for `.ribbon-action-group` elems
+    //
+    // [1] Ensure that dropdowns work.
+    //
+    // [2] Override overflow of potential `grid-block` CSS class on the elem.
+    //     TODO: Remove `!important` in the `2.0.0` release
+    //
+    @mixin ribbon-action-group-grid-block() {
+        @include grid-block(
+            $size: shrink,
+            $orientation: horizontal,
+            $align: false,
+            $order: false,
+            $allow-nested-vblocks: false
+        );
+        @include force-overflow(visible !important); // [1] / [2]
+
+        // --------------------------------------------
+        //   GROUPS THAT DO NOT CONTAIN MULTIPLE ROWS
+        //
+        //   -> Only make it a "grid content" block if
+        //      we are not going to use vertical blocks
+        //      within it.
+        //      (`ribbon-action-group-rows-grid-block()`)
+        // --------------------------------------------
+        &:not(.has-multiple-rows) {
+            display: block; // mimic `.grid-content`
+        }
+    }
+
+    //
+    // Vertical grid block styling for `.ribbon-action-group__rows` elems
+    //
+    // [1] Ensure that dropdowns work.
+    //
+    // [2] Override padding / overflow of potential `grid-content` CSS class on the elem.
+    //     TODO: Remove `!important` in the `2.0.0` release
+    //
+    @mixin ribbon-action-group-rows-grid-block() {
+        @include grid-block(
+            $size: shrink,
+            $orientation: vertical,
+            $align: false,
+            $order: false,
+            $allow-nested-vblocks: false
+        );
+        @include force-overflow(visible !important); // [1] / [2]
+        padding: 0 !important; // [2]
+    }
+
+    //
+    // Apply the same amount of horizontal spacing between the children within a toolbar as we
+    // do adjacent sibling `.ribbon-action-group__rows`.
+    //
+    @mixin ribbon-action-group-toolbar-children-spacing($spacing) {
+        .btn-toolbar {
+            > .btn-group,
+            > .btn {
+                margin-left: $spacing;
+
+                &:first-of-type {
+                    margin-left: 0;
+                }
+            }
+        }
+    }
+
+    //
+    //   [1] Requires addition of the `has-multiple-rows`
+    //       CSS class on the `.ribbon-action-group` elem.
+    //
+    //   [2] Match spacing between adjacent toolbars /
+    //       groups / etc...
+    //
+    //   [3] Only add top / bottom padding to rows that are
+    //       not the first one in an action group since the
+    //       `.ribbon-nav-container` elem has top padding
+    //       built-in.
+    //
+    //   [4] Using `!important` to trump the `!important`
+    //       added in `ribbon-action-group-rows-grid-block()`
+    //       TODO: Remove `!important` in the `2.0.0` release
+    //
+    @mixin ribbon-action-group-rows($horizontal-spacing, $vertical-spacing, $space-below-row: 0, $class-prefix: 'ribbon-') {
+        @include ribbon-action-group-rows-grid-block();
+
+        + .#{$class-prefix}action-group__rows {
+            padding-left: to-rem($horizontal-spacing) !important; // [2] / [4]
+        }
+
+        // Nest one or more row within `.#{$class-prefix}action-group__rows`
+        .#{$class-prefix}action-group__row {
+            // ----- [3] / [4] ----- //
+            + .#{$class-prefix}action-group__row {
+                padding-top: to-rem($vertical-spacing) !important;
+                padding-bottom: to-rem($space-below-row) !important;
+            }
+        }
+    }

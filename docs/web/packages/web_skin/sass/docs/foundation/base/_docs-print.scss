@@ -1,0 +1,23 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/foundation/base/print';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+@media print {
+    .ws-navbar,
+    .ws-sidebar,
+    .wdesk-archived-docs {
+        display: none !important;
+    }
+    body {
+        padding-top: 0 !important; // no navbar, so this is unnecessary.
+    }
+    .ws-header {
+        padding-bottom: 0;
+    }
+}

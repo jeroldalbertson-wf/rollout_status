@@ -1,0 +1,275 @@
+// ********************************************************
+
+////
+/// Hint tooltips component configuration
+/// ---
+/// @access public
+/// @group core.components.hints
+/// @since 1.6.0
+/// @type Map
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/hints-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend,
+                                                function z,
+                                                function box-model-height,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+///
+/// Global configuration for `.has-hint` elements and their pseudo-elements that are used to render the actual visible hint.
+///
+/// * `:before`: Displays the arrow
+/// * `:after`: Displays the content
+///
+/// Extends `$tooltip-config`. Properties documented here are additive - or they override a pre-existing value within `$tooltip-config`.
+/// ---
+/// @requires {function} get
+/// @requires {function} get-deep
+/// @requires {function} extend
+/// @requires {function} to-rem
+/// @requires {function} box-model-height
+/// @requires {variable} $z-index
+/// @requires {variable} $tooltip-config
+/// @requires {variable} $triangle-config
+/// @requires {variable} $default-slide-speed
+/// @requires {variable} $default-fade-speed
+/// ---
+/// @prop {String} content-attr     [aria-label]    - The HTML element attribute that the CSS `content` property uses to display the hint content
+/// @prop {String} arrow-selector   ['&:before']    - The Sass selector expression used to target the pseudo-element that renders the hints arrow
+/// @prop {String} body-selector    ['&:after']     - The Sass selector expression string used to target the pseudo-element that renders the hints body / content
+/// @prop {Number} z-index          [10000]         - The CSS `z-index` property value applied to the `arrow-selector` and `body-selector` pseudo-elements
+///
+/// @prop {Number} arrow-base       [1rem]          - The length of the side of the arrow that is parallel with the edge of the hint content that faces the "host" `.has-tip` element
+/// @prop {Number} arrow-altitude   [.5rem]         - The length between the baseline and vertex of the arrow. If the hint is positioned using the `hint--left` or `hint--right` CSS class, this length will essentially be a "width", otherwise it will be a "height"
+/// @prop {Number} arrow-bd-width   [.5rem]         - The border width used to create the corresponding `arrow-base` length
+/// @prop {Number} gutter           [.7rem]         - The desired distance between the edge of the hint content that faces the "host" `.has-hint` element, and the parallel edge of the "host" `.has-hint` element
+///
+/// @prop {Number} font-size                    [1.2rem]        - The `font-size` of the hint content
+/// @prop {Number} bd-width                     [.1rem]         - The border width applied to the hint content
+/// @prop {Number} content-padding              [.4rem .8rem]   - The padding value applied to the hint content pseudo-element
+/// @prop {Number} content-padding-vertical     [.4rem]         - The vertical padding value applied ot the hint content pseudo-element
+/// @prop {Number} content-padding-horizontal   [.8rem]         - The vertical padding value applied ot the hint content pseudo-element
+/// @prop {Number} min-height                   [2.4rem]        - The calculated height value of a hint with only a single line of text
+///
+/// @prop {Number} fade-transition-speed    [.15s]  - The duration of the hint fade transition
+/// @prop {Number} slide-transition-speed   [.3s]   - The duration of the hint slide transition
+/// @prop {Number} show-delay               [.1s]   - The delay between when the user hovers or focuses the "host" `.has-hint` element, and when the hint itself becomes visible
+/// @prop {Number} hide-delay               [0s]    - The delay between when the user stops hovering or blurs the "host" `.has-hint` element, and when the hint itself becomes invisible
+///
+/// @prop {Arglist} fade-transition  [(opacity, visibility) .15s ease 0s]
+/// @prop {Arglist} slide-transition [(margin, top, left, bottom, right, transform) .3s ease 0s]
+///
+/// @prop {String} max-width [none]  - The default `max-width` of the `.has-hint:after` pseudo-element that contains the hint content. Set to `none` because by default, hint content does not wrap to more than one line, and never becomes wider than its "host" `.has-hint` element
+///
+$hint-config: extend($tooltip-config, (
+    'content-attr': aria-label,
+    'arrow-selector': '&:before',
+    'body-selector': '&:after',
+    'z-index': get($z-index, 'tooltip'),
+    'arrow-base': to-rem(get($tooltip-config, 'arrow-width')),
+    'arrow-altitude': null, // Actual value added via @extend
+    'arrow-bd-width': null, // Actual value added via @extend
+    'gutter': null, // Actual value added via @extend
+    'font-size': to-rem(get($tooltip-config, 'font-size')),
+    'bd-width': to-rem(get($tooltip-config, 'bd-width')),
+    'content-padding': to-rem(get($tooltip-config, 'content-padding')),
+    'content-padding-vertical': null, // Actual value added via @extend
+    'content-padding-horizontal': null, // Actual value added via @extend
+    'min-height': null, // Actual value added via @extend
+    'fade-transition-speed': $default-fade-speed,
+    'slide-transition-speed': $default-slide-speed,
+    'fade-transition': null, // Actual value added via @extend
+    'slide-transition': null, // Actual value added via @extend
+    'show-delay': .1s,
+    'hide-delay': 0s,
+    'max-width': none
+)) !default;
+
+// ----------------------------------------------------
+//   CALCULATED VALUES
+//   -> based on $hint-config
+//
+//   -> cannot be included in initial map declaration
+//      because the calculations depend on values
+//      within the map, and Sass has no ability to
+//      reference a key in a map from within that map.
+//
+//   -> documented as props of $hint-config
+//      because they are added via extend() below.
+// ----------------------------------------------------
+    $hint-arrow-altitude: get($hint-config, 'arrow-base') / get-deep($triangle-config, 'base.size-ratio');
+    $hint-padding-vertical: nth(get($hint-config, 'content-padding'), 1);
+    $hint-padding-horizontal: nth(get($hint-config, 'content-padding'), 2);
+    $hint-bd-width: get($hint-config, 'bd-width');
+    $hint-font-size: get($hint-config, 'font-size');
+    $hint-line-height: get($hint-config, 'line-height');
+    $hint-min-height: to-rem(box-model-height(
+        $font-size: $hint-font-size,
+        $line-height: $hint-line-height,
+        $padding-vertical: $hint-padding-vertical,
+        $bd-width: $hint-bd-width
+    ));
+
+    $hint-config: extend($hint-config, (
+        'arrow-altitude': $hint-arrow-altitude,
+        'arrow-bd-width': get($hint-config, 'arrow-base') / 2,
+        'gutter': $hint-arrow-altitude + .2rem,
+        'content-padding-vertical': $hint-padding-vertical,
+        'content-padding-horizontal': $hint-padding-horizontal,
+        'min-height': $hint-min-height,
+        'fade-transition': (opacity, visibility) get($hint-config, 'fade-transition-speed') ease get($hint-config, 'hide-delay'),
+        'slide-transition': (margin, top, left, bottom, right, transform) get($hint-config, 'slide-transition-speed') ease get($hint-config, 'hide-delay')
+    ));
+
+    // ----- UNDOCUMENTED CONVENIENCE ALIAS VARS ----- //
+    $hint-content-attr: get($hint-config, 'content-attr');
+    $hint-arrow: get($hint-config, 'arrow-selector');
+    $hint-body: get($hint-config, 'body-selector');
+
+
+///
+/// Widths used for multi-line hints.
+/// ---
+/// @requires {function} get
+/// @requires {function} to-rem
+/// @requires {variable} $tooltip-config
+/// ---
+/// @prop {Number} xs [8rem]  - The `width` of the `.has-hint:after` pseudo-element that contains the hint content when the optional `hint--xs` CSS class is added to the "host" `.has-hint` element. In this case, hint content will wrap onto more than one line
+/// @prop {Number} sm [15rem] - The `width` of the `.has-hint:after` pseudo-element that contains the hint content when the optional `hint--sm` CSS class is added to the "host" `.has-hint` element. In this case, hint content will wrap onto more than one line
+/// @prop {Number} lg [30rem] - The `width` of the `.has-hint:after` pseudo-element that contains the hint content when the optional `hint--lg` CSS class is added to the "host" `.has-hint` element. In this case, hint content will wrap onto more than one line
+///
+$hint-width-config: (
+    'xs': 8rem,
+    'sm': 15rem,
+    'lg': to-rem(get($tooltip-config, 'max-width'))
+) !default;
+
+
+///
+/// Configuration values used to construct the CSS classes and element offset values needed
+/// for all the positioning variations available with the Web Skin "hint" tooltip system.
+///
+/// __For the `transition-direction` properties:__
+///
+/// * The `transition-direction` property represents the direction along the "primary" axis _(e.g. the vertical axis if the hint is positioned top or bottom)_
+/// * The `transition-direction-op-axis` property represents the direction along the axis that is perpendicular to the direction of the tooltip _(e.g. the horizontal axis if the hint is positioned top or bottom)_.
+/// * A value of `0` means no movement along that axis.
+/// * A value of `1` means movement along the axis from top to bottom - or - left to right
+/// * A value of `-1` means movement along the axis from bottom to top - or - right to left
+/// ---
+/// @access private
+/// @group core.internals.components.hints
+/// ---
+/// @prop {Map}     top - Configuration values for a `.hint--top` element _(hint appears above "host" element)_
+/// @prop {String}  top.margin-direction                        [bottom]
+/// @prop {String}  top.bd-side                                 [top]
+/// @prop {Number}  top.transition-direction                    [-1]
+/// @prop {Number}  top.transition-direction-op-axis            [0]
+///
+/// @prop {Map}     top-left - Configuration values for a `.hint--top-left` element _(hint appears above "host" element, with the arrow placement on the right side of the hint)_
+/// @prop {String}  top-left.margin-direction                   [bottom]
+/// @prop {String}  top-left.bd-side                            [top]
+/// @prop {Number}  top-left.transition-direction               [-1]
+/// @prop {Number}  top-left.transition-direction-op-axis       [-1]
+///
+/// @prop {Map}     top-right - Configuration values for a `.hint--top-right` element _(hint appears above "host" element, with the arrow placement on the left side of the hint)_
+/// @prop {String}  top-right.margin-direction                  [bottom]
+/// @prop {String}  top-right.bd-side                           [top]
+/// @prop {Number}  top-right.transition-direction              [-1]
+/// @prop {Number}  top-right.transition-direction-op-axis      [1]
+///
+/// @prop {Map}     bottom - Configuration values for a `.hint--bottom` element _(hint appears below "host" element)_
+/// @prop {String}  bottom.margin-direction                     [top]
+/// @prop {String}  bottom.bd-side                              [bottom]
+/// @prop {Number}  bottom.transition-direction                 [1]
+/// @prop {Number}  bottom.transition-direction-op-axis         [0]
+///
+/// @prop {Map}     bottom-left - Configuration values for a `.hint--bottom-left` element _(hint appears below "host" element, with the arrow placement on the right side of the hint)_
+/// @prop {String}  bottom-left.margin-direction                [top]
+/// @prop {String}  bottom-left.bd-side                         [bottom]
+/// @prop {Number}  bottom-left.transition-direction            [1]
+/// @prop {Number}  bottom-left.transition-direction-op-axis    [-1]
+///
+/// @prop {Map}     bottom-right - Configuration values for a `.hint--bottom-right` element _(hint appears below "host" element, with the arrow placement on the left side of the hint)_
+/// @prop {String}  bottom-right.margin-direction               [top]
+/// @prop {String}  bottom-right.bd-side                        [bottom]
+/// @prop {Number}  bottom-right.transition-direction           [1]
+/// @prop {Number}  bottom-right.transition-direction-op-axis   [1]
+///
+/// @prop {Map}     right - Configuration values for a `.hint--right` element _(hint appears to the right of the "host" element)_
+/// @prop {String}  right.margin-direction                      [left]
+/// @prop {String}  right.bd-side                               [right]
+/// @prop {Number}  right.transition-direction                  [1]
+/// @prop {Number}  right.transition-direction-op-axis          [0]
+///
+/// @prop {Map}     left - Configuration values for a `.hint--left` element _(hint appears to the left of the "host" element)_
+/// @prop {String}  left.margin-direction                       [right]
+/// @prop {String}  left.bd-side                                [left]
+/// @prop {Number}  left.transition-direction                   [-1]
+/// @prop {Number}  left.transition-direction-op-axis           [0]
+///
+$hint-position-configs: (
+    'top': (
+        'margin-direction': bottom,
+        'bd-side': top,
+        'transition-direction': -1,
+        'transition-direction-op-axis': 0
+    ),
+    'top-left': (
+        'margin-direction': bottom,
+        'bd-side': top,
+        'transition-direction': -1,
+        'transition-direction-op-axis': -1
+    ),
+    'top-right': (
+        'margin-direction': bottom,
+        'bd-side': top,
+        'transition-direction': -1,
+        'transition-direction-op-axis': 1
+    ),
+    //
+    'bottom': (
+        'margin-direction': top,
+        'bd-side': bottom,
+        'transition-direction': 1,
+        'transition-direction-op-axis': 0
+    ),
+    'bottom-left': (
+        'margin-direction': top,
+        'bd-side': bottom,
+        'transition-direction': 1,
+        'transition-direction-op-axis': -1
+    ),
+    'bottom-right': (
+        'margin-direction': top,
+        'bd-side': bottom,
+        'transition-direction': 1,
+        'transition-direction-op-axis': 1
+    ),
+    //
+    'right': (
+        'margin-direction': left,
+        'bd-side': right,
+        'transition-direction': 1,
+        'transition-direction-op-axis': 0
+    ),
+    //
+    'left': (
+        'margin-direction': right,
+        'bd-side': left,
+        'transition-direction': -1,
+        'transition-direction-op-axis': 0
+    )
+);

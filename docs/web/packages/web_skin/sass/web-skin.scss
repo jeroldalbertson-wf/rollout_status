@@ -1,0 +1,28 @@
+/*!
+ * -------------------------------------
+ * Web Skin Core CSS
+ * v{{ws_css_version}}
+ * ---
+ * MSIE Support: false
+ * Touch UI Support: false
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+
+// ----------------------------------------------------
+//   Core Module
+// ----------------------------------------------------
+    @import "module-core";
+
+
+// ----------------------------------------------------
+//   Browser Support Check
+// ----------------------------------------------------
+    @if not $ie-support {
+        @error "MSIE should be supported for wdesk.scss.";
+    }
+    @if $min-ie-supported > $min-ie-supported-platform {
+        @error "MSIE #{$min-ie-supported-platform} should be supported for wdesk.scss.";
+    }

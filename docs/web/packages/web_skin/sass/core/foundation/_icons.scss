@@ -1,0 +1,136 @@
+// ********************************************************
+//
+//   The Web Skin Icon System
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/icons';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   BASE ELEMENT
+// ----------------------------------------------------
+    .icon {
+        // base 16
+        @include icon-base();
+
+        // base 24 variant (icons that start with .icon-twfr-)
+        &[class*="icon-twfr-"] {
+            @include icon-size('base', 'base24');
+        }
+
+        &.#{$icon-class-two-color} {
+            @include icon-set-second-color();
+        }
+
+        &[class*="icon-file"],
+        &[class*="icon-twfr-file"] {
+            @include icon-set-doctype();
+        }
+    } // END .icon
+
+
+// ----------------------------------------------------
+//   ICON SIZES
+// ----------------------------------------------------
+    // base16
+    @each $size-suffix, $size in $icon-base16-size-config {
+        .icon-#{$size-suffix} {
+            @include icon-size($size-suffix, 'base16');
+        }
+    }
+
+    // base24
+    @each $size-suffix, $size in $icon-base24-size-config {
+        .icon-#{$size-suffix}[class*="icon-twfr-"] {
+            @include icon-size($size-suffix, 'base24');
+        }
+    }
+
+
+// ----------------------------------------------------
+//   ICON GLYPHS
+// ----------------------------------------------------
+    @include ws-icon-glyphs-main();
+    @include ws-icon-glyphs-doctype();
+
+
+// ----------------------------------------------------
+//   COLOR PICKER "NONE" OVERLAY
+//
+//   https://github.com/Workiva/web-skin/issues/1279
+//
+//   Intended for use alongside the following icons:
+//     > `icon-fill-color`
+//     > `icon-text-color`
+//     > `icon-draw-border-color`
+//     > `icon-highlighter`
+//
+//   ---------------
+//
+//   Sample markup:
+//
+//   <div class="btn-group btn-group-split">
+//      <div role="button" class="btn btn-white no-text btn--color-picker--none">
+//          <i class="icon icon-fill-color color-picker--glyph">...</i>
+//          <i class="icon icon-color-picker-none icon-color">...</i>
+//      </div>
+//      Dropdown button goes here
+//   </div>
+//
+//   ---------------
+//
+//   [1] Remove color indication from icon glyph
+//       > `!important` used to override any inline
+//         styling applied via dynamic dart componentry
+//
+//   [2] Override `.btn .icon` positioning defaults
+//
+//   [3] Inherit background color from parent button
+//       in all states like `:hover`, `:active`, etc.
+//
+//   [4] Override default icon size so that the circle
+//       bg is not the full 16px.
+//
+//   [5] Presence of this class on the parent `.btn`
+//       element causes "none" icon glyph to become
+//       visible.
+// ----------------------------------------------------
+    .btn--color-picker--none {
+        .color-picker--glyph {
+            &:before,
+            &:after {
+                color: inherit !important; // [1]
+            }
+        }
+    }
+
+    .icon-color-picker-none {
+        display: none;
+        position: absolute;
+        top: auto !important;  // [2]
+        bottom: 0;
+        right: 0;
+        left: auto !important; // [2]
+        margin: 0 !important;  // [2]
+        background-color: inherit; // [3]
+        border-radius: 50%;
+
+        // ----- [4] ----- //
+        &,
+        &:before {
+            padding: 0;
+            margin-left: -.1rem;
+            margin-top: -.1rem;
+            width: 1.3rem;
+            height: 1.3rem;
+        }
+
+        // ----- [5] ----- //
+        .btn--color-picker--none & {
+            display: block;
+        }
+    }

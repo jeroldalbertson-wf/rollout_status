@@ -1,0 +1,43 @@
+// ********************************************************
+//
+//   CARDS STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/cards';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $cards-module-config:  'core/components/atoms/cards/cards-config';
+    $cards-module-helpers: 'core/components/atoms/cards/cards-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $cards-module-config,
+                                          $cards-module-helpers);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Card Styles
+// ----------------------------------------------------
+    @import 'card-resets';
+    @import 'card-structure';
+    @import 'card-variations';
+    @import 'card-invisible-list';
+    @import 'card-skins';
+    @import 'card-tasking';
+
+
+// ----------------------------------------------------
+//   Components Nested Within Cards
+// ----------------------------------------------------
+    @import 'card-with-list-groups';
+    @import 'card-with-tables';
+
+
+// ----------------------------------------------------
+//   Card Layouts
+// ----------------------------------------------------
+    @import 'card-layout';

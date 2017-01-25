@@ -1,0 +1,188 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/dialogs/dialogs-shared';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $dialogs-shared-module-config:  'core/components/atoms/dialogs/dialogs-shared-config';
+    $dialogs-shared-module-helpers: 'core/components/atoms/dialogs/dialogs-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $dialogs-shared-module-config,
+                                          $dialogs-shared-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   SHARED DIALOG CONTAINER STYLES
+//
+//   -> `.modal`
+//      + Used for WSR `<Modal>`
+//      + Only one can be open at a time
+//      + Dark backdrop
+//      + Fixed positioning
+//      + Kills scroll and clickability of app surface
+//
+//   -> `.dialog-floating-wrapper`
+//      + Used for WSR `<Dialog>`
+//      + More than one can be open at a time
+//      + No backdrop, lighter shadow / border
+//      + No positioning - the fixed/abs positioning
+//        is added to the child `.modal-dialog`
+//
+// ********************************************************
+.modal,
+.dialog-floating-wrapper {
+    display: none;
+    outline: 0;
+
+    // ----------------------------------------------------
+    //   Slide entry option for dialogs
+    // ----------------------------------------------------
+    &.slide {
+        display: block;
+        visibility: hidden;
+
+        &.in {
+            visibility: visible;
+        }
+
+        @include slide(down, $start: -25%, $child-selector: '.modal-dialog', $positioning: false);
+    }
+
+    &.fade {
+        display: block;
+        visibility: hidden;
+
+        &.in {
+            visibility: visible;
+        }
+    }
+
+    &:not(.slide):not(.fade) {
+        // Dialog without a CSS transition is being used... show it when the `in` class is present
+        &.in {
+            display: block;
+            visibility: visible;
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   COMPONENT NESTING WITHIN DIALOGS
+//
+// ********************************************************
+.modal,
+.dialog-floating-wrapper {
+    // ----------------------------------------------------
+    //   Session timeout form legend styling
+    // ----------------------------------------------------
+    form legend {
+        margin-bottom: get($form-config, 'legend-margin-bottom') / 2;
+        border: 0 none;
+    }
+
+    // ----------------------------------------------------
+    //   Product tour pattern nests a `.carousel`
+    // ----------------------------------------------------
+    .carousel {
+        margin-left:  to-rem($modal-content-padding) * -1 !important;
+        margin-right: to-rem($modal-content-padding) * -1 !important;
+    }
+}
+
+
+
+// ********************************************************
+//
+//   POPOVER / TOOLTIP ARROW SHARED STYLES
+//
+//   .arrow        => outer (border color)
+//   .arrow:after  => inner (bg color)
+//
+// ********************************************************
+.arrow {
+    position: absolute;
+    z-index: 1; // keep below .inner
+    width: 0;
+    height: 0;
+
+    &:after {
+        position: absolute;
+        content: " ";
+    }
+}
+
+
+// ********************************************************
+//
+//   POPOVER / TOOLTIP ARROW ALIGNMENT VARIATIONS
+//
+//   Instead of center-aligning the arrow along the edge
+//   that points to the trigging element, these classes
+//   can be used to align the arrow at the "start" or "end"
+//   of that edge.
+//
+//   See: https://github.com/Workiva/web-skin/issues/1292
+//
+//   When combined with the `.align-overlay-with-trigger-edge`
+//   CSS class, the arrow will align the same way, but no
+//   negative margin will be added to the overlaid element
+//   (e.g. `.tooltip` or `.popover`) to facilitate overlays
+//   that have their edges aligned with the edge of the
+//   trigger.
+//
+//   See: https://jira.atl.workiva.net/browse/UIP-1123
+//
+// ********************************************************
+    .align-arrow-start,
+    .align-arrow-end {
+        // Get rid of margin that is used to center the arrow by default
+        .arrow { margin: 0 !important; }
+    }
+
+    $dialog-components-with-arrows: (
+        'popover': $popover-config,
+        'tooltip': $tooltip-config
+    );
+
+    @each $overlay-placement in $triangle-directions {
+        $start-offset-direction: if(is($overlay-placement, top bottom), left, top);
+        $end-offset-direction:   if(is($overlay-placement, top bottom), right, bottom);
+
+        $tooltip-offset-amount:  get($tooltip-config, 'bd-radius') + (get($tooltip-config, 'arrow-width') / 2);
+
+        @each $dialog-component-name, $dialog-component-config in $dialog-components-with-arrows {
+            $dialog-offset-amount:  get($dialog-component-config, 'bd-radius') + (get($dialog-component-config, 'arrow-width') / 2);
+
+            .#{$dialog-component-name}.#{$overlay-placement}.align-arrow-start {
+                &:not(.align-overlay-with-trigger-edge) {
+                    margin-#{$start-offset-direction}: to-rem($dialog-offset-amount * -1);
+                }
+
+                .arrow {
+                    #{$start-offset-direction}: to-rem(get($dialog-component-config, 'bd-radius'));
+                    #{$end-offset-direction}: auto;
+                }
+            }
+
+            .#{$dialog-component-name}.#{$overlay-placement}.align-arrow-end {
+                &:not(.align-overlay-with-trigger-edge) {
+                    margin-#{$start-offset-direction}: to-rem($dialog-offset-amount);
+                }
+
+                .arrow {
+                    #{$end-offset-direction}: to-rem(get($dialog-component-config, 'bd-radius'));
+                    #{$start-offset-direction}: auto;
+                }
+            }
+        }
+    }

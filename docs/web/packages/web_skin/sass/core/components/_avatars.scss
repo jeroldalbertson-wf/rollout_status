@@ -1,0 +1,144 @@
+// ********************************************************
+//
+//   USER AVATAR COMPONENT STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/avatars';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $avatars-module-config: 'core/components/atoms/avatars/avatars-config';
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $avatars-module-config);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE STYLES
+//
+//   [1] Override <figure> margin from `_normalize.scss`.
+//
+// ********************************************************
+.w-avatar {
+    @include display-flex();
+    @include align-items(center);
+    @include justify-content(center);
+
+    position: relative;
+    margin: 0; // [1]
+    width: get($avatar-config, 'diameter');
+    height: get($avatar-config, 'diameter');
+    border: get($avatar-config, 'bd-width') solid get($avatar-config, 'default-color');
+    color: get($avatar-config, 'default-color');
+    background-color: get($avatar-config, 'default-bg-color');
+    border-radius: 50%;
+    text-align: center;
+    font-size: get($avatar-config, 'font-size');
+}
+
+
+    // ----------------------------------------------------
+    //  USER INITIALS
+    //
+    //  -> Will be overlapped by `.w-avatar__img` if present.
+    //
+    //  [1] Don't change the mouse cursor / text-decoration
+    //      when this class is added to an `<abbr>` element
+    //      as this is just an a11y semantics thing - not
+    //      something we want to necessarily advertise to
+    //      users visually.
+    // ----------------------------------------------------
+    .w-avatar__initials {
+        // ----- [1] ----- //
+        &[title] {
+            cursor: default;
+            border-bottom: none;
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //  OPTIONAL USER IMAGE (assuming user upload)
+    //
+    //  [1] Overlap `.w-avatar__initials`
+    //
+    //  [2] Allow colored border to still show up so that
+    //      "identity" still works for color-coding
+    //      comments, etc.
+    // ----------------------------------------------------
+    .w-avatar__img {
+        position: absolute; // [1]
+        left: 0;
+        top: 0;
+        border-radius: 50%;
+        // ----- [2] ----- //
+        width: 100%;
+        height: 100%;
+        border: get($avatar-config, 'bd-width') solid get($avatar-config, 'default-bg-color');
+    }
+
+
+    // ----------------------------------------------------
+    //  OPTIONAL BADGE
+    //
+    //  -> Typically used to indicate a count of something
+    //     that is associated with that user.
+    //     (e.g. the number of comments)
+    //
+    //  [1] Override default `.badge` margin.
+    //
+    //  [2] Modifier class that should be applied when the
+    //      badge is displaying a number that has 3+ digits.
+    // ----------------------------------------------------
+    .w-avatar__badge {
+        position: absolute;
+        margin: 0; // [1]
+        bottom: get($avatar-badge-config, 'offset-bottom');
+        right: 100%;
+        margin-right: get($avatar-badge-config, 'offset-right');
+        min-height: get($avatar-badge-config, 'min-height');
+        line-height: get($avatar-badge-config, 'min-height');
+        padding: get($avatar-badge-config, 'padding-vertical') get($avatar-badge-config, 'padding-right') get($avatar-badge-config, 'padding-vertical') get($avatar-badge-config, 'padding-left');
+        font-size: get($avatar-badge-config, 'font-size');
+
+        // ----- [2] ----- //
+        @at-root .w-avatar__badge--hundreds {
+            margin-right: get($avatar-badge-config, 'offset-right') * 2;
+        }
+    }
+
+
+
+// ********************************************************
+//
+//  SIZE VARIATIONS
+//
+//  [1] Always align large avatars horizontally centered
+//      within their containers.
+//
+// ********************************************************
+.w-avatar--lg {
+    margin: auto; // [1]
+    width: get($avatar-config, 'diameter-lg');
+    height: get($avatar-config, 'diameter-lg');
+    border-width: get($avatar-config, 'bd-width-lg');
+    font-size: get($avatar-config, 'font-size-lg');
+}
+
+
+
+// ********************************************************
+//
+//  SKIN VARIATIONS
+//
+// ********************************************************
+@each $skin-name, $skin-color in $avatar-skin-colors {
+    .w-avatar--#{$skin-name} {
+        border-color: $skin-color;
+        color: $skin-color;
+    }
+}

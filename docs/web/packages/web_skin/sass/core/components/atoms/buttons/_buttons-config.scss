@@ -1,0 +1,260 @@
+// ********************************************************
+
+////
+/// Button component configuration
+/// ---
+/// @access public
+/// @group core.components.buttons
+/// @link http://bit.ly/webskin-buttons Button component spec
+/// @link http://bit.ly/webskin-button-sizes Button component size variation spec
+/// @link http://bit.ly/webskin-btn-colors Button component color option spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/buttons/buttons-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   INDIVIDUAL [PRIVATE] BUTTON CONFIGS
+//
+// ********************************************************
+    @import 'config/button-size-config';
+    @import 'config/button-color-config';
+    @import 'config/button-outline-color-config';
+
+
+
+// ********************************************************
+//
+//   GLOBAL [PUBLIC] BUTTON CONFIG
+//
+// ********************************************************
+    ///
+    /// Global configuration for `.btn` components.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @todo Write unit test(s) that asserts that all keys within `$btn-sizes` are represented here
+    /// @todo Write unit test that asserts that `shadow-depth` equals `bd-width`
+    /// @todo Write unit test that asserts that `dd-menu-spacing` is equal to `bd-width * 2`
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {function} extend
+    /// @requires {variable} $font-family-base
+    /// @requires {variable} $btn-colors
+    /// @requires {variable} $btn-inner-height-config
+    /// @requires {variable} $btn-text-height-config
+    /// @requires {variable} $btn-icon-sizes
+    /// @requires {variable} $btn-caret-top-margins
+    /// @requires {variable} $caret-only-btn-widths
+    /// @requires {variable} $caret-size-config
+    /// @requires {variable} $global-component-size-config
+    /// @requires {variable} $global-component-bd-width
+    /// @requires {variable} $disabled-alpha-default
+    /// @requires {variable} $spacing-xs
+    /// ---
+    /// @see {variable} font-size-variation-config
+    /// @see {variable} line-height-variation-config
+    /// @see {variable} global-component-padding-config
+    /// @see {variable} global-component-bd-radius-config
+    /// @see {variable} global-component-height-config
+    /// @see {variable} btn-inner-height-config
+    /// @see {variable} btn-text-height-config
+    /// @see {variable} btn-icon-sizes
+    /// @see {variable} btn-caret-top-margins
+    /// @see {variable} caret-component-halign-margins
+    /// @see {variable} caret-only-btn-widths
+    /// @see {function} btn-group-prevent-double-border-selectors
+    /// ---
+    /// @prop {Number} bd-width     [1px] - Default border width
+    /// @prop {Number} shadow-depth [1px] - Default amount of "punchable" shadow
+    /// @prop {List}   font-family  [$font-family-base] - Default font stack
+    /// @prop {String} font-weight  [normal] - Default font weight
+    ///
+    /// @prop {Map}    font-size                - `$font-size-variation-config` map containing `base`, `xs`, `sm`, `md` and `lg` keys with corresponding `font-size` values
+    /// @prop {Map}    line-height              - `$line-height-variation-config` map containing `base-px`, `base`, `xs`, `sm`, `md` and `lg` keys with corresponding `line-height` values
+    /// @prop {Map}    padding                  - `$global-component-padding-config` map containing `base`, `xs`, `sm` and `lg` keys with corresponding maps of `vertical`, `horizontal` and `all` `padding` values
+    /// @prop {Map}    bd-radius                - `$global-component-bd-radius-config` map containing `base`, `xs`, `sm` and `lg` keys with corresponding `border-radius` values
+    /// @prop {Map}    height                   - `$global-component-height-config` map containing `base`, `xs`, `sm` and `lg` keys with corresponding calculated `height` values
+    /// @prop {Map}    height-inner             - `$btn-inner-height-config` map containing `base`, `xs`, `sm` and `lg` keys with corresponding calculated "inner" `height` values
+    /// @prop {Map}    height-text              - `$btn-text-height-config` map containing `base`, `xs`, `sm` and `lg` keys with corresponding calculated "text" `height` values
+    /// @prop {Map}    icon                     - `$btn-icon-sizes` config map with values for `.icon` components nested within buttons
+    /// @prop {List}   available-icon-sizes     - List of icon sizes that will fit within buttons
+    /// @prop {Map}    caret-top-offset         - `$btn-caret-top-margins` config map with top offset values used to vertically center for `.caret` components nested within buttons
+    /// @prop {Map}    caret-horizontal-offset  - `$caret-component-halign-margins` config map with horizontal offset values used to keep a `.caret` elem within component size variations from being flush with the component's label text
+    /// @prop {Map}    caret-only-btn-widths    - `$caret-only-btn-widths` config map with calculated widths of `.btn` components that only have a `.caret` elem within it
+    ///
+    /// @prop {Map}    state-colors             - `$btn-colors` config map used in button state variations
+    ///
+    /// @prop {Number} dd-menu-spacing [2px]    - Amount of space between `.dropdown-menu` components adjacent to their toggling `.btn`
+    /// @prop {Number} disabled-alpha  [.45]    - Opacity used in a disabled `.btn` component
+    ///
+    /// @prop {Map}     group-prevent-double-bd-selectors - Map of all the selectors used to prevent double borders from rendering between children of a `.btn-group`
+    /// @prop {String}  group-prevent-double-bd-selectors.adjacent-btns         ['> .btn:not(.btn-link) + .btn:not(.btn-link)'] - Selector used to prevent double borders between two `.btn` elems within a `.btn-group`
+    /// @prop {String}  group-prevent-double-bd-selectors.adjacent-btn-groups   ['> .btn-group + .btn-group']   - Selector used to prevent double borders between two child `.btn-group` elems within a parent `.btn-group`
+    /// @prop {String}  group-prevent-double-bd-selectors.btn-group-after-btn   ['> .btn + .btn-group']         - Selector used to prevent double borders between a child `.btn-group` immediately following a `.btn` elem within a parent `.btn-group`
+    /// @prop {String}  group-prevent-double-bd-selectors.btn-after-btn-group   ['> .btn-group + .btn:not(.btn-link)']         - Selector used to prevent double borders between a child `.btn` immediately following a `.btn-group` elem within a parent `.btn-group`
+    ///
+    /// @prop {Number} vertical-label-font-size         [1rem]      - Font size value for a`.btn-label-sm` element within a `.btn-vertical` element
+    /// @prop {Number} vertical-label-line-height       [1.4rem]    - Line height value for a`.btn-label-sm` element within a `.btn-vertical` element
+    /// @prop {Number} vertical-label-margin-top        [4px]       - Amount of margin used to separate adjacent `.icon` and `.btn-label-sm` elements within `.btn-vertical` elements
+    /// @prop {Number} vertical-dd-normalize            [3px]       - Amount of differential used to ensure that all variations of a `.btn-vertical.dropdown-toggle` are the same height, with vertically aligned labels, icons and carets. Variations include standard, and split.
+    /// @prop {Number} vertical-dd-caret-margin-left    [4px]       - Amount of margin used to separate adjacent `.btn-label-sm` and `.caret` elements within `.btn-vertical.dropdown-toggle` elements
+    ///
+    /// @prop {Number} dd-toggle-pad-reduce [.65] - Used to calculate the reduced amount of padding the adjacent edges in a separated dropdown toggle button have
+    ///
+    /// @prop {Number} dd-toggle-padding-horizontal     [8px]  - Calculated amount of horizontal padding for split-button dropdown toggles. _Added via `@extend`_
+    /// @prop {Number} dd-toggle-padding-lg-horizontal  [10px] - Calculated amount of horizontal padding for split-button dropdown toggles in a `lg` button size variation. _Added via `@extend`_
+    /// @prop {Number} dd-toggle-padding-xs-horizontal  [4px]  - Calculated amount of horizontal padding for split-button dropdown toggles in a `xs` button size variation. _Added via `@extend`_
+    ///
+    /// @prop {Number} dd-toggle-vertical-line-height           [5px]  - Line height for vertical split-button dropdown toggles
+    /// @prop {Number} dd-toggle-vertical-line-height-xs        [4px]  - Line height for vertical split-button dropdown toggles in a `xs` button size variation
+    /// @prop {Number} dd-toggle-vertical-padding-top           [4px]  - Calculated amount of top padding for vertical split-button dropdown toggles. _Added via `@extend`_
+    /// @prop {Number} dd-toggle-vertical-padding-bottom        [1px]  - Calculated amount of bottom padding for vertical split-button dropdown toggles. _Added via `@extend`_
+    /// @prop {Number} dd-toggle-vertical-padding-lg-top        [10px] - Calculated amount of top padding for vertical split-button dropdown toggles in a `lg` button size variation. _Added via `@extend`_
+    /// @prop {Number} dd-toggle-vertical-padding-xs-top        [3px]  - Calculated amount of top padding for vertical split-button dropdown toggles in a `xs` button size variation. _Added via `@extend`_
+    /// @prop {Number} dd-toggle-ribbon-nav-vertical-height     [10px] - Calculated height of the dropdown-toggle button within a vertical split-button group nested within a Tabbed Toolbar [`.nav-ribbon`].  Used to ensure that vertical split button groups align vertically with their non-split adjacent siblings. _Added via `@extend`_
+    ///
+    $btn-config: (
+        'bd-width':     $global-component-bd-width,
+        'shadow-depth': $global-component-bd-width,
+        'font-family':  $font-family-base,
+        'font-weight':  normal,
+        'font-size':    get($global-component-size-config, 'font-size'),
+        'line-height':  get($global-component-size-config, 'line-height'),
+        'padding':      get($global-component-size-config, 'padding'),
+        'bd-radius':    get($global-component-size-config, 'bd-radius'),
+        'height':       get($global-component-size-config, 'height'),
+        'height-inner': $btn-inner-height-config,
+        'height-text':  $btn-text-height-config,
+        // icons
+        'icon': $btn-icon-sizes,
+        'available-icon-sizes': 'base' 'md' 'lg',
+        // carets
+        'caret-top-offset': $btn-caret-top-margins,
+        'caret-horizontal-offset': $caret-component-halign-margins,
+        'caret-only-btn-widths': $caret-only-btn-widths,
+        // color config
+        'state-colors': $btn-colors,
+        // misc
+        'dd-menu-spacing': $global-component-bd-width + 1px,
+        'disabled-alpha': $disabled-alpha-default,
+        // btn group stuff
+        'group-prevent-double-bd-selectors': (
+            'adjacent-btns': '> .btn:not(.btn-link) + .btn:not(.btn-link)',
+            'adjacent-btn-groups': '> .btn-group + .btn-group',
+            'btn-group-after-btn': '> .btn + .btn-group',
+            'btn-after-btn-group': '> .btn-group + .btn:not(.btn-link)'
+        ),
+        // vertical buttons
+        'vertical-label-font-size': 1rem,
+        'vertical-label-line-height': 1.4rem,
+        'vertical-label-margin-top': 4px,
+        'vertical-dd-normalize': $spacing-xs,
+        'vertical-dd-caret-margin-left': 4px,
+        // split button dropdowns
+        'dd-toggle-pad-reduce': .65,
+        'dd-toggle-padding-horizontal': null,    // calculated value added via @extend
+        'dd-toggle-padding-lg-horizontal': null, // calculated value added via @extend
+        'dd-toggle-padding-xs-horizontal': null, // calculated value added via @extend
+        // vertical split button dropdowns
+        'dd-toggle-vertical-line-height': get-deep($caret-size-config, 'base.height'),
+        'dd-toggle-vertical-line-height-xs': get-deep($caret-size-config, 'sm.height'),
+        'dd-toggle-vertical-padding-top': null,    // calculated value added via @extend
+        'dd-toggle-vertical-padding-bottom': null, // calculated value added via @extend
+        'dd-toggle-vertical-padding-lg-top': null, // calculated value added via @extend
+        'dd-toggle-vertical-padding-xs-top': null, // calculated value added via @extend
+        'dd-toggle-ribbon-nav-vertical-height': null // calculated value added via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $btn-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $btn-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        // split buttons
+        $btn-dd-toggle-padding-reduce: get($btn-config, 'dd-toggle-pad-reduce');
+        $btn-dd-toggle-padding-horizontal:    round($btn-dd-toggle-padding-reduce * get-deep($btn-config, 'padding.base.horizontal'));
+        $btn-lg-dd-toggle-padding-horizontal: round($btn-dd-toggle-padding-reduce * get-deep($btn-config, 'padding.lg.horizontal'));
+        $btn-xs-dd-toggle-padding-horizontal: round($btn-dd-toggle-padding-reduce * get-deep($btn-config, 'padding.xs.horizontal')) - 1;
+        // vertical split buttons
+        $btn-split-vertical-dd-toggle-padding-top:    round($btn-dd-toggle-padding-horizontal / 2);
+        $btn-split-vertical-dd-toggle-padding-bottom: $btn-split-vertical-dd-toggle-padding-top - get($btn-config, 'vertical-dd-normalize');
+        $btn-split-vertical-lg-dd-toggle-padding-top: round($btn-lg-dd-toggle-padding-horizontal / 2);
+        $btn-split-vertical-xs-dd-toggle-padding-top: round($btn-xs-dd-toggle-padding-horizontal / 2);
+        $btn-split-vertical-dd-toggle-ribbon-nav-height: ($btn-split-vertical-dd-toggle-padding-top + $btn-split-vertical-dd-toggle-padding-bottom) + get($btn-config, 'dd-toggle-vertical-line-height');
+
+        // ----- EXTEND btn config with calc'd values ----- //
+        $btn-config: extend($btn-config,
+            (
+                'dd-toggle-padding-horizontal': $btn-dd-toggle-padding-horizontal,
+                'dd-toggle-padding-lg-horizontal': $btn-lg-dd-toggle-padding-horizontal,
+                'dd-toggle-padding-xs-horizontal': $btn-xs-dd-toggle-padding-horizontal,
+                'dd-toggle-vertical-padding-top': $btn-split-vertical-dd-toggle-padding-top,
+                'dd-toggle-vertical-padding-bottom': $btn-split-vertical-dd-toggle-padding-bottom,
+                'dd-toggle-vertical-padding-lg-top': $btn-split-vertical-lg-dd-toggle-padding-top,
+                'dd-toggle-vertical-padding-xs-top': $btn-split-vertical-xs-dd-toggle-padding-top,
+                'dd-toggle-ribbon-nav-vertical-height': $btn-split-vertical-dd-toggle-ribbon-nav-height
+            )
+        );
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED BUTTON CONFIG ALIASES
+//
+// ********************************************************
+    $btn-vertical-sm-label-offset-top: get($btn-config, 'vertical-label-margin-top'); // TODO: Remove in 2.0.0
+    $btn-hover-focus-selectors: '#{$link-hover-focus}, &#{$focus-class}, &#{$focus-class}:hover';
+    $btn-focus-only-selectors: '#{$focus}, &#{$focus-class}, &#{$focus-class}:hover';
+    $btn-pressed-active-selectors: '#{$link-pressed}, &.active, &.active:hover, .open > &.dropdown-toggle';
+    $btn-disabled-selectors: '&.disabled, &[disabled]';
+
+    $btn-bd-width:     get($btn-config, 'bd-width');
+    $btn-punch-depth:  get($btn-config, 'shadow-depth');
+    $btn-text-base:    get($btn-colors-default, 'text-base');
+    $btn-text-hover:   get($btn-colors-default, 'text-hover');
+    $btn-text-press:   get($btn-colors-default, 'text-press');
+    $btn-bd-base:      get($btn-colors-default, 'bd-base');
+    $btn-shadow-base:  get($btn-colors-default, 'shadow-base');
+    $btn-bd-hover:     get($btn-colors-default, 'bd-hover');
+    $btn-shadow-hover: get($btn-colors-default, 'shadow-hover');
+    $btn-bd-press:     get($btn-colors-default, 'bd-press');
+    $btn-shadow-press: get($btn-colors-default, 'shadow-press');
+
+
+    // ----- Stuff for .btn-vertical label / icon / caret placement ----- //
+    $btn-padding-top-rem: to-rem(get-deep($btn-config, 'padding.base.vertical'));
+    $btn-bd-width-rem: to-rem(get($btn-config, 'bd-width'));
+    $btn-vertical-label-margin-top-rem: to-rem(get($btn-config, 'vertical-label-margin-top'));
+    $btn-vertical-label-line-height: get($btn-config, 'vertical-label-line-height');
+    // Amount of negative offset that would be necessary to align the icon flush to the top of the button
+    $btn-vertical-icon-align-flush-top: ($btn-padding-top-rem + $btn-bd-width-rem) * -1;
+    $btn-vertical-icon-top-offset: $btn-vertical-icon-align-flush-top + $btn-vertical-label-margin-top-rem;
+    // Amount of negative offset that would be necessary to align the label flush to the bottom edge of the icon
+    $btn-vertical-label-align-flush-top: $btn-vertical-icon-top-offset;
+    $btn-vertical-label-align-adjustment: .2rem;
+    $btn-vertical-label-top-offset: $btn-vertical-label-align-flush-top + $btn-vertical-label-margin-top-rem - $btn-vertical-label-align-adjustment;
+    // Amount of bottom offset that would be necessary to align the caret flush to thte top edge of the .btn-label-sm
+    $btn-vertical-caret-align-flush-to-label-top: $btn-padding-top-rem + $btn-vertical-label-line-height + abs($btn-vertical-icon-top-offset) + $btn-vertical-label-align-adjustment;
+    $btn-vertical-caret-valign-with-label: ($btn-vertical-label-line-height - to-rem($caret-sm-height / 2));
+    $btn-vertical-caret-bottom-offset: $btn-vertical-caret-align-flush-to-label-top - $btn-vertical-caret-valign-with-label;

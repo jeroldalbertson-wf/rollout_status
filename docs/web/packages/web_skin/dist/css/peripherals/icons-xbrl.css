@@ -1,0 +1,529 @@
+@charset "UTF-8";
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for XBRL Icons
+ * ---
+ * MSIE Support: 10+
+ * Touch UI Support: false
+ * ---
+ * Requires
+ *   web-skin v1.14.0 Core CSS
+ *   XBRL webfont (static/fonts/icons/Wdesk_Icons_Xbrl.*)
+ * ---
+ * Copyright © 2017 Workiva
+ * -------------------------------------
+ */
+@font-face {
+  font-family: "Wdesk_Icons_Xbrl";
+  src: url("../../fonts/icons/Wdesk_Icons_Xbrl.woff") format("woff"), url("../../fonts/icons/Wdesk_Icons_Xbrl.ttf") format("truetype");
+  font-weight: false;
+  font-style: false;
+}
+
+.icon[class*="icon-xbrl"], .icon[class*="icon-twfr-xbrl"] {
+  font-family: "Wdesk_Icons_Xbrl";
+}
+
+.icon-xbrl-ixbrl:before {
+  content: "\e900";
+}
+
+.icon-xbrl-ixbrl.icon-two-color:after {
+  content: "\e9ac";
+  color: #66cc00 !important;
+}
+
+.icon-xbrl-hypercube:before {
+  content: "\e901";
+}
+
+.icon-xbrl-hypercube.icon-color:before {
+  color: #0094ff;
+}
+
+.icon-xbrl-axis-defaults:before {
+  content: "\e902";
+}
+
+.icon-xbrl-axis-defaults.icon-two-color:after {
+  content: "\e987";
+  color: #0094ff !important;
+}
+
+.icon-xbrl-data-quality-error:before {
+  content: "\e903";
+}
+
+.icon-xbrl-data-quality-error.icon-color:before {
+  color: #ee2724;
+}
+
+.icon-xbrl-error:before {
+  content: "\e904";
+}
+
+.icon-xbrl-error.icon-color:before {
+  color: #ee2724;
+}
+
+.icon-xbrl-data-quality-informational:before {
+  content: "\e905";
+}
+
+.icon-xbrl-data-quality-informational.icon-color:before {
+  color: #026dce;
+}
+
+.icon-xbrl-informational:before {
+  content: "\e907";
+}
+
+.icon-xbrl-informational.icon-color:before {
+  color: #026dce;
+}
+
+.icon-xbrl-data-quality-warning:before {
+  content: "\e908";
+}
+
+.icon-xbrl-data-quality-warning.icon-color:before {
+  color: #fbad17;
+}
+
+.icon-xbrl-warning:before {
+  content: "\e909";
+}
+
+.icon-xbrl-warning.icon-color:before {
+  color: #fbad17;
+}
+
+.icon-xbrl-concept-removal:before {
+  content: "\e90a";
+}
+
+.icon-xbrl-concept-removal.icon-two-color:after {
+  content: "\e988";
+  color: #f26c21 !important;
+}
+
+.icon-xbrl-export-taxonomy:before {
+  content: "\e90b";
+}
+
+.icon-xbrl-export-taxonomy.icon-two-color:after {
+  content: "\e98a";
+  color: #0094ff !important;
+}
+
+.icon-xbrl-validate-outline:before {
+  content: "\e90c";
+}
+
+.icon-xbrl-validate-outline.icon-two-color:after {
+  content: "\e98c";
+  color: #66cc00 !important;
+}
+
+.icon-xbrl-filter:before {
+  content: "\e90d";
+}
+
+.icon-xbrl-filter.icon-two-color:after {
+  content: "\e98b";
+  color: #0094ff !important;
+}
+
+.icon-xbrl-tooltip:before {
+  content: "\e910";
+}
+
+.icon-xbrl-doc-setting:before {
+  content: "\e911";
+}
+
+.icon-xbrl-doc-setting.icon-two-color:after {
+  content: "\e989";
+  color: #0094ff !important;
+}
+
+.icon-xbrl-project-refresh:before {
+  content: "\e906";
+}
+
+.icon-xbrl-project-refresh.icon-two-color:after {
+  content: "\e90e";
+  color: #66cc00 !important;
+}
+
+.icon-xbrl-flagged-sign:before {
+  content: "\e6c9";
+}
+
+.icon-xbrl-replace-extension:before {
+  content: "\e628";
+}
+
+.icon-xbrl-replace-extension.icon-two-color:after {
+  content: "\e64b";
+  color: #0094ff !important;
+}
+
+.icon-xbrl-mixed-sign:before {
+  content: "\e6ca";
+}
+
+.icon-xbrl-concept-extension:before {
+  content: "\e70c";
+}
+
+.icon-xbrl-concept-extension.icon-two-color:before {
+  color: #0094ff;
+}
+
+.icon-xbrl-concept-extension.icon-two-color:after {
+  content: "\e664";
+  color: #fbad17 !important;
+}
+
+.icon-xbrl-concept:before {
+  content: "\e70d";
+}
+
+.icon-xbrl-concept.icon-color:before {
+  color: #0094ff;
+}
+
+.icon-xbrl-member-extension:before {
+  content: "\e70e";
+}
+
+.icon-xbrl-member-extension.icon-two-color:before {
+  color: #0094ff;
+}
+
+.icon-xbrl-member-extension.icon-two-color:after {
+  content: "\e664";
+  color: #fbad17 !important;
+}
+
+.icon-xbrl-member:before {
+  content: "\e70f";
+}
+
+.icon-xbrl-member.icon-color:before {
+  color: #0094ff;
+}
+
+.icon-xbrl-outline-abstract-extension:before {
+  content: "\e710";
+}
+
+.icon-xbrl-outline-abstract-extension.icon-two-color:before {
+  color: #0094ff;
+}
+
+.icon-xbrl-outline-abstract-extension.icon-two-color:after {
+  content: "\e664";
+  color: #fbad17 !important;
+}
+
+.icon-xbrl-outline-abstract:before {
+  content: "\e711";
+}
+
+.icon-xbrl-outline-abstract.icon-color:before {
+  color: #0094ff;
+}
+
+.icon-xbrl-outline-axis-extension:before {
+  content: "\e712";
+}
+
+.icon-xbrl-outline-axis-extension.icon-two-color:before {
+  color: #0094ff;
+}
+
+.icon-xbrl-outline-axis-extension.icon-two-color:after {
+  content: "\e664";
+  color: #fbad17 !important;
+}
+
+.icon-xbrl-outline-axis:before {
+  content: "\e713";
+}
+
+.icon-xbrl-outline-axis.icon-color:before {
+  color: #0094ff;
+}
+
+.icon-xbrl-outline-domain-extension:before {
+  content: "\e714";
+}
+
+.icon-xbrl-outline-domain-extension.icon-two-color:before {
+  color: #0094ff;
+}
+
+.icon-xbrl-outline-domain-extension.icon-two-color:after {
+  content: "\e664";
+  color: #fbad17 !important;
+}
+
+.icon-xbrl-outline-domain:before {
+  content: "\e715";
+}
+
+.icon-xbrl-outline-domain.icon-color:before {
+  color: #0094ff;
+}
+
+.icon-xbrl-outline-table-extension:before {
+  content: "\e716";
+}
+
+.icon-xbrl-outline-table-extension.icon-two-color:before {
+  color: #0094ff;
+}
+
+.icon-xbrl-outline-table-extension.icon-two-color:after {
+  content: "\e664";
+  color: #fbad17 !important;
+}
+
+.icon-xbrl-outline-table:before {
+  content: "\e717";
+}
+
+.icon-xbrl-outline-table.icon-color:before {
+  color: #0094ff;
+}
+
+.icon-xbrl-blacklines-tab:before {
+  content: "\e720";
+}
+
+.icon-xbrl-compare:before {
+  content: "\e721";
+}
+
+.icon-xbrl-compare.icon-two-color:before {
+  color: #8a8a8a;
+}
+
+.icon-xbrl-compare.icon-two-color:after {
+  content: "\e66a";
+  color: #e3e3e3 !important;
+}
+
+.icon-xbrl-severity-tab:before {
+  content: "\e722";
+  top: -0.05rem;
+}
+
+.icon-xbrl:before {
+  content: "\e723";
+}
+
+.icon-xbrl.icon-two-color:before {
+  color: #595959;
+}
+
+.icon-xbrl.icon-two-color:after {
+  content: "\e66b";
+  color: #acacac !important;
+}
+
+.icon-xbrl-concept-deprecated:before {
+  content: "\e90e";
+}
+
+.icon-xbrl-concept-deprecated.icon-two-color:after {
+  content: "\e901";
+  color: #fff !important;
+}
+
+.icon-xbrl-concept-new:before {
+  content: "\e90f";
+}
+
+.icon-xbrl-concept-new.icon-two-color:before {
+  color: #0094ff;
+}
+
+.icon-xbrl-concept-new.icon-two-color:after {
+  content: "\e900";
+  color: #fff !important;
+}
+
+.icon-twfr-xbrl-concept:before {
+  content: "\e914";
+}
+
+.icon-twfr-xbrl-concept.icon-color:before {
+  color: #0094ff;
+}
+
+.icon-twfr-xbrl-member:before {
+  content: "\e915";
+}
+
+.icon-twfr-xbrl-member.icon-color:before {
+  color: #0094ff;
+}
+
+.icon-twfr-xbrl-outline-axis:before {
+  content: "\e916";
+}
+
+.icon-twfr-xbrl-outline-axis.icon-color:before {
+  color: #0094ff;
+}
+
+.icon-twfr-xbrl-outline-domain:before {
+  content: "\e917";
+}
+
+.icon-twfr-xbrl-outline-domain.icon-color:before {
+  color: #0094ff;
+}
+
+.icon-twfr-xbrl-outline-table:before {
+  content: "\e918";
+}
+
+.icon-twfr-xbrl-outline-table.icon-color:before {
+  color: #0094ff;
+}
+
+.icon-twfr-xbrl-severity-tab:before {
+  content: "\e919";
+}
+
+.icon-twfr-xbrl-filter:before {
+  content: "\e91a";
+}
+
+.icon-twfr-xbrl-filter.icon-two-color:after {
+  content: "\e99a";
+  color: #0094ff !important;
+}
+
+.icon-twfr-xbrl:before {
+  content: "\e912";
+}
+
+.icon-twfr-xbrl.icon-two-color:before {
+  color: #acacac;
+}
+
+.icon-twfr-xbrl.icon-two-color:after {
+  content: "\e994";
+  color: #595959 !important;
+}
+
+.icon-twfr-xbrl-blocktag-add:before {
+  content: "\e997";
+}
+
+.icon-twfr-xbrl-blocktag-add.icon-two-color:after {
+  content: "\e959";
+  color: #66cc00 !important;
+}
+
+.icon-twfr-xbrl-detect:before {
+  content: "\e998";
+}
+
+.icon-twfr-xbrl-detect.icon-two-color:after {
+  content: "\e95a";
+  color: #0094ff !important;
+}
+
+.icon-twfr-xbrl-label-sync:before {
+  content: "\e999";
+}
+
+.icon-twfr-xbrl-label-sync.icon-color:before {
+  color: #0094ff;
+}
+
+.icon-twfr-xbrl-locate:before {
+  content: "\e99a";
+}
+
+.icon-twfr-xbrl-locate.icon-two-color:after {
+  content: "\e95b";
+  color: #66cc00 !important;
+}
+
+.icon-twfr-xbrl-settings-advanced:before {
+  content: "\e99b";
+}
+
+.icon-twfr-xbrl-settings-advanced.icon-two-color:after {
+  content: "\e95c";
+  color: #0094ff !important;
+}
+
+.icon-twfr-xbrl-project-refresh:before {
+  content: "\e913";
+}
+
+.icon-twfr-xbrl-project-refresh.icon-two-color:after {
+  content: "\e916";
+  color: #66cc00 !important;
+}
+
+.icon.icon-project-refresh-xbrl, .icon.icon-twfr-project-refresh-xbrl, .icon.icon-tab-xbrl-blacklines, .icon.icon-tab-xbrl-severity {
+  font-family: "Wdesk_Icons_Xbrl";
+}
+
+.icon-project-refresh-xbrl:before {
+  content: "\e906";
+}
+
+.icon-project-refresh-xbrl.icon-two-color:after {
+  content: "\e90e";
+  color: #66cc00 !important;
+}
+
+.icon-tab-xbrl-blacklines:before {
+  content: "\e720";
+}
+
+.icon-tab-xbrl-severity:before {
+  content: "\e722";
+  top: -0.05rem;
+}
+
+.icon-twfr-project-refresh-xbrl:before {
+  content: "\e913";
+}
+
+.icon-twfr-project-refresh-xbrl.icon-two-color:after {
+  content: "\e916";
+  color: #66cc00 !important;
+}
+
+.icon-xbrl-analyzer-taxonomy-off:before {
+  content: "\e900";
+  font-family: "Wdesk_Icons" !important;
+}
+
+.icon-xbrl-analyzer-taxonomy-off.icon-two-color:after {
+  content: "\e985";
+  color: #f26c21 !important;
+}
+
+.icon-xbrl-analyzer-taxonomy-on:before {
+  content: "\e901";
+  font-family: "Wdesk_Icons" !important;
+}
+
+.icon-xbrl-analyzer-taxonomy-on.icon-two-color:after {
+  content: "\e986";
+  color: #66cc00 !important;
+}
+
+/*# sourceMappingURL=icons-xbrl.css.map */

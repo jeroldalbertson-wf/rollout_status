@@ -1,0 +1,13 @@
+// ********************************************************
+//
+//   XXS COMPONENT SIZE STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/shared/xxs-component-size';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+@include xxs-component-sizes();

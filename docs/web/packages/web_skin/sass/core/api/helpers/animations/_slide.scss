@@ -1,0 +1,179 @@
+// ********************************************************
+
+////
+/// Global mixins pertaining to sliding animations
+/// ---
+/// @since 1.0.0
+/// @access public
+/// @group core.animation
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/animations/slide';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function is,
+                                                function get,
+                                                function get-deep);
+//
+// ********************************************************
+
+
+///
+/// Cross-browser reusable slide animation styles.
+/// Will use `translate3d` for browsers that can handle it, and will gracefully degrade use basic CSS positioning for others
+/// ---
+/// @requires {js}       js/core/modernizr           <https://github.com/WebFilings/web-skin/blob/master/dist/js/core/modernizr/modernizr-custom.js>
+/// @requires {external} SassScript/unquote          <http://bit.ly/sass_unquote>
+/// @requires {variable} $default-slide-speed
+/// @requires {variable} $default-slide-delay
+/// ---
+/// @param {String}          $direction                                  - direction the element should move during the slide animation
+/// @param {Bool | Number}   $start              [false]                 - starting CSS position of the element before the slide animation begins. If `false`, will default to `100%` or `-100%` to ensure elems "starts" off-screen
+/// @param {Number}          $finish             [0]                     - finishing CSS position of the element at the conclusion of the slide animation. It is not recommended that this be altered
+/// @param {Number}          $speed              [$default-slide-speed]  - how long the slide animation takes from start to finish
+/// @param {String}          $ease               [ease-out]              - animation easing function to use
+/// @param {Number}          $delay              [$default-slide-delay]  - how long to wait before the slide animation begins
+/// @param {String}          $positoning         [absolute]              - CSS `position` property of the sliding element
+/// @param {String | Bool}   $child-selector     [false]                 - CSS selector for the element to slide. Will default to the element this mixin is included within
+/// @param {String}          $finish-selector    ['.in']                 - CSS selector used to trigger the animation when it is added to the elem
+///
+@mixin slide($direction,
+             $start: false,
+             $finish: 0,
+             $speed: $default-slide-speed,
+             $ease: linear,
+             $delay: $default-slide-delay,
+             $positioning: absolute,
+             $child-selector: false,
+             $finish-selector: '.in'
+            )
+{
+    $positioning: if($positioning != false, unquote($positioning), $positioning);
+
+    // set $start if no $start value was explicitly set
+    @if not $start {
+        @if is($direction, down right) {
+            // if it is down or to the right, start with negative value
+            $start: -100%;
+        } @else {
+            // if it is up or to the left, start with positive value
+            $start: 100%;
+        }
+    }
+
+    $translate-axis: if(is($direction, up down), y, x);
+    $translate-x-start: if($translate-axis == x, $start, 0);
+    $translate-y-start: if($translate-axis == y, $start, 0);
+
+    // map direction to css top/right/bottom/left property (for non-3d-transform fallback)
+    $transition-direction: (
+        'down': (
+            'modifier': top,
+            'reset': bottom
+        ),
+        'up': (
+            'modifier': bottom,
+            'reset': top
+        ),
+        'right': (
+            'modifier': left,
+            'reset': right
+        ),
+        'left': (
+            'modifier': if($positioning != relative, right, left),
+            'reset': if($positioning != relative, left, right)
+        )
+    );
+
+    $transition-property-modifier: get-deep($transition-direction, '#{$direction}.modifier');
+    $transition-property-reset: get-deep($transition-direction, '#{$direction}.reset');
+    $transition-value-start: if($translate-axis == x, $translate-x-start, $translate-y-start);
+
+    $selector-start: if($child-selector, $child-selector, '&');
+    $selector-finish: if($child-selector, '#{$finish-selector} #{$child-selector}', $finish-selector);
+
+    #{$selector-start} {
+        @if is-true($positioning) {
+            position: $positioning;
+        }
+        #{$transition-property-modifier}: 0;
+        #{$transition-property-reset}: auto;
+
+        // use more performant 3d transforms for browsers that can handle it
+        @include translate3d($translate-x-start, $translate-y-start, 0);
+        @include experimental-property-and-value(transition, transform $speed $ease $delay);
+
+        // basic css positioning fallback
+        // @requires modernizr
+        .no-csstransforms3d & {
+            #{$transition-property-modifier}: $transition-value-start;
+            #{$transition-property-reset}: auto;
+            @include transition($transition-property-modifier $speed $ease);
+        }
+    }
+
+    &#{$selector-finish} {
+        $translate-x-finish: if($translate-axis == x, $finish, 0);
+        $translate-y-finish: if($translate-axis == y, $finish, 0);
+        $transition-value-finish: if($translate-axis == x, $translate-x-finish, $translate-y-finish);
+
+        // use more performant 3d transforms for browsers that can handle it
+        @include translate3d($translate-x-finish, $translate-y-finish, 0);
+
+        // basic css positioning fallback
+        // @requires modernizr
+        .no-csstransforms3d & {
+            #{$transition-property-modifier}: abs($transition-value-finish);
+            #{$transition-property-reset}: auto;
+        }
+    }
+}
+
+
+///
+/// Reusable styles for a sliding animation that slides from top to bottom
+/// ---
+/// @param {String} $positon [absolute]  - CSS `position` property of the sliding element
+/// @param {Number} $finish  [0]         - Finishing CSS position of the element at the conclusion of the slide animation
+///
+@mixin slide-down($position: absolute, $finish: 0) {
+    @include slide(down, $positioning: $position, $finish: $finish);
+}
+
+
+///
+/// Reusable styles for a sliding animation that slides from bottom to top
+/// ---
+/// @param {String} $positon [absolute]  - CSS `position` property of the sliding element
+/// @param {Number} $finish  [0]         - Finishing CSS position of the element at the conclusion of the slide animation
+///
+@mixin slide-up($position: absolute, $finish: 0) {
+    @include slide(up, $positioning: $position, $finish: abs($finish) * -1);
+}
+
+
+///
+/// Reusable styles for a sliding animation that slides from right to left
+/// ---
+/// @param {String} $positon [absolute]  - CSS `position` property of the sliding element
+/// @param {Number} $finish  [0]         - Finishing CSS position of the element at the conclusion of the slide animation
+///
+@mixin slide-left($position: absolute, $finish: 0) {
+    @include slide(left, $positioning: $position, $finish: abs($finish) * -1);
+}
+
+
+///
+/// Reusable styles for a sliding animation that slides from left to right
+/// ---
+/// @param {String} $positon [absolute]  - CSS `position` property of the sliding element
+/// @param {Number} $finish  [0]         - Finishing CSS position of the element at the conclusion of the slide animation
+///
+@mixin slide-right($position: absolute, $finish: 0) {
+    @include slide(right, $positioning: $position, $finish: $finish);
+}

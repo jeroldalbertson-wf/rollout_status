@@ -1,0 +1,26 @@
+// ********************************************************
+//
+//   Wdesk Login Page Alerts
+//
+    $module: 'peripherals/wdesk-login/wdesk-login-alerts';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.container-login .alert-toast {
+    position: absolute; // override default fixed
+}
+
+.login-form-alert-msg-list-wrapper {
+    display: inline-block;
+    margin: 0 auto;
+}
+
+.login-form-alert-msg-list {
+    margin-bottom: 0;
+    // keep it spaced apart from the close button
+    padding-right: $alert-close-btn-width - $alert-padding-horizontal;
+    text-align: left;
+}
+

@@ -1,0 +1,279 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/navs/navbar-options-menu';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+$docs-options-menu-bg: $docs-navbar-bd-color;
+$docs-options-nav-height: 180px;
+
+// basic / advanced "tab" nav
+$tab-nav-width: 175px;
+$tab-nav-offset-top: $docs-spacing-md;
+$tab-nav-item-height: get-deep($btn-config, 'height.sm');
+$tab-nav-item-bd-color: $docs-navbar-collapsing-menu-secondary-link-bg-active;
+$tab-nav-item-bd-width: 1px;
+
+$tab-content-height: $docs-options-nav-height - ($tab-nav-offset-top + $tab-nav-item-height);
+
+.ws-navbar.docs-options {
+    background-color: $docs-options-menu-bg;
+    box-shadow: 0 .1rem 0 rgba($white, .1);
+    z-index: z('fixed-navbar');
+
+    // hidden
+    top: to-rem($docs-navbar-height - $docs-options-nav-height);
+
+    // showing
+    &.in {
+        top: to-rem($docs-navbar-height);
+    }
+
+    .container {
+        min-height: to-rem($docs-options-nav-height);
+    }
+
+    .navbar-nav.nav-blocks {
+        position: relative !important;
+    }
+
+    //
+    // TABBABLE (basic / advanced)
+    //
+    .tabbable {
+        position: relative;
+        > .nav-stripe {
+            position: absolute;
+            left: 0;
+            right: 0;
+            // left: $grid-gutter-width;
+            // right: $grid-gutter-width;
+            top: to-rem($tab-nav-offset-top + ($tab-nav-item-height / 2)); // center so it "strikes" through the pills
+            height: to-rem($tab-nav-item-bd-width);
+            background-color: transparentize($tab-nav-item-bd-color, .8);
+        }
+        > .nav {
+            width: to-rem($tab-nav-width);
+            height: to-rem($tab-nav-item-height);
+            position: relative;
+            top: to-rem($tab-nav-offset-top);
+            left: 50%;
+            margin: 0 0 0 (to-rem(round($tab-nav-width / -2)));
+            border-radius: to-rem($border-radius-base);
+            box-shadow: 0 0 0 .2rem $docs-options-menu-bg;
+
+            > .nav-item {
+                color: inherit;
+
+                > .hitarea {
+                    height: to-rem($tab-nav-item-height) !important;
+                    line-height: 1;
+                    margin: 0;
+                    color: $tab-nav-item-bd-color !important;
+                    background-color: $docs-options-menu-bg !important;
+                    border: to-rem($tab-nav-item-bd-width) solid $tab-nav-item-bd-color;
+                    border-right-width: 0;
+                    border-radius: 0;
+
+                    #{$link-hover-focus} {
+                        background-color: $docs-navbar-collapsing-menu-secondary-link-bg-hover !important;
+                    }
+                }
+
+                &:first-child {
+                    > .hitarea {
+                        @include border-left-radius(to-rem($border-radius-base));
+                    }
+                }
+                &:last-child {
+                    > .hitarea {
+                        @include border-right-radius(to-rem($border-radius-base));
+                        border-right-width: to-rem($tab-nav-item-bd-width);
+                    }
+                }
+
+                &.active > .hitarea,
+                > .hitarea.open,
+                .hitarea#{$link-pressed-inline} {
+                    color: $docs-navbar-collapsing-menu-secondary-link-color-active !important;
+                    background-color: $docs-navbar-collapsing-menu-secondary-link-bg-active !important;
+                    box-shadow: none !important;
+                }
+            }
+        }
+        > .tab-content {
+            $tab-content-pad: to-rem($grid-gutter-width / 2);
+            $tab-content-pad-adjust: .5rem;
+
+            width: 100%;
+            clear: both;
+            padding: ($tab-content-pad + $tab-content-pad-adjust) 0 ($tab-content-pad - $tab-content-pad-adjust);
+        }
+    }
+
+    //
+    // OPTIONS FORM
+    //
+    $doc-option-elem-shadow: inset 0 .1rem .1rem rgba($black,.015), 0 .1rem 0 rgba($white,.035);
+
+    $options-label-color: contrast-color($docs-options-menu-bg);
+    $options-input-height: get-deep($form-control-config, 'height.base');
+
+    $docs-options-dd-bg: darken($docs-options-menu-bg, 5);
+    $docs-options-dd-caret-color: $docs-navbar-collapsing-menu-secondary-link-color;
+
+    $options-cbox-height: $line-height-base-px;
+    $options-checkmark-width: 9px;
+    $options-checkmark-height: 5px;
+    $options-checkmark-bd-width: 3px;
+    $valign-middle-checkmark: round(($options-cbox-height - ($options-checkmark-width + $options-checkmark-bd-width)) / 2);
+    $valign-middle-cbox: round(($options-input-height - $options-cbox-height) / 2);
+
+    .doc-option-container {
+        display: inline-block !important;
+        margin: 0 to-rem($docs-spacing-base) 0 0;
+        padding: 0;
+        text-align: left;
+
+        &.flush-right {
+            margin-right: to-rem($docs-spacing-sm) !important;
+        }
+
+        &.hide {
+            display: none !important;
+        }
+    }
+
+    .doc-option-label {
+        font-weight: normal;
+    }
+
+    .doc-option-cbox-label {
+        color: mix($docs-options-menu-bg, $options-label-color, 25%);
+
+        &:hover,
+        &.active {
+            color: $options-label-color;
+        }
+    }
+
+    // CUSTOM COLORS / SPACING FOR DROPDOWNS
+    .chosen-container-single {
+        &.dev-design-container {
+            width: 15rem !important; // so the entire sentence doesn't shift right when we switch between dev/design.
+        }
+
+        .btn {
+            box-shadow: #{$doc-option-elem-shadow} !important;
+            background-color: $docs-options-dd-bg;
+            border-color: $docs-options-dd-bg;
+
+            // text
+            .dropdown-toggle__display-value {
+                color: $docs-navbar-collapsing-menu-secondary-link-color;
+            }
+
+            .caret {
+                border-top-color: $docs-options-dd-caret-color;
+                border-bottom-color: $docs-options-dd-caret-color;
+            }
+        }
+        // button hover / opened dropdown
+        &.open .btn,
+        .btn#{$hover-inline},
+        .btn#{$focus-inline} {
+            // border-color: $tab-nav-item-bd-color;
+            .dropdown-toggle__display-value {
+                color: $docs-navbar-collapsing-menu-link-color;
+            }
+
+            .caret {
+                border-top-color: $tab-nav-item-bd-color;
+                border-bottom-color: $tab-nav-item-bd-color;
+            }
+        }
+
+        &.open .btn {
+            @include border-bottom-radius(0);
+        }
+
+        .dropdown-menu--filterable {
+            width: 100%;
+            margin-top: 0;
+            margin-left: 0; // since there's no left/right border
+            background-color: $docs-options-dd-bg;
+            border: 0 none;
+            border-top: .1rem solid $docs-options-menu-bg;
+            @include border-top-radius(0);
+            box-shadow: none;
+
+            .menu-item > .hitarea {
+                color: $docs-navbar-collapsing-menu-secondary-link-color;
+
+                //
+                // HOVER
+                //
+                &#{$focus-class} {
+                    color: $docs-navbar-collapsing-menu-link-color;
+                    background-color: $docs-navbar-collapsing-menu-secondary-link-bg-hover;
+                }
+            }
+
+            .dropdown-info {
+                @include border-top-radius(0);
+                background-color: transparent;
+                border-color: transparent;
+            }
+        }
+    }
+
+    [role="form"] {
+        margin: 0;
+        color: $options-label-color;
+
+
+        // GROUPS OF ADVANCED OPTIONS
+        .fieldset {
+            line-height: to-rem($options-input-height);
+
+            &.valign-middle {
+                margin-top: to-rem(round($tab-content-height / 2) - $options-input-height);
+            }
+
+            legend {
+                padding: 0;
+                margin: 0;
+                font-family: $font-family-base;
+                font-size: 1.6rem;
+                color: inherit;
+                text-align: right;
+                white-space: nowrap;
+                border: 0 none;
+                // make sure if the legend overflows the grid container that e'thing remains right-aligned
+                text-indent: to-rem($grid-gutter-width / -2);
+            }
+        }
+    }
+}
+
+.docs-options-backdrop {
+    z-index: z('fixed-navbar') - 1;
+}
+
+// popover that prompts the user about the new options feature
+.popover-options-navbar {
+    margin-top: .6rem !important; // overlap the navbar a bit
+    z-index: $zindex-fixed-navbar-docs + 1;
+
+    .inner {
+        max-width: none;
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+}

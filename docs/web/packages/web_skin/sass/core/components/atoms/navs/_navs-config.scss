@@ -1,0 +1,33 @@
+// ********************************************************
+
+////
+/// Nav component configuration manifest
+/// ---
+/// @group core.components.navs
+/// @link http://bit.ly/webskin-navs Nav components spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/navs-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   GLOBAL NAV GROUPINGS
+// ----------------------------------------------------
+    @import 'helpers/nav-config-helpers';
+    @import 'config/nav-base-config';
+    @import 'config/nav-secondary-config';
+
+
+// ----------------------------------------------------
+//   SPECIFIC NAV COMPONENTS
+// ----------------------------------------------------
+    @import 'config/nav-tab-config';
+    @import 'config/nav-pill-config';
+    @import 'config/nav-block-config';
+    @import 'config/nav-pagination-config';

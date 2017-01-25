@@ -1,0 +1,63 @@
+// ********************************************************
+//
+//   IMAGE THUMBNAIL COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-thumbnails
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/thumbnails';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $thumbnails-module-config:  'core/components/atoms/thumbnails/thumbnails-config';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $thumbnails-module-config);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE THUMBNAIL CLASS
+//   -> Can be `<a>`, `<div>`, or `<img>`
+//
+// ********************************************************
+.thumbnail {
+    @include img-thumbnail-base();
+
+    margin-bottom: to-rem($line-height-base-px);
+
+    > img,
+    a > img {
+        @include img-responsive();
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .caption {
+        padding: to-rem($thumbnail-caption-padding);
+        color: $thumbnail-caption-color;
+
+        > p:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   CLICKABLE THUMBNAILS
+//
+// ********************************************************
+a.thumbnail,
+.hitarea.thumbnail {
+    &.active,
+    #{$link-hover-focus} {
+        border-color: get-deep($form-control-config, 'colors.bd-focus');
+        // prevent underline from appearing on caption text
+        text-decoration: none;
+    }
+}

@@ -1,0 +1,186 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-tooltips';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Base tooltip example containers
+// ----------------------------------------------------
+.ws-tooltip-examples {
+    text-align: center;
+    margin: 0 0 to-rem($docs-spacing-md);
+    list-style: none;
+}
+.tooltip-static-demo {
+    min-height: 10rem;
+}
+.tooltip-validation-demo {
+    .tooltip {
+        position: static;
+
+        .inner {
+            max-width: none;
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   Tooltips within example containers
+// ----------------------------------------------------
+.tooltip-static-demo-tip-col {
+    min-height: 5rem;
+}
+
+.ws-example-tooltip .tooltip {
+    @include opacity(1);
+
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+}
+
+// Styles from the UX example spec for UIP-1225
+.ws-example-tooltip-table {
+    width: auto;
+    font-size: get($tooltip-with-header-config, 'content-font-size');
+    margin-top: $paragraph-margin-bottom;
+
+    td,
+    th {
+        padding: .2rem;
+    }
+
+    th {
+        font-weight: normal;
+        padding-right: 1rem;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Tooltip nav examples
+// ----------------------------------------------------
+.ws-example-tooltip-nav .tooltip {
+    @include opacity(1);
+
+    left: 10%;
+    top: 50%;
+    margin-top: -3rem;
+}
+
+
+// ----------------------------------------------------
+//  Hint examples
+// ----------------------------------------------------
+.hint-demo--blocks {
+    $block-bd-width: to-rem(get($btn-config, 'bd-width'));
+    $block-bd-radius: to-rem(get-deep($btn-config, 'bd-radius.base'));
+
+    .grid-block {
+        background-color: get($btn-colors-white, 'bg-base');
+        border: $block-bd-width solid get($btn-colors-white, 'bd-base');
+        border-right-width: 0;  // Prevent double borders
+        border-bottom-width: 0; // Prevent double borders
+        text-align: center;
+
+        // Round the corners to match the other examples that
+        // just use single buttons
+        &:first-child  { @include border-top-left-radius($block-bd-radius); }
+        &:nth-child(3) { @include border-top-right-radius($block-bd-radius); }
+        &:nth-child(7) { @include border-bottom-left-radius($block-bd-radius); }
+        &:last-child   { @include border-bottom-right-radius($block-bd-radius); }
+
+        // 3 are displayed in a given row
+        // Add right borders for far-right elements
+        &:nth-child(3n) {
+            border-right-width: $block-bd-width;
+        }
+
+        // Add bottom borders for last row of elements
+        &:nth-child(7),
+        &:nth-child(8),
+        &:nth-child(9) {
+            border-bottom-width: $block-bd-width;
+        }
+    }
+}
+
+.hint-demo {
+    // Prevent cursor from changing as the user
+    // hovers around in the demo
+    cursor: default;
+
+    &,
+    .grid-block {
+        overflow: visible !important;
+    }
+
+    code {
+        // Prevent cursor from changing as the user
+        // hovers around in the demo
+        cursor: default;
+        // Make the text color look like any other white button text
+        background-color: transparent;
+        color: get($btn-colors-white, 'text-base');
+    }
+}
+
+// Styles to display hints and tooltips side-by-side and have identical positioning
+.hint-tooltip-static-skin-demo {
+    .grid-content + .grid-content {
+        // Add a little extra space since these are stacked vertically
+        // below the lg breakpoint
+        padding-top: 3rem;
+    }
+
+    // Above this breakpoint, they are not stacked vertically.
+    @include respond-to('screen-lg and up') {
+        .grid-content + .grid-content {
+            padding-top: $flex-grid-gutter-width / 2;
+        }
+
+        .has-hint {
+            @include translateX(-50%);
+        }
+    }
+
+    .has-hint {
+        display: block;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        @include translateX($flex-grid-gutter-width * -1);
+    }
+
+    .hint-static-demo {
+        padding-left: 0; // Ensure hint aligns horizontally centered
+    }
+
+    .tooltip-static-demo {
+        min-height: 0;
+    }
+
+    .tooltip {
+        margin-top: 0;
+        top: auto;
+        bottom: 0;
+        left: 50%;
+        @include transform(translateX(-50%) translateY(get($hint-config, 'gutter') * -1));
+    }
+}
+
+.tooltip-hint-feature-comparison-table {
+    .has-hint {
+        padding: 1rem;
+    }
+
+    .col-feature-name {
+        width: 31rem;
+    }
+}

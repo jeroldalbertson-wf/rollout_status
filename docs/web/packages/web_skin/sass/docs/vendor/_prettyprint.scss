@@ -1,0 +1,135 @@
+// ********************************************************
+//
+//   for use with prettyprint in code demos
+//   like the one in javascript/datepicker
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/vendor/prettyprint';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Base class
+// ----------------------------------------------------
+.prettyprint {
+    // match the styles of our .highlight code examples component
+    @include docs-code-highlight-base();
+    border-width: .1rem;
+
+    // for prettyprint, the <pre> IS .prettyprint
+    // so we need to apply the same padding that is applied
+    // to .highlight pre {} here again.
+    @include docs-code-highlight-pre();
+
+    // don't show by default
+    .linenums {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    &.linenums {
+        @include docs-code-highlight-linenums();
+
+        // show line numbers
+        .linenums {
+            list-style: decimal;
+            margin: 0 0 0 -1rem;
+
+            li {
+                padding-left: .8rem; // should match padding-right of .highlight pre .lineno
+                color: #bebec5;
+                line-height: 2.2rem;
+            }
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   Code output
+// ----------------------------------------------------
+.prettyprint {
+    .pln { // plain
+        color: $code-ex-default;
+    }
+
+    .com { // comment
+        color: $code-comment;
+        font-style: italic;
+    }
+
+    .lit { // literal
+        color: $code-literal-str-sym;
+    }
+
+    .pun,
+    .opn,
+    .clo { // punctuation, open/close braces
+        color: $code-punctuation;
+    }
+
+    .fun { // function
+        color: $code-name-function;
+        font-weight: bold;
+    }
+
+    .str { // string
+        color: $code-literal-str;
+    }
+
+    .atn { // attribute name
+        color: $code-name-attr;
+    }
+
+    .atv { // attribute value
+        color: $code-literal-str;
+    }
+
+    .kwd { // keyword
+        color: $code-keyword;
+        font-weight: bold;
+    }
+
+    .tag,
+    .xsl,
+    .htm { // html / xsl / xml tag
+        color: $code-name-tag;
+    }
+
+    .dec { // decimal
+        color: $code-literal-num;
+    }
+
+    .typ,
+    .var { // variable / type
+        color: $code-name-variable;
+    }
+
+    .linenums .tag {
+        color: #1e347b;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Layout
+// ----------------------------------------------------
+.code-examples .prettyprint.code-example {
+    border-radius: 0;
+
+    &:last-child {
+        @include border-bottom-radius(to-rem($code-bd-radius));
+    }
+}
+
+.prettyprint.code-example + .prettyprint.code-example {
+    margin-top: -.1rem;
+}
+
+.ws-example + .code-example {
+    margin: (to-rem($docs-spacing-base) * -1) 0 0 0;
+}

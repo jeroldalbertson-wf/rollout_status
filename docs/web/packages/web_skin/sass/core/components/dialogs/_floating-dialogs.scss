@@ -1,0 +1,71 @@
+// ********************************************************
+//
+//   "FLOATING" DIALOG COMPONENT STYLE MODULE
+//
+//   -> Gets the majority of its styling from the modals
+//      component, but these are wrapped in a unique
+//      `.dialog-floating-wrapper` elem, and have no
+//      dark backdrop behind them.
+//
+//   -> For now, they share all the child elems like
+//      `.modal-dialog`, `.modal-content`, `.modal-header`,
+//      `.modal-footer`, etc. with modals.
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/dialogs/floating-dialogs';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $dialogs-floating-module-config:  'core/components/atoms/dialogs/modals-config';
+    $dialogs-floating-module-helpers: 'core/components/atoms/dialogs/modals-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $dialogs-floating-module-config,
+                                          $dialogs-floating-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   FLOATING DIALOG WRAPPER
+//
+//   -> All styles for this variation must have this addnl
+//      selector until we formally separate the markup of
+//      a modal dialog vs. a floating dialog.
+//
+// ********************************************************
+.dialog-floating-wrapper {
+    display: block;
+
+    // ----------------------------------------------------
+    //   Shell div for floating dialogs
+    //
+    //   -> Positioning, z-index, etc applied here since
+    //      the `.dialog-floating-wrapper` does not contain
+    //      any positioning unlike the `.modal` wrapper.
+    //
+    //   -> TODO (2.x) - rename children of floating dialogs
+    // ----------------------------------------------------
+    .modal-dialog {
+        position: fixed;
+        z-index: z('modal');
+        top: 0;
+    }
+
+
+    // ----------------------------------------------------
+    //   Skinned element for floating dialogs
+    //
+    //   -> Lighter border color / shadow as a result
+    //      of being rendered without a dark backdrop
+    //      behind it.
+    // ----------------------------------------------------
+    .modal-content {
+        border-color: get($modal-config, 'bd-color-no-backdrop');
+        box-shadow: #{get($modal-config, 'shadow-no-backdrop')};
+        overflow: auto; // Scroll if a custom height / width is added to the .modal-dialog that causes overflow.
+    }
+}

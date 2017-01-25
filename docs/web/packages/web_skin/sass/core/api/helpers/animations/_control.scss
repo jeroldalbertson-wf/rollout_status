@@ -1,0 +1,56 @@
+// ********************************************************
+
+////
+/// Global mixins pertaining to animation control
+/// ---
+/// @since 1.0.0
+/// @access public
+/// @group core.animation
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/animations/control';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// Activate the browser's GPU
+///
+@mixin activate-gpu {
+    @include translateZ(0);
+}
+
+///
+/// Reusable styles for stopping an animation
+///
+@mixin animation-stop {
+    @include experimental(animation-play-state, paused);
+}
+
+///
+/// Reusable styles for starting an animation
+///
+@mixin animation-start {
+    @include experimental(animation-play-state, running);
+}
+
+///
+/// Reusable styles for starting / stopping an animation based on the visibility utility classes on or surrounding the animated element.
+/// Turning off animations when an element is invisible saves on CPU / GPU load.
+///
+@mixin animation-visibility-control {
+    .hide &, &.hide,
+    .fade &, &.fade,
+    .hide &.in {
+        @include animation-stop();
+    }
+
+    .in &, &.in,
+    .show &, &.show {
+        @include animation-start();
+    }
+}

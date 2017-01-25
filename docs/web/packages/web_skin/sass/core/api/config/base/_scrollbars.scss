@@ -1,0 +1,71 @@
+// ********************************************************
+
+////
+/// Base scrollbar styles
+/// ---
+/// @group core.display
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/base/scrollbars';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   CUSTOM SCROLLBAR CONFIG MAP
+//
+//   -> Store these scrollbar values in
+//      a map for easy iteration within
+//      functions and mixins and easy
+//      nesting in other component maps
+// ----------------------------------------------------
+    ///
+    /// Collection of scrollbar configuration values.
+    /// ---
+    /// @since 1.0.0
+    /// @type Map
+    /// ---
+    /// @prop {Number}   width-default           [17px]                      - Width of a typical scrollbar for browsers like MSIE and Firefox.
+    /// @prop {Number}   width-webkit            [11px]                      - Width of a typical scrollbar for Webkit browsers like Chrome / Safari
+    /// @prop {Number}   width-ws                [11px]                      - Width used in the _not-yet-implemented_ custom Web Skin scrollbar styling.
+    /// @prop {Color}    bg                      [#7f7f7f]                   - Background color of a webkit scrollbar container, implemented as `rgba`, not a hex value.
+    /// @prop {Number}   bd-radius               [8px]                       - Border radius value of a webkit scrollbar container.
+    /// @prop {Number}   bd-width                [2px]                       - Border width of a webkit scrollbar container that determines how far in-set the scrollbar thumb element is.
+    /// @prop {Color}    bd-color                [#ffffff]                   - Color of a webkit scrollbar container.
+    /// @prop {String}   selector-webkit-base    [::-webkit-scrollbar]       - CSS selector used to target a webkit scrollbar container.
+    /// @prop {String}   selector-webkit-thumb   [::-webkit-scrollbar-thumb] - CSS selector used to target a webkit scrollbar thumb / "gripper" element.
+    ///
+    $scroll-bar-config: (
+        'width-default': 17px,
+        'width-webkit':  11px,
+        'width-ws':      11px,
+        'bg': rgba($black, .5),
+        'bd-radius': 8px,
+        'bd-width':  2px,
+        'bd-color':  $white,
+        'selector-webkit-base':  '::-webkit-scrollbar',
+        'selector-webkit-thumb': '::-webkit-scrollbar-thumb'
+    );
+
+
+// ----------------------------------------------------
+//   CUSTOM SCROLLBAR CONFIG ALIASES
+//
+//   -> Store them as concise single vars
+//
+//   -> DO NOT CHANGE THESE VALUES
+//      (change config map instead)
+// ----------------------------------------------------
+    $scroll-bar-width-default:  get($scroll-bar-config, 'width-default');
+    $scroll-bar-width-webkit:   get($scroll-bar-config, 'width-webkit');
+    $scroll-bar-width-ws:       get($scroll-bar-config, 'width-ws');
+    $scroll-bar-webkit:         get($scroll-bar-config, 'selector-webkit-base');
+    $scroll-bar-webkit-thumb:   get($scroll-bar-config, 'selector-webkit-thumb');
+    $scroll-bar-radius:         get($scroll-bar-config, 'bd-radius');
+    $scroll-bar-bd-width:       get($scroll-bar-config, 'bd-width');
+    $scroll-bar-bd-color:       get($scroll-bar-config, 'bd-color');
+    $scroll-bar-bg:             get($scroll-bar-config, 'bg');

@@ -1,0 +1,44 @@
+// ********************************************************
+
+////
+/// Global constant values
+/// ---
+/// @group core.internals.constants
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/constants';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// Map of characters and their corresponding url encoded values
+/// ---
+/// @type Map
+/// @since 1.3.2
+/// @link http://www.w3schools.com/tags/ref_urlencode.asp ASCII Encoding Reference
+/// ---
+/// @prop {String} 'space'  ['%20'] - When iterating through this map, be sure to replace this key name with ' '
+/// @prop {String} '!'      ['%21']
+/// @prop {String} '#'      ['%23']
+/// @prop {String} '$'      ['%24']
+/// @prop {String} '%'      ['%25']
+/// @prop {String} '&'      ['%26']
+/// @prop {String} '+'      ['%2B']
+/// @prop {String} '/'      ['%2F']
+/// @prop {String} '?'      ['%3F']
+///
+$url-encoded-chars: (
+    ' ': '%20',
+    '!': '%21',
+    '#': '%23',
+    '%': '%25',
+    '&': '%26',
+    '+': '%2B',
+    '/': '%2F',
+    '?': '%3F'
+);

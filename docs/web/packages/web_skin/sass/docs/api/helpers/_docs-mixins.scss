@@ -1,0 +1,251 @@
+// ********************************************************
+//
+    $module: 'docs/api/helpers/docs-mixins';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+@mixin responsive-test-case-inactive {
+    border: .1rem solid #ddd;
+    color: #999;
+}
+
+@mixin responsive-test-case-active {
+    background-color: #dff0d8;
+    border: .1rem solid #d6e9c6;
+    color: #468847;
+}
+
+@mixin img-reveal-on-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    @include opacity(0);
+}
+
+@mixin crosshatch-bg($angle: 45deg, $color: $black, $alpha: 0.1, $line-weight: .1rem, $spread: .4rem) {
+    background: repeating-linear-gradient(
+        $angle,
+        rgba($color, $alpha),
+        rgba($color, $alpha) $line-weight,
+        rgba($color, 0) $line-weight,
+        rgba($color, 0) $spread
+    );
+}
+
+//
+// Create a soft, rounded inset shadow at the bottom of a scrolling section
+// to clearly indicate to users that there is content to be scrolled through
+// and to create a clear visual boundary between sections
+//
+// Note that the scrolling container must be a child of the container that this mixin is included within
+//
+@mixin inset-oval-shadow($visible-shadow-height: 14px, $shadow-softness: .8, $shadow-color: $black, $shadow-alpha: .2) {
+    // 1.0 having an extremely edge, .1 being an extremely hard-edge
+    $shadow-softness-factor: .8;
+    $shadow-blur: round($visible-shadow-height * $shadow-softness-factor);
+    $shadow-spread: $visible-shadow-height - $shadow-blur;
+    $shadow-elem-height: $visible-shadow-height + ($shadow-spread * 2);
+
+    position: relative;
+    overflow: hidden;
+
+    &:after {
+        position: absolute;
+        right: 0;
+        // want to leave 1px of "hard" edge showing so that the shadow
+        // looks like it goes all the way to the left/right edge of the container
+        bottom: to-rem($shadow-elem-height + ($shadow-spread - 1)) * -1;
+        left: 0;
+        height: to-rem($shadow-elem-height);
+        content: '';
+        background-color: rgba($shadow-color, $shadow-alpha);
+        border-radius: 20%;
+        box-shadow: 0 0 to-rem($shadow-blur) to-rem($shadow-spread) rgba($shadow-color, $shadow-alpha);
+    }
+}
+
+@mixin docs-permalink-icon {
+    position: absolute;
+    top: auto;
+    left: to-rem($icon-size-md) * -1;
+    @include opacity(0);
+
+    $icon-size-md-rem: to-rem($icon-size-md);
+
+    width: $icon-size-md-rem;
+    height: $icon-size-md-rem;
+    font-size: $icon-size-md-rem;
+
+    /* Should always match .icon-link:before */
+    content: to-unicode("e63d");
+
+    @include transition(opacity .2s ease-in-out);
+}
+
+@mixin docs-heading-base {
+    position: relative;
+
+    small {
+        $sm-color: mute($color: $zc-gray);
+        color: $sm-color;
+        [href] {
+            color: darken($sm-color, 10%);
+        }
+    }
+}
+
+@mixin docs-headings-permalink-base($bottom-offset: 0) {
+    z-index: 1; // will be used to keep adjacent headers beneath their predecessors
+    margin-top: 0;
+    padding-top: to-rem($permalink-heading-padding-top);
+
+
+    //
+    // Styles to use IF users can click on the headings to permalink
+    //
+
+    // @include disable-user-select();
+    // cursor: pointer;
+
+    // // 'link' icon
+    // &:before {
+    //     @include icon-base();
+    //     @include icon-props-base();
+    //     @include icon-props-glyphs();
+    //     @include docs-permalink-icon();
+    //     bottom: $bottom-offset;
+    // }
+
+    // #{$link-hover-focus} {
+    //     &:before {
+    //         @include opacity(.7);
+    //     }
+    // }
+}
+
+@mixin docs-callout-variation($variation) {
+    $bg-color:   get-deep($callout-color-config, '#{$variation}.bg-color');
+    $bd-color:   get-deep($callout-color-config, '#{$variation}.bd-color');
+    $text-color: get-deep($callout-color-config, '#{$variation}.text-color');
+
+    border-left-color: $bd-color;
+
+    @if $bg-color != inherit {
+        background-color: $bg-color;
+    }
+
+    // Primary headings only (no h5, h6)
+    h2,
+    h3,
+    h4,
+    .ws-callout-heading,
+    .ws-callout-ide-snippet-footnote {
+        color: $text-color !important;
+    }
+
+    .ws-callout-ide-snippet-footnote a {
+        color: $text-color !important;
+    }
+}
+
+@mixin docs-callout-heading {
+    font-size: 1.8rem !important; // equivalent to <h4>
+
+    code {
+        color: inherit;
+        background-color: inherit;
+        padding: 0;
+    }
+}
+
+@mixin docs-code-highlight-linenums {
+    box-shadow: inset to-rem($line-number-column-width) 0 0 lighten($code-bg, 5), inset to-rem($line-number-column-width + 1) 0 0 $docs-code-bd;
+    padding-left: to-rem($line-number-column-width) + $docs-code-horizontal-padding;
+}
+
+@mixin docs-code-highlight-pre() {
+    padding: to-rem($docs-spacing-md) $docs-body-padding-horizontal to-rem($docs-spacing-md) $docs-code-horizontal-padding;
+
+    @include respond-to('screen-sm and up') {
+        padding-left: $docs-code-horizontal-padding-sm;
+    }
+}
+
+@mixin docs-code-highlight-base {
+    display: block;
+    position: relative;
+    padding: 0;
+    margin: 0 0 to-rem($font-size-base) 0;
+    clear: both;
+    background-color: $docs-code-bg;
+    border-style: solid;
+    border-color: $docs-code-bd;
+    border-radius: to-rem($docs-code-bd-radius);
+    height: auto;
+
+    [aria-hidden="true"]:not([class*="visible-"]):not([class*="hidden-"]) &,
+    &[aria-hidden="true"] {
+        display: none;
+    }
+
+    pre {
+        padding: $docs-code-horizontal-padding;
+
+        @include respond-to('screen-sm and up') {
+            padding-left: $docs-code-horizontal-padding-sm;
+        }
+    }
+
+    // ----- Text selection override ----- //
+    code,
+    pre {
+        &,
+        * {
+            @include cursor-selected {
+                background: darken($ws-selection-bg-hover, 10);
+                text-shadow: none;
+            }
+        }
+    }
+
+    // ----- Nested within list items ----- //
+    li > .highlight-wrapper & {
+        margin-top: to-rem(round($docs-spacing-base / 2));
+        margin-bottom: to-rem($docs-spacing-base);
+    }
+
+    li:last-child > .highlight-wrapper & {
+        margin-bottom: 0;
+    }
+
+    // ----- Nested within tables ----- //
+    .table & {
+        margin-bottom: 0;
+    }
+
+    // Enlarge code snippet font-size at large desktop size and up
+    @include respond-to('screen-lg and up') {
+        pre {
+            font-size: to-rem($font-size-base);
+        }
+    }
+}
+
+// Should be included within a single `.nav` selector
+//
+//     .nav {
+//       @include docs-sidenav-nested-item-indentations();
+//     }
+@mixin docs-sidenav-nested-item-indentations($indent-config: $sidenav-group-indents) {
+    $nav-nesting-selector: '';
+
+    @each $nesting-level-key in map-keys($indent-config) {
+        $nav-nesting-selector: $nav-nesting-selector + ' .nav';
+
+        #{$nav-nesting-selector} > .nav-item > .hitarea {
+            padding-left: to-rem(get($indent-config, $nesting-level-key));
+        }
+    }
+}

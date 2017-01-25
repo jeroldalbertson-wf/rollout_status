@@ -1,0 +1,39 @@
+// ********************************************************
+
+////
+/// Global functions to help with manipulation of lists
+/// ---
+/// @access public
+/// @since 1.1.0
+/// @group core.utils.lists
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/functions/utilities/lists';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function join,
+                                                function list-separator);
+//
+// ********************************************************
+
+
+///
+/// Casts `$value` into a list.
+/// ---
+/// @param {*}      $value              - value to cast to list
+/// @param {String} $separator [space]  - separator to use
+/// ---
+/// @example scss
+///   to-list(a b c, comma)
+///   // a, b, c
+/// ---
+/// @returns {List}
+///
+@function to-list($value, $separator: list-separator($value)) {
+    @return join((), $value, $separator);
+}

@@ -1,0 +1,131 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/tools/responsive';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          'core/api/config/defaults/breakpoints',
+                                          'core/api/helpers/mixins/breakpoints',
+                                          'core/api/helpers/mixins/visibility');
+//
+// ********************************************************
+
+
+//
+// Future Friendly Device Width Defaults
+//
+// *** NOTE: Requires some JS for MSIE 10+ Mobile
+//     see: https://api.atl.workiva.net/WebSkin/docs/build/html/getting-started/#browsers-msie-device-width ***
+//
+// Source: http://bit.ly/1oOEpc9
+//
+    @-ms-viewport       { width: device-width; }
+    @viewport           { width: device-width; }
+
+
+//
+// SIZE RANGES
+//
+
+@include responsive-invisibility(".visible-xs, .visible-sm, .visible-md, .visible-lg");
+
+@include respond-to('below screen-xs') {
+    @include responsive-visibility(".visible-xs");
+    @include responsive-invisibility(".hidden-xs");
+}
+
+@include respond-to('screen-sm only') {
+    @include responsive-visibility(".visible-sm");
+    @include responsive-invisibility(".hidden-sm");
+}
+
+@include respond-to('screen-md only') {
+    @include responsive-visibility(".visible-md");
+    @include responsive-invisibility(".hidden-md");
+}
+
+@include respond-to('screen-lg and up') {
+    @include responsive-visibility(".visible-lg");
+    @include responsive-invisibility(".hidden-lg");
+}
+
+
+//
+// PIXEL DENSITIES
+//
+
+// start out assuming standard resolution
+@include responsive-visibility(".visible-res-standard");
+@include responsive-invisibility(".hidden-res-standard");
+
+@include responsive-invisibility(".visible-retina");
+@include responsive-visibility(".hidden-retina");
+
+@include responsive-invisibility(".visible-res-high");
+@include responsive-visibility(".hidden-res-high");
+
+@include responsive-invisibility(".visible-mdpi");
+@include responsive-visibility(".hidden-mdpi");
+
+@include responsive-invisibility(".visible-hdpi");
+@include responsive-visibility(".hidden-hdpi");
+
+// any hi-resolution
+@include breakpoint($all-hi-res) {
+    @include responsive-visibility(".hidden-res-standard"); // visible by default
+    @include responsive-invisibility(".visible-res-standard"); // visible by default
+    @include responsive-invisibility(".hidden-res-high");
+    @include responsive-visibility(".visible-res-high");
+}
+
+// iOS / OSx Retina
+@include respond-to('retina+ resolution') {
+    @include responsive-invisibility(".hidden-retina");
+    @include responsive-visibility(".visible-retina");
+}
+
+// Android Medium Density (mdpi)
+@include breakpoint($all-mdpi) {
+    @include responsive-invisibility(".hidden-mdpi");
+    @include responsive-visibility(".visible-mdpi");
+}
+
+// Android High Density (hdpi)
+@include breakpoint($all-hdpi) {
+    @include responsive-invisibility(".hidden-hdpi");
+    @include responsive-visibility(".visible-hdpi");
+}
+
+
+//
+// BROWSERS (Requires libs.js[ua-sniffer*.js])
+//
+@include responsive-invisibility('.visible-ie');
+.ua-ie {
+    @include responsive-visibility('.visible-ie');
+    @include responsive-invisibility('.hidden-ie');
+}
+
+
+//
+// TOUCH (Requires libs.js[Modernizr])
+//
+@include responsive-invisibility(".visible-touch");
+html.touch {
+    @include responsive-visibility(".visible-touch");
+    @include responsive-invisibility(".hidden-touch");
+}
+
+
+//
+// PRINT
+//
+@include responsive-invisibility(".visible-print");
+@media print {
+    @include responsive-visibility(".visible-print");
+    @include responsive-invisibility(".hidden-print");
+}

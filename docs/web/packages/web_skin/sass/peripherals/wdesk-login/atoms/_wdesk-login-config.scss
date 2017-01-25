@@ -1,0 +1,150 @@
+// ********************************************************
+//
+//   Wdesk Login Page Configuration
+//
+    $module: 'peripherals/wdesk-login/atoms/wdesk-login-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   WEB SKIN CONFIG CUSTOMIZATIONS
+//
+//   -> Customize core config values for
+//      use in the login page module
+//
+// ********************************************************
+
+    // ----------------------------------------------------
+    //   Custom Grid
+    // ----------------------------------------------------
+    $grid-config-login: (
+        'columns': 20, // to allow for slightly more granular column width control
+        'gutter-width': 20px // to accomodate the 10px left/right container padding shown in comps
+    );
+
+    @include set-grid-config($grid-config-login);
+
+
+
+// ********************************************************
+//
+//   BRANDING
+//
+// ********************************************************
+    $workiva-wdesk-logo-dir:  '#{$wdesk-logo-dir}wdesk-login/';
+    $workiva-wdesk-logo-name: 'workiva-wdesk-logo';
+    $workiva-wdesk-logo-src1x: '#{$workiva-wdesk-logo-dir}#{$workiva-wdesk-logo-name}.png';
+    $workiva-wdesk-logo-src2x: '#{$workiva-wdesk-logo-dir}#{$workiva-wdesk-logo-name}_retina.png';
+    $workiva-wdesk-logo-width: image-width($workiva-wdesk-logo-src1x);
+    $workiva-wdesk-logo-height: image-height($workiva-wdesk-logo-src1x);
+
+
+
+// ********************************************************
+//
+//   LAYOUT
+//
+// ********************************************************
+    $login-container-font-size: $font-size-base;
+
+    $default-grid-col-padding-horizontal: round($grid-gutter-width / 2);
+
+    $default-form-group-margin-bottom-px: $line-height-base-px;
+    $default-form-group-margin-bottom: to-em($default-form-group-margin-bottom-px, $login-container-font-size);
+
+    $login-layout-spacing-base-px: $default-grid-col-padding-horizontal * 3;
+    $login-layout-spacing-base: to-em($login-layout-spacing-base-px, $login-container-font-size);
+    $login-layout-spacing-header-px: ($default-grid-col-padding-horizontal * 4) - 5px; // little more white space around header / logos
+    $login-layout-spacing-header: to-em($login-layout-spacing-header-px, $login-container-font-size);
+
+    $login-form-row-min-height: to-em(185px, $login-container-font-size);
+
+    // ----------------------------------------------------
+    //   HEADER ABOVE FORM
+    // ----------------------------------------------------
+    $login-container-padding-top: $login-layout-spacing-header;
+    $login-header-padding-bottom: $login-container-padding-top;
+
+    // ----- XS LANDSCAPE VARIATION ----- //
+    $login-xs-container-padding-top: $default-form-group-margin-bottom;
+    $login-xs-header-padding-bottom: $login-xs-container-padding-top;
+    $login-xs-footer-margin-top: round($login-xs-container-padding-top / 2);
+
+    // ----------------------------------------------------
+    //   FOOTER BELOW FORM / HERO
+    // ----------------------------------------------------
+    $login-footer-margin-top: $login-layout-spacing-base;
+
+
+    // ----------------------------------------------------
+    //   BREAKPOINTS
+    //   -> media queries always use the
+    //      font-size set in the UA styles,
+    //      not our custom ones when
+    //      calculating em units
+    // ----------------------------------------------------
+        $login-xs-breakpoint-max: $screen-xs-max;
+        $login-sm-breakpoint-min: $screen-sm-min;
+        $login-md-breakpoint-min: $screen-md-min;
+
+        @include add-breakpoint('below screen-sm, landscape', screen (orientation landscape) (max-width $screen-xs-max));
+        @include add-breakpoint('below screen-sm, portrait', screen (orientation portrait)  (max-width $screen-xs-max));
+
+
+    // ----------------------------------------------------
+    //   FORM
+    // ----------------------------------------------------
+
+        // ----- "Welcome" LEGEND HEADER ----- //
+        $login-legend-font-size-px: 26px;
+        $login-legend-font-size: to-em($login-legend-font-size-px, $login-container-font-size);
+        $login-legend-font-family: $webfont-sans-serif;
+        $login-legend-font-weight: $webfont-weight-light;
+        $login-legend-color: $zc-green-c;
+        $login-legend-margin-bottom: to-em($login-legend-font-size-px, $login-legend-font-size-px);
+
+        // ----- "Use Single Sign On" HEADER BUTTON ----- //
+        $login-sso-primary-padding-vertical: to-em(12px, $login-container-font-size);
+
+        // ----- FORM ACTION BTN ALIGNMENT ----- //
+        $login-form-actions-secondary-offset-top: to-em(round((get-deep($btn-config, 'height.base') - get-deep($btn-config, 'height.sm')) / 2), $login-container-font-size);
+        $login-form-actions-secondary-font-size: to-em(12px, $login-container-font-size);
+        $login-form-actions-divider-padding-horizontal: to-em(round($padding-sm-horizontal / 2), $login-container-font-size);
+
+        // ----- MOBILE FIRST DEFAULTS ----- //
+        $login-form-fieldset-margin-vertical: to-em($login-layout-spacing-base-px, $login-container-font-size);
+        $login-form-fieldset-width: to-em($workiva-wdesk-logo-width + 65px, $login-container-font-size);
+
+        $login-form-rug-bg: $zc-gray-20;
+
+        // ----- TABLET+ ('$screen-sm') ----- //
+
+        // override grid column padding
+        // when the image / form are side-by-side
+        // so that the image is consistently flush
+        // with the edge of the gray form surface
+        $login-sm-grid-col-padding-horizontal: 0px;
+        $login-sm-form-row-min-height: to-em(250px, $login-container-font-size);
+        $login-sm-form-fieldset-padding-horizontal: $login-form-fieldset-margin-vertical - to-em($login-sm-grid-col-padding-horizontal, $font-size-base);
+        $login-sm-container-padding-top: to-em(63px, $login-container-font-size);
+
+        $login-sm-form-rug-padding-top: 5%;
+
+        // ----- DESKTOP+ ('$screen-md') ----- //
+        $login-md-legend-font-size-px: 36px;
+        $login-md-legend-font-size: to-em($login-md-legend-font-size-px, $login-container-font-size);
+        $login-md-legend-margin-bottom: to-em($login-layout-spacing-base-px, $login-md-legend-font-size-px);
+
+        $login-md-mktg-hero-max-height-px: 390px;
+        $login-md-mktg-hero-max-height: to-em($login-md-mktg-hero-max-height-px, $login-container-font-size);
+        $login-md-form-row-min-height: $login-md-mktg-hero-max-height;
+
+        $login-md-form-group-callout-margin-bottom: $login-layout-spacing-base;
+
+        $login-md-grid-container-width-px: 960px;
+        $login-md-grid-container-width: to-em($login-md-grid-container-width-px, $login-container-font-size);
+
+        $login-md-form-rug-padding-top: 6%;

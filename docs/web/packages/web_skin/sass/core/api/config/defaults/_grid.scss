@@ -1,0 +1,204 @@
+// ********************************************************
+
+////
+/// Grid system configuration / config helper(s)
+/// ---
+/// @access public
+/// @group core.grid
+/// @since 0.1.0
+/// @link http://bit.ly/webskin-grid Grid Column Layout Spec
+/// @link http://bit.ly/webskin-container Default Layout Container Spec
+/// @link http://bit.ly/webskin-container-wide Wide Layout Container Spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/grid';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend,
+                                                function is-map,
+                                                function reject,
+                                                function to-rem,
+                                                function to-px);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   GRID CONFIG MAP
+//
+// ********************************************************
+    ///
+    /// Grid layout configuration. Customizable via the `set-grid-config()` helper method.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @see {mixin} set-grid-config
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {function} to-rem
+    /// @requires {variable} $breakpoint-config
+    /// @requires {variable} $screen-widths
+    /// @requires {variable} $component-spacing-config
+    /// @requires {variable} $line-height-lg
+    /// @requires {variable} $font-size-lg
+    /// ---
+    /// @prop {Number} columns              [12]     - Default number of columns
+    /// @prop {Number} gutter-width         [30px]   - Default "gutter" width for the default `.container`
+    /// @prop {Number} gutter-width-wide    [48px]   - Default "gutter" width for the `.container-wide` variation
+    /// @prop {String} float-breakpoint     [sm]     - Screen size name/key where grid columns start to float side-by-side instead of the mobile-first stacked appearance
+    /// @prop {List}   breakpoints          [sm, md, lg, xl]    - List of breakpoint aliases used to classify when columns display as columns, and when they become 100% width
+    /// @prop {List}   column-size-groups   [xs, sm, md, lg]    - List of column size group aliases used to classify which columns float at certain viewport sizes
+    ///
+    /// @prop {List}   breakpoints-v2       [null, sm, md, lg, xl]  - List of breakpoints used for the v2 Flexbox Grid system. `since 1.1.0`
+    ///
+    /// @prop {Map} container-width
+    /// @prop {Number} container-width.wide [100%]   - Constant `width` of the `.container-wide` variation; Always `100%` no matter the screen width
+    /// @prop {Number} container-width.sm   [750px]  - Calculated `width` of the `.container` at the `screen-sm and up` breakpoint, __a.k.a Tablets__. _Added via `@extend`_
+    /// @prop {Number} container-width.md   [970px]  - Calculated `width` of the `.container` at the `screen-md and up` breakpoint, __a.k.a Desktops__. _Added via `@extend`_
+    /// @prop {Number} container-width.lg   [1170px] - Calculated `width` of the `.container` at the `screen-lg and up` breakpoint, __a.k.a Large Desktops__. _Added via `@extend`_
+    /// @prop {Number} container-width.xl   [1570px] - Calculated `width` of the `.container` at the `screen-xl and up` breakpoint, __a.k.a HD Desktops__. _Added via `@extend`_
+    ///
+    $grid-config: (
+        'columns': 12,
+        'gutter-width': get($component-spacing-config, 'block-gutter') * 2,
+        'gutter-width-wide': round($line-height-lg * $font-size-lg) * 2,
+        'float-breakpoint': sm,
+        'breakpoints': reject(map-keys(get($breakpoint-config, 'width')), 'xs'),
+        'column-size-groups': reject(map-keys(get($breakpoint-config, 'width')), 'xl'),
+        'breakpoints-v2': set-nth(map-keys(get($breakpoint-config, 'width')), 1, null),
+        'container-width': (
+            // for `.container-wide`
+            'wide': 100%,
+            // for `.container`
+            'sm': null, // actual calculated value inserted via @extend
+            'md': null, // ""
+            'lg': null, // ""
+            'xl': null  // ""
+        )
+    );
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $grid-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $grid-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+
+        $grid-container-width-sm: 720px  + get($grid-config, 'gutter-width');
+        $grid-container-width-md: 940px  + get($grid-config, 'gutter-width');
+        $grid-container-width-lg: 1140px + get($grid-config, 'gutter-width');
+        $grid-container-width-xl: 1540px + get($grid-config, 'gutter-width');
+
+        // ----- EXTEND grid config with calc'd values ----- //
+        $grid-config: extend($grid-config,
+            (
+                'container-width': (
+                    'sm': $grid-container-width-sm,
+                    'md': $grid-container-width-md,
+                    'lg': $grid-container-width-lg,
+                    'xl': $grid-container-width-xl
+                )
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   GRID CONFIG VALUE HELPER METHODS
+//
+//   -> Special methods that belong here in a configuration
+//      module b/c their sole purpose is to set and
+//      update config values
+//
+// ********************************************************
+    ///
+    /// Set/update grid configuration alias values
+    /// ---
+    /// @access private
+    /// @group core.internals.grid
+    /// @since 1.0.0
+    ///
+    @mixin set-grid-config-aliases {
+        $grid-columns:                  get($grid-config, 'columns') !global;
+        $grid-float-breakpoint:         get($grid-config, 'float-breakpoint') !global;
+        $container-gutter-default:      get($grid-config, 'gutter-width') !global;
+        $container-gutter-wide:         get($grid-config, 'gutter-width-wide') !global;
+
+        $grid-wide-container-width:     get-deep($grid-config, 'container-width.wide') !global;
+        $grid-container-width-sm:       get-deep($grid-config, 'container-width.sm') !global;
+        $grid-container-width-md:       get-deep($grid-config, 'container-width.md') !global;
+        $grid-container-width-lg:       get-deep($grid-config, 'container-width.lg') !global;
+        $grid-container-width-xl:       get-deep($grid-config, 'container-width.xl') !global;
+
+
+        // ----------------------------------------------------
+        //   DEPRECATED ALIASES
+        // ----------------------------------------------------
+        $grid-gutter-width:                     $container-gutter-default !global;
+        $grid-wide-gutter-width:                $container-gutter-wide !global;
+        $grid-container-width-tablet:           $grid-container-width-sm !global;
+        $grid-container-width-desktop:          $grid-container-width-md !global;
+        $grid-container-width-large-desktop:    $grid-container-width-lg !global;
+        $grid-container-width-hd-desktop:       $grid-container-width-xl !global;
+    }
+
+    ///
+    /// Customize grid configuration values
+    /// ---
+    /// @since 1.0.0
+    /// @param {Map} $custom-config - Map of one or more grid configuration values you want to customize
+    /// @see {variable} grid-config
+    ///
+    @mixin set-grid-config($custom-config) {
+        @if not is-map($custom-config) {
+            @error "Mixin `set-grid-config` expecting `$custom-config` to be a `map`. Received `#{type-of($custom-config)}`.";
+        }
+
+        $grid-config: extend($grid-config, $custom-config) !global;
+
+        @include set-grid-config-aliases(); // call here to update alias values
+    }
+
+
+
+// ********************************************************
+//
+//   GRID CONFIG ALIASES
+//
+// ********************************************************
+    @include set-grid-config-aliases(); // call here to set defaults
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED GRID VARS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   Rough grid column width calculations
+    //   Used only for docs output of var values
+    //
+    //   @see _scss-var-content.scss
+    // ----------------------------------------------------
+    $grid-column-width-sm: round($grid-container-width-sm / $grid-columns);
+    $grid-column-width-md: round($grid-container-width-md / $grid-columns);
+    $grid-column-width-lg: round($grid-container-width-lg / $grid-columns);
+    $grid-column-width-xl: round($grid-container-width-xl / $grid-columns);

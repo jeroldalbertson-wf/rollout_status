@@ -1,0 +1,512 @@
+// ********************************************************
+//
+//   BADGE COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-badges
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/badges';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $badges-module-config: 'core/components/atoms/badges/badges-config';
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $badges-module-config);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE STYLES
+//
+// ********************************************************
+.badge {
+    display: inline-block;
+    min-width: get($badge-config, 'min-width');
+    min-height: to-rem(get($badge-config, 'min-height'));
+    margin-right: get($badge-config, 'spacing-horizontal');
+    margin-top: 1%; // Works great along with text-bottom for a perfer vertical centering
+    padding: $badge-padding;
+    text-align: center;
+    vertical-align: text-bottom;
+    white-space: nowrap;
+    color: get($badge-config, 'text-color');
+    background-color: get($badge-config, 'bg');
+    font-family: $font-family-base;
+    font-size: get($badge-config, 'font-size');
+    font-weight: bold;
+    line-height: get($badge-config, 'line-height');
+    border-radius: get($badge-config, 'bd-radius');
+    @include disable-user-select(); // not a selectable piece of text
+
+    // Empty badges collapse
+    &:empty { display: none; }
+
+    // ----------------------------------------------------
+    //   BADGE ALIGNMENT
+    // ----------------------------------------------------
+    &.align-right,
+    &.pull-right  {
+        margin-right: 0;
+        margin-left: get($badge-config, 'spacing-horizontal');
+    }
+}
+
+
+// ********************************************************
+//
+//   CLICKABLE BADGES
+//
+//   Hover / focus states only for badges that are hitareas
+//
+// ********************************************************
+.badge.hitarea {
+    #{$link-hover-focus} {
+        cursor: pointer;
+        text-decoration: none;
+        color: get($badge-config, 'text-color-hover');
+        background-color: darken(get($badge-config, 'bg'), $elem-hover-bg-darken-amount-default);
+    }
+}
+
+
+// ********************************************************
+//
+//   BADGES IN BUTTONS
+//
+// ********************************************************
+    .btn-xs .badge {
+        position: relative;
+        top: -.1rem;
+        margin-bottom: -.2rem; // don't change the height of the button
+        line-height: to-rem(get($badge-config, 'line-height-xs')); // Center within min-height
+    }
+
+    .btn-lg .badge.pull-right {
+        margin-top: 3%;
+    }
+
+
+    // ----------------------------------------------------
+    //   Btn outline state color variation badge adjustments
+    // ----------------------------------------------------
+    @each $state-name in map-keys(map-remove($colors-global-states, 'default')) {
+        .btn-outline.btn-#{$state-name} {
+            .badge {
+                color: $body-bg;
+                background-color: get-deep($btn-colors, '#{$state-name}.bg-base');
+            }
+
+            #{$link-hover-focus} {
+                .badge {
+                    color: get-deep($btn-colors, '#{$state-name}.bg-hover');
+                    background-color: get-deep($btn-colors, '#{$state-name}.text-hover');
+                }
+            }
+        }
+    }
+
+    .btn-outline.btn-default {
+        $bg-base: get($btn-outline-colors-default, 'bg-base');
+
+        .badge {
+            color: if($bg-base == transparent, $body-bg, $bg-base);
+            background-color: get($btn-outline-colors-default, 'text-base');
+        }
+
+        #{$link-hover-focus} {
+            .badge {
+                color: get($btn-outline-colors-default, 'bg-hover');
+                background-color: get($btn-outline-colors-default, 'text-hover');
+            }
+        }
+    }
+
+    .btn-outline.btn-link {
+        $bg-base: get($btn-outline-colors-link, 'bg-base');
+
+        .badge {
+            color: if($bg-base == transparent, $body-bg, $bg-base);
+            background-color: get($btn-outline-colors-link, 'text-base');
+        }
+
+        #{$link-hover-focus} {
+            .badge {
+                color: get($btn-outline-colors-link, 'bg-hover');
+                background-color: get($btn-outline-colors-link, 'text-hover');
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   Btn state color variation badge adjustments
+    // ----------------------------------------------------
+    @each $state-name in reject($btn-state-names, 'link') {
+        .btn-#{$state-name} {
+            .badge {
+                color: get-deep($btn-colors, '#{$state-name}.bg-base');
+                background-color: get-deep($btn-colors, '#{$state-name}.text-base');
+            }
+        }
+    }
+
+    // reset the default badge colors for a "text" hyperlink button
+    .btn-link .badge {
+        color: get($badge-config, 'text-color');
+        background-color: get($badge-config, 'bg');
+    }
+
+
+// ********************************************************
+//
+//   BADGES IN NAVS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   BASE NAVS
+    // ----------------------------------------------------
+    .nav > .nav-item {
+        $nav-badge-text-color: if(get($nav-link-config, 'bg') == transparent, $white, get($nav-link-config, 'bg'));
+        $nav-badge-text-color-hover: if(get($nav-link-config, 'bg-hover') == transparent, $white, get($nav-link-config, 'bg-hover'));
+        $nav-badge-text-color-press: if(get($nav-link-config, 'bg-press') == transparent, $white, get($nav-link-config, 'bg-press'));
+        $nav-badge-text-color-active: if(get($nav-link-config, 'bg-active') == transparent, $white, get($nav-link-config, 'bg-active'));
+        $nav-badge-text-color-disabled: if(get($nav-link-config, 'bg-disabled') == transparent, $white, get($nav-link-config, 'bg-disabled'));
+
+        $nav-badge-bg: get($nav-link-config, 'text-color');
+        $nav-badge-bg-hover: get($nav-link-config, 'text-color-hover');
+        $nav-badge-bg-press: get($nav-link-config, 'text-color-press');
+        $nav-badge-bg-active: get($nav-link-config, 'text-color-active');
+        $nav-badge-bg-disabled: get($nav-link-config, 'text-color-disabled');
+
+        > .hitarea {
+            .badge {
+                color: $nav-badge-text-color;
+                background-color: $nav-badge-bg;
+            }
+
+            // ----- HOVER / FOCUS HITAREA STATES ----- //
+            @if $nav-badge-text-color-hover != $nav-badge-text-color or
+                $nav-badge-bg-hover         != $nav-badge-bg {
+
+                #{$link-hover-focus} {
+                    .badge {
+                        color: $nav-badge-text-color-hover;
+                        background-color: $nav-badge-bg-hover;
+                    }
+                }
+            }
+
+            // ----- PRESSED HITAREA STATE ----- //
+            @if $nav-badge-text-color-press != $nav-badge-text-color-hover or
+                $nav-badge-bg-press         != $nav-badge-bg-hover {
+
+                #{$link-pressed} {
+                    .badge {
+                        color: $nav-badge-text-color-press;
+                        background-color: $nav-badge-bg-press;
+                    }
+                }
+            }
+
+            // ----- DISABLED HITAREA STATE ----- //
+            #{$nav-disabled-selectors} {
+                .badge {
+                    color: $nav-badge-text-color-disabled !important;
+                    background-color: $nav-badge-bg-disabled !important;
+                }
+            }
+        }
+
+
+        // ----- ACTIVE / OPEN NAV STATES ----- //
+        &.active,
+        &.open {
+            > .hitarea {
+                .badge {
+                    color: $nav-badge-text-color-active;
+                    background-color: $nav-badge-bg-active;
+                }
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   PILL NAVS
+    // ----------------------------------------------------
+    .nav-pills > .nav-item {
+        @each $skin-name in join(('default'), append(map-keys($default-states-min), 'link')) {
+            $is-default-skin: $skin-name == 'default';
+            $is-link-variation: is-true(str-index($skin-name, 'link'));
+            $skin: get($btn-colors, $skin-name);
+            $pill-hitarea-selector: '.pill-#{$skin-name}';
+
+            // Create a map of the keys so they can be altered if necessary based on the skin config being used.
+            $skin-value-keys: (
+                bg: 'bg-base',
+                bg-hover: 'bg-hover',
+                bg-press: 'bg-press',
+                bg-active: 'bg-active',
+                bg-disabled: 'bg-base',
+                text-base: 'text-base',
+                text-hover: 'text-hover',
+                text-press: 'text-press',
+                text-disabled: 'text-base'
+            );
+
+            @if $is-link-variation {
+                $skin: $nav-pills-pill-link-skin-colors;
+            } @else if $is-default-skin {
+                $skin: $nav-pills-pill-config;
+                $pill-hitarea-selector: '.hitarea';
+
+                // Normalize the map keys
+                $skin-value-keys: extend($skin-value-keys, (
+                    bg: 'bg',
+                    bg-disabled: 'bg-disabled',
+                    text-base: 'text-color',
+                    text-hover: 'text-color-hover',
+                    text-press: 'text-color-press',
+                    text-disabled: 'text-color-disabled'
+                ));
+            }
+
+
+            $nav-pill-badge-text-color: get($skin, get($skin-value-keys, 'bg'));
+                @if $nav-pill-badge-text-color == transparent { $nav-pill-badge-text-color: $white; }
+            $nav-pill-badge-text-color-hover: get($skin, get($skin-value-keys, 'bg-hover'));
+                @if $nav-pill-badge-text-color-hover == transparent { $nav-pill-badge-text-color-hover: $white; }
+            $nav-pill-badge-text-color-press: get($skin, get($skin-value-keys, 'bg-press'));
+                @if $nav-pill-badge-text-color-press == transparent { $nav-pill-badge-text-color-press: $white; }
+            $nav-pill-badge-text-color-active: get($skin, get($skin-value-keys, 'bg-active'));
+                @if $nav-pill-badge-text-color-active == transparent { $nav-pill-badge-text-color-active: $white; }
+            $nav-pill-badge-text-color-disabled: get($skin, get($skin-value-keys, 'bg-disabled'));
+                @if $nav-pill-badge-text-color-disabled == transparent { $nav-pill-badge-text-color-disabled: $white; }
+            $nav-pill-badge-bg: get($skin, get($skin-value-keys, 'text-base'));
+            $nav-pill-badge-bg-hover: get($skin, get($skin-value-keys, 'text-hover'));
+            $nav-pill-badge-bg-press: get($skin, get($skin-value-keys, 'text-press'));
+            $nav-pill-badge-bg-active: get($skin, get($skin-value-keys, 'text-active'));
+            $nav-pill-badge-bg-disabled: get($skin, get($skin-value-keys, 'text-disabled'));
+
+            $hover-colors-differ-from-base: $nav-pill-badge-text-color-hover != $nav-pill-badge-text-color or
+                                            $nav-pill-badge-bg-hover         != $nav-pill-badge-bg;
+
+            $press-colors-differ-from-hover: $nav-pill-badge-text-color-press != $nav-pill-badge-text-color-hover or
+                                             $nav-pill-badge-bg-press         != $nav-pill-badge-bg-hover;
+
+            > #{$pill-hitarea-selector} {
+                .badge {
+                    color: $nav-pill-badge-text-color;
+                    background-color: $nav-pill-badge-bg;
+                }
+
+                // ----- HOVER / FOCUS HITAREA STATES ----- //
+                @if $hover-colors-differ-from-base {
+                    #{$link-hover-focus} {
+                        .badge {
+                            color: $nav-pill-badge-text-color-hover;
+                            background-color: $nav-pill-badge-bg-hover;
+                        }
+                    }
+                }
+
+                // ----- PRESSED HITAREA STATE ----- //
+                @if $press-colors-differ-from-hover {
+                    #{$link-pressed} {
+                        .badge {
+                            color: $nav-pill-badge-text-color-press;
+                            background-color: $nav-pill-badge-bg-press;
+                        }
+                    }
+                }
+
+                // ----- DISABLED HITAREA STATE ----- //
+                #{$nav-disabled-selectors} {
+                    .badge {
+                        color: $nav-pill-badge-text-color-disabled !important;
+                        background-color: $nav-pill-badge-bg-disabled !important;
+                    }
+                }
+            }
+
+            // ----- ACTIVE / OPEN PILL SKIN VARIATION STATES ----- //
+            &.active,
+            &.open {
+                > #{$pill-hitarea-selector} {
+                    .badge {
+                        color: $nav-pill-badge-text-color-active;
+                        background-color: $nav-pill-badge-bg-active;
+                    }
+                }
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   TAB NAVS
+    // ----------------------------------------------------
+    .nav-tabs > .nav-item {
+        $nav-tab-badge-text-color: if(get($nav-tabs-tab-config, 'bg') == transparent, $white, get($nav-tabs-tab-config, 'bg'));
+        $nav-tab-badge-text-color-hover: if(get($nav-tabs-tab-config, 'bg-hover') == transparent, $white, get($nav-tabs-tab-config, 'bg-hover'));
+        $nav-tab-badge-text-color-press: if(get($nav-tabs-tab-config, 'bg-press') == transparent, $white, get($nav-tabs-tab-config, 'bg-press'));
+        $nav-tab-badge-text-color-active: if(get($nav-tabs-tab-config, 'bg-active') == transparent, $white, get($nav-tabs-tab-config, 'bg-active'));
+        $nav-tab-badge-text-color-disabled: if(get($nav-tabs-tab-config, 'bg-disabled') == transparent, $white, get($nav-tabs-tab-config, 'bg-disabled'));
+
+        $nav-tab-badge-bg: get($nav-tabs-tab-config, 'text-color');
+        $nav-tab-badge-bg-hover: get($nav-tabs-tab-config, 'text-color-hover');
+        $nav-tab-badge-bg-press: get($nav-tabs-tab-config, 'text-color-press');
+        $nav-tab-badge-bg-active: get($nav-tabs-tab-config, 'text-color-active');
+        $nav-tab-badge-bg-disabled: get($nav-tabs-tab-config, 'text-color-disabled');
+
+        > .hitarea {
+            .badge {
+                color: $nav-tab-badge-text-color;
+                background-color: $nav-tab-badge-bg;
+            }
+
+            // ----- HOVER / FOCUS HITAREA STATES ----- //
+            @if $nav-tab-badge-text-color-hover != $nav-tab-badge-text-color or
+                $nav-tab-badge-bg-hover         != $nav-tab-badge-bg {
+
+                #{$link-hover-focus} {
+                    .badge {
+                        color: $nav-tab-badge-text-color-hover;
+                        background-color: $nav-tab-badge-bg-hover;
+                    }
+                }
+            }
+
+            // ----- PRESSED HITAREA STATE ----- //
+            @if $nav-tab-badge-text-color-press != $nav-tab-badge-text-color-hover or
+                $nav-tab-badge-bg-press         != $nav-tab-badge-bg-hover {
+
+                #{$link-pressed} {
+                    .badge {
+                        color: $nav-tab-badge-text-color-press;
+                        background-color: $nav-tab-badge-bg-press;
+                    }
+                }
+            }
+
+            // ----- DISABLED HITAREA STATE ----- //
+            #{$nav-disabled-selectors} {
+                .badge {
+                    color: $nav-tab-badge-text-color-disabled !important;
+                    background-color: $nav-tab-badge-bg-disabled !important;
+                }
+            }
+        }
+
+
+        // ----- ACTIVE / OPEN NAV STATES ----- //
+        &.active,
+        &.open {
+            > .hitarea {
+                .badge {
+                    color: $nav-tab-badge-text-color-active;
+                    background-color: $nav-tab-badge-bg-active;
+                }
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   LIST GROUP NAVS
+    // ----------------------------------------------------
+    .list-group-item.hitarea {
+        $list-group-badge-text-color: if(get($list-group-link-config, 'bg') == transparent, $white, get($list-group-link-config, 'bg'));
+        $list-group-badge-text-color-hover: if(get($list-group-link-config, 'bg-hover') == transparent, $white, get($list-group-link-config, 'bg-hover'));
+        $list-group-badge-text-color-press: if(get($list-group-link-config, 'bg-press') == transparent, $white, get($list-group-link-config, 'bg-press'));
+        $list-group-badge-text-color-active: if(get($list-group-link-config, 'bg-active') == transparent, $white, get($list-group-link-config, 'bg-active'));
+        $list-group-badge-text-color-disabled: if(get($list-group-link-config, 'bg-disabled') == transparent, $white, get($list-group-link-config, 'bg-disabled'));
+
+        $list-group-badge-bg: get($list-group-link-config, 'text-color');
+        $list-group-badge-bg-hover: get($list-group-link-config, 'text-color-hover');
+        $list-group-badge-bg-press: get($list-group-link-config, 'text-color-press');
+        $list-group-badge-bg-active: get($list-group-link-config, 'text-color-active');
+        $list-group-badge-bg-disabled: get($list-group-link-config, 'text-color-disabled');
+
+        .badge {
+            margin-top: to-rem(abs(get($list-group-item-config, 'margin-bottom')) * 2);
+            color: $list-group-badge-text-color;
+            background-color: $list-group-badge-bg;
+        }
+
+        // ----- HOVER / FOCUS HITAREA STATES ----- //
+        @if $list-group-badge-text-color-hover != $list-group-badge-text-color or
+            $list-group-badge-bg-hover         != $list-group-badge-bg {
+
+            #{$link-hover-focus} {
+                .badge {
+                    color: $list-group-badge-text-color-hover;
+                    background-color: $list-group-badge-bg-hover;
+                }
+            }
+        }
+
+
+        // ----- PRESSED HITAREA STATE ----- //
+        @if $list-group-badge-text-color-press != $list-group-badge-text-color-hover or
+            $list-group-badge-bg-press         != $list-group-badge-bg-hover {
+
+            #{$link-pressed} {
+                .badge {
+                    color: $list-group-badge-text-color-press;
+                    background-color: $list-group-badge-bg-press;
+                }
+            }
+        }
+
+
+        // ----- DISABLED HITAREA STATE ----- //
+        &.disabled,
+        &[disabled] {
+            .badge {
+                color: $list-group-badge-text-color-disabled !important;
+                background-color: $list-group-badge-bg-disabled !important;
+            }
+        }
+
+
+        // ----- ACTIVE STATE ----- //
+        .active > &,
+        &.active {
+            &,
+            #{$link-pressed} {
+                .badge {
+                    color: $list-group-badge-text-color-active;
+                    background-color: $list-group-badge-bg-active;
+                }
+            }
+        }
+    }
+
+
+// ********************************************************
+//
+//   OUTLINE BADGE SKIN VARIATION
+//
+//   -> These badge styles trump all other nested badge
+//      skin styles since they don't need to change color
+//      based on any of the skinning of the parent element
+//      at all.
+//
+//  [1] Inherit text color from the parent, override
+//      all previously applied colors based on the skin
+//      of the parent (e.g. badges in buttons / navs).
+//
+//  [2] Use an inset box-shadow instead of a border to
+//      ensure that outlined badges are the same width
+//      and height as their non-outlined counterparts.
+//
+// ********************************************************
+.badge--outline {
+    color: inherit !important; // [1]
+    background-color: transparent !important;
+    box-shadow: inset 0 0 0 .1rem currentColor; // [2]
+}

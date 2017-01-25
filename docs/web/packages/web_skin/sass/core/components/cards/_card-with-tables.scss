@@ -1,0 +1,103 @@
+// ********************************************************
+//
+//   STYLE ADJUSTMENTS FOR TABLES WITHIN CARDS
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/cards/card-with-tables';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $cards-module-config:  'core/components/atoms/cards/cards-config';
+    $cards-module-helpers: 'core/components/atoms/cards/cards-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $cards-module-config,
+                                          $cards-module-helpers);
+//
+// ********************************************************
+
+
+.table--flush {
+    margin-bottom: 0;
+}
+
+
+// ----------------------------------------------------
+//   HANDLE BORDERS / BORDER RADII
+// ----------------------------------------------------
+.card__body {
+    > .table,
+    > .table-responsive > .table {
+        // Add borders above and below the table to
+        // separate it from any adjacent content
+        border-top: to-rem(get($table-config, 'bd-width')) solid get($table-config, 'bd-color');
+        border-bottom: to-rem(get($table-config, 'bd-width')) solid get($table-config, 'bd-color');
+
+        &:last-child {
+            @include border-bottom-radius(get($card-size-base-config, 'bd-radius-inner'));
+            border-bottom: 0;
+            margin-bottom: 0;
+
+            // Prevent double bottom borders
+            #{$_tbody} #{$_tr}:last-of-type {
+                > #{$_td},
+                > #{$_th} {
+                    border-bottom-width: 0;
+
+                    // Make the radius of the first / last cell in the last row
+                    // line up nicely at the bottom of a rounded card.
+                    .card--rounded & {
+                        &:first-of-type {
+                            @include border-bottom-left-radius(get($card-size-base-config, 'bd-radius-inner'));
+                        }
+
+                        &:last-of-type {
+                            @include border-bottom-right-radius(get($card-size-base-config, 'bd-radius-inner'));
+                        }
+                    }
+                }
+            }
+        }
+
+        &:first-child {
+            @include border-top-radius(get($card-size-base-config, 'bd-radius-inner'));
+            border-top: 0;
+
+            // Prevent double top borders
+            #{$_tr}:first-of-type {
+                > #{$_td},
+                > #{$_th} {
+                    // Make the radius of the first / last cell in the first row
+                    // line up nicely at the bottom of a rounded card.
+                    .card--rounded & {
+                        &:first-of-type {
+                            @include border-top-left-radius(get($card-size-base-config, 'bd-radius-inner'));
+                        }
+
+                        &:last-of-type {
+                            @include border-top-right-radius(get($card-size-base-config, 'bd-radius-inner'));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    > .table-bordered,
+    > .table-responsive > .table-bordered {
+        // Prevent double-right border
+        border-right: 0;
+    }
+
+    //
+    // Remove the left / right borders from a
+    // .table-responsive element since the panel
+    // already gives us the borders we want.
+    //
+    > .table-responsive {
+        border-left-width: 0;
+        border-right-width: 0;
+    }
+}

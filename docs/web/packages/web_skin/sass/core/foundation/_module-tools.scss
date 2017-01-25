@@ -1,0 +1,19 @@
+// ********************************************************
+//
+//   Foundation tool classes for the
+//   Web Skin core module
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/module-tools';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+@import "tools/component-animations";
+@import "tools/brand-marks";
+@import "tools/responsive";
+@import "tools/layout";
+@import 'tools/draggables';
+@import "tools/utilities";

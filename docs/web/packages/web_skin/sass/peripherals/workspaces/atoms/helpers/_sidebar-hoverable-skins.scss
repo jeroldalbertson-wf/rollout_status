@@ -1,0 +1,150 @@
+// ********************************************************
+
+////
+/// Workspaces "hoverable" sidebar component skin helpers
+/// ---
+/// @since 1.3.0
+/// @access public
+/// @group peripherals.components.workspaces
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/atoms/helpers/sidebar-hoverable-skins';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+$sidebar-active-nav-items: '.nav > .nav-item > .hitarea.active, .nav > .nav-item.active > .hitarea, .nav > .nav-item > .hitarea.open, .nav > .nav-item.open > .hitarea';
+
+
+//
+// Reusable styles applied when the sidebar has the
+// `wksp-sidebar-hoverable` CSS class, and the user
+// is NOT hovering and/or focusing within the sidebar.
+//
+@mixin wksp-sidebar-hoverable-grayscale-styles() {
+    .wksp-nav-pills .nav-item {
+        @include wksp-pill-link-skin($is-sidebar-hovered: false);
+    }
+
+    .wksp-pill-panel {
+        .panel-heading.hitarea {
+            @include wksp-pill-panel-heading-skin(
+                $is-sidebar-hovered: false,
+                $skin-config: $wksp-sidebar-pill-panel-config
+            );
+        }
+    }
+
+    .wksp-sidebar-btn-primary {
+        // Make the create / import buttons look like an active grayscale nav-pill when the sidebar is not hovered
+        $skin: get($wksp-sidebar-pill-skin-config, 'grayscale');
+
+        color: get($skin, 'text-active');
+        background-color: get($skin, 'bg-active');
+        border-color: get($skin, 'bd-active');
+    }
+
+
+    //
+    // When a child elem had focus and focus is set
+    // somewhere outside the sidebar, or when a user
+    // moves their mouse cursor outside the bounds of
+    // the sidebar, add a brief delay so that the
+    // sidebar doesn't appear inactive "instantly".
+    //
+    #{$sidebar-active-nav-items},
+    .btn {
+        @include wksp-sidebar-hitarea-transitions('min-to-max', $hover-delay: .6s);
+    }
+
+    .wksp-pill-panel .panel-heading.hitarea {
+        &.open {
+            // Do the border-radius transition immediately
+            @include wksp-sidebar-pill-panel-hitarea-transitions('min-to-max', $hover-delay: .6s);
+        }
+
+        &.collapsed {
+            // Delay the border-radius transition
+            @include wksp-sidebar-pill-panel-hitarea-transitions('max-to-min', $hover-delay: .6s);
+        }
+    }
+
+    &.wksp-sidebar-minimized {
+        #{$sidebar-active-nav-items},
+        .btn {
+            @include wksp-sidebar-hitarea-transitions('max-to-min', $hover-delay: .6s);
+        }
+    }
+}
+
+
+//
+// Reusable styles applied when
+// a) The sidebar lacks the `wksp-sidebar-hoverable` CSS class
+// b) The sidebar has the `wksp-sidebar-hoverable` CSS class,
+//    and the user is hovering and/or focusing within the sidebar.
+//
+@mixin wksp-sidebar-hoverable-full-color-styles($always-full-color: false) {
+    .wksp-nav-pills .nav-item {
+        @include wksp-pill-link-skin($is-sidebar-hovered: true);
+    }
+
+    .wksp-pill-panel {
+        .panel-heading.hitarea {
+            @include wksp-pill-panel-heading-skin(
+                $is-sidebar-hovered: true,
+                $skin-config: $wksp-sidebar-hovered-pill-panel-config
+            );
+        }
+    }
+
+    //
+    // Make the create / import buttons look like a "btn-primary"
+    // skinned button when the sidebar is hovered.
+    //
+    .wksp-sidebar-btn-primary {
+        @include btn-skin('primary');
+
+        &.btn-flat {
+            box-shadow: none;
+        }
+    }
+
+
+    // Only add transitions if a grayscale => full color effect is happening
+    @if not $always-full-color {
+        //
+        // Immediately activate the full color appearance
+        // when a sidebar button child elem, or activated
+        // sidebar nav elem gains focus or when
+        // a user hovers the sidebar.
+        //
+        #{$sidebar-active-nav-items},
+        .btn {
+            @include wksp-sidebar-hitarea-transitions('min-to-max', $hover-delay: 5ms);
+        }
+
+        .wksp-pill-panel .panel-heading.hitarea {
+            &.open {
+                // Do the border-radius transition immediately
+                @include wksp-sidebar-pill-panel-hitarea-transitions('min-to-max', $hover-delay: 5ms);
+            }
+
+            &.collapsed {
+                // Delay the border-radius transition
+                @include wksp-sidebar-pill-panel-hitarea-transitions('max-to-min', $hover-delay: 5ms);
+            }
+        }
+
+        &.wksp-sidebar-minimized {
+            #{$sidebar-active-nav-items},
+            .btn {
+                @include wksp-sidebar-hitarea-transitions('max-to-min', $hover-delay: 5ms);
+            }
+        }
+    }
+}

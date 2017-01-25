@@ -1,0 +1,227 @@
+// ----------------------------------------------------
+//   get()
+// ----------------------------------------------------
+@include describe('[get]') {
+    @include describe('when key is found') {
+        @include it('should return the value') {
+            $map: (
+                foo: 'bar',
+                baz: 'bin'
+            );
+            $expected: 'bar';
+            $actual: get($map, foo);
+
+            @include should(expect( $actual ), to(equal( $expected )));
+        }
+    }
+
+    @include describe('when key is not found') {
+        @include it('should return null') {
+            $map: (
+                foo: 'bar',
+                baz: 'bin'
+            );
+            $expected: null;
+            $actual: get($map, foobar);
+
+            @include should(expect( $actual ), to(equal( $expected )));
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   get-deep()
+// ----------------------------------------------------
+@include describe('[get-deep]') {
+    @include describe('using the default delimiter') {
+        @include it('should return the deeply nested value') {
+            $map: (
+                foo: (
+                    child: 'bar'
+                )
+            );
+            $expected: 'bar';
+            $actual: get-deep($map, 'foo.child');
+
+            @include should(expect( $actual ), to(equal( $expected )));
+        }
+    }
+
+    @include describe('using a custom delimiter') {
+        @include it('should return the deeply nested value') {
+            $map: (
+                foo: (
+                    child: 'bar'
+                )
+            );
+            $expected: 'bar';
+            $actual: get-deep($map, foo child, ' ');
+
+            @include should(expect( $actual ), to(equal( $expected )));
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   extend()
+// ----------------------------------------------------
+@include describe('[extend]') {
+    @include describe('when two maps have no identical keys and a depth of') {
+        @include describe('one') {
+            @include it('should return a single map with key value pairs from both maps') {
+                $map1: (
+                    foo: 'bar',
+                    baz: 'bin'
+                );
+                $map2: (
+                    foobar: 'foobaz'
+                );
+                $expected: (
+                    foo: 'bar',
+                    baz: 'bin',
+                    foobar: 'foobaz'
+                );
+                $actual: extend($map1, $map2);
+
+                @include should(expect( inspect($actual) ), to(be( inspect($expected) )));
+            }
+        }
+
+        @include describe('more than one') {
+            @include it('should return a single map with deeply nested key value pairs from both maps') {
+                $map1: (
+                    foo: 'bar',
+                    baz: (
+                        child: 'bin',
+                        another-child: (
+                            grandchild: 'baby-bin'
+                        )
+                    )
+                );
+                $map2: (
+                    foobar: 'foobaz',
+                    out-of-foos: (
+                        nested-foo: 'bars'
+                    )
+                );
+                $expected: (
+                    foo: 'bar',
+                    baz: (
+                        child: 'bin',
+                        another-child: (
+                            grandchild: 'baby-bin'
+                        )
+                    ),
+                    foobar: 'foobaz',
+                    out-of-foos: (
+                        nested-foo: 'bars'
+                    )
+                );
+                $actual: extend($map1, $map2);
+
+                @include should(expect( inspect($actual) ), to(be( inspect($expected) )));
+            }
+        }
+    }
+
+    @include describe('when two maps have some identical keys and a depth of') {
+        @include describe('one') {
+            @include it('should return a single map with key value pairs from both maps, where the conflicting key value from map2 is the winner') {
+                $map1: (
+                    foo: 'bar',
+                    baz: 'bin'
+                );
+                $map2: (
+                    foobar: 'foobaz',
+                    foo: 'baz'
+                );
+                $expected: (
+                    foo: 'baz',
+                    baz: 'bin',
+                    foobar: 'foobaz'
+                );
+                $actual: extend($map1, $map2);
+
+                @include should(expect( inspect($actual) ), to(be( inspect($expected) )));
+            }
+        }
+
+        @include describe('more than one') {
+            @include it('should return a single map with deeply nested key value pairs from both maps, where the conflicting key value from map2 is the winner') {
+                $map1: (
+                    foo: 'bar',
+                    baz: (
+                        child: 'bin',
+                        another-child: (
+                            grandchild: 'baby-bin'
+                        )
+                    )
+                );
+                $map2: (
+                    baz: (
+                        another-child: (
+                            grandchild: 'grandbaby-bin'
+                        )
+                    ),
+                    foobar: 'foobaz',
+                    out-of-foos: (
+                        nested-foo: 'bars'
+                    )
+                );
+                $expected: (
+                    foo: 'bar',
+                    baz: (
+                        child: 'bin',
+                        another-child: (
+                            grandchild: 'grandbaby-bin'
+                        )
+                    ),
+                    foobar: 'foobaz',
+                    out-of-foos: (
+                        nested-foo: 'bars'
+                    )
+                );
+                $actual: extend($map1, $map2);
+
+                @include should(expect( inspect($actual) ), to(be( inspect($expected) )));
+            }
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   map-serialize()
+// ----------------------------------------------------
+@include describe('[map-serialize]') {
+    @include describe('when map is only one level deep') {
+        @include it('should return a URL-encoded string') {
+            $map: (
+                foo: 'bar',
+                bar: 2,
+                baz: #fff
+            );
+            $expected: 'foo=bar&bar=2&baz=#fff';
+            $actual: map-serialize($map);
+
+            @include should(expect( $actual ), to(equal( $expected )));
+        }
+    }
+
+    @include describe('when map key value contains a value that needs to be escaped') {
+        @include it('should return a URL-encoded string') {
+            $map: (
+                foo: 'bar',
+                bar: 2,
+                baz: #fff,
+                selector: '&.classname'
+            );
+            $expected: 'foo=bar&bar=2&baz=#fff&selector=%26.classname';
+            $actual: map-serialize($map);
+
+            @include should(expect( $actual ), to(equal( $expected )));
+        }
+    }
+}

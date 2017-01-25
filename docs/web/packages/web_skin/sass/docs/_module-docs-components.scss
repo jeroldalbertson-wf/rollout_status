@@ -1,0 +1,47 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/module-docs-components';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----- Navigation ----- //
+@import "components/navs/docs-navbar";
+@import "components/navs/docs-navbar-options-menu";
+@import "components/navs/docs-sidenav";
+@import "components/navs/tabs/docs-tabs-vertical";
+@import "components/navs/tabs/docs-tabbed-content";
+@import "components/navs/docs-navs-pills-bar"; // Prototype for new nav-pills-bar component TODO: remove when this gets added to the core web skin module
+@import "components/navs/docs-search-filter-bar";
+
+// ----- Layout ----- //
+@import "components/layout/docs-header";
+@import "components/layout/docs-footer";
+@import "components/layout/docs-home"; // TODO: this should probably be in its own file / inlined on the home page?
+@import "components/layout/docs-sections";
+@import "components/layout/docs-tables";
+@import "components/layout/docs-getting-started-branding"; // TODO: this should probably be in its own file / inlined on the getting-started page?
+
+// ----- Typography ----- //
+@import "components/docs-type";
+
+// ----- Buttons ----- //
+@import "components/docs-buttons";
+
+// ----- Callouts ----- //
+@import "components/docs-callouts";
+
+// ----- Tooltips ----- //
+@import "components/docs-tooltips";
+
+// ----- Code examples ----- //
+@import "components/docs-code-examples";
+
+// ----- Examples ----- //
+@import "components/docs-examples";
+
+// ----- SassDoc ----- //
+@import "components/docs-sassdoc";

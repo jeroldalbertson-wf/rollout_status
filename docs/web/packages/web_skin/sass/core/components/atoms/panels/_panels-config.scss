@@ -1,0 +1,71 @@
+// ********************************************************
+
+////
+/// Panel component configuration
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// @access public
+/// @group core.components.panels
+/// @link http://bit.ly/webskin-panels Panel component spec
+/// @link http://bit.ly/webskin-panel-sizes Panel component size variation spec
+/// @link http://bit.ly/webskin-panel-colors Panel component color variation spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/panels/panels-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   INDIVIDUAL PANEL SIZE / COLOR CONFIGS
+//
+// ********************************************************
+    @import 'config/panel-size-config';
+    @import 'config/panel-color-config';
+
+
+
+// ********************************************************
+//
+//   GLOBAL PANEL CONFIG
+//
+// ********************************************************
+    ///
+    /// Global collection of configurations for `.panel` components, along with the `.panel-heading`, `.panel-title`, `.panel-body` and `.panel-footer` elems nested within them.
+    /// ---
+    /// @todo Change `.panel-heading` to `.panel-header`
+    /// ---
+    /// @requires {function} get
+    /// @requires {variable} $base-elem-margin-vertical
+    /// @requires {variable} $dialog-config
+    /// @requires {variable} $panel-size-base-config
+    /// @requires {variable} $panel-size-sm-config
+    /// @requires {variable} $panel-colors
+    /// @requires {variable} $panel-colors-inverse
+    /// ---
+    /// @prop {Number} bd-width         [1px]   - Default border width of a `.panel`
+    /// @prop {Number} bd-radius        [0]     - Default border radius of a `.panel`
+    /// @prop {Number} margin-bottom    [20px]  - Default amount of negative space to preserve beneath a `.panel`
+    ///
+    /// @prop {Map}    base             - Size configuration map for base `.panel` component size
+    /// @prop {Map}    sm               - Size configuration map for small `.panel-condensed` component size variation
+    /// @prop {Map}    colors           - Color configuration map for the default and default contrast state variations of a `.panel`
+    /// @prop {Map}    colors-inverse   - Color configuration map for the default and inverse contrast state variations of a `.panel`
+    ///
+    $panel-config: (
+        'bd-width': $global-component-bd-width,
+        'bd-radius': 0,
+        'margin-bottom': $base-elem-margin-vertical * 2,
+        // size variations
+        'base': $panel-size-base-config,
+        'sm': $panel-size-sm-config,
+        // color config
+        'colors': $panel-colors,
+        'colors-inverse': $panel-colors-inverse
+    ) !default;

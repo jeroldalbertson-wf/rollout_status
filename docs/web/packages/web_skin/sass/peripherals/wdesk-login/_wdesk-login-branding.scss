@@ -1,0 +1,37 @@
+// ********************************************************
+//
+//   Wdesk Login Page Branding Styles
+//
+    $module: 'peripherals/wdesk-login/wdesk-login-branding';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Masthead Logo
+// ----------------------------------------------------
+    %workiva-wdesk-logo-img {
+        @include img-retina($file-1x: $workiva-wdesk-logo-src1x, $file-2x: $workiva-wdesk-logo-src2x);
+    }
+
+
+// ----------------------------------------------------
+//   Mobile First Defaults
+// ----------------------------------------------------
+    .workiva-wdesk-logo {
+        @extend %workiva-wdesk-logo-img;
+
+        margin: 0 auto;
+    }
+
+
+// ----------------------------------------------------
+//   TABLET+
+// ----------------------------------------------------
+    @include breakpoint($login-sm-breakpoint-min) {
+        .workiva-wdesk-logo {
+            margin-right: 0;
+            margin-left: 0;
+        }
+    }

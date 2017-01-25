@@ -1,0 +1,105 @@
+// ********************************************************
+
+////
+/// Global display helpers for components / base elements
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// @group core.display
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/display';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function comma-list);
+//
+// ********************************************************
+
+
+///
+/// Collection of default `z-index` layer values of core components. Values can be easily referenced using the `get()` or `z()` functions.
+/// ---
+/// @see {function} get
+/// @see {function} z
+/// ---
+/// @example scss
+///   // using get-deep()
+///   .keep-above-navbar {
+///       z-index: get($z-index, fixed-navbar) + 1;
+///   }
+///   // using z()
+///   .keep-above-navbar {
+///       z-index: z(fixed-navbar) + 1;
+///   }
+/// ---
+/// @prop {Number} dropdown        [1000] - Default `z-index` value for a `.dropdown` element.
+/// @prop {Number} navbar          [1000] - Default `z-index` value for a `.navbar` element
+/// @prop {Number} tooltip         [10000] - Default `z-index` value for a `.tooltip` element or `.has-hint:before` / `.has-hint:after` pseudo-element.
+/// @prop {Number} fixed-navbar    [1030] - Default `z-index` value for a `.navbar-fixed-*` element.
+/// @prop {Number} modal-backdrop  [1040] - Default `z-index` value for a `.backdrop` element.
+/// @prop {Number} modal           [1050] - Default `z-index` value for a `.modal` element.
+/// @prop {Number} popover         [1051] - Default `z-index` value for a `.popover` element.
+/// @prop {Number} toast-alert     [1060] - Default `z-index` value for a `.alert-toast` element.
+///
+$z-index: (
+    'dropdown': 1000,
+    'navbar': 1000,
+    'tooltip': 10000, // Above everything.
+    'fixed-navbar': 1030,
+    'modal-backdrop': 1050,
+    'modal': 1050,
+    'popover': 1051,
+    'toast-alert': 1060
+) !default;
+
+
+///
+/// Collection of HTML elements and groups of element types.
+/// ---
+/// @requires {function} comma-list
+/// ---
+/// @prop {List} selectable                    - List of elems that we enable `user-select` on.
+/// @prop {List} block                         - List of elems that are given `display: block;` by default.
+/// @prop {List} inline                        - List of elems that are given `display: inline;` by default.
+/// @prop {List} html5-block                   - List of HTML5 elems that are given `display: block;` by default.
+/// @prop {List} html5-inline                  - List of HTML5 elems that are given `display: inline;` by default.
+/// @prop {String} inline-block        [img]   - Elem that is given `display: inline-block;` by default.
+/// @prop {String} list-item           [li]
+/// @prop {String} table               [table]
+/// @prop {String} table-row-group     [tbody]
+/// @prop {String} table-header-group  [thead]
+/// @prop {String} table-footer-group  [tfoot]
+/// @prop {String} table-row           [tr]
+/// @prop {List}   table-cell          [th td]
+///
+$global-element-types: (
+    'selectable':   comma-list('[contenteditable]' '[contenteditable] *' address blockquote pre code input
+                               textarea p span small strong em abbr acronym td th),
+    'block':        comma-list(address article aside blockquote center dir div dd
+                               details dl dt fieldset figcaption figure form footer
+                               frameset h1 h2 h3 h4 h5 h6 hr header hgroup isindex
+                               menu nav noframes noscript ol p pre section summary ul),
+    'inline':       comma-list(a abbr acronym audio b basefont bdo big br canvas cite
+                               code command datalist dfn em embed font i img input
+                               keygen kbd label mark meter output progress q rp rt
+                               ruby s samp select small span strike strong sub sup
+                               textarea time tt u var video wbr),
+    'html5-block':  comma-list(article aside details figcaption figure footer
+                               header hgroup menu nav section summary),
+    'html5-inline': comma-list(audio canvas command datalist embed keygen mark
+                               meter output progress rp rt ruby time video wbr),
+    'inline-block':         img,
+    'list-item':            li,
+    'table':                table,
+    'table-row-group':      tbody,
+    'table-header-group':   thead,
+    'table-footer-group':   tfoot,
+    'table-row':            tr,
+    'table-cell':           th td
+) !default;
+

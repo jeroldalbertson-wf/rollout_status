@@ -1,0 +1,477 @@
+// ********************************************************
+
+////
+/// Dropdown nav size configuration
+/// ---
+/// @access public
+/// @group core.components.dropdowns
+///
+/// @link http://bit.ly/webskin-dropdowns Dropdown nav component spec
+/// @link http://bit.ly/webskin-dropdown-dividers Dropdown nav divider spec
+/// @link http://bit.ly/webskin-dropdown-headers Dropdown nav header spec
+/// @link http://bit.ly/webskin-dropdown-info-panels Dropdown nav info-panel spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/config/dropdown-size-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function calc-nav-divider-margin,
+                                                function box-model-height,
+                                                function get,
+                                                function extend,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   SIZES THAT DO NOT VARY
+//
+// ********************************************************
+    ///
+    /// Default border width for `.dropdown-menu` components at all sizes.
+    /// ---
+    /// @type Number
+    ///
+    $dropdown-menu-bd-width: 1px !default;
+
+    ///
+    /// Default border width for `.dropdown-info` panels within `.dropdown-menu` components at all sizes.
+    /// ---
+    /// @type Number
+    /// @since 0.4.3
+    /// @link http://bit.ly/webskin-dropdown-info-panels Dropdown nav info-panel spec
+    /// ---
+    /// @requires {variable} $dropdown-menu-bd-width
+    ///
+    $dropdown-info-panel-bd-width: $dropdown-menu-bd-width !default;
+
+    ///
+    /// Amount to increase/decrease the font size of `.dropdown-header` elements compared to the font size for the reset of the menu.
+    /// ---
+    /// @type Number
+    /// @access private
+    /// @group core.internals.components.dropdowns
+    /// @link http://bit.ly/webskin-dropdown-headers Dropdown nav header spec
+    ///
+    $dropdown-header-font-size-mod: -1;
+
+
+
+// ********************************************************
+//
+//   BASE SIZE
+//
+// ********************************************************
+    ///
+    /// Collection of size properties for the default `.dropdown-menu` component, as well as the various elems that are often nested within them.
+    /// ---
+    /// @since 1.0.0
+    /// @type Map
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {function} extend
+    /// @requires {function} calc-nav-divider-margin
+    /// @requires {function} box-model-height
+    /// @requires {variable} $font-size-md
+    /// @requires {variable} $line-height-sm
+    /// @requires {variable} $nav-base-config
+    /// @requires {variable} $global-component-size-config
+    /// @requires {variable} $dropdown-menu-bd-width
+    /// ---
+    /// @prop {Number} min-width                    [120px]      - Minimum width
+    /// @prop {Number} max-width                    [500px]      - Maximum width
+    /// @prop {Number} font-size                    [13px]       - Font size
+    /// @prop {Number} header-font-size             [12px]       - Font size of `.dropdown-header`. _Added via `@extend`_
+    /// @prop {Number} line-height                  [1.5]        - Line height
+    /// @prop {Number} bd-radius                    [4px]        - Border radius
+    /// @prop {Number} padding-vertical             [4px]        - Vertical padding
+    /// @prop {Number} padding-horizontal           [0]          - Horizontal padding
+    /// @prop {List}   padding                      [4px 0]      - Combination of vertical and horizontal padding. _Added via `@extend`_
+    /// @prop {Number} link-padding-vertical        [3px]        - Vertical padding for nested `.hitarea` elems
+    /// @prop {Number} link-padding-horizontal      [11px]       - Horizontal padding for nested `.hitarea` elems
+    /// @prop {List}   link-padding                 [3px 11px]   - Combination of vertical and horizontal padding for nested `.hitarea` elems. _Added via `@extend`_
+    /// @prop {Number} link-height                  [25px]       - Calculated height of nested `.hitarea` elems. _Added via `@extend`_
+    /// @prop {Number} link-icon-margin-horizontal  [1px]        - Calculated horizontal spacing for `.icon` elems nested within `.hitarea` elems. _Added via `@extend`_
+    /// @prop {List}   divider-margin               [3px 0 2px]  - Margin for nested `.divider` elems. _Added via `@extend`_
+    ///
+    $dropdown-menu-base-size-config: (
+        'min-width': 120px,
+        'max-width': 500px,
+        'font-size': $font-size-md,
+        'header-font-size': null, // actual calculated value inserted via @extend
+        'line-height': $line-height-sm,
+        'bd-radius': get($nav-base-config, 'bd-radius'),
+        'padding-vertical': get($nav-base-config, 'bd-radius'),
+        'padding-horizontal': 0,
+        'padding': null, // actual calculated value inserted via @extend
+        //
+        'link-padding-vertical': get-deep($global-component-size-config, 'padding.xs.vertical') - 1,
+        'link-padding-horizontal': get-deep($global-component-size-config, 'padding.base.horizontal') - $dropdown-menu-bd-width,
+        'link-padding': null, // actual calculated value inserted via @extend
+        'link-height': null, // actual calculated value inserted via @extend
+        'link-icon-margin-horizontal': null, // actual calculated value inserted via @extend
+        //
+        'divider-margin': null // actual calculated value inserted via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $dropdown-menu-base-size-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $dropdown-menu-base-size-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $cfg: $dropdown-menu-base-size-config;
+        $dropdown-header-font-size:  get($cfg, 'font-size') + $dropdown-header-font-size-mod;
+        $dropdown-menu-padding:      get($cfg, 'padding-vertical') get($cfg, 'padding-horizontal');
+        $dropdown-menu-link-padding: get($cfg, 'link-padding-vertical') get($cfg, 'link-padding-horizontal');
+        $dropdown-menu-link-height:  box-model-height($font-size: get($cfg, 'font-size'),
+                                                      $line-height: get($cfg, 'line-height'),
+                                                      $padding-vertical: get($cfg, 'link-padding-vertical'),
+                                                      $bd-width: 0
+                                                     );
+        $dropdown-menu-link-icon-margin-horizontal: floor(get($cfg, 'link-padding-horizontal') / 10);
+        $dropdown-menu-divider-margin: calc-nav-divider-margin(get($cfg, 'padding-vertical'), $dropdown-menu-bd-width);
+
+        // ----- EXTEND base size config with calc'd values ----- //
+        $dropdown-menu-base-size-config: extend($dropdown-menu-base-size-config,
+            (
+                'header-font-size': $dropdown-header-font-size,
+                'padding': $dropdown-menu-padding,
+                'link-padding': $dropdown-menu-link-padding,
+                'link-height': $dropdown-menu-link-height,
+                'link-icon-margin-horizontal': $dropdown-menu-link-icon-margin-horizontal,
+                'divider-margin': $dropdown-menu-divider-margin
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   MEDIUM SIZE VARIATION
+//
+// ********************************************************
+    ///
+    /// Collection of size properties for the `.dropdown-menu-md` component size variation, as well as the various elems that are often nested within them.
+    /// ---
+    /// @since 1.0.0
+    /// @type Map
+    /// ---
+    /// @requires {function} extend
+    /// @requires {variable} $dropdown-menu-base-size-config
+    /// ---
+    /// @prop {Number} min-width                    [160px]      - Minimum width
+    /// @prop {Number} max-width                    [600px]      - Maximum width
+    /// @prop {Number} font-size                    [13px]       - _Inherited from `$dropdown-menu-base-size-config`_
+    /// @prop {Number} header-font-size             [12px]       - _Inherited from `$dropdown-menu-base-size-config`_
+    /// @prop {Number} line-height                  [1.5]        - _Inherited from `$dropdown-menu-base-size-config`_
+    /// @prop {Number} bd-radius                    [4px]        - _Inherited from `$dropdown-menu-base-size-config`_
+    /// @prop {Number} padding-vertical             [4px]        - _Inherited from `$dropdown-menu-base-size-config`_
+    /// @prop {Number} padding-horizontal           [0]          - _Inherited from `$dropdown-menu-base-size-config`_
+    /// @prop {List}   padding                      [4px 0]      - _Inherited from `$dropdown-menu-base-size-config`_
+    /// @prop {Number} link-padding-vertical        [4px]        - _Inherited from `$dropdown-menu-base-size-config`_
+    /// @prop {Number} link-padding-horizontal      [11px]       - _Inherited from `$dropdown-menu-base-size-config`_
+    /// @prop {List}   link-padding                 [4px 11px]   - _Inherited from `$dropdown-menu-base-size-config`_
+    /// @prop {Number} link-height                  [27px]       - _Inherited from `$dropdown-menu-base-size-config`_
+    /// @prop {Number} link-icon-margin-horizontal  [1px]        - _Inherited from `$dropdown-menu-base-size-config`_
+    /// @prop {List}   divider-margin               [4px 0 3px]  - _Inherited from `$dropdown-menu-base-size-config`_
+    ///
+    $dropdown-menu-md-size-config: extend($dropdown-menu-base-size-config,
+        (
+            'min-width': 160px,
+            'max-width': 600px,
+            'link-padding-vertical': get-deep($global-component-size-config, 'padding.xs.vertical'),
+            'link-padding': null, // actual calculated value inserted via @extend
+            'link-height': null, // actual calculated value inserted via @extend
+            'divider-margin': null, // actual calculated value inserted via @extend
+        )
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $dropdown-menu-md-size-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $dropdown-menu-md-size-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $cfg: $dropdown-menu-md-size-config;
+        $dropdown-menu-md-link-padding: get($cfg, 'link-padding-vertical') get($cfg, 'link-padding-horizontal');
+        $dropdown-menu-md-link-height:  box-model-height($font-size: get($cfg, 'font-size'),
+                                                         $line-height: get($cfg, 'line-height'),
+                                                         $padding-vertical: get($cfg, 'link-padding-vertical'),
+                                                         $bd-width: 0
+                                                        );
+        $dropdown-menu-md-divider-margin: calc-nav-divider-margin(get($cfg, 'padding-vertical'), $dropdown-menu-bd-width);
+
+        // ----- EXTEND base size config with calc'd values ----- //
+        $dropdown-menu-md-size-config: extend($dropdown-menu-md-size-config,
+            (
+                'link-padding': $dropdown-menu-md-link-padding,
+                'link-height': $dropdown-menu-md-link-height,
+                'divider-margin': $dropdown-menu-md-divider-margin
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   LARGE SIZE VARIATION
+//
+// ********************************************************
+    ///
+    /// Collection of size properties for the `.dropdown-menu-lg` component size variation, as well as the various elems that are often nested within them.
+    /// ---
+    /// @since 1.0.0
+    /// @type Map
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {function} calc-nav-divider-margin
+    /// @requires {function} box-model-height
+    /// @requires {variable} $font-size-base
+    /// @requires {variable} $line-height-base
+    /// @requires {variable} $border-radius-lg
+    /// @requires {variable} $dropdown-menu-base-size-config
+    /// ---
+    /// @prop {Number} min-width                    [200px]      - Minimum width
+    /// @prop {Number} max-width                    [700px]      - Maximum width
+    /// @prop {Number} font-size                    [14px]       - Font size
+    /// @prop {Number} header-font-size             [13px]       - Font size of `.dropdown-header`. _Added via `@extend`_
+    /// @prop {Number} line-height                  [1.42857]    - Line height
+    /// @prop {Number} bd-radius                    [6px]        - Border radius
+    /// @prop {Number} padding-vertical             [6px]        - Vertical padding
+    /// @prop {Number} padding-horizontal           [0]          - Horizontal padding
+    /// @prop {List}   padding                      [6px 0]      - Combination of vertical and horizontal padding. _Added via `@extend`_
+    /// @prop {Number} link-padding-vertical        [7px]        - Vertical padding for nested `.hitarea` elems
+    /// @prop {Number} link-padding-horizontal      [15px]       - Horizontal padding for nested `.hitarea` elems
+    /// @prop {List}   link-padding                 [7px 15px]   - Combination of vertical and horizontal padding for nested `.hitarea` elems. _Added via `@extend`_
+    /// @prop {Number} link-height                  [34px]       - Calculated height of nested `.hitarea` elems. _Added via `@extend`_
+    /// @prop {Number} link-icon-margin-horizontal  [1px]        - Calculated horizontal spacing for `.icon` elems nested within `.hitarea` elems. _Added via `@extend`_
+    /// @prop {List}   divider-margin               [6px 0 5px]  - Margin for nested `.divider` elems. _Added via `@extend`_
+    ///
+    $dropdown-menu-lg-size-config: (
+        'min-width': 200px,
+        'max-width': 700px,
+        'font-size': $font-size-base,
+        'header-font-size': null, // actual calculated value inserted via @extend
+        'line-height': $line-height-base,
+        'bd-radius': $border-radius-lg,
+        'padding-vertical': $border-radius-lg,
+        'padding-horizontal': 0,
+        'padding': null, // actual calculated value inserted via @extend
+        //
+        'link-padding-vertical': get($dropdown-menu-base-size-config, 'link-padding-vertical') + 4,
+        'link-padding-horizontal': get($dropdown-menu-base-size-config, 'link-padding-horizontal') + 4,
+        'link-padding': null, // actual calculated value inserted via @extend
+        'link-height': null, // actual calculated value inserted via @extend
+        'link-icon-margin-horizontal': null, // actual calculated value inserted via @extend
+        //
+        'divider-margin': null // actual calculated value inserted via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $dropdown-menu-lg-size-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $dropdown-menu-lg-size-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $cfg: $dropdown-menu-lg-size-config;
+        $dropdown-menu-lg-padding:      get($cfg, 'padding-vertical') get($cfg, 'padding-horizontal');
+        $dropdown-menu-lg-link-padding: get($cfg, 'link-padding-vertical') get($cfg, 'link-padding-horizontal');
+        $dropdown-menu-lg-link-height:  box-model-height($font-size: get($cfg, 'font-size'),
+                                                         $line-height: get($cfg, 'line-height'),
+                                                         $padding-vertical: get($cfg, 'link-padding-vertical'),
+                                                         $bd-width: 0
+                                                        );
+        $dropdown-menu-lg-link-icon-margin-horizontal: floor(get($cfg, 'link-padding-horizontal') / 10);
+        $dropdown-menu-lg-divider-margin: calc-nav-divider-margin(get($cfg, 'padding-vertical'), $dropdown-menu-bd-width);
+        $dropdown-lg-header-font-size: get($cfg, 'font-size') + $dropdown-header-font-size-mod;
+
+        // ----- EXTEND large size config with calc'd values ----- //
+        $dropdown-menu-lg-size-config: extend($dropdown-menu-lg-size-config,
+            (
+                'header-font-size': $dropdown-lg-header-font-size,
+                'padding': $dropdown-menu-lg-padding,
+                'link-padding': $dropdown-menu-lg-link-padding,
+                'link-height': $dropdown-menu-lg-link-height,
+                'link-icon-margin-horizontal': $dropdown-menu-lg-link-icon-margin-horizontal,
+                'divider-margin': $dropdown-menu-lg-divider-margin
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   COLLECTION OF ALL SIZES
+//
+//   -> Store the size variation config values in a map
+//      for easy iteration / programattic access
+//
+// ********************************************************
+    ///
+    /// Collection of all size property map configs for `.dropdown-menu` component size variations, as well as the various elems that are often nested within them.
+    /// ---
+    /// @since 1.0.0
+    /// @type Map
+    /// ---
+    /// @requires {variable} $dropdown-menu-base-size-config
+    /// @requires {variable} $dropdown-menu-md-size-config
+    /// @requires {variable} $dropdown-menu-lg-size-config
+    /// ---
+    /// @prop {Map} base - Configuration map used in the default `.dropdown-menu` component size
+    /// @prop {Map} md   - Configuration map used in the `.dropdown-menu-md` component size variation
+    /// @prop {Map} lg   - Configuration map used in the `.dropdown-menu-lg` component size variation
+    ///
+    $dropdown-menu-sizes: (
+        'base': $dropdown-menu-base-size-config,
+        'md':   $dropdown-menu-md-size-config,
+        'lg':   $dropdown-menu-lg-size-config
+    ) !default;
+
+
+
+// ********************************************************
+//
+//  DROPDOWN "BOX" SIZES
+//
+//  -> Just like a `.dropdown-menu`, but it is intended
+//     to house a wide range of components - not just
+//     `.menu-item`s.
+//
+// ********************************************************
+    ///
+    /// Collection of size properties for the default `.dropdown-menu--box` component, as well as the various elements that are often nested within them.
+    /// ---
+    /// @since 1.9.0
+    /// @type Map
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} to-rem
+    /// @requires {variable} $dropdown-menu-base-size-config
+    /// ---
+    /// @prop {Number}      min-width          [0]     - Minimum width
+    /// @prop {String}      max-width          [none]  - Maximum width
+    /// @prop {Number}      bd-radius          [.4rem] - Border radius
+    /// @prop {Number}      padding-vertical   [0]     - Vertical padding
+    /// @prop {Number}      padding-horizontal [0]     - Horizontal padding
+    /// @prop {List|Number} padding            [0]     - Padding
+    ///
+    /// @prop {Number} child-spacing [1.1rem] - The amount of horizontal / vertical space that should appear between non `.menu-item` children
+    ///
+    $dropdown-box-base-size-config: (
+        'min-width': 0,
+        'max-width': none,
+        'bd-radius': to-rem(get($dropdown-menu-base-size-config, 'bd-radius')),
+        'padding-vertical': 0,
+        'padding-horizontal': 0,
+        'padding': 0,
+        'child-spacing': to-rem(get($dropdown-menu-base-size-config, 'link-padding-horizontal'))
+    ) !default;
+
+    ///
+    /// Collection of size properties for the default `.dropdown-menu--box--md` size variation, as well as the various elements that are often nested within them.
+    /// ---
+    /// @since 1.9.0
+    /// @type Map
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} to-rem
+    /// @requires {variable} $dropdown-menu-md-size-config
+    /// ---
+    /// @prop {Number}      min-width          [0]     - Minimum width
+    /// @prop {String}      max-width          [none]  - Maximum width
+    /// @prop {Number}      bd-radius          [.4rem] - Border radius
+    /// @prop {Number}      padding-vertical   [0]     - Vertical padding
+    /// @prop {Number}      padding-horizontal [0]     - Horizontal padding
+    /// @prop {List|Number} padding            [0]     - Padding
+    ///
+    /// @prop {Number} child-spacing [1.1rem] - The amount of horizontal / vertical space that should appear between non `.menu-item` children
+    ///
+    $dropdown-box-md-size-config: (
+        'min-width': 0,
+        'max-width': none,
+        'bd-radius': to-rem(get($dropdown-menu-md-size-config, 'bd-radius')),
+        'padding-vertical': 0,
+        'padding-horizontal': 0,
+        'padding': 0,
+        'child-spacing': to-rem(get($dropdown-menu-md-size-config, 'link-padding-horizontal'))
+    ) !default;
+
+    ///
+    /// Collection of size properties for the default `.dropdown-menu--box--lg` size variation, as well as the various elements that are often nested within them.
+    /// ---
+    /// @since 1.9.0
+    /// @type Map
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} to-rem
+    /// @requires {variable} $dropdown-menu-lg-size-config
+    /// ---
+    /// @prop {Number}      min-width          [0]     - Minimum width
+    /// @prop {String}      max-width          [none]  - Maximum width
+    /// @prop {Number}      bd-radius          [.6rem] - Border radius
+    /// @prop {Number}      padding-vertical   [0]     - Vertical padding
+    /// @prop {Number}      padding-horizontal [0]     - Horizontal padding
+    /// @prop {List|Number} padding            [0]     - Padding
+    ///
+    /// @prop {Number} child-spacing [1.5rem] - The amount of horizontal / vertical space that should appear between non `.menu-item` children
+    ///
+    $dropdown-box-lg-size-config: (
+        'min-width': 0,
+        'max-width': none,
+        'bd-radius': to-rem(get($dropdown-menu-lg-size-config, 'bd-radius')),
+        'padding-vertical': 0,
+        'padding-horizontal': 0,
+        'padding': 0,
+        'child-spacing': to-rem(get($dropdown-menu-lg-size-config, 'link-padding-horizontal'))
+    ) !default;
+
+    ///
+    /// Collection of all size property map configs for `.dropdown-menu--box` component size variations, as well as the various elems that are often nested within them.
+    /// ---
+    /// @since 1.9.0
+    /// @type Map
+    /// ---
+    /// @requires {variable} $dropdown-box-base-size-config
+    /// @requires {variable} $dropdown-box-md-size-config
+    /// @requires {variable} $dropdown-box-lg-size-config
+    /// ---
+    /// @prop {Map} base - Configuration map used in the default `.dropdown-menu--box` component size
+    /// @prop {Map} md   - Configuration map used in the `.dropdown-menu--box--md` component size variation
+    /// @prop {Map} lg   - Configuration map used in the `.dropdown-menu--box--lg` component size variation
+    ///
+    $dropdown-menu-sizes: (
+        'base': $dropdown-box-base-size-config,
+        'md':   $dropdown-box-md-size-config,
+        'lg':   $dropdown-box-lg-size-config
+    ) !default;

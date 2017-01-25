@@ -1,0 +1,106 @@
+// ********************************************************
+
+////
+/// XXS component size variation helpers
+/// ---
+/// @since 1.4.0
+/// @access public
+/// @group core.components.shared.size
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/shared/xxs-component-size-helpers';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+///
+/// Generate all styles for `.{component}-xxs` size variations.
+///
+@mixin xxs-component-sizes() {
+    // ----------------------------------------------------
+    //   Form Controls / Input Groups
+    // ----------------------------------------------------
+        @include form-control-size(xxs, $group: false); // .input-xxs
+        @include form-control-size(xxs, $group: true);  // .form-group-xxs .form-control
+        @include input-group-size(xxs); // .input-group-xxs *
+
+        .input-group-xxs {
+            .input-group-btn {
+                &,
+                .btn-group {
+                    @include display-flex();
+                }
+            }
+
+            .btn {
+                @include btn-size(xxs, $global: true);
+            }
+        }
+
+        .grid-block > .form-group-xxs {
+            @include display-flex();
+        }
+
+        .form-horizontal .form-group-xxs > .control-label {
+            padding-top: 0;
+            line-height: inherit;
+        }
+
+
+    // ----------------------------------------------------
+    //   Buttons / Button Groups
+    // ----------------------------------------------------
+        .btn-xxs,
+        .btn-group-xxs > .btn,
+        .input-group-xxs .input-group-btn > .btn {
+            @include btn-size(xxs, $global: true);
+
+            // An xxs button with nothing but a caret within it
+            &.dropdown-toggle.no-text {
+                @include display-flex();
+                @include align-items(center);
+
+                // Cannot use min-height here... because MSIE.
+                // See: http://bit.ly/2dygAqI
+                $xxs-dd-toggle-width: to-rem(icon-size-base-16());
+                height: $xxs-dd-toggle-width;
+                width: $xxs-dd-toggle-width;
+
+                .caret {
+                    // Let the flexbox `align-items` property do the vertical centering
+                    // TODO: Remove when we implement UIP-1129
+                    margin-top: 0 !important;
+                    // Firefox inexplicably doesn't center the caret using `justify-content`
+                    margin-left: (($xxs-dd-toggle-width - to-rem($caret-sm-width)) / 2) - .1rem !important;
+                }
+            }
+        }
+
+        @include remove-btn-punch-offset-from-xs-dd-toggle(xxs);
+
+        .grid-block > .btn-group-xxs {
+            @include display-flex();
+        }
+
+
+    // ----------------------------------------------------
+    //   Dropdown Menus Spawned From XXS Groups
+    //
+    //   -> At some point, this could be added as a new
+    //      `.dropdown-menu-sm` spec?
+    // ----------------------------------------------------
+    .btn-group-xxs,
+    .input-group-xxs {
+        .dropdown-menu {
+            min-width: 6rem;
+
+            > .menu-item > .hitarea {
+                padding: .2rem .4rem;
+                font-size: to-rem($font-size-xs);
+            }
+        }
+    }
+}

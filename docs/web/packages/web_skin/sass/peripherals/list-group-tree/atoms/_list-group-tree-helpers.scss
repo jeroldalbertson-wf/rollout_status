@@ -1,0 +1,419 @@
+// ********************************************************
+
+////
+/// Tree list nav (`.list-group-tree`) component helpers
+/// ---
+/// @since 1.3.6
+/// @group peripherals.components.trees
+/// @link http://bit.ly/webskin-list-group-tree List tree navigation spec
+/// @link http://bit.ly/webskin-list-group-tree-css-module See how the list-group-tree CSS module utilizes this helper
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/list-group-tree/atoms/list-group-tree-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function extend,
+                                                function get-deep,
+                                                function to-rem,
+                                                function component-height,
+                                                function to-decimal);
+//
+//   DEPENDENCIES:
+//
+    @import 'list-group-tree-config';
+//
+// ********************************************************
+
+
+///
+/// Determine the amount of left padding that a nested `.list-group` element should have in order to left-align the text of the parent `.list-group-item` with
+/// the left edge of the child `.list-group-item`'s `.caret` element.
+/// ---
+/// @since 1.4.0
+///
+@function get-list-group-tree-caret-alignment-offset($item-left-padding) {
+    @return $item-left-padding - (get($list-group-tree-link-caret-config, 'margin-left') + get-deep($caret-size-config, 'base.width'));
+}
+
+///
+/// Helper fn that returns the amount of left padding that should be applied to a
+/// `.list-group-item` based on how many levels deep the node is nested within the tree.
+/// ---
+/// @see {mixin} list-group-tree-item-top-level-with-group-icons
+/// ---
+/// @param {Number} $nesting-level [1] - How many levels deep the node is nested within the tree
+/// @param {Boolean} $top-level-item-has-icon [false] - If the top level `.list-group-item` is styled using the `list-group-tree-item-top-level-with-group-icons()` mixin - this should be set to `true`.
+/// @param {String} $size-variation [sm] - List group size variation
+///
+@function list-group-tree-item-indent($nesting-level: 1, $top-level-item-has-icon: false, $size-variation: sm) {
+    $left-padding: get-deep($list-group-tree-link-sizes, 'padding.#{$size-variation}.left');
+    $left-padding-with-group-icons: get-deep($list-group-tree-link-sizes, 'padding.#{$size-variation}.left-with-group-icons');
+
+    // Non top-level indent
+    $_indent-amount: $left-padding - get-list-group-tree-caret-alignment-offset($left-padding);
+
+    // Top level items should not be indented as much to preserved space. (UIP-1110)
+    @if $nesting-level == 1 {
+        $_indent-amount: $left-padding - get-list-group-tree-caret-alignment-offset($left-padding);
+
+        @if $top-level-item-has-icon {
+            $_indent-amount: $left-padding-with-group-icons;
+        }
+    }
+
+    @return $_indent-amount;
+}
+
+///
+/// Base CSS styles for the visible "caret" within a base `.list-group-tree .list-group-item`.
+///
+/// _Note that `.list-group-tree` items use the `:after` pseudo-element of the nested `<i class="caret">`
+/// element to render the indicator._
+///
+@mixin list-group-tree-item-base-caret() {
+    .caret {
+        // Zero out the default
+        border: 0 none;
+        height: to-rem(get($list-group-tree-link-caret-config, 'container-height'));
+        width: to-rem(get($list-group-tree-link-caret-config, 'container-width'));
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        // Actual caret
+        &:after {
+            position: absolute;
+            // center caret within .caret's height / width
+            top: to-rem(get($list-group-tree-link-caret-config, 'margin-top-collapsed'));
+            left: to-rem(get($list-group-tree-link-caret-config, 'margin-left-collapsed'));
+            content: "";
+            width: 0; // Thanks, Firefox (UIP-1656)
+            @include triangle-direction($direction: 'right',
+                                        $width: $caret-width,
+                                        $color: rgba(get($list-group-tree-link-caret-config, 'color'), get($list-group-tree-link-caret-config, 'alpha'))
+                                       );
+        }
+    }
+
+    // ----- [DEFAULT] CARET HOVER / FOCUS STATES ----- //
+    #{$link-hover-focus} {
+        .caret {
+            &:after {
+                border-left-color: get($list-group-tree-link-caret-config, 'color-hover');
+            }
+        }
+    }
+
+    // ----- [DEFAULT] CARET PRESS STATE ----- //
+    &:not(.open) {
+        #{$link-pressed} {
+            .caret {
+                &:after {
+                    border-left-color: get($list-group-tree-link-caret-config, 'color-press');
+                }
+            }
+        }
+    }
+}
+
+///
+/// CSS styles for the visible "caret" within an "active" `.list-group-tree .list-group-item` that does not have visible children.
+///
+/// _Note that `.list-group-tree` items use the `:after` pseudo-element of the nested `<i class="caret">`
+/// element to render the indicator._
+///
+@mixin list-group-tree-item-active-caret() {
+    .caret {
+        cursor: pointer; // Override default `.active` style
+
+        &:after {
+            border-left-color: get($list-group-tree-link-caret-config, 'color-active');
+        }
+    }
+
+    // ----- [ACTIVE] CARET HOVER / FOCUS / PRESS STATES ----- //
+    #{$link-hover-focus},
+    #{$link-pressed} {
+        .caret {
+            &:after {
+                border-left-color: get($list-group-tree-link-caret-config, 'color-active');
+            }
+        }
+    }
+}
+
+///
+/// CSS styles for the visible "caret" within an "active" `.list-group-tree .list-group-item` that has visible children.
+///
+/// _Note that `.list-group-tree` items use the `:after` pseudo-element of the nested `<i class="caret">`
+/// element to render the indicator._
+///
+@mixin list-group-tree-item-open-active-caret() {
+    .caret {
+        &:after {
+            @include triangle-direction($direction: 'down',
+                                        $width: $caret-width,
+                                        $color: get($list-group-tree-link-caret-config, 'color-active')
+                                       );
+        }
+    }
+
+    // ----- [ACTIVE] CARET HOVER / FOCUS / PRESS STATES ----- //
+    #{$link-hover-focus},
+    #{$link-pressed} {
+        .caret {
+            &:after {
+                @include triangle-direction($direction: 'down',
+                                            $color: get($list-group-tree-link-caret-config, 'color-active')
+                                           );
+            }
+        }
+    }
+}
+
+///
+/// CSS styles for the visible "caret" within an "open" / "expanded" `.list-group-tree .list-group-item`.
+///
+/// _Note that `.list-group-tree` items use the `:after` pseudo-element of the nested `<i class="caret">`
+/// element to render the indicator._
+///
+@mixin list-group-tree-item-open-caret() {
+    .caret {
+        opacity: 1;
+
+        &:after {
+            top: to-rem(get($list-group-tree-link-caret-config, 'margin-top'));
+            left: to-rem(get($list-group-tree-link-caret-config, 'margin-left'));
+            @include triangle-direction($direction: 'down',
+                                        $width: $caret-width,
+                                        $color: get($list-group-tree-link-caret-config, 'color-open')
+                                       );
+        }
+    }
+
+    // ----- [OPEN] CARET HOVER / FOCUS STATES ----- //
+    #{$link-hover-focus} {
+        .caret {
+            &:after {
+                @include triangle-direction($direction: 'down',
+                                            $color: get($list-group-tree-link-caret-config, 'color-hover')
+                                           );
+            }
+        }
+    }
+
+    // ----- [OPEN] CARET PRESS STATE ----- //
+    #{$link-pressed} {
+        .caret {
+            &:after {
+                @include triangle-direction($direction: 'down',
+                                            $color: get($list-group-tree-link-caret-config, 'color-press')
+                                           );
+            }
+        }
+    }
+}
+
+///
+/// Base CSS styles for a `.list-group-item` nested at any level within the hierarchy of a `.list-group-tree`.
+///
+@mixin list-group-tree-item-base() {
+    border-top-width: to-rem(get($list-group-tree-config, 'bd-width'));
+    border-top-color: get($list-group-tree-config, 'bd-color');
+    margin-bottom: to-rem(get($list-group-tree-link-sizes, 'margin-bottom'));
+    // non-collapsing buttons should align with collapsing ones
+    padding: to-rem(get-deep($list-group-tree-link-sizes, 'padding.base.all'));
+    // handle overflowing text
+    @include truncate-text();
+
+    .icon {
+        color: get($list-group-tree-group-config, 'icon-color');
+    }
+
+
+    // ----- HOVER / FOCUS STATES ----- //
+    #{$link-hover-focus} {
+        // TODO: how can we make the focus style not appear to "stick"
+        // wf-home-html repo adds a transparent bg color for the focus state
+        background-color: get($list-group-tree-link-colors, 'bg-hover');
+
+        .icon {
+            color: inherit;
+        }
+    }
+
+
+    // ----- PRESSED STATE ----- //
+    #{$link-pressed} {
+        // TODO: how can we make the focus style not appear to "stick"
+        // wf-home-html repo adds a transparent bg color for the focus state
+        background-color: get($list-group-tree-link-colors, 'bg-press');
+
+        .icon {
+            color: inherit;
+        }
+    }
+}
+
+///
+/// Reusable styles for size variations of `.list-group-tree` components.
+/// ---
+/// @since 1.5.0
+/// @param {String}  $size - CSS class suffix for size variation
+///
+@mixin list-group-tree-item-size($size) {
+    .list-group-tree.list-group-#{$size} {
+        .list-group-item {
+            padding: to-rem(get-deep($list-group-tree-link-sizes, 'padding.#{$size}.all'));
+
+            .caret {
+                height: to-rem(get($list-group-tree-link-caret-config, 'container-height-#{$size}'));
+                width: to-rem(get($list-group-tree-link-caret-config, 'container-width-#{$size}'));
+
+                // Actual caret
+                &:after {
+                    @include triangle-direction(
+                        $direction: 'right',
+                        $width: get($list-group-tree-link-caret-config, 'width-#{$size}')
+                    );
+                    // center caret within .caret's height / width
+                    top: to-rem(get($list-group-tree-link-caret-config, 'margin-top-collapsed-#{$size}'));
+                    left: to-rem(get($list-group-tree-link-caret-config, 'margin-left-collapsed-#{$size}'));
+                }
+            }
+        }
+
+        // ----- OPEN STATE (CARET POINTING DOWN) ----- //
+        .open > .list-group-item,
+        .list-group-item.open {
+            .caret::after {
+                @include triangle-direction(
+                    $direction: 'down',
+                    $width: get($list-group-tree-link-caret-config, 'width-#{$size}')
+                );
+                // center caret within .caret's height / width
+                top: to-rem(get($list-group-tree-link-caret-config, 'margin-top-#{$size}'));
+                left: to-rem(get($list-group-tree-link-caret-config, 'margin-left-#{$size}'));
+            }
+        }
+
+        // ----- OPEN + ACTIVE STATE (CARET POINTING DOWN) ----- //
+        .active,
+        .active-parent {
+            > .list-group-item.open {
+                .caret::after {
+                    @include triangle-direction(
+                        $direction: 'down',
+                        $width: get($list-group-tree-link-caret-config, 'width-#{$size}')
+                    );
+                }
+            }
+        }
+    }
+}
+
+///
+/// CSS styles for a top-level `.list-group-item` within a `.list-group-tree`.
+///
+@mixin list-group-tree-item-top-level() {
+    padding-left: 0;
+    text-indent: to-rem(get-deep($list-group-tree-link-sizes, 'padding.base.left'));
+
+
+    @if get($list-group-tree-group-config, 'platform-bd-color') != transparent {
+        // ----- PLATFORM "INDICATOR" BASE STYLES ----- //
+        &:after {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: block;
+            width: to-rem(get($list-group-tree-group-config, 'platform-bd-width'));
+            background-color: transparent; // turns green when active
+            content: "";
+        }
+    }
+
+    // only show this when combined with .has-group-icons variation
+    .group-icon {
+        display: none;
+    }
+}
+
+///
+/// CSS styles for a top-level parent node within a `.list-group-tree` acting as a horizontal divider.
+///
+@mixin list-group-tree-top-level-divider() {
+    // Since we're using a pseudo elem for the border,
+    // reverse the margin/padding differential default
+    margin-top: to-rem(get($list-group-tree-group-config, 'bd-spacing-vertical') - get($list-group-base-config, 'bd-width'));
+    padding-top: to-rem(get($list-group-tree-group-config, 'bd-spacing-vertical'));
+
+    // Should not be flush left, so we'll use pseudo :after
+    &:after {
+        position: absolute;
+        top: 0;
+        right: to-rem(get($list-group-tree-group-config, 'bd-inset-horizontal'));
+        left: to-rem(get($list-group-tree-group-config, 'bd-inset-horizontal'));
+        content: "";
+        border-top: to-rem(get($list-group-base-config, 'bd-width')) solid get($list-group-base-config, 'bd-color');
+    }
+}
+
+///
+/// CSS styles for a top-level `.list-group-item` that is "active" within a `.list-group-tree`.
+///
+@mixin list-group-tree-item-top-level-active() {
+    $platform-bd-color: get($list-group-tree-group-config, 'platform-bd-color');
+
+    @if $platform-bd-color != transparent {
+        // Activate the platform indicator color
+        &:after {
+            background-color: $platform-bd-color;
+        }
+    }
+}
+
+///
+/// CSS styles for a top-level `.list-group-item` within a `.list-group-tree` that should display an `.icon`
+/// to the left of the node title instead of a vertical "platform" border.
+/// ---
+/// @see {mixin} list-group-tree-item-top-level
+/// ---
+/// @param {Boolean} $include-top-level-item-base-styles [false] - If set to `true`, the styles from the `list-group-tree-item-top-level()` mixin will be included.
+///
+@mixin list-group-tree-item-top-level-with-group-icons($include-top-level-item-base-styles: false) {
+    text-indent: to-rem(get($list-group-tree-group-config, 'text-indent'));
+
+    .group-icon {
+        display: inline-block;
+        text-indent: 0;
+    }
+
+    @if get($list-group-tree-group-config, 'platform-bd-color') != transparent {
+        // Hide left border "indicator"
+        // since we're using an icon instead
+        &:after {
+            display: none;
+        }
+    }
+
+    .caret {
+        display: none;
+    }
+}
+
+///
+/// CSS styles for a top-level `.list-group-item` that is "active" within a `.list-group-tree` that should display an `.icon`
+/// to the left of the node title instead of a vertical "platform" border.
+///
+@mixin list-group-tree-item-top-level-with-group-icons-active() {
+    .group-icon {
+        color: inherit;
+    }
+}

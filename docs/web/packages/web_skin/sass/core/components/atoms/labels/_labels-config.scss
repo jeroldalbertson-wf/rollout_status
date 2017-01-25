@@ -1,0 +1,121 @@
+// ********************************************************
+
+////
+/// Label component configuration
+/// ---
+/// @since 1.0.0
+/// @type Number
+/// @group core.components.labels
+/// @link http://bit.ly/webskin-labels Label component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/labels/labels-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE COMPONENT
+//
+// ********************************************************
+    ///
+    /// Configuration for `.label` components.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// ---
+    /// @prop {Number}  font-size           [.8em]              - Default font size
+    /// @prop {Number}  line-height         [inherit]           - Default line height
+    /// @prop {Number}  padding-top         [.1em]              - Default top padding
+    /// @prop {Number}  padding-bottom      [.1em]              - Default bottom padding
+    /// @prop {Number}  padding-horizontal  [.54em]             - Default horizontal padding
+    /// @prop {List}    padding             [.1em .54em]        - Combination of vertical and horizontal padding. _Added via `@extend`_
+    /// @prop {Number}  bd-width            [1px]               - Default border width
+    /// @prop {Number}  bd-radius           [.27em]             - Calculated border radius. _Added via `@extend`_
+    /// @prop {Color}   bg-color            [#707070]           - Background color of `.label` element
+    /// @prop {Color}   bd-color            [transparent]       - Border color of `.label` element
+    /// @prop {Color}   text-color          [#ffffff]           - Text color of `.label` element
+    /// @prop {Color}   text-color-hover    [#ffffff]           - Text color when `.label.hitarea` element is hovered
+    ///
+    $label-config: (
+        'font-size': .8em,
+        'line-height': inherit,
+        'padding-top': .1em,
+        'padding-bottom': .1em,
+        'padding-horizontal': .54em,
+        'padding': null, // actual calculated value inserted via @extend
+        'bd-width': 1px,
+        'bd-radius': null, // actual calculated value inserted via @extend
+        //
+        'bg-color': $zc-gray-90,
+        'bd-color': transparent,
+        'text-color': #fff,
+        'text-color-hover': #fff
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $label-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $label-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $label-padding: get($label-config, 'padding-top') get($label-config, 'padding-horizontal') get($label-config, 'padding-bottom');
+        $label-bd-radius: get($label-config, 'padding-horizontal') / 2;
+
+        // ----- EXTEND label config with calc'd values ----- //
+        $label-config: extend($label-config,
+            (
+                'padding': $label-padding,
+                'bd-radius': $label-bd-radius
+            )
+        );
+
+        // TODO: Add a unit test asserting that a label used in an element
+        // that inherits $font-size-base is 20px tall
+        // (using $font-size-base + ($label-padding-top + ($label-font-size * $font-size-base)) + ($label-padding-bottom * ($label-font-size * $font-size-base)) + ($label-bd-width * 2))
+
+
+
+// ********************************************************
+//
+//   STATUS COMPONENT VARIATION
+//   -> Uses a non-reversed txt color,
+//      has a different bd color than
+//      the bg color, and is not all-caps
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.label-status` component variation.
+    /// ---
+    /// @type Map
+    /// @link http://bit.ly/webskin-labels-status Web Skin "Status" Label Variation Spec
+    /// ---
+    /// @requires {variable} $zc-gray-20
+    /// @requires {variable} $zc-gray-80
+    /// ---
+    /// @prop {Color} bg         [#f3f3f3] - Background color of `.label-status` element.
+    /// @prop {Color} bd         [#8a8a8a] - Border color of `.label-status` element.
+    /// @prop {Color} text       [#8a8a8a] - Text color of `.label-status` element.
+    /// @prop {Color} text-hover [#8a8a8a] - Text color when `.label-status.hitarea` element is hovered.
+    ///
+    $label-status-colors: (
+        'bg': $zc-gray-20,
+        'bd': $zc-gray-80,
+        'text': $zc-gray-80,
+        'text-hover': $zc-gray-80
+    ) !default;

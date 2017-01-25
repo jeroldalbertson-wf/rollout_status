@@ -1,0 +1,176 @@
+// ********************************************************
+
+////
+/// Global mixins pertaining to image assets
+/// ---
+/// @access public
+/// @group core.utils.images
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/images';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function calc-img-retina-height,
+                                                function calc-img-retina-width,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+///
+/// Reusable styles to optimize image interpolation when scaling an `<img>`.
+///
+@mixin crisp-images {
+    @if $webkit-support  {        image-rendering: -webkit-optimize-contrast; }
+    @if $firefox-support {        image-rendering:    -moz-crisp-edges; }
+    @if $opera-support   {        image-rendering:      -o-crisp-edges; }
+    @if $ie-support      { -ms-interpolation-mode:         nearest-neighbor; }
+                                  image-rendering:         optimizeSpeed;     // Legal fallback
+                                  image-rendering:         optimize-contrast; // CSS3 Proposed
+}
+
+
+///
+/// Reusable styles for preventing background image clipping in an element with fixed width/height
+/// ---
+/// @since 0.4.3
+///
+@mixin prevent-bg-image-clip {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-color: transparent;
+}
+
+
+///
+/// Reusable styles for centering a background image in an element with fixed width/height
+/// ---
+/// @since 0.4.3
+/// ---
+/// @param {Bool | Number}   $container-height - if not `false`, the height of the container element
+/// @param {Bool | Number}   $container-width  - if not `false`, the width of the container element
+/// @param {Number}          $img-height       - height of the background image
+/// @param {Number}          $img-width        - width of the background image
+///
+@mixin align-bg-image($container-height, $container-width, $img-height, $img-width) {
+    width: $img-width;
+    height: $img-height;
+
+    @if $container-height {
+        position: relative;
+        top: to-rem(($container-height - $img-height) / 2);
+    }
+
+    @if $container-width {
+        position: relative;
+        left: to-rem(($container-width - $img-width) / 2);
+    }
+}
+
+
+///
+/// Reusable styles for thumbnail images
+/// ---
+/// @since 1.0.0
+///
+@mixin img-thumbnail-base {
+    display: block;
+    padding: to-rem($thumbnail-padding);
+    line-height: $line-height-base;
+    background-color: $thumbnail-bg;
+    border: to-rem($thumbnail-bd-width) solid $thumbnail-bd-color;
+    border-radius: to-rem($thumbnail-bd-radius);
+    @include transition(all .2s ease-in-out);
+}
+
+
+///
+/// Responsive images (ensure images don't scale beyond their parents)
+/// ---
+/// @since 0.2.0
+///
+@mixin img-responsive($display: block) {
+    @if not is($display, block inline-block) {
+        @warn "`img-responsive` mixin expecting `block` or `inline-block`. #{$display} given. Mixin will not produce a `display` property to avoid invalid CSS being generated.";
+    } @else {
+        display: #{$display};
+    }
+
+    max-width: 100%; // Part 1: Set a maxium relative to the parent
+    height: auto;    // Part 2: Scale the height according to the width, otherwise you get stretching
+    width: auto;     // Part 3: Help "old lady MSIE" across the street
+}
+
+
+///
+/// Load / align a 2x ("retina") background image style based on a media query and the size of its container
+/// ---
+/// @since 0.4.3
+/// @todo add documentation about how to use this mixin / give examples currently being used
+/// ---
+///
+/// @param {String}          $file-1x                    - File path and file name for the 1x image; Relative to `images_dir` in `config.rb`.
+/// @param {String}          $file-2x                    - File path and file name for the 2x image; Relative to `images_dir` in `config.rb`.
+/// @param {Number | Bool}   $container-height [false]   - Height of container to vertically center within.
+/// @param {Number | Bool}   $container-width  [false]   - Width of container to horizontally center within.
+/// @param {Number}          $offset-vertical  [0]       - How much smaller you want the image to be than the `$container-height`.
+///
+@mixin img-retina($file-1x, $file-2x,
+                  $container-height: false,
+                  $container-width: false,
+                  $offset-vertical: 0
+                 )
+{
+    $final-height:  to-rem(calc-img-retina-height($file-1x, $container-height: $container-height, $offset-vertical: $offset-vertical));
+    $final-width:   to-rem(calc-img-retina-width($file-1x, $container-height: $container-height, $offset-vertical: $offset-vertical));
+
+    $container-height: if($container-height, to-rem($container-height), $container-height);
+    $container-width: if($container-width, to-rem($container-width), $container-width);
+
+    @include align-bg-image($container-height, $container-width, $final-height, $final-width);
+
+    background-image: image-url(#{$file-1x});
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-color: transparent;
+    background-size: 100%;
+
+    // requires modernizr
+    .no-backgroundsize & {
+        background-image: none;
+    }
+
+    // TODO: store this media query as a Sass var
+    @include respond-to('retina+ resolution') {
+        background-image: image-url(#{$file-2x});
+        background-size: $final-width $final-height;
+    }
+}
+
+
+//
+// @todo document params
+//
+@mixin img-wdesk-logo {
+    @include img-retina($file-1x: '#{$wdesk-logo-dir}#{$wdesk-logo-name}.png', $file-2x: '#{$wdesk-logo-dir}#{$wdesk-logo-name}_retina.png');
+}
+
+//
+// @todo document params
+//
+@mixin img-wdesk-logo-lg {
+    @include img-retina($file-1x: '#{$wdesk-logo-dir}#{$wdesk-logo-lg-name}.png', $file-2x: '#{$wdesk-logo-dir}#{$wdesk-logo-lg-name}_retina.png');
+}
+
+//
+// @todo document params
+//
+@mixin img-w-symbol {
+    @include img-retina($file-1x: '#{$wdesk-logo-dir}w-symbol_color.png', $file-2x: '#{$wdesk-logo-dir}w-symbol_color_retina.png');
+}

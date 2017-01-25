@@ -1,0 +1,47 @@
+// ********************************************************
+//
+//   These are tooltips we use in our docs
+//   not to demonstrate Web Skin core tooltips
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/tooltips';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.tooltip.docs-tooltip {
+    .inner {
+        max-width: none;
+    }
+
+    .arrow {
+        display: none;
+    }
+}
+
+.popover-tip {
+    .inner {
+        max-width: 50rem;
+    }
+
+    code {
+        background-color: transparent;
+    }
+}
+
+// Code examples within tooltips
+.tooltip__code {
+    white-space: pre-wrap;
+    background-color: transparent;
+    color: #a5ebec !important; // something neon-ish that will look good on a dark bg
+    text-shadow: none;
+}
+
+.tooltip__code--block {
+    display: block;
+    display: block;
+    padding: .75em;
+    margin-top: .75em;
+}

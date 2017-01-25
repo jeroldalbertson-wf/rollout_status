@@ -1,0 +1,225 @@
+// ********************************************************
+
+////
+/// Helper mixins pertaining to [experimental CSS3 user interface properties](http://www.w3.org/TR/2000/WD-css3-userint-20000216)
+/// ---
+/// @access public
+/// @group core.utils.css3
+/// @link http://www.w3.org/TR/2000/WD-css3-userint-20000216 CSS3 Interface Properties
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/css3/user-interface';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, mixin experimental,
+                                                mixin experimental-property-and-value-only-for,
+                                                function is-true);
+//
+// ********************************************************
+
+
+///
+/// CSS3 Browser Prefixed reusable style that controls the tap highlight color on mobile devices
+/// ---
+/// @since 1.1.0
+/// @param {Color} $color - Color to apply. A semi-opaque color via `rgba()` is stronly recommended.
+///
+@mixin tap-highlight-color($color) {
+    -webkit-tap-highlight-color: $color;
+}
+
+///
+/// CSS3 Browser Prefixed reusable style that prevents elem flickering on touch devices when user taps a clickable elem
+///
+@mixin disable-tap-highlight {
+    @include tap-highlight-color(rgba(0, 0, 0, 0));
+}
+
+///
+/// CSS3 Browser Prefixed reusable style that controls the selection model and granularity of an element
+/// ---
+/// @since 1.1.0
+/// ---
+/// @param {String} $select - value to set for `user-select` property
+///
+@mixin user-select($select) {
+    @include experimental(user-select, $select);
+}
+
+///
+/// CSS3 Browser Prefixed reusable style that disables the selection model and controls the granularity of an element
+/// ---
+/// @see {mixin} enable-user-select
+/// ---
+/// @param {Bool} $important [false]
+///
+@mixin disable-user-select($important: false) {
+    $important: if($important == false, '', '!important');
+
+    @include user-select(none #{$important});
+    @include disable-tap-highlight();
+}
+
+///
+/// CSS3 Browser Prefixed reusable style that enables cursor selection highlighting on an element
+/// ---
+/// @see {mixin} disable-user-select
+/// @param {String} $el [text] - value to set for `user-select` property
+///
+@mixin enable-user-select($el: text) {
+    @include user-select($el);
+}
+
+///
+/// CSS3 Browser Prefixed `::selection` selectors which are wrapped around the styles you send to this mixin via the Sass `@content` directive. Use to modify a style based on when the user has selected some text with their cursor.
+/// ---
+/// @since 1.0.0
+/// ---
+/// @param {Boolean} $use-parent-selector
+///
+@mixin cursor-selected($use-parent-selector: true) {
+    $selection:     if($use-parent-selector, '&::selection', '::selection');
+    $moz-selection: if($use-parent-selector, '&::-moz-selection', '::-moz-selection');
+
+    #{$selection} {
+        @content;
+    }
+    @if $experimental-support-for-mozilla {
+        #{$moz-selection} {
+            @content;
+        }
+    }
+}
+
+///
+/// Style the html5 input placeholder in browsers that support it.
+/// ---
+/// @since 1.1.0
+/// ---
+/// @output Styles produced by taking the styles passed as mixin `@content` and generating selectors from the mixin context
+/// ---
+/// @example scss
+///   .form-control {
+///     @include form-control-placeholder {
+///       color: #b2b2b2;
+///       font-style: italic;
+///     }
+///   }
+///
+@mixin form-control-placeholder {
+    // Firefox
+    @if $experimental-support-for-mozilla {
+        @if $min-firefox-supported < 18 {
+            // Firefox 4-18
+            &:-moz-placeholder { @content }
+        }
+
+        // Firefox 19+
+        &::-moz-placeholder {
+            opacity: 1; // Firefox 19+ sets opacity to 0.54
+            @content;
+        }
+    }
+
+    // MSIE 10
+    @if $experimental-support-for-microsoft {
+        @if $min-ie-supported < 11 {
+            &:-ms-input-placeholder { @content }
+        }
+    }
+
+    // Safari / Chrome
+    @if $experimental-support-for-webkit {
+        &::-webkit-input-placeholder { @content }
+    }
+
+    // NOTE: This is not standardized yet so no "official" / un-prefixed selector is generated.
+}
+
+///
+/// Style the html5 `<input type="range">` element's shadow dom responsible for rendering the "track" that the "thumb" slides along.
+/// ---
+/// @since 1.4.0
+/// @see {mixin} range-input-slider-thumb
+/// ---
+/// @output Styles produced by taking the styles passed as mixin `@content` and generating selectors from the mixin context
+/// ---
+/// @example scss
+///   .form-control[type="range"] {
+///     @include range-input-slider-track() {
+///       // ... styles here ...
+///     }
+///   }
+///
+@mixin range-input-slider-track() {
+    $parent-selector: &;
+    $webkit-pseudo-elem: if($parent-selector, '&::-webkit-slider-runnable-track', 'input[type="range"]::-webkit-slider-runnable-track');
+    $moz-pseudo-elem: if($parent-selector, '&::-moz-range-track', 'input[type="range"]::-moz-range-track');
+    $ms-pseudo-elem: if($parent-selector, '&::-ms-track', 'input[type="range"]::-ms-track');
+
+    // These selectors cannot be combined into a single comma-separated rule.
+    #{$webkit-pseudo-elem} {
+        @content;
+    }
+
+    #{$moz-pseudo-elem} {
+        @content;
+    }
+
+    #{$ms-pseudo-elem} {
+        @content;
+    }
+}
+
+///
+/// Style the html5 `<input type="range">` element's shadow dom responsible for rendering the "thumb" that the user can grab and slide.
+/// ---
+/// @since 1.4.0
+/// @see {mixin} range-input-slider-track
+/// ---
+/// @output Styles produced by taking the styles passed as mixin `@content` and generating selectors from the mixin context
+/// ---
+/// @example scss
+///   .form-control[type="range"] {
+///     @include range-input-slider-thumb() {
+///       // ... styles here ...
+///     }
+///   }
+///
+@mixin range-input-slider-thumb() {
+    $parent-selector: &;
+    $webkit-pseudo-elem: if($parent-selector, '&::-webkit-slider-thumb', 'input[type="range"]::-webkit-slider-thumb');
+    $moz-pseudo-elem: if($parent-selector, '&::-moz-range-thumb', 'input[type="range"]::-moz-range-thumb');
+    $ms-pseudo-elem: if($parent-selector, '&::-ms-thumb', 'input[type="range"]::-ms-thumb');
+
+    // These selectors cannot be combined into a single comma-separated rule.
+    #{$webkit-pseudo-elem} {
+        @content;
+    }
+
+    #{$moz-pseudo-elem} {
+        @content;
+    }
+
+    #{$ms-pseudo-elem} {
+        @content;
+    }
+}
+
+///
+/// Use top / bottom border widths to "mask" the visible bg of the track, while keeping the actual rendered height of the track the full height
+/// of the parent so that it's easier for users to click / slide the thumb around.
+///
+@mixin range-input-slider-track-height($visible-track-height, $parent-height, $parent-bg: $body-bg) {
+    $border-height: ($parent-height - $visible-track-height) / 2;
+
+    border-width: $border-height 0;
+    border-style: solid none;
+    border-color: $parent-bg;
+    height: $parent-height;
+}

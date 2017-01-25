@@ -1,0 +1,269 @@
+// ********************************************************
+
+////
+/// File browser component helpers
+/// ---
+/// @since 1.4.0
+/// @access public
+/// @group core.components.form-controls
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/forms/form-file-browser-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function normalize-xxs-map-key,
+                                                function to-rem);
+//
+//   DEPENDENCIES:
+//
+    @import './config/form-file-browser-config';
+    @import './form-file-browser-helpers-private';
+//
+// ********************************************************
+
+
+///
+/// Reusable styles for size variations of `.form-control-file` input elems.
+/// ---
+/// @see {mixin} form-control-size
+/// ---
+/// @param {String} $size - CSS class suffix for size variation
+/// @param {Boolean} $group [false] - When set to true, the size variation suffix will be appended to `.form-group` instad of `.form-control-file`
+///
+@mixin file-browser-size($size, $group: false) {
+    $cfg: $form-control-config;
+    $size: unquote($size);
+
+    // selectors
+    $group-selector:        if($group, '.form-group-#{$size}', '');
+    $wrapper-selector:      _file-browser-size-wrapper-selector($size, $group);
+    $input-selector:        _file-browser-size-custom-input-selector($size, $group);
+    $button-selector:       _file-browser-size-button-selector($size, $group);
+    $input-text-selector:   _file-browser-size-input-text-selector($size, $group);
+
+    // sizes
+    $map-size:    normalize-xxs-map-key($size);
+    $height:      to-rem(get-deep($cfg, 'height.#{$map-size}'));
+    $line-height: to-rem(get-deep($cfg, 'line-height.#{$map-size}'));
+    $font-size:   to-rem(get-deep($cfg, 'font-size.#{$map-size}'));
+    $bd-radius:   to-rem(get-deep($cfg, 'bd-radius.#{$map-size}'));
+    $padding:     to-rem(get-deep($cfg, 'padding.#{$map-size}.all'));
+
+    // the "wrapper" (`.form-control-file`)
+    #{$group-selector} #{$wrapper-selector} {
+        min-width: get-deep($file-browser-config, 'min-width.#{$size}');
+        height: $height;
+    }
+
+    // the "input" (`.form-control-file__custom-input`)
+    #{$group-selector} #{$input-selector} {
+        @include input-size($size);
+    }
+
+    // the "placeholder" text
+    #{$group-selector} #{$input-text-selector} {
+        left: to-rem(get-deep($cfg, 'padding.#{$map-size}.horizontal'));
+        right: get-deep($file-browser-config, 'default-button-width.#{$map-size}');
+    }
+
+    // the "button" (`.form-control-file__custom-input:before`)
+    #{$group-selector} #{$button-selector} {
+        height: $height - to-rem(get($form-control-config, 'bd-width') * 2);
+        padding: $padding;
+        line-height: $line-height;
+        @include border-right-radius($bd-radius - to-rem(get($form-control-config, 'bd-width')));
+    }
+}
+
+///
+/// Reusable styles for `.form-control-file` components nested within `.form-group` components that have validation state classes present.
+/// ---
+/// @see {mixin} form-group-variant
+/// ---
+/// @param {String} $state-name - CSS class suffix for state variation
+///
+@mixin file-browser-state-skin($state-name) {
+    $color-config: get($form-group-states, $state-name);
+
+    .form-control-file__custom-input {
+        color: get($color-config, 'control-text-base');
+        background-color: get($color-config, 'control-bg-base');
+        border-color: get($color-config, 'control-bd-base');
+    }
+
+    // ------------------------------------------------
+    //   FOCUSED STATE
+    // ------------------------------------------------
+    .form-control-file input:focus + .form-control-file__custom-input {
+        color: get($color-config, 'control-text-focus');
+        border-color: get($color-config, 'control-bd-focus');
+
+        &#{get($file-browser-config, 'input-display-selector')} {
+            color: get($color-config, 'control-text-focus');
+        }
+    }
+}
+
+///
+/// Calculate the width of the "button" segment of a `.form-control-file` input based on the given `$text` and `$size-variation`.
+/// ---
+/// @see {function} file-browser-input-text-width
+/// ---
+/// @param {String} $text ['Browse']
+/// @param {String} $size-variation ['base']
+/// ---
+/// @returns {Number}
+///
+@function file-browser-button-width($text: get($file-browser-config, 'default-button-text'), $size-variation: 'base') {
+    $allowed-size-variation-keys: map-keys(get($file-browser-config, 'min-width'));
+    @if not is($size-variation, $allowed-size-variation-keys) {
+        @error "Function `file-browser-button-width` expected the value of the `$size-variation` argument to be one of the following: [#{$allowed-size-variation-keys}]. Was: `#{$size-variation}`.";
+    }
+
+    $font-size: get-deep($form-control-config, 'font-size.#{$size-variation}');
+    $button-segment-text-width: calc-text-width(str-length($text), $font-size);
+    $button-segment-width: component-width($button-segment-text-width, $size-variation);
+
+    @return $button-segment-width;
+}
+
+///
+/// Calculate the width of the "input text" segment of a `.form-control-file` input based on the given `$text` and `$size-variation`.
+/// ---
+/// @see {function} file-browser-button-width
+/// ---
+/// @param {String} $text ['Choose file...']
+/// @param {String} $size-variation ['base']
+/// ---
+/// @returns {Number}
+///
+@function file-browser-input-text-width($text: get($file-browser-config, 'default-placeholder-text'), $size-variation: 'base') {
+    $allowed-size-variation-keys: map-keys(get($file-browser-config, 'min-width'));
+    @if not is($size-variation, $allowed-size-variation-keys) {
+        @error "Function `file-browser-input-text-width` expected the value of the `$size-variation` argument to be one of the following: [#{$allowed-size-variation-keys}]. Was: `#{$size-variation}`.";
+    }
+
+    $font-size: get-deep($form-control-config, 'font-size.#{$size-variation}');
+    $input-segment-text-width: calc-text-width(str-length($text), $font-size);
+    $input-segment-width: component-width($input-segment-text-width, $size-variation);
+
+    @return $input-segment-width;
+}
+
+///
+/// Get the min-width of the _actual_ `<input>` hidden within a `.form-control-file` component.
+/// ---
+/// @param {String} $placeholder-text ['Choose file...']
+/// @param {String} $button-text ['Browse']
+/// @param {String} $size-variation ['base']
+/// ---
+/// @returns {Number}
+///
+@function file-browser-input-min-width($placeholder-text: get($file-browser-config, 'default-placeholder-text'), $button-text: get($file-browser-config, 'default-button-text'), $size-variation: 'base') {
+    $allowed-size-variation-keys: map-keys(get($file-browser-config, 'min-width'));
+    @if not is($size-variation, $allowed-size-variation-keys) {
+        @error "Mixin `set-file-browser-input-min-width` expected the value of the `$size-variation` argument to be one of the following: [#{$allowed-size-variation-keys}]. Was: `#{$size-variation}`.";
+    }
+
+    $font-size: get-deep($form-control-config, 'font-size.#{$size-variation}');
+    $input-segment-width: file-browser-input-text-width($placeholder-text, $size-variation);
+    $button-segment-width: file-browser-button-width($button-text, $size-variation);
+
+    $min-width-needed:  to-rem($input-segment-width + $button-segment-width);
+    $default-min-width: get-deep($file-browser-config, 'min-width.#{$size-variation}');
+
+    @return max($min-width-needed, $default-min-width);
+}
+
+///
+/// Set the min-width of the _actual_ `<input>` hidden within a `.form-control-file` component if the calculated width of the placeholder text and button text necessitates one larger than is specified as defaults within `get($file-browser-config, 'min-width')`.
+/// ---
+/// @param {String} $placeholder-text ['Choose file...']
+/// @param {String} $button-text ['Browse']
+/// @param {String} $size-variation ['base']
+///
+@mixin set-file-browser-input-min-width($placeholder-text: get($file-browser-config, 'default-placeholder-text'), $button-text: get($file-browser-config, 'default-button-text'), $size-variation: 'base') {
+    $min-width-needed:  file-browser-input-min-width($placeholder-text, $button-text, $size-variation);
+    $default-min-width: get-deep($file-browser-config, 'min-width.#{$size-variation}');
+
+    @if $default-min-width < $min-width-needed {
+        .form-control-file input {
+            min-width: to-rem($min-width-needed);
+        }
+    }
+}
+
+///
+/// Set the value of the text displayed within a `.form-control-file` input.
+/// ---
+/// @example scss Usage
+///   .your-custom-selector {
+///       @include file-browser-input-text('Upload a fizzle bizzle...');
+///   }
+/// ---
+/// @example html Required Markup Structure
+///   <div class="your-custom-selector">
+///       <label class="file">...</label>
+///   </div>
+/// ---
+/// @see {mixin} file-browser-button-text
+/// ---
+/// @param {String} $text
+/// @param {String} $size-variation ['base'] - Include the size variation name to be sure the input renders with a width large enough to accomodate the given `$text`
+/// @param {String} $button-text ['Browse']  - If you have also customized the text in the button using the `file-browser-button-text()` function, pass that argument here so we can calculate it's width and make sure the input renders with a width large enough to accomodate the given `$text`
+///
+@mixin file-browser-input-text($text, $size-variation: 'base', $button-text: get($file-browser-config, 'default-button-text')) {
+    .form-control-file__custom-input#{get($file-browser-config, 'input-display-selector')} {
+        content: $text;
+    }
+
+    // Check to see if the min-width of the actual `<input>`
+    // needs to be increased based on the length of the text in the placeholder and the button
+    @include set-file-browser-input-min-width($text, $button-text, $size-variation);
+}
+
+///
+/// Set the value of the text displayed within a `.form-control-file` button.
+/// ---
+/// @example scss Usage
+///   .your-custom-selector {
+///       @include file-browser-button-text('Upload');
+///   }
+/// ---
+/// @example html Required Markup Structure
+///   <div class="your-custom-selector">
+///       <label class="file">...</label>
+///   </div>
+/// ---
+/// @see {mixin} file-browser-input-text
+/// @param {String} $text
+///
+@mixin file-browser-button-text($text) {
+    .form-control-file__custom-input#{get($file-browser-config, 'button-selector')} {
+        content: $text;
+    }
+
+    .form-control-file__custom-input#{get($file-browser-config, 'input-display-selector')} {
+        right: to-rem(file-browser-button-width($text));
+    }
+
+    // Adjust the width of the input "text" based on the new button width
+    @each $size-name in $form-control-size-variation-names {
+        $cfg: $form-control-config;
+        $size: unquote($size-name);
+        $map-size: normalize-xxs-map-key($size-name);
+        $button-width: if($text == get($file-browser-config, 'default-button-text'), get-deep($file-browser-config, 'default-button-width.#{$map-size}'), file-browser-button-width($text));
+
+        #{_file-browser-size-input-text-selector($size, $group: false)},
+        #{_file-browser-size-input-text-selector($size, $group: true)} {
+            right: to-rem($button-width);
+        }
+    }
+}

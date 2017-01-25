@@ -1,0 +1,29 @@
+// ********************************************************
+//
+//   VIRTUAL TABLES STYLE MODULE
+//
+//   This outputs all the styles found in
+//   `core/components/tables/generated` module, except
+//   CSS classes are used for all selectors instead
+//   of table elements like `<td>`, `<th>`, etc
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/virtual-tables';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Normalize CSS class based virtual table elem
+//   display values so that they act *exactly* like
+//   their HTML element counterparts.
+// ----------------------------------------------------
+    @include table-elem-display-defaults();
+
+// ----------------------------------------------------
+//   Import the generated table / table elem
+//   selectors and styles
+// ----------------------------------------------------
+    @import '../../core/components/tables/tables-generated';

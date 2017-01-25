@@ -1,0 +1,129 @@
+// ********************************************************
+
+////
+/// Badge component configuration
+/// ---
+/// @group core.components.badges
+/// @link http://bit.ly/webskin-badges Badge component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/badges/badges-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// Configuration for `.badge` components.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {function} extend
+/// @requires {function} average
+/// @requires {function} box-model-height
+/// @requires {variable} $zc-gray-70
+/// @requires {variable} $padding-base-horizontal
+/// @requires {variable} $font-size-sm
+/// @requires {variable} $font-size-xs
+/// ---
+/// @prop {Color} bg                [#707070]   - Default background color
+/// @prop {Color} text-color        [#ffffff]   - Default text color
+/// @prop {Color} text-color-hover  [#ffffff]   - Text color when hovered
+///
+/// @prop {Number} bd-radius            [1em]       - Default border radius
+///
+/// @prop {Number} spacing-horizontal   [.5em]      - Default horizontal space when adjacent to other components / component text
+/// @prop {Number} min-width            [.64825em]  - Default minimum width
+/// @prop {Number} min-height           [14px]      - Default minimum height
+/// @prop {Number} line-height          [inherit]   - Default line height
+/// @prop {Number} line-height-xs       [14px]      - Default line height for a badge nested within a component's `xs` size variation. _Added via `@extend`_
+///
+/// @prop {Number} font-size            [.85725em]  - Default font size
+/// @prop {Number} padding-vertical     [0]         - Default vertical padding
+/// @prop {Number} padding-horizontal   [.5725em]   - DEPRECATED.  Will be removed completely in 2.0.0
+/// @prop {Number} padding-left         [.525em]    - Default left padding. Slightly less than `padding-right` to ensure horizontal centering of numeric characters.
+/// @prop {Number} padding-right        [.5725em]   - Default right padding
+/// @prop {List}   padding              [0 .5725em 0 .525em] - Combination of vertical and horizontal padding. _Added via `@extend`_
+///
+/// @prop {Number} height               [17px]      - Computed height. _Added via `@extend`_
+/// @prop {Number} height-lg            [19px]      - Computed height when nested within a component's `lg` size variation. _Added via `@extend`_
+/// @prop {Number} height-sm            [15px]      - Computed height when nested within a component's `sm` size variation. _Added via `@extend`_
+/// @prop {Number} height-xs            [14px]      - Computed height when nested within a component's `xs` size variation. _Added via `@extend`_
+///
+$badge-config: (
+    // colors
+    'bg': $zc-gray-90,
+    'text-color': #fff,
+    'text-color-hover': #fff,
+    //
+    'bd-radius': 1em,
+    // box-model
+    'spacing-horizontal': .5em,
+    'min-width': .64825em,
+    'min-height': $font-size-base,
+    'line-height': inherit,
+    'line-height-xs': null, // actual calculated value inserted via @extend
+    'font-size': .85725em,
+    //
+    'padding-vertical': 0,
+    'padding-horizontal': .5725em,
+    'padding-right': .5725em,
+    'padding-left': .525em,
+    'padding': null, // actual calculated value inserted via @extend
+    //
+    'height': null, // actual calculated value inserted via @extend
+    'height-lg': null, // actual calculated value inserted via @extend
+    'height-sm': null, // actual calculated value inserted via @extend
+    'height-xs': null, // actual calculated value inserted via @extend
+) !default;
+
+
+// ----------------------------------------------------
+//   CALCULATED VALUES
+//   -> based on $badge-config
+//
+//   -> cannot be included in initial map declaration
+//      because the calculations depend on values
+//      within the map, and Sass has no ability to
+//      reference a key in a map from within that map.
+//
+//   -> documented as props of $badge-config
+//      because they are added via extend() below.
+// ----------------------------------------------------
+    $badge-line-height-xs: get($badge-config, 'min-height');
+    $badge-padding: get($badge-config, 'padding-vertical') get($badge-config, 'padding-right') get($badge-config, 'padding-vertical') get($badge-config, 'padding-left');
+    $badge-height: box-model-height($font-size: to-px(get($badge-config, 'font-size'), $font-size-base),
+                                    $line-height: $line-height-base,
+                                    $padding-vertical: to-px(get($badge-config, 'padding-vertical'), $font-size-base)
+                                   );
+    // $badge-padding-sm: get($badge-config, 'padding-vertical-sm') get($badge-config, 'padding-horizontal-sm');
+    $badge-height-lg: box-model-height($font-size: to-px(get($badge-config, 'font-size'), $font-size-lg),
+                                       $line-height: $line-height-lg,
+                                       $padding-vertical: to-px(get($badge-config, 'padding-vertical'), $font-size-lg)
+                                      );
+    $badge-height-sm: box-model-height($font-size: to-px(get($badge-config, 'font-size'), $font-size-sm),
+                                       $line-height: $line-height-sm,
+                                       $padding-vertical: to-px(get($badge-config, 'padding-vertical'), $font-size-sm)
+                                      );
+    // $badge-padding-xs: get($badge-config, 'padding-top-xs') get($badge-config, 'padding-right-xs') get($badge-config, 'padding-bottom-xs') get($badge-config, 'padding-left-xs');
+    $badge-height-xs: box-model-height($font-size: to-px(get($badge-config, 'font-size'), $font-size-xs),
+                                       $line-height: $badge-line-height-xs,
+                                       $padding-vertical: to-px(get($badge-config, 'padding-vertical'), $font-size-xs)
+                                      );
+
+    // ----- EXTEND badge config with calc'd values ----- //
+    $badge-config: extend($badge-config,
+        (
+            'line-height-xs': $badge-line-height-xs,
+            'padding': $badge-padding,
+            'height': $badge-height,
+            'height-lg': $badge-height-lg,
+            'height-sm': $badge-height-sm,
+            'height-xs': $badge-height-xs
+        )
+    );

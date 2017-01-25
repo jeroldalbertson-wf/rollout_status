@@ -1,0 +1,206 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/browser-upgrade/browser-upgrade-layout';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   MOBILE FIRST DEFAULTS
+// ----------------------------------------------------
+.browser-upgrade-container {
+    padding-top: 1em;
+}
+
+.browser-upgrade-masthead .lead {
+    padding: 0 round($grid-gutter-width / 2);
+    margin-bottom: round($line-height-base-px * 1.5);
+    font-size: $h4-font-size;
+    clear: both;
+}
+
+.browser-upgrade-benefits {
+    padding: 0 round($grid-gutter-width / 2);
+    max-width: 570px;
+    margin: 0 auto;
+}
+
+.browser-upgrade-heading {
+    padding: 0 round($grid-gutter-width / 2);
+    margin-bottom: 1em;
+    font-size: $h1-font-size - 6;
+    color: $zc-green-120;
+}
+
+.browser-list {
+    margin-top: $line-height-base-px;
+    margin-left: auto;
+    margin-right: auto;
+    //
+    // when it's at its smallest possible screen-width
+    // make the max-width the size that each list-group-item is
+    // at the desktop size (per @hannahdeering-wf's request)
+    //
+    max-width: 280px;
+
+    .list-group-item {
+        text-align: center;
+        background: $group-bg;
+        // prevent link bg colors from overflowing outside corner radii
+        overflow: hidden;
+        @include background-clip(padding-box);
+
+        // zero-out all padding inherited from global .list-group-item styles
+        padding: 0;
+
+        // reset border radiuses
+        // need the !important b/c of :first-child / :last-child specificity
+        border-radius: 0 !important;
+
+        &.first-group-item {
+            @include border-top-radius($border-radius-base !important);
+        }
+        &.last-group-item {
+            @include border-bottom-radius($border-radius-base !important);
+        }
+
+        &.browsers-best {
+            background: $group-bg-best;
+        }
+    }
+}
+
+.browser-group-heading {
+    color: $group-heading-color;
+    // MSIE 7 has to have this
+    position: relative;
+
+    &.is-empty {
+        visibility: hidden;
+    }
+}
+
+.browser-link {
+    display: block;
+    // make room for absolutely positioned heading
+    padding-top: $group-heading-height + $logo-pad;
+    padding-bottom: $line-height-base-px;
+    margin-top: -$group-heading-height;
+
+    + .browser-link {
+        padding-top: $logo-pad;
+        margin-top: 0;
+    }
+
+    &, .browser-name {
+        color: $zc-gray;
+    }
+
+    #{$link-hover-focus} {
+        background-color: darken($group-bg, $elem-hover-bg-darken-amount-default);
+        &, .browser-name {
+            color: $group-heading-color;
+            text-decoration: none;
+        }
+    }
+
+    @each $sprite in $spritesheet-sprites {
+        $sprite-name: nth($sprite, 10);
+
+        &.#{$sprite-name} {
+            .browser-logo {
+                display: block;
+                margin: 0 auto;
+                text-align: center; // required for MSIE 6 centering
+                @include sprite($sprite);
+            }
+        }
+    }
+}
+
+.browser-fine-print {
+    color: $zc-gray-70;
+
+    &.is-empty {
+        display: none;
+    }
+}
+
+
+// ----------------------------------------------------
+//   PROGRESSIVELY ENHANCE FOR TABLETS+
+// ----------------------------------------------------
+@include respond-to('screen-sm and up') {
+    .browser-upgrade-container {
+        padding-top: 3em;
+    }
+
+    .browser-upgrade-masthead .lead {
+        padding: 0;
+        font-size: $h3-font-size;
+        clear: both;
+    }
+
+    .browser-upgrade-heading {
+        padding: 0;
+        margin-bottom: 1em;
+        font-size: $h1-font-size - 2;
+    }
+
+    .browser-list {
+        max-width: 100%;
+
+        .list-group-item {
+            &.first-group-item {
+                // reset again now that we're floating these left to right
+                border-radius: 0 !important;
+                @include border-left-radius($border-radius-base !important);
+                border-right-width: 0;
+            }
+            &.last-group-item {
+                // reset again now that we're floating these left to right
+                border-radius: 0 !important;
+                @include border-right-radius($border-radius-base !important);
+                border-left-width: 0;
+            }
+        }
+    }
+
+    .browser-link {
+
+        + .browser-link {
+            padding-top: $group-heading-height + $logo-pad;
+            // make room for absolutely positioned heading
+            margin-top: -$group-heading-height;
+        }
+
+        &.halved {
+            float: left;
+            width: 50%;
+            @if $ie-support and $min-ie-supported < 8 {
+                *clear: right;
+                *padding-right: 0;
+                *padding-left: 0;
+                *margin-bottom: round($line-height-base-px / -2); // not a clue in the world why MSIE 7 needs this
+            }
+        }
+    }
+
+    // need the height of these placeholders when we're lining these up left-to-right
+    .browser-fine-print.is-empty {
+        display: block;
+    }
+}
+
+
+// ----------------------------------------------------
+//   PROGRESSIVELY ENHANCE FOR DESKTOPS+
+// ----------------------------------------------------
+@include respond-to('screen-md and up') {
+    .browser-upgrade-heading {
+        font-size: $h1-font-size;
+    }
+}

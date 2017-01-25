@@ -1,0 +1,13 @@
+// ********************************************************
+//
+    $module: 'core/api/helpers/animations';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+@import 'animations/control';
+@import 'animations/collapse';
+@import 'animations/slide';
+@import 'animations/spin';
+@import 'animations/fade';

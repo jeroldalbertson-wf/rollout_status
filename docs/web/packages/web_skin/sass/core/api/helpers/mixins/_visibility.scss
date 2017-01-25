@@ -1,0 +1,193 @@
+// ********************************************************
+
+////
+/// Helpers dealing with changing the visibility of elements
+/// ---
+/// @access public
+/// @group core.utils.visibility
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/visibility';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function is-number,
+                                                function is-px,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   CORE VISIBILITY HELPERS
+//
+// ********************************************************
+    ///
+    /// Cross-browser opacity
+    /// ---
+    /// @requires {external} SassScript/unquote <http://bit.ly/sass_unquote>
+    /// ---
+    /// @param {Number}           $alpha             - amount of opacity between `0` and `1`
+    /// @param {Bool | String}    $important [false] - whether or not the style should have an `!important` flag added
+    ///
+    @mixin opacity($alpha, $important: false) {
+        @if not is-number($alpha) {
+            @error "`opacity` mixin expecting a number; #{type-of($alpha)} given.";
+        }
+        @if $alpha < 0 or $alpha > 1 {
+            @error "`opacity` mixin expecting a number between `0` and `1`; #{$alpha} given.";
+        }
+
+        $important: if($important == false, '', '!important');
+        $alpha: unquote("#{$alpha} #{$important}");
+
+        opacity: $alpha;
+    }
+
+
+
+// ********************************************************
+//
+//   ACCESSIBLE VISIBILITY HELPERS
+//
+// ********************************************************
+    ///
+    /// Only display content to screen readers
+    /// ---
+    /// @see {mixin} sr-only-focusable
+    /// @see {mixin} sr-only-reveal
+    /// @since 0.4.0
+    /// @link http://a11yproject.com/posts/how-to-hide-content/ A11y friendly content hiding
+    ///
+    @mixin sr-only {
+        position: absolute;
+        width: .1rem;
+        height: .1rem;
+        margin: -.1rem;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        border: 0;
+    }
+
+    ///
+    /// Reverse the effects of the `sr-only` mixin
+    /// ---
+    /// @since 0.4.9
+    /// @see {mixin} sr-only
+    /// @link http://a11yproject.com/posts/how-to-hide-content/ A11y friendly content hiding
+    /// ---
+    /// @param {String} $position [static]
+    /// @param {String | Number} $width [auto]
+    /// @param {String | Number} $height [auto]
+    ///
+    @mixin sr-only-reveal($position: static, $width: auto, $height: auto) {
+        position: $position;
+        width: if(is-px($width, false), to-rem($width), $width);
+        height: if(is-px($height, false), to-rem($height), $height);
+        margin: 0;
+        overflow: visible;
+        clip: auto;
+    }
+
+    ///
+    /// Use in conjunction with `sr-only` mixin to only display content when it's focused.
+    /// Especially useful for "Skip to main content" links.
+    /// ---
+    /// @see {mixin} sr-only
+    /// @since 0.4.12
+    /// @link http://a11yproject.com/posts/how-to-hide-content/ A11y friendly content hiding
+    ///
+    @mixin sr-only-focusable {
+        &:active,
+        &:focus {
+            @include sr-only-reveal();
+        }
+    }
+
+
+
+// ********************************************************
+//
+//   RESPONSIVE VISIBILITY HELPERS
+//
+// ********************************************************
+    ///
+    /// Visibility utility used to reveal elements within certain media queries
+    /// ---
+    /// @since 0.2.0
+    /// @see {mixin} responsive-invisibility
+    /// @link http://bit.ly/webskin-responsive-utils DOCS: How to use responsive visibility classes
+    /// ---
+    /// @param {String} $parent - parent elem CSS selector to reveal
+    ///
+    @mixin responsive-visibility($parent) {
+        #{$parent} {
+            display: inherit !important;
+            visibility: visible !important;
+            @include opacity(1, !important);
+        }
+        #{$parent}.display-inline {
+            display: inline !important;
+        }
+        #{$parent}.display-inline-block {
+            display: inline-block !important;
+        }
+        tr#{$parent} {
+            display: table-row !important;
+        }
+        th#{$parent},
+        td#{$parent} {
+            display: table-cell !important;
+        }
+    }
+
+    ///
+    /// Visibility utility used to reveal elements within certain media queries
+    /// ---
+    /// @since 0.2.0
+    /// @see {mixin} responsive-visibility
+    /// @link http://bit.ly/webskin-responsive-utils DOCS: How to use responsive visibility classes
+    /// ---
+    /// @param {String} $parent - parent elem CSS selector to reveal
+    ///
+    @mixin responsive-invisibility($parent) {
+        #{$parent} {
+            display: none !important;
+            visibility: collapse !important;
+        }
+    }
+
+
+
+// ********************************************************
+//
+//   MISC VISIBILITY HELPERS
+//
+// ********************************************************
+    ///
+    /// Completely hide a table cell
+    ///
+    @mixin hide-table-cell {
+        visibility: collapse;
+        display: none;
+        padding: 0;
+        margin: 0;
+        @include table-cell-width(0);
+    }
+
+    ///
+    /// Reusable styles for "pure CSS" image replacement
+    ///
+    @mixin hide-text {
+        font: 0/0 a;
+        color: transparent;
+        text-shadow: none;
+        background-color: transparent;
+        border: 0;
+    }

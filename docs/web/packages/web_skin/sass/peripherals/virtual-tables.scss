@@ -1,0 +1,34 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for
+ * "Virtual" Tables
+ * ---
+ * MSIE Support: 10+
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+// ----------------------------------------------------
+//   Set selector prefix so CSS classes are produced
+//   instead of HTML tags
+// ----------------------------------------------------
+    $table-selector-prefix: '.';
+
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import '../core/api';
+
+
+// ----------------------------------------------------
+//   Virtual Table Styles
+//   -> Same module as core table styles... the only
+//      difference is that in this module, we are
+//      setting `$table-selector-prefix` to `.`
+// ----------------------------------------------------
+    @import 'virtual-tables/virtual-tables-base';

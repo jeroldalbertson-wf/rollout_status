@@ -1,0 +1,148 @@
+// ********************************************************
+
+////
+/// Dropdown nav color configuration
+/// ---
+/// @access public
+/// @group core.components.dropdowns
+///
+/// @link http://bit.ly/webskin-dropdowns Dropdown nav component spec
+/// @link http://bit.ly/webskin-dropdown-dividers Dropdown nav divider spec
+/// @link http://bit.ly/webskin-dropdown-headers Dropdown nav header spec
+/// @link http://bit.ly/webskin-dropdown-info-panels Dropdown nav info-panel spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/config/dropdown-color-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function darkness,
+                                                function build-box-shadow,
+                                                function get,
+                                                function extend);
+//
+// ********************************************************
+
+
+///
+/// What value does the `lightness()` fn need to return for the background color of the surface beneath the `.dropdown-menu` in order for a box-shadow to be used?
+/// ---
+/// @type Number
+/// @since 0.4.9-2
+/// @access private
+/// @group core.internals.components.dropdowns
+///
+$dropdown-menu-shadow-threshold: 96%;
+
+///
+/// Collection of color values for the `.dropdown-menu` and `.dropdown-box` components, as well as the various elems that are often nested within them.
+/// ---
+/// @since 1.0.0
+/// @type Map
+/// ---
+/// @requires {function} get
+/// @requires {function} darkness
+/// @requires {variable} $nav-base-config
+/// @requires {variable} $nav-secondary-config
+/// @requires {variable} $zc-gray-70
+/// @requires {variable} $zc-gray-40
+/// @requires {variable} $state-default-bg
+/// ---
+/// @prop {Color} bg                        [#ffffff] - Default background color
+/// @prop {Color} bd-color                  [#bebebe] - Default border color
+/// @prop {Color} divider-bd-color          [#e3e3e3] - Border color of nested `.divider` elems
+/// @prop {Color} header-text-color         [#b2b2b2] - Text color of nested `.dropdown-header` elems
+/// @prop {Color} info-panel-bg             [#fafafa] - Background color of nested `.dropdown-info` elems
+/// @prop {Color} info-panel-bd-color       [#e3e3e3] - Border color of nested `.dropdown-info` elems
+/// @prop {Color} info-panel-header-color   [#adadad] - Text color of nested `.dropdown-info .dropdown-header` elems
+///
+$dropdown-menu-color-config: (
+    'bg': get($nav-secondary-config, 'bg'),
+    'bd-color': mix(get($nav-secondary-config, 'bd-color'), get($nav-base-config, 'bd-color'), 49%),
+    'divider-bd-color': $zc-gray-40,
+    'header-text-color': $zc-gray-70,
+    //
+    'info-panel-bg': $state-default-bg,
+    'info-panel-bd-color': $zc-gray-40,
+    'info-panel-header-color': darken($zc-gray-70, darkness($state-default-bg))
+) !default;
+
+
+// ********************************************************
+//
+//   MENU BOX SHADOWS
+//
+// ********************************************************
+    ///
+    /// Box shadow configuration for `.dropdown-menu` components
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @link http://bit.ly/webskin-dropdowns Dropdown nav component spec
+    /// ---
+    /// @requires {function} extend
+    /// @requires {variable} $shadow-default-config
+    /// ---
+    /// @prop {Bool}   inset     [false]    - _inherited from `$shadow-default-config`_
+    /// @prop {Number} offset-x  [0]        - _inherited from `$shadow-default-config`_
+    /// @prop {Number} offset-y  [2px]
+    /// @prop {Number} blur      [0]        - _inherited from `$shadow-default-config`_
+    /// @prop {Number} spread    [0]        - _inherited from `$shadow-default-config`_
+    /// @prop {Color}  color     [#000000]  - _inherited from `$shadow-default-config`_
+    /// @prop {Number} alpha     [.11]      - _inherited from `$shadow-default-config`_
+    ///
+    $dropdown-menu-shadow-config: extend($shadow-default-config,
+        (
+            'offset-y': $shadow-default-vertical - 1
+        )
+    );
+
+    ///
+    /// Box shadow configuration for `.dropdown-menu` components within a `.dropup` container variation
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @link http://bit.ly/webskin-dropdowns-dropup Dropdown nav component dropup variation spec
+    /// ---
+    /// @requires {function} extend
+    /// @requires {variable} $shadow-default-config
+    /// ---
+    /// @prop {Bool}   inset     [false]    - _inherited from `$shadow-default-config`_
+    /// @prop {Number} offset-x  [0]        - _inherited from `$shadow-default-config`_
+    /// @prop {Number} offset-y  [-2px]
+    /// @prop {Number} blur      [0]        - _inherited from `$shadow-default-config`_
+    /// @prop {Number} spread    [0]        - _inherited from `$shadow-default-config`_
+    /// @prop {Color}  color     [#000000]  - _inherited from `$shadow-default-config`_
+    /// @prop {Number} alpha     [.11]      - _inherited from `$shadow-default-config`_
+    ///
+    $dropup-menu-shadow-config: extend($shadow-default-config,
+        (
+            'offset-y': ($shadow-default-vertical - 1) * -1
+        )
+    );
+
+    ///
+    /// Default `box-shadow` value for `.dropdown-menu` components
+    /// ---
+    /// @type List
+    /// @link http://bit.ly/webskin-dropdowns Dropdown nav component spec
+    /// ---
+    /// @requires {function} build-box-shadow
+    /// @requires {variable} $dropdown-menu-shadow-config
+    ///
+    $dropdown-menu-shadow: build-box-shadow($dropdown-menu-shadow-config);
+
+    ///
+    /// Default `box-shadow` value for `.dropdown-menu` components within a `.dropup` container variation
+    /// ---
+    /// @type List
+    /// @link http://bit.ly/webskin-dropdowns-dropup Dropdown nav component dropup variation spec
+    /// ---
+    /// @requires {function} build-box-shadow
+    /// @requires {variable} $dropup-menu-shadow-config
+    ///
+    $dropup-menu-shadow: build-box-shadow($dropup-menu-shadow-config);

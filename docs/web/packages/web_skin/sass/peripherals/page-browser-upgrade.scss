@@ -1,0 +1,49 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for Browser Upgrade Layout
+ *
+ * Must support MSIE 8 / 9 so that the page we present
+ * to Wdesk users that are trying to use an unsupported
+ * browser does not appear broken.
+ * ---
+ * MSIE Support: 8
+ * Touch UI Support: false
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ *   web-skin v{{ws_css_version}} Libs JS for MSIE
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import "../core/api";
+    // ----- Change MSIE support level to 8 ----- //
+    @include set-browser-minimum-versions(('ie': '8'), $force: true);
+
+
+// ----------------------------------------------------
+//   Browser Upgrade Layout Atoms
+// ----------------------------------------------------
+    @import "browser-upgrade/atoms/browser-upgrade-config";
+
+// ----------------------------------------------------
+//   Browser Upgrade Layout Components
+// ----------------------------------------------------
+    @import "browser-upgrade/browser-upgrade-layout";
+
+
+// ----------------------------------------------------
+//   Browser Support Warning
+// ----------------------------------------------------
+    @if not $ie-support {
+        @warn "MSIE should be supported for wdesk_browser-upgrade.scss.";
+    }
+    @if $min-ie-supported > 8 {
+        @warn "MSIE 8 should be supported for wdesk_browser-upgrade.scss.";
+    }

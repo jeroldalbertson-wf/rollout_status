@@ -1,0 +1,125 @@
+// ********************************************************
+//
+//   EMPTY VIEW MESSAGING COMPONENT STYLE MODULE
+//
+//   Used to indicate empty search results, empty content
+//   areas based on tab filters, and even empty page contents
+//   based on a server error / 404 error.
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/empty-view';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $empty-view-module-config:  'core/components/atoms/empty-view/empty-view-config';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $empty-view-module-config);
+//
+// ********************************************************
+
+
+.empty-view {
+    margin-top: get($empty-view-config, 'margin-top');
+    padding: get($empty-view-config, 'padding');
+    text-align: center;
+    color: get($empty-view-config, 'message-color');
+
+    p:last-child {
+        margin-bottom: 0; // Prevent extra white-space at the bottom of the container
+    }
+}
+
+.empty-view__message-heading {
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: get($empty-view-config, 'message-heading-margin-bottom');
+    font-size: get($empty-view-config, 'message-heading-font-size');
+    font-weight: get($empty-view-config, 'message-heading-font-weight');
+    color: inherit;
+}
+
+.empty-view__icon {
+    $base16-icon-size: get($empty-view-config, 'icon-size-base16');
+    $base24-icon-size: get($empty-view-config, 'icon-size-base24');
+
+    width: $base16-icon-size;
+    height: $base16-icon-size;
+    font-size: $base16-icon-size;
+    margin-bottom: get($empty-view-config, 'icon-margin-bottom');
+    color: get($empty-view-config, 'icon-color');
+
+    &[class*="icon-twfr-"] {
+        width: $base24-icon-size;
+        height: $base24-icon-size;
+        font-size: $base24-icon-size;
+    }
+}
+
+
+
+// ********************************************************
+//
+//  EMPTY VIEW VERTICAL CENTERING LAYOUT CONTAINERS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //  EMPTY VIEW VBLOCK
+    //
+    //   -> For use in things like sidebars / main content
+    //      areas when a full-height vertical centering
+    //      treatment is required, but the height of the
+    //      parent element is not necessarily `100vh` like
+    //      it is in the case of the `.empty-view-page-frame`
+    //      use-case.
+    //
+    //  [1] Mimic `.grid-block.grid-vertical.grid-align-center`
+    //
+    //  [2] Have to use absolute positioning because we
+    //      cannot guarantee that the element it is nested
+    //      within will have a fixed height.
+    //
+    //      This is similar to the reason we need the
+    //      `.grid-reset` element wrapping around nested
+    //      `.grid-vertical` blocks.
+    // ----------------------------------------------------
+    .empty-view-vblock {
+        // ----- [1] ----- //
+        @include display-flex();
+        @include flex(1 1 0%);
+        @include flex-flow(column nowrap);
+        @include align-items(stretch);
+        @include justify-content(center);
+
+        // ----- [2] ----- //
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 100%;
+
+        // Centers vertically within the container, so no top margin
+        .empty-view {
+            margin-top: 0;
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //  FULL PAGE EMPTY VIEW FRAME
+    //
+    //   -> For use on things like 404 error pages where the
+    //      entire viewport will contain nothing but an
+    //      `.empty-view` component.
+    // ----------------------------------------------------
+    .empty-view-page-frame {
+        @include grid-frame($orientation: vertical, $align: center);
+
+        // Centers vertically within the container, so no top margin
+        .empty-view {
+            margin-top: 0;
+        }
+    }

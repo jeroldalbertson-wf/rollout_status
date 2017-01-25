@@ -1,0 +1,180 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-modals';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Base modal example containers
+// ----------------------------------------------------
+.ws-example-modal {
+    position: relative;
+    overflow: hidden;
+    // Disable Chrome scrolling optimizations to work around Chrome opacity bug
+    //
+    // See: UIP-1780
+    z-index: 1;
+
+    &:not(.ws-example-modal--flush) {
+        //
+        // since the `.modal` nested within it has its own
+        // margin that we want to preserve, reduce the
+        // example wrapper's top padding to keep the visual
+        // space around the dialog even on all sides.
+        //
+        padding-top: to-rem($docs-spacing-base);
+    }
+}
+
+.ws-example-modal--lightbox {
+    padding: 0 !important;
+
+    .modal {
+        height: 80rem;
+    }
+
+    // Simulate the default max-height within an example container
+    .modal-dialog {
+        $default-max-height: get-deep($lightbox-config, 'breakpoints.default.max-height');
+        $equivalent-vertical-margin: (100% - $default-max-height) / 2;
+        margin-top: $equivalent-vertical-margin !important;
+        margin-bottom: $equivalent-vertical-margin !important;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Modal notifications example container
+// ----------------------------------------------------
+.ws-example-modal-notifications {
+    // prevent double spacing
+    .modal + .modal .modal-dialog {
+        margin-top: 0;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Modals within example containers
+// ----------------------------------------------------
+.ws-example > .modal,
+.wsr-static-modal .modal {
+    position: relative;
+    display: block;
+    top: to-rem($example-modal-vertical-offset);
+    width: 100%;
+    z-index: 3;
+    overflow: hidden;
+
+    &.modal--lightbox {
+        @include display-flex();
+    }
+
+    // make sure dialogs fit inside our example boundaries at smaller screen sizes
+    @include respond-to('screen-sm and up') {
+        .modal-dialog {
+            position: relative; // override any `.modal-dialog` that has used `align-modal-center()`
+            left: 0;
+            margin-top: to-rem($modal-content-padding * 2);
+            margin-right: to-rem($modal-content-padding * 2);
+            margin-left: to-rem($modal-content-padding * 2);
+            width: auto;
+        }
+
+        &.modal-sm .modal-dialog {
+            width: to-rem($modal-dialog-sm-width);
+            margin-left: to-rem(round($modal-dialog-sm-width / -2));
+            left: 50%;
+        }
+    }
+
+    @include respond-to('screen-lg and up') {
+        .modal-dialog {
+            width: to-rem($modal-dialog-width);
+            margin-left: to-rem(round($modal-dialog-width / -2));
+            left: 50%;
+        }
+
+        &.session-timeout-dialog .modal-dialog {
+            // ensure the session timeout dialog example doesn't get "clipped"
+            margin-left: to-rem(round($modalDialogWidth / -2));
+        }
+    }
+
+    //
+    // For a static example, the viewport width must be 140rem or larger before the large example
+    // will render without appearing "clipped" by the .ws-example container boundary.
+    // In an actual implementation, this width is shown above 99.2rem.
+    //
+    @include breakpoint('screen' 1400px) {
+        &.modal-lg .modal-dialog {
+            width: to-rem($modal-dialog-lg-width);
+            margin-left: to-rem(round($modal-dialog-lg-width / -2));
+            left: 50%;
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//  MODALS WITHIN HORIZONTAL FLEXBOX EXAMPLE CONTAINERS
+// ----------------------------------------------------
+.ws-examples--horizontal {
+    $horizontal-example-breakpoints: sm md lg;
+
+    @each $breakpoint-name in $horizontal-example-breakpoints {
+        @include respond-to('screen-#{$breakpoint-name} and up') {
+            > .ws-example.grid-block-#{$breakpoint-name} {
+                .modal-dialog {
+                    margin-left: 0;
+                    margin-right: 0;
+                    left: 0;
+                    right: 0;
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    @at-root .ws-example-modal--flush {
+        > .modal {
+            overflow: visible;
+        }
+
+        .modal-dialog {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   Modal backdrops within example containers
+// ----------------------------------------------------
+.ws-example > .modal-backdrop {
+    position: absolute;
+    z-index: 3;
+    bottom: -.1rem; // for whatever reasons - sometimes 1px shows through the backdrop where the code example meets the demo
+}
+
+
+// ----------------------------------------------------
+//   Live demo modals (outside of example containers)
+// ----------------------------------------------------
+.live-demo-modal,
+body > .backdrop.modal-backdrop {
+    z-index: $zindex-fixed-navbar-docs + 1;
+}
+
+
+// ----------------------------------------------------
+//   Modal tour code example
+// ----------------------------------------------------
+.tabbed-markup-modal-tour .highlight {
+    min-height: 25rem;
+}

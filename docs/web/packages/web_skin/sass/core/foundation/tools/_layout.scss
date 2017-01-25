@@ -1,0 +1,21 @@
+// ********************************************************
+//
+    $module: 'core/foundation/tools/layout';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Masonry Column Layouts
+//
+//   <div class="columns-{breakpoint} columns-up-{breakpoint}-{n}">
+//      <div class="column">...</div>
+//      <div class="column">...</div>
+//      <div class="column">...</div>
+//      <div class="column">...</div>
+//   </div>
+// ----------------------------------------------------
+@each $breakpoint in get($grid-config, 'breakpoints-v2') {
+    @include generate-breakpoint-column-layout-classes($breakpoint);
+}

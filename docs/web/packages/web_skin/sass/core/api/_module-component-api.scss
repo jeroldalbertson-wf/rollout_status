@@ -1,0 +1,11 @@
+// ********************************************************
+//
+    $module: 'core/api/module-component-api';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+@import 'config/module-base';
+@import 'config/module-component-config';
+@import 'helpers/module-component-helpers';

@@ -1,0 +1,618 @@
+// ********************************************************
+
+////
+/// Dropdown navigation component helpers
+/// ---
+/// @since 0.4.0
+/// @group core.components.dropdowns
+/// @link http://bit.ly/webskin-dropdowns Dropdown nav component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/dropdowns-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function to-rem,
+                                                function is-number);
+//
+// ********************************************************
+
+
+///
+/// Base styling for `.dropdown-menu` components
+///
+@mixin dropdown-menu-base() {
+    @include dropdown-menu-base-structure();
+    @include dropdown-menu-base-skin();
+    @include dropdown-menu-size($dropdown-menu-base-size-config, $include-menu-item-styles: false);
+}
+
+///
+/// Base structural styling for `.dropdown-menu` components
+/// @since 1.9.0
+///
+@mixin dropdown-menu-base-structure() {
+    @include background-clip(padding-box);
+    box-sizing: content-box; // makes it much easier to handle vertical scrolling
+
+    display: none; // none by default, but block on "open" of the menu
+    overflow: auto; // allow for scrolling when fixed height is set (@see issue 869)
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: z('dropdown');
+    float: left;
+    width: auto; // min/max widths don't work if this is set to 100%
+    margin: to-rem(get($btn-config, 'dd-menu-spacing')) 0 0 0;
+    list-style: none;
+}
+
+///
+/// Base visual styling (skin) for `.dropdown-menu` components
+/// @since 1.9.0
+///
+@mixin dropdown-menu-base-skin() {
+    background-color: get($dropdown-menu-color-config, 'bg');
+    border: to-rem($dropdown-menu-bd-width) solid get($dropdown-menu-color-config, 'bd-color');
+
+    @if lightness(get($dropdown-menu-color-config, 'bg')) >= $dropdown-menu-shadow-threshold {
+        box-shadow: #{$dropdown-menu-shadow};
+    }
+}
+
+
+///
+/// Styling for a `.dropdown-menu` that contains another `.dropdown-menu`.
+/// For example, if your menu needs a "pinned" item at the top, and a scrolling menu of items beneath, place these
+/// styles on the `.dropdown-menu` containing the scrolling menu.
+///
+/// [1] Menu padding should be placed on the inner
+///     scrollable menu only. Note that this means
+///     size variation classes like `dropdown-menu-lg`
+///     should be placed on the inner menu as well.
+///
+/// [2] Size the outer `.dropdown-menu` vertically
+///     using flexbox so that inner `.dropdown-menu`
+///     scrolls when it can't fit within the outer `.dropdown-menu`'s
+///     max-height, sizes as tall as it can otherwise.
+///
+/// [3] Override negative top / bottom margin since
+///     outer menu has no padding via [1].
+///
+/// [4] Size `.dropdown-menu--outer` vertically
+///     using flexbox so that the `dropdown-menu--inner`
+///     scrolls when it can't fit within `.dropdown-menu--outer`'s
+///     max-height, sizes as tall as it can otherwise.
+///
+/// ---
+/// @since 1.11.0
+/// @link https://jira.atl.workiva.net/browse/UIP-1561 UIP-1561
+/// ---
+///
+@mixin dropdown-menu-outer() {
+    padding: 0 !important; // [1]
+
+    .overlay-target--v2 & { // [2]
+        @include display-flex();
+        @include flex-direction(column);
+    }
+
+    > .dropdown-info:first-child,
+    > .dropdown-info:last-child {
+        // [3]
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+
+        .overlay-target--v2 & {
+            @include flex(0 0 auto); // [4]
+        }
+    }
+}
+
+///
+/// Styling for a `.dropdown-menu` that is nested within another `.dropdown-menu`.
+/// For example, if your menu needs a "pinned" item at the top, and a scrolling menu of items beneath, place these styles on the scrolling menu.
+/// ---
+/// @since 1.9.0
+/// @link https://jira.atl.workiva.net/browse/UIP-1024 UIP-1024
+/// @link https://jira.atl.workiva.net/browse/UIP-984 UIP-984
+/// ---
+/// @param {Bool} $scroll-vertical      [true]
+/// @param {Bool} $scroll-horizontal    [false]
+///
+@mixin dropdown-menu-nested($scroll-vertical: true, $scroll-horizontal: false) {
+    // These rules essentially override the rules from `dropdown-menu-base()`.
+    display: block;
+    margin: 0;
+    position: relative;
+    top: auto;
+    left: auto;
+    float: inherit;
+    min-width: 0;
+    max-width: none;
+    width: 100%;
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    white-space: normal;
+
+    @if $scroll-vertical and $scroll-horizontal { // bi-directional scroll
+        overflow: auto;
+    } @elseif $scroll-vertical or $scroll-horizontal { // single-direction scroll
+        overflow: hidden;
+        overflow-#{if($scroll-vertical, 'y', 'x')}: auto;
+    }
+}
+
+///
+/// Base styling for a `.dropup .dropdown-menu` component variation
+/// ---
+/// @since 1.0.0
+/// ---
+/// @param {Bool} $set-margin-bottom [true] - Whether to set the `margin-bottom` property
+///
+@mixin dropup-menu-base($set-margin-bottom: true) {
+    top: auto;
+    bottom: 100%;
+    margin-top: 0;
+
+    @if $set-margin-bottom {
+        margin-bottom: to-rem(get($btn-config, 'dd-menu-spacing'));
+    }
+}
+
+///
+/// Reusable styles for `.dropdown-menu` elem size variations
+/// ---
+/// @since 0.4.2
+/// ---
+/// @param {Map}    $size-config                        - Dropdown menu size configuration
+/// @param {Bool}   $include-menu-item-styles [true]    - Whether to output size variation styling for the children of the menu as well.
+///
+@mixin dropdown-menu-size($size-config, $include-menu-item-styles: true) {
+    $min-width: get($size-config, 'min-width');
+    $max-width: get($size-config, 'max-width');
+
+    @if is-number($min-width) {
+        $min-width: to-rem($min-width);
+    }
+
+    @if is-number($max-width) {
+        $max-width: to-rem($max-width);
+    }
+
+    min-width: $min-width;
+    max-width: $max-width;
+    padding: to-rem(get($size-config, 'padding'));
+    border-radius: to-rem(get($size-config, 'bd-radius'));
+
+    @if $include-menu-item-styles {
+        @include dropdown-menu-item-size($size-config);
+    }
+}
+
+///
+/// Reusable styles for `.menu-item`s within `.dropdown-menu` elem size variations
+/// ---
+/// @since 1.9.0
+/// ---
+/// @param {Map} $size-config - Dropdown menu size configuration
+///
+@mixin dropdown-menu-item-size($size-config) {
+    $bd-radius: get($size-config, 'bd-radius');
+    $padding-vertical: get($size-config, 'padding-vertical');
+    $info-padding-vertical: $padding-vertical + $bd-radius;
+    $link-padding-vertical: get($size-config, 'link-padding-vertical');
+    $link-padding-horizontal: get($size-config, 'link-padding-horizontal');
+    $link-icon-margin-horizontal: get($size-config, 'link-icon-margin-horizontal');
+    $link-font-size: get($size-config, 'font-size');
+
+    > .menu-item,
+    &.dropdown-menu--virtual .menu-item {
+        font-size: to-rem(get($size-config, 'font-size'));
+
+        > .hitarea {
+            max-width: to-rem(get($size-config, 'max-width'));
+            padding: to-rem(get($size-config, 'link-padding'));
+            font-size: to-rem(get($size-config, 'font-size'));
+            line-height: to-rem(get($size-config, 'line-height'));
+
+            // HITAREA THAT IS A CHECKBOX OR RADIO
+            &.checkbox,
+            &.radio {
+                // The visible checkbox
+                label {
+                    @include dropdown-menu-toggle-link-label-alignment(
+                        $link-padding-horizontal: $link-padding-horizontal,
+                        $link-font-size: $link-font-size
+                    );
+                }
+            }
+        }
+
+        &.checked {
+            > .hitarea {
+                @include dropdown-menu-link-checked($link-padding-horizontal, $is-size-variation: true);
+            }
+        }
+    }
+
+    .divider {
+        margin: to-rem(get($size-config, 'divider-margin'));
+    }
+
+    .dropdown-info {
+        padding: to-rem($info-padding-vertical $link-padding-horizontal);
+
+        &:first-child {
+            margin-top: to-rem($padding-vertical) * -1;
+            margin-bottom: to-rem($padding-vertical);
+            @include border-top-radius(to-rem($bd-radius - $dropdown-menu-bd-width));
+        }
+        &:last-child {
+            margin-top: to-rem($padding-vertical);
+            margin-bottom: to-rem($padding-vertical) * -1;
+            @include border-bottom-radius(to-rem($bd-radius - $dropdown-menu-bd-width));
+        }
+    }
+
+    .dropdown-header {
+        padding: to-rem($link-padding-vertical $link-padding-horizontal);
+        font-size: to-rem(get($size-config, 'header-font-size')) !important; // override .menu-item font-size
+        line-height: to-rem(get($size-config, 'line-height'));
+    }
+}
+
+///
+/// Update the `max-width` value of a `.dropdown-menu` and its links if you need to override the Web Skin defaults in a specific context within your Wdesk app.
+/// ---
+/// @since 1.0.0
+/// ---
+/// @example scss App Sass Usage
+///   .my-custom-dropdown-menu {
+///     @include set-dropdown-menu-max-width(20rem);
+///   }
+///
+/// @example html App HTML Implementation
+///   <ul class="dropdown-menu my-custom-dropdown-menu">
+///     <!--
+///          This menu will have a custom
+///          max-width instead of the Web Skin default.
+///     -->
+///   </ul>
+/// ---
+/// @param {Number} $width - Max width you want to set for your menu
+///
+@mixin set-dropdown-menu-max-width($width) {
+    &,
+    > .menu-item > .hitarea,
+    &.dropdown-menu--virtual .menu-item > .hitarea {
+        max-width: to-rem($width);
+    }
+}
+
+///
+/// Update the `min-width` value of a `.dropdown-menu` and its links if you need to override the Web Skin defaults in a specific context within your Wdesk app.
+/// ---
+/// @since 1.3.4
+/// ---
+/// @example scss App Sass Usage
+///   .my-custom-dropdown-menu {
+///     @include set-dropdown-menu-min-width(8rem);
+///   }
+///
+/// @example html App HTML Implementation
+///   <ul class="dropdown-menu my-custom-dropdown-menu">
+///     <!--
+///          This menu will have a custom
+///          min-width instead of the Web Skin default.
+///     -->
+///   </ul>
+/// ---
+/// @param {Number} $width - Min width you want to set for your menu
+///
+@mixin set-dropdown-menu-min-width($width) {
+    &,
+    > .menu-item > .hitarea,
+    &.dropdown-menu--virtual .menu-item > .hitarea {
+        min-width: to-rem($width);
+    }
+}
+
+///
+/// Base styling for dropdown menu `<li>` elems
+///
+@mixin dropdown-menu-item {
+    display: block;
+    clear: both;
+    font-size: to-rem(get($dropdown-menu-base-size-config, 'font-size'));
+    color: get($nav-secondary-link-config, 'text-color');
+    cursor: default;
+    // not a selectable piece of text
+    @include disable-user-select();
+    @include truncate-text();
+}
+
+///
+/// Base styling for `.hitarea` elems within dropdown menu `<li>` elems
+/// ---
+/// @param {Bool} $set-display      [true] - Whether the `display: block` style should be set
+/// @param {Bool} $set-max-width    [true] - Whether the `max-width` property should be set
+/// @param {Bool} $set-text-indent  [true] - Whether the `text-indent` property should be set, __DEPRECATED in `1.3.4`__, does nothing.
+/// @param {Bool} $set-padding-left [true] - Whether the `padding-left` property should be set, __DEPRECATED in `1.3.4`__, does nothing.
+///
+@mixin dropdown-menu-link($set-display: true,
+                          $set-max-width: true,
+                          $set-text-indent: true,
+                          $set-padding-left: true)
+{
+    $size-config: $dropdown-menu-base-size-config;
+
+    @include truncate-text();
+    @include disable-user-select();
+
+    // Required to allow `:before/:after` pseudo elems to be positioned absolute
+    position: relative;
+    clear: both;
+    font-family: $font-family-base;
+    font-size: to-rem(get($size-config, 'font-size'));
+    line-height: to-rem(get($size-config, 'line-height'));
+    color: get($nav-secondary-link-config, 'text-color');
+    text-align: left;
+    padding: to-rem(get($size-config, 'link-padding'));
+    border-radius: 0;
+    @if $set-display      { display: block; }
+    @if $set-max-width    { max-width: to-rem(get($size-config, 'max-width')); }
+    min-width: 100%;
+
+    // HITAREA THAT IS A CHECKBOX OR RADIO
+    &.checkbox,
+    &.radio {
+        @include dropdown-menu-toggle-link();
+    }
+
+    // Adjust base24 / medium base16 icon vertical alignment within menu items
+    > .icon {
+        &.icon-md,
+        &[class*="icon-twfr-"] {
+            vertical-align: middle;
+        }
+    }
+}
+
+///
+/// Base styling for `.dropdown-header` elems
+/// ---
+/// @link http://bit.ly/webskin-dropdown-headers Dropdown nav header spec
+///
+@mixin dropdown-menu-header {
+    $size-config: $dropdown-menu-base-size-config;
+    //
+    $link-padding-vertical: get($size-config, 'link-padding-vertical');
+    $link-padding-horizontal: get($size-config, 'link-padding-horizontal');
+    $link-icon-margin-horizontal: get($size-config, 'link-icon-margin-horizontal');
+
+    display: block;
+    margin: 0;
+    font-family: $font-family-base;
+    font-size: to-rem(get($size-config, 'header-font-size')) !important; // override .dropdown-menu > .menu-item font-size
+    font-weight: bold;
+    line-height: to-rem(get($size-config, 'line-height'));
+    color: get($dropdown-menu-color-config, 'header-text-color') !important; // override .dropdown-menu > .menu-item color
+    text-transform: uppercase;
+    cursor: default;
+    padding: to-rem($link-padding-vertical $link-padding-horizontal);
+    white-space: normal;
+}
+
+///
+/// Base styling for `.dropdown-info` elems
+/// ---
+/// @since 0.4.3
+/// @link http://bit.ly/webskin-dropdown-info-panels Dropdown nav info-panel spec
+///
+@mixin dropdown-menu-info {
+    $size-config: $dropdown-menu-base-size-config;
+    //
+    $bd-radius: to-rem(get($size-config, 'bd-radius'));
+    $padding-vertical: to-rem(get($size-config, 'padding-vertical'));
+    $link-padding-vertical: to-rem(get($size-config, 'link-padding-vertical'));
+    $link-padding-horizontal: to-rem(get($size-config, 'link-padding-horizontal'));
+    $link-icon-margin-horizontal: to-rem(get($size-config, 'link-icon-margin-horizontal'));
+
+    // DEFAULT - between two other <li> elems
+    margin: $padding-vertical 0;
+    background-color: get($dropdown-menu-color-config, 'info-panel-bg'); // same as default alert bg
+    border-top: to-rem($dropdown-info-panel-bd-width) solid get($dropdown-menu-color-config, 'info-panel-bd-color'); // similar to a .divider
+    border-bottom: to-rem($dropdown-info-panel-bd-width) solid get($dropdown-menu-color-config, 'info-panel-bd-color'); // similar to a .divider
+    padding: ($padding-vertical + $link-padding-vertical) $link-padding-horizontal;
+    white-space: normal;
+
+    .dropdown-menu & {
+        // TOP ALIGNMENT - no <li> above it
+        &:first-child {
+            margin-top: to-rem($padding-vertical) * -1;
+            border-top: none;
+            @include border-top-radius($bd-radius - to-rem($dropdown-menu-bd-width));
+        }
+
+        // BOTTOM ALIGNMENT - no <li> below it
+        &:last-child {
+            margin-bottom: -$padding-vertical;
+            border-bottom: none;
+            @include border-bottom-radius($bd-radius - to-rem($dropdown-menu-bd-width));
+        }
+    }
+
+
+    // when a .dropdown-header is nested within a .dropdown-info <li>
+    .dropdown-header {
+        // tweak padding for nested header
+        // use important to over-rule the dropdown
+        // size variation implementations of dropdown-header
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+        // darken just a bit
+        color: get($dropdown-menu-color-config, 'info-panel-header-color') !important;
+    }
+}
+
+///
+/// Reusable styles for hovered `.hitarea` elems within dropdown menus
+/// ---
+/// @alias secondary-nav-link-hover
+///
+@mixin dropdown-menu-item-hover {
+    @include secondary-nav-link-hover();
+}
+
+///
+/// Reusable styles for hovered `.hitarea` elems within dropdown menus
+/// ---
+/// @alias secondary-nav-link-press
+///
+@mixin dropdown-menu-item-press {
+    @include secondary-nav-link-press();
+}
+
+///
+/// Reusable styles for "checked" variation of a `<li>` elem within a dropdown menu
+/// ---
+/// @since 0.4.8
+/// ---
+/// @param {Number}  $link-padding-horizontal   [11px]  - Amount of horizontal padding present on the `.hitarea`
+/// @param {Boolean} $is-size-variation         [false] - Set to `true` if using the mixin only to update alignment of the checkmark in a dropdown size variation
+///
+@mixin dropdown-menu-link-checked($link-padding-horizontal: get($dropdown-menu-base-size-config, 'link-padding-horizontal'),
+                                  $is-size-variation: false
+                                 )
+{
+    $checked-icon-size: get-deep($icon-size-config, 'base16.sm');
+    $link-checked-padding-horizontal: round(($link-padding-horizontal - $checked-icon-size) / 2);
+
+    &:before {
+        @if not $is-size-variation {
+            font-family: get-deep($icon-font-config, 'main.name');
+            content: to-unicode(get-deep($icon-shared-pua-codes, 'main.checkmark'));
+            font-size: to-rem($checked-icon-size);
+            margin-top: to-rem((($checked-icon-size / 2) + 2) * -1);
+            text-indent: 0; // override default indent applied to parent hitarea
+
+            //
+            // Use absolute positioning to ensure that markup
+            // whitespace within the menu item does not render
+            // @see https://github.com/Workiva/web-skin/issues/868
+            //
+            position: absolute;
+            top: 50%;
+        }
+
+        left: to-rem($link-checked-padding-horizontal);
+    }
+}
+
+///
+/// Reusable base styles for a dropdown menu item hitarea that _is_ a `.checkbox` or `.radio`.
+/// ---
+/// @since 1.6.5
+/// @link http://bit.ly/webskin-menu-item-checkboxes Checkbox and Radio menu item spec
+///
+@mixin dropdown-menu-toggle-link() {
+    min-height: 0;
+    margin: 0;
+
+    label {
+        // Inherit text label properties from the parent `.hitarea`
+        color: inherit;
+        font-size: inherit;
+        font-style: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+
+        // Ensure that text-truncation / user-select works just like a normal hitarea
+        @include truncate-text();
+        @include disable-user-select();
+
+        // Align the label text according to the size of the checkbox itself
+        @include dropdown-menu-toggle-link-label-alignment();
+    }
+}
+
+///
+/// Reusable styles for the label text of a dropdown menu item hitarea that _is_ a `.checkbox` or `.radio`.
+/// ---
+/// @since 1.6.5
+/// @link http://bit.ly/webskin-menu-item-checkboxes Checkbox and Radio menu item spec
+/// ---
+/// @param {Number} $link-padding-horizontal    [11px]  - Amount of horizontal padding present on the `.hitarea`
+/// @param {Number} $link-font-size             [13px]  - Font size of the `.hitarea`
+///
+@mixin dropdown-menu-toggle-link-label-alignment(
+    $link-padding-horizontal: get($dropdown-menu-base-size-config, 'link-padding-horizontal'),
+    $link-font-size: get($dropdown-menu-base-size-config, 'font-size')
+) {
+    // Ensure that the horizontal spacing between the checkbox
+    // and the label is equal to the space between the edge of
+    // the menu and the edge of the checkbox.
+    $cbox-radio-width: to-px(get($cbox-radio-config, 'width'), $link-font-size);
+    text-indent: to-rem($cbox-radio-width) + to-rem($link-padding-horizontal);
+}
+
+///
+/// Reusable base styles for a dropdown menu item hitarea that _is_ a `.checkbox`.
+/// ---
+/// @since 1.5.0
+/// @link http://bit.ly/webskin-menu-item-checkboxes Checkbox and Radio menu item spec
+/// @deprecated since 1.7.0 - use `dropdown-menu-toggle-link()` instead.
+/// @todo remove in the 2.0.0 release
+///
+@mixin dropdown-menu-checkbox-link() {
+    @include dropdown-menu-toggle-link();
+}
+
+///
+/// Reusable styles for the label text of a dropdown menu item hitarea that _is_ a `.checkbox`.
+/// ---
+/// @since 1.5.0
+/// @link http://bit.ly/webskin-menu-item-checkboxes Checkbox and Radio menu item spec
+/// @deprecated since 1.7.0 - use `dropdown-menu-toggle-link-label-alignment()` instead.
+/// @todo remove in the 2.0.0 release
+/// ---
+/// @param {Number} $link-padding-horizontal    [11px]  - Amount of horizontal padding present on the `.hitarea`
+/// @param {Number} $link-font-size             [13px]  - Font size of the `.hitarea`
+///
+@mixin dropdown-menu-checkbox-link-label-alignment(
+    $link-padding-horizontal: get($dropdown-menu-base-size-config, 'link-padding-horizontal'),
+    $link-font-size: get($dropdown-menu-base-size-config, 'font-size')
+) {
+    @include dropdown-menu-toggle-link-label-alignment($link-padding-horizontal, $link-font-size);
+}
+
+// @private
+// @see ribbon-action-group-grid-block
+@mixin dropdown-action-group-grid-block() {
+    @include ribbon-action-group-grid-block();
+}
+
+// @private
+// @see ribbon-action-group-toolbar-children-spacing
+@mixin dropdown-action-group-toolbar-children-spacing() {
+    @include ribbon-action-group-toolbar-children-spacing(get($dropdown-box-base-size-config, 'child-spacing'));
+}
+
+// @private
+// @see ribbon-action-group-rows
+@mixin dropdown-action-group-rows() {
+    @include ribbon-action-group-rows(
+        $horizontal-spacing: get($dropdown-box-base-size-config, 'child-spacing'),
+        $vertical-spacing: get($dropdown-box-base-size-config, 'child-spacing'),
+        $class-prefix: 'dropdown-'
+    );
+}

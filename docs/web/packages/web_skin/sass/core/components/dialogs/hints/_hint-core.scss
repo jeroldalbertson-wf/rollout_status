@@ -1,0 +1,68 @@
+// ********************************************************
+//
+//  HINT CORE
+//
+//  Defines the basic styling for the hint using the
+//  `has-hint` CSS class / `aria-label` element attribute.
+//
+//  Each hint is made up of 2 parts:
+//
+//  1) body  (:after)
+//  2) arrow (:before)
+//
+//  NOTE: top / bottom position work better if the
+//        `.has-hint` element has either `block` or
+//        `inline-block` display.  However, we don't set it
+//        here to avoid unintentional pollution.
+//
+// ********************************************************
+
+
+.has-hint {
+    position: relative;
+    // The hint content / arrow pseudo-elements won't be visible
+    // unless the element has visible overflow.
+    overflow: visible !important;
+
+    &.disabled,
+    &[disabled],
+    &[aria-disabled=true] {
+        // Allow hints to be used on [disabled] elements.
+        pointer-events: auto !important;
+    }
+
+    &[#{$hint-content-attr}=''] {
+        #{$hint-arrow},
+        #{$hint-body} {
+            display: none !important;
+        }
+    }
+
+    #{$hint-arrow} {
+        @include _hint-pseudo-element-base();
+
+        content: '';
+        background: transparent;
+        border: get($hint-config, 'arrow-bd-width') solid transparent;
+    }
+
+    #{$hint-body} {
+        @include _hint-pseudo-element-base();
+        @include tooltip-base($has-separate-inner-element: false);
+        // Add a specific size using one of the classes defined in
+        // `_hint-sizes.scss` to turn this off and display multi-line hints.
+        @include truncate-text();
+
+        content: attr(#{$hint-content-attr});
+    }
+
+    #{$link-hover-focus} {
+        #{$hint-arrow},
+        #{$hint-body} {
+            @include transition-delay(get($hint-config, 'show-delay'));
+
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+}

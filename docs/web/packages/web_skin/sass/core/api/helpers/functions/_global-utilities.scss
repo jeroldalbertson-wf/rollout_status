@@ -1,0 +1,41 @@
+// ********************************************************
+
+////
+/// Global utility function manifest
+/// ---
+/// @access public
+/// @since 1.0.0
+/// @group core.utils
+////
+
+//
+//   DEBUG OPTIONS:
+//
+    $debug-api-module-imports: false !default;
+    $debug-component-module-imports: false !default;
+
+//
+//   DEPENDENCIES:
+//
+    @import '../../../../module-vendor';
+    @import 'utilities/check-dependencies';
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/functions/global-utilities';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+@import '../../config/defaults/type-rhythm-global';
+
+@import 'utilities/polyfills';
+@import 'utilities/lists';
+@import 'utilities/eval';
+@import 'utilities/strings';
+@import 'utilities/numbers';
+@import 'utilities/maps';
+@import 'utilities/mutate';
+@import 'utilities/type-conversion';
+@import 'utilities/unit-conversion';

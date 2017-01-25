@@ -1,0 +1,226 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/nav-wizards/nav-wizard-base';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   NAV WIZARD BASE
+//
+//   @requires nav-item-justified
+//   @requires nav-pills-pill-justified
+// ----------------------------------------------------
+    #{$nav-wizard-selector} {
+        @include nav-item-justified();
+        @include nav-pills-pill-justified();
+
+        // prevent arrow edges from showing outside the nav area
+        overflow: hidden;
+    }
+
+
+// ----------------------------------------------------
+//   NAV WIZARD ITEMS / "STEPS"
+// ----------------------------------------------------
+    #{$nav-wizard-selector} > .nav-item {
+        position: relative;
+        max-height: to-rem($nav-link-height);
+        border-left: 0 none;
+
+        &,
+        #{$link-pressed} {
+            > .hitarea {
+                // By default, hitareas in .nav-wizard are not clickable
+                cursor: default !important;
+                // make sure the steps that are not yet completed don't show up as vividly as the current step
+                color: mix(get($nav-pills-pill-config, 'text-color'), get($nav-pills-pill-config, 'bg'), 20%); // fallback
+                color: transparentize(get($nav-pills-pill-config, 'text-color'), .2);
+                background-color: get($nav-pills-pill-config, 'bg');
+                border-color: transparent; // override .nav-pills:hover default
+            }
+        }
+
+        // indent the text when there is an arrow before it
+        + .nav-item > .hitarea {
+            padding-left: to-rem($nav-wizard-arrow-width + $nav-link-padding-left);
+        }
+
+        .icon-checkmark-sign {
+            // hide the "completed" indicator icon until its actually completed
+            display: none;
+            margin-right: to-rem($spacing-base);
+        }
+
+
+        // ----- ACTIVE STEP ----- //
+        &.active {
+            &,
+            #{$link-pressed} {
+                > .hitarea {
+                    color: get($nav-pills-pill-config, 'text-color-active');
+                    background-color: get($nav-pills-pill-config, 'bg-active');
+                }
+            }
+        }
+
+        // ----- COMPLETED STEP ----- //
+        &.completed {
+            > .hitarea {
+                // make sure the steps that came before aren't more vibrant than the current step
+                color: mix(get($nav-pills-pill-config, 'text-color'), get($nav-pills-pill-config, 'bg'), 20%); // fallback
+                color: transparentize(get($nav-pills-pill-config, 'text-color'), .2);
+            }
+
+            .icon {
+                display: inline-block;
+                top: -.1rem;
+            }
+        }
+    }
+
+
+// ----------------------------------------------------
+//   CLICKABLE NAV WIZARD ITEMS / "STEPS"
+//
+//   -> Allows the user the jump ahead / back
+// ----------------------------------------------------
+    #{$nav-wizard-selector}.is-clickable > .nav-item {
+        &,
+        > .hitarea {
+            cursor: pointer !important;
+        }
+
+        // ----- HOVER STATE ----- //
+        #{$link-hover-focus} {
+            > .hitarea {
+                background-color: get($nav-pills-pill-config, 'bg-hover');
+                color: get($nav-pills-pill-config, 'text-color-hover');
+            }
+        }
+
+        // ----- PRESSED STATE ----- //
+        #{$link-pressed} {
+            > .hitarea {
+                background-color: get($nav-pills-pill-config, 'bg-press');
+                color: get($nav-pills-pill-config, 'text-color-press');
+            }
+        }
+
+
+        // ----- ACTIVE STEP ----- //
+        &.active {
+            &,
+            > .hitarea {
+                cursor: default !important;
+            }
+
+            &:not(.completed) {
+                > .hitarea {
+                    background-color: get($nav-pills-pill-config, 'bg-active');
+                }
+            }
+        }
+
+
+        // ----- COMPLETED STEP ----- //
+        &.completed {
+            &,
+            > .hitarea {
+                cursor: pointer !important;
+            }
+
+            // ----- HOVER STATE ----- //
+            #{$link-hover-focus} {
+                > .hitarea {
+                    background-color: get($nav-pills-pill-config, 'bg-hover');
+                    color: get($nav-pills-pill-config, 'text-color-active');
+
+                    // ----- FOCUSED HITAREA IN A HOVERED STEP ----- //
+                    #{$link-hover-focus-nested} {
+                        background-color: get($nav-pills-pill-config, 'bg-hover');
+                    }
+                }
+            }
+
+            // ----- PRESSED STATE ----- //
+            #{$link-pressed} {
+                > .hitarea {
+                    background-color: get($nav-pills-pill-config, 'bg-press') !important;
+                }
+            }
+        }
+    }
+
+
+// ----------------------------------------------------
+//   NAV WIZARD ITEM ARROW SEPERATORS
+// ----------------------------------------------------
+    #{$nav-wizard-selector} > .nav-item {
+        // arrow container
+        .wizard-inner {
+            position: relative;
+            top: to-rem($nav-link-height) * -1;
+            left: 0;
+            display: block;
+        }
+
+        // arrow itself
+        .wizard-arrow {
+            @include nav-wizard-separator-arrow();
+
+            // arrow bg
+            &:before {
+                @include nav-wizard-separator-arrow();
+                top:  to-rem($nav-wizard-arrow-width) * -1;
+                left: to-rem($nav-wizard-sep-arrow-width) * -1;
+                content: "";
+                border-width: to-rem($nav-wizard-arrow-width 0 $nav-wizard-arrow-width $nav-wizard-arrow-width);
+                border-left-color: get($nav-pills-pill-config, 'bg');
+            }
+        }
+
+
+        // ----- ACTIVE STEP ----- //
+        &.active {
+            .wizard-arrow:before,
+            + .nav-item .wizard-arrow:before {
+                border-left-color: get($nav-pills-pill-config, 'bg-active');
+            }
+        }
+    }
+
+    #{$nav-wizard-selector}.is-clickable > .nav-item {
+
+        // ----- HOVER STATE ----- //
+        #{$link-hover-focus} {
+            // only change the color of the arrow if the <li> being hovered
+            // has a .hitarea directly before the arrow
+            + .nav-item .wizard-arrow:before {
+                border-left-color: get($nav-pills-pill-config, 'bg-hover');
+            }
+        }
+
+        // ----- PRESSED STATE ----- //
+        #{$link-pressed} {
+            // only change the color of the arrow if the <li> being pressed
+            // has a .hitarea directly before the arrow
+            + .nav-item .wizard-arrow:before {
+                border-left-color: get($nav-pills-pill-config, 'bg-press') !important;
+            }
+        }
+
+
+        // ----- ACTIVE STEP ----- //
+        &.active:not(.completed) {
+            // only change the color of the arrow if the <li> being hovered
+            // has a .hitarea directly before the arrow
+            + .nav-item .wizard-arrow:before {
+                border-left-color: get($nav-pills-pill-config, 'bg-active');
+            }
+        }
+    }
+

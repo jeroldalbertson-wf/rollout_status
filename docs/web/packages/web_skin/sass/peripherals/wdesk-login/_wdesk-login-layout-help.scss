@@ -1,0 +1,126 @@
+// ********************************************************
+//
+//   Wdesk Login "Forgot Password" Page Layout Styles
+//
+    $module: 'peripherals/wdesk-login/wdesk-login-layout-help';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+
+.row-login-main[data-has-help-msg="true"] {
+
+    // center the login form within all
+    // available space since there is no
+    // marketing hero image
+    .login-form-rug {
+        left: 0;
+        right: 0;
+        width: 100%;
+
+        fieldset {
+            // max-width when there is no hero
+            // image is not side-by-side with form
+            max-width: $login-form-fieldset-width * 2;
+            margin-right: auto;
+            margin-left: auto;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .form-group {
+            // restrict the username / form actions groups
+            // instead of restricting the entire form group
+            max-width: $login-form-fieldset-width;
+
+            // let the help text expand to the full width
+            // of the fieldset, and beef up the spacing
+            &.form-group-callout {
+                @include emphasize-form-group-callout();
+                max-width: 100%;
+            }
+        }
+
+        // beef up the spacing to match the spacing beneath the callout text
+        .login-form-actions {
+            // use padding instead of margin to prevent collapsing margins
+            // between adjacent .form-group elems
+            padding-top: $login-md-form-group-callout-margin-bottom - $default-form-group-margin-bottom;
+        }
+
+
+        // ----------------------------------------------------
+        //   Additional Help Tabbed Content
+        // ----------------------------------------------------
+
+        // space out the help link container
+        // using the default bottom paragraph margin
+        [role="tablist"] {
+            margin-top: $default-form-group-margin-bottom / 2;
+        }
+
+        // Additional help links (tab behavior)
+        .btn[role="tab"] {
+            &.open {
+                background-color: $wf_gray_lt5 !important;
+            }
+        }
+
+        // Paragraphs within collapsible help containers
+        .collapse > p {
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   BELOW TABLET, LANDSCAPE
+    //   -> At this size, we're dealing
+    //      with severe viewport height
+    //      limitations, adjust accordingly.
+    // ----------------------------------------------------
+    @include respond-to('below screen-sm, landscape') {
+        .login-form-rug {
+            fieldset {
+                margin-top: $login-form-fieldset-margin-vertical / 2;
+                margin-bottom: $login-form-fieldset-margin-vertical / 2;
+            }
+
+            .form-group {
+                &.form-group-callout {
+                    max-width: 80%;
+                    // don't have enough vertical height to
+                    // use the larger "emphasized" bottom margin
+                    margin-bottom: $default-form-group-margin-bottom;
+                }
+            }
+
+            .login-form-actions {
+                // don't have enough vertical height to do this
+                padding-top: 0;
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    //   TABLET+
+    // ----------------------------------------------------
+        @include respond-to('screen-sm and up') {
+            .login-form-rug {
+                padding-bottom: $login-sm-form-rug-padding-top;
+            }
+        }
+
+
+    // ----------------------------------------------------
+    //   DESKTOP+
+    // ----------------------------------------------------
+        @include respond-to('screen-md and up') {
+            .login-form-rug {
+                padding-bottom: $login-md-form-rug-padding-top;
+            }
+        }
+}

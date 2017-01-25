@@ -1,0 +1,361 @@
+// ********************************************************
+//
+//   Base typographic styles for the
+//   Web Skin core module
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/base/type';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+//
+// Body text
+//
+p {
+    margin: 0 0 $paragraph-margin-bottom;
+}
+
+.lead {
+    margin-bottom: $paragraph-margin-bottom;
+    font-family: $webfont-sans-serif;
+    font-size: to-rem($font-size-lead);
+    font-weight: $webfont-weight-light;
+    line-height: $line-height-lg;
+    // Lato does not read very easily in non-title / paragraph form
+    // out-of-the-box.  A little extra spacing between words goes a long way.
+    word-spacing: .1em;
+
+    strong,
+    .text-bold {
+        font-weight: normal;
+    }
+}
+
+
+//
+// Emphasis & misc
+//
+small,
+.text-sm  {
+    font-size: percentage($font-size-sm-modifier);
+}
+
+.text-md  {
+    font-size: to-rem($font-size-md);
+    // using a percentage font-size within .text-md makes the font too small
+    small,
+    .text-sm {
+        font-size: to-rem($font-size-sm); // force 12px
+    }
+}
+
+.text-lg  {
+    font-size: to-rem($font-size-lg);
+}
+
+.text-xs {
+    font-size: to-rem($font-size-xs);
+}
+
+.text-bold {
+    font-weight: bold;
+}
+
+.text-italic {
+    font-style: italic;
+}
+
+cite {
+    font-style: normal;
+}
+
+//
+// NOTE: Contextual color emphasis and
+//       text alignment classes can be found in "_utilities.scss"
+//
+
+
+//
+// Headings
+//
+@include generate-headings();
+
+
+//
+// Page header
+//
+.page-header {
+    @include clearfix();
+
+    font-size: to-rem($h1-font-size); // required for `em` margins to work
+    padding-bottom: $headings-margin-bottom;
+    // double the margin
+    margin-top: ($headings-margin-top * 2);
+    margin-bottom: ($headings-margin-bottom * 2);
+    border-bottom: to-rem($headings-bd-width) solid $headings-bd-color;
+
+    > h1,
+    > h2 {
+        // margin is applied by the parent .page-header
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+
+//
+// Header link utility class
+//
+// Makes the text color of an anchor inherit from its parent
+// But look like a link when hovered
+//
+.header-link {
+    @include header-link();
+}
+
+
+//
+// Lists
+//
+ul,
+ol {
+    padding: 0;
+    margin: to-rem(0 0 $base-elem-margin-vertical $list-margin-left-base);
+
+    // Nesting
+    ul,
+    ol {
+        margin-bottom: 0;
+    }
+}
+
+// primary
+.list-text li {
+    // secondary
+    li {
+        font-size: to-rem($font-size-md);
+        // tertiary
+        li { color: $zc-gray-70; }
+    }
+}
+
+ol {
+    // secondary
+    li li {
+        list-style-type: lower-alpha;
+        // tertiary
+        li {
+            list-style-type: upper-roman;
+        }
+    }
+}
+
+
+//
+// List options
+//
+// `.list-unstyled` keeps list items block level, just removes list-style
+// `.list-inline` turns list items into inline-block
+//
+.list-unstyled,
+.list-inline {
+    padding-left: 0;
+    margin-left: 0;
+    list-style: none;
+}
+
+// Single-line list items
+.list-inline > li {
+    display: inline-block;
+    padding-right: to-rem($spacing-base);
+    padding-left: to-rem($spacing-base);
+}
+
+// Wordy list items need a little more space to keep things legible
+.list-wordy {
+    > li {
+        margin-bottom: to-rem($base-elem-margin-vertical);
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    dd + dt {
+        margin-top: to-rem($base-elem-margin-vertical);
+    }
+}
+
+
+//
+// Description Lists
+//
+dl {
+    margin-top: 0; // remove browser default
+    margin-bottom: to-rem($base-elem-margin-vertical);
+}
+dt {
+    font-weight: bold;
+    line-height: $line-height-base;
+}
+dd {
+    // undo browser default
+    margin-left: 0;
+    line-height: $line-height-base;
+}
+
+
+//
+// Horizontal description lists
+//
+// Defaults to being stacked without any of the below styles applied, until the
+// grid breakpoint is reached (default of ~768px).
+//
+.dl-horizontal {
+    // mobile first defaults
+    dd + dt {
+        margin-top: to-rem($base-elem-margin-vertical);
+    }
+
+    @include respond-to('screen-#{$grid-float-breakpoint} and up') {
+        dt {
+            float: left;
+            width: to-rem($definition-list-term-width);
+            clear: left;
+            text-align: right;
+            @include truncate-text();
+        }
+
+        dd {
+            margin-left: to-rem($definition-list-term-width + $list-margin-left-base);
+            @include clearfix(); // Clear the floated `dt` if an empty `dd` is present
+
+            + dt {
+                margin-top: 0;
+            }
+        }
+    }
+}
+
+
+//
+// MISC
+//
+
+// Horizontal rules
+hr,
+.divider {
+    // Address differences between Firefox and other browsers.
+    height: 0;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+
+    @include divider-horizontal();
+
+    // adjust divider horizontal margins when nested within a grid row
+    .row > & {
+        $row-divider-margin: to-rem(round(get($grid-config, 'gutter-width') / 2));
+
+        margin-right: $row-divider-margin;
+        margin-left: $row-divider-margin;
+    }
+}
+
+.hr-vertical {
+    @include divider-vertical();
+}
+
+// Abbreviations and acronyms
+abbr[title],
+abbr[data-original-title] {
+    cursor: help;
+    text-decoration: none; // Override Firefox default
+    border-bottom: .1rem dotted lighten($text-color, 60%);
+    border-bottom: .1rem dotted rgba($text-color, .4); // down-level fallback
+}
+
+a,
+.btn-link {
+    #{$link-hover-focus} {
+        abbr {
+            border-bottom-color: transparent !important;
+            cursor: pointer !important;
+        }
+    }
+}
+
+.initialism {
+    font-size: 90%;
+    text-transform: uppercase;
+}
+
+// Blockquotes
+blockquote {
+    padding: $blockquote-padding-vertical $blockquote-padding-horizontal;
+    margin: 0 0 to-rem($base-elem-margin-vertical);
+    border-left: to-rem($blockquote-bd-width) solid $zc-gray-40;
+
+    p {
+        font-family: $webfont-sans-serif;
+        font-size: to-rem($font-size-lg);
+        font-weight: $webfont-weight-light;
+        line-height: $line-height-lg;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    small {
+        display: block;
+        line-height: $line-height-base;
+        color: $zc-gray-70;
+
+        &:before {
+            content: '\2014 \00A0'; // EM DASH, NBSP
+        }
+    }
+
+    // Float right with text-align: right
+    &.pull-right {
+        padding-left: 0;
+        border-right: to-rem($blockquote-bd-width) solid $zc-gray-40;
+        border-left: 0;
+
+        p {
+            text-align: right;
+        }
+
+        small {
+            text-align: right;
+
+            &:before {
+                content: '';
+            }
+
+            &:after {
+                content: '\00A0 \2014'; // NBSP, EM DASH
+            }
+        }
+    }
+}
+
+// Quotes
+q,
+blockquote {
+    &:before,
+    &:after {
+        content: "";
+    }
+}
+
+// Addresses
+address {
+    display: block;
+    margin-bottom: to-rem($base-elem-margin-vertical);
+    font-style: normal;
+    line-height: $line-height-base;
+}

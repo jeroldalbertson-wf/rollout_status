@@ -1,0 +1,170 @@
+// ********************************************************
+
+////
+/// Global functions to help with manipulation of strings
+/// ---
+/// @access public
+/// @since 1.0.0
+/// @group core.utils.strings
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/functions/utilities/strings';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function is-string);
+//
+// ********************************************************
+
+
+///
+/// Explodes `$string` into a list using `$delimiter` as a delimiter.
+///
+/// @param {String||Arglist} $string   - string to explode
+/// @param {String} $delimiter ['']    - string to use as a delimiter
+/// @param {String} $separator [space] - list separator
+/// ---
+/// @example
+///   explode(abc)
+///   // a b c
+///
+/// @example
+///   explode(abc, b)
+///   // a c
+/// ---
+/// @returns {List}
+///
+@function explode($string, $delimiter: '', $separator: space) {
+    @if is-list($string) {
+        @return $string;
+    }
+
+    @if is-arglist($string) {
+        $arglist-result: join((), (), $separator);
+        $arglist-length: length($string);
+
+        @for $i from 1 through $arglist-length {
+            $arg: nth($string, $i);
+            $arg-values: explode($arg, $delimiter: ' ', $separator: space);
+
+            @each $arg-value in $arg-values {
+                $arglist-result: append($arglist-result, $arg-value, $separator);
+            }
+        }
+
+        @return $arglist-result;
+    }
+
+    @if not is-string($string) {
+        @error "`explode` function expecting a string; #{type-of($string)} given.";
+    }
+
+    @if not is-string($delimiter) {
+        @error "`explode` function expecting a string; #{type-of($delimiter)} given.";
+    }
+
+    $result: join((), (), $separator);
+    $length: str-length($string);
+
+    @if not index(space comma, $separator) {
+        $separator: space;
+    }
+
+    @if str-length($delimiter) == 0 {
+        @for $i from 1 through $length {
+            $result: append($result, str-slice($string, $i, $i));
+        }
+
+        @return $result;
+    }
+
+    $running: true;
+    $remaining: $string;
+
+    @while $running {
+        $index: str-index($remaining, $delimiter);
+
+        @if not $index {
+            $running: false;
+        }
+
+        @else {
+            $slice: str-slice($remaining, 1, $index - 1);
+            $result: append($result, $slice, $separator);
+            $remaining: str-slice($remaining, $index + str-length($delimiter));
+        }
+    }
+
+    @return append($result, $remaining, $separator);
+}
+
+
+///
+/// Explode a list that was passed as a param value for an arglist
+/// back into a comma-separated list.
+/// ---
+/// @since 1.2.0
+/// ---
+/// @param {Arglist} $value
+///
+@function arglists-to-list($value) {
+    @return explode($value, ',', comma);
+}
+
+
+///
+/// Replace `$search` with `$replace` in `$string`
+/// ---
+/// @since 1.3.2
+/// ---
+/// @param {String} $string         - Initial string
+/// @param {String} $search         - Substring to replace
+/// @param {String} $replace ('')   - New value
+/// ---
+/// @return {String} - Updated string
+///
+@function str-replace($string, $search, $replace: '') {
+    $index: str-index($string, $search);
+
+    @if not $index {
+        // Substring (`$search`) to replace not found... short-circuit
+        @return $string;
+    }
+
+    $str-before-replacement: str-slice($string, 1, $index - 1);
+    $str-after-replacement: str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+
+    @return $str-before-replacement + $replace + $str-after-replacement;
+}
+
+
+///
+/// Escapes special chars to produce a URL encoded string
+/// ---
+/// @since 1.3.2
+/// @param {String} $string
+/// @return {String} - URL encoded string
+///
+@function url-encode($string) {
+    $encoded-value: $string;
+
+    @each $char, $escape in $url-encoded-chars {
+        //
+        // So that the % portion of the encoding doesn't get converted to %25
+        // as we recurse through the chars in a string - replace it with
+        // a non-reserved character for now, and then replace those with
+        // the % after we're done recursing.
+        //
+        // See: http://stackoverflow.com/questions/7012810/url-encoding-ampersand-problem
+        //
+        $escape: str-replace($escape, '%', '`');
+
+        $encoded-value: str-replace($encoded-value, $char, $escape);
+    }
+
+    @return str-replace($encoded-value, '`', '%');
+}

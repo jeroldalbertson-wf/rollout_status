@@ -1,0 +1,213 @@
+@charset "UTF-8";
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for Browser Upgrade Layout
+ *
+ * Must support MSIE 8 / 9 so that the page we present
+ * to Wdesk users that are trying to use an unsupported
+ * browser does not appear broken.
+ * ---
+ * MSIE Support: 8
+ * Touch UI Support: false
+ * ---
+ * Requires
+ *   web-skin v1.14.0 Core CSS
+ *   web-skin v1.14.0 Libs JS for MSIE
+ * ---
+ * Copyright © 2017 Workiva
+ * -------------------------------------
+ */
+.browser-upgrade-container {
+  padding-top: 1em;
+}
+
+.browser-upgrade-masthead .lead {
+  padding: 0 15px;
+  margin-bottom: 30px;
+  font-size: 18px;
+  clear: both;
+}
+
+.browser-upgrade-benefits {
+  padding: 0 15px;
+  max-width: 570px;
+  margin: 0 auto;
+}
+
+.browser-upgrade-heading {
+  padding: 0 15px;
+  margin-bottom: 1em;
+  font-size: 30px;
+  color: #339900;
+}
+
+.browser-list {
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 280px;
+}
+
+.browser-list .list-group-item {
+  text-align: center;
+  background: #f8f8f8;
+  overflow: hidden;
+  -ms-background-clip: padding-box;
+  background-clip: padding-box;
+  padding: 0;
+  border-radius: 0 !important;
+}
+
+.browser-list .list-group-item.first-group-item {
+  -ms-border-top-left-radius: 4px !important;
+  border-top-left-radius: 4px !important;
+  -ms-border-top-right-radius: 4px !important;
+  border-top-right-radius: 4px !important;
+}
+
+.browser-list .list-group-item.last-group-item {
+  -ms-border-bottom-left-radius: 4px !important;
+  border-bottom-left-radius: 4px !important;
+  -ms-border-bottom-right-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
+}
+
+.browser-list .list-group-item.browsers-best {
+  background: #f3f3f3;
+}
+
+.browser-group-heading {
+  color: #66cc00;
+  position: relative;
+}
+
+.browser-group-heading.is-empty {
+  visibility: hidden;
+}
+
+.browser-link {
+  display: block;
+  padding-top: 64px;
+  padding-bottom: 20px;
+  margin-top: -54px;
+}
+
+.browser-link + .browser-link {
+  padding-top: 10px;
+  margin-top: 0;
+}
+
+.browser-link, .browser-link .browser-name {
+  color: #595959;
+}
+
+.browser-link:hover, .browser-link:focus {
+  background-color: #ebebeb;
+}
+
+.browser-link:hover, .browser-link:hover .browser-name, .browser-link:focus, .browser-link:focus .browser-name {
+  color: #66cc00;
+  text-decoration: none;
+}
+
+.browser-link.chrome .browser-logo {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  background-image: url(../../img/browser-upgrade-s96005be9b0.png);
+  background-position: 0px 0px;
+  width: 124px;
+  height: 124px;
+}
+
+.browser-link.firefox .browser-logo {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  background-image: url(../../img/browser-upgrade-s96005be9b0.png);
+  background-position: -124px 0px;
+  width: 124px;
+  height: 124px;
+}
+
+.browser-link.msie .browser-logo {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  background-image: url(../../img/browser-upgrade-s96005be9b0.png);
+  background-position: 0px -124px;
+  width: 124px;
+  height: 124px;
+}
+
+.browser-link.safari .browser-logo {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  background-image: url(../../img/browser-upgrade-s96005be9b0.png);
+  background-position: -124px -124px;
+  width: 124px;
+  height: 124px;
+}
+
+.browser-fine-print {
+  color: #b2b2b2;
+}
+
+.browser-fine-print.is-empty {
+  display: none;
+}
+
+@media screen and (min-width: 48em) {
+  .browser-upgrade-container {
+    padding-top: 3em;
+  }
+  .browser-upgrade-masthead .lead {
+    padding: 0;
+    font-size: 24px;
+    clear: both;
+  }
+  .browser-upgrade-heading {
+    padding: 0;
+    margin-bottom: 1em;
+    font-size: 34px;
+  }
+  .browser-list {
+    max-width: 100%;
+  }
+  .browser-list .list-group-item.first-group-item {
+    border-radius: 0 !important;
+    -ms-border-top-left-radius: 4px !important;
+    border-top-left-radius: 4px !important;
+    -ms-border-bottom-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+    border-right-width: 0;
+  }
+  .browser-list .list-group-item.last-group-item {
+    border-radius: 0 !important;
+    -ms-border-top-right-radius: 4px !important;
+    border-top-right-radius: 4px !important;
+    -ms-border-bottom-right-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+    border-left-width: 0;
+  }
+  .browser-link + .browser-link {
+    padding-top: 64px;
+    margin-top: -54px;
+  }
+  .browser-link.halved {
+    float: left;
+    width: 50%;
+  }
+  .browser-fine-print.is-empty {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 62em) {
+  .browser-upgrade-heading {
+    font-size: 36px;
+  }
+}
+
+/*# sourceMappingURL=page-browser-upgrade.css.map */

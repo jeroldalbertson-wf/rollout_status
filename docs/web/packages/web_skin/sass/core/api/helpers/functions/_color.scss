@@ -1,0 +1,449 @@
+// ********************************************************
+
+////
+/// Global functions to help with color manipulation / declaration
+/// ---
+/// @access public
+/// @group core.color.base
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/functions/color';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function is,
+                                                function is-number,
+                                                function is-color,
+                                                function is-string,
+                                                function is-map,
+                                                function is-percentage,
+                                                function list-has);
+//
+// ********************************************************
+
+
+///
+/// Fetch a color declared within the global `$colors` variable.
+/// ---
+/// @since 1.0.0
+/// @see {variable} colors
+/// ---
+/// @example scss
+///   // dot-separated string
+///   .i-want-red-text {
+///       color: color('global.red.base');
+///   }
+///   // space-separated string
+///   .much-success {
+///       background-color: color('states success base');
+///   }
+/// ---
+/// @param {String | List} $keys - Space or dot-separated path to the nested key value in the `$colors` variable
+/// @returns {Color}
+///
+@function color($keys) {
+    @return get-deep($colors, $keys);
+}
+
+
+///
+/// Determine a color that has an acceptable amount of contrast against a given background color.
+/// ---
+/// @since 1.1.0
+/// ---
+/// @requires {external} SassScript/lightness <http://bit.ly/sass_lightness>
+/// @requires {variable} $contrasted-dark-default
+/// @requires {variable} $contrasted-light-default
+/// @requires {variable} $contrasted-lightness-threshold
+/// ---
+/// @param {Color}  $color              - Color to contrast against
+/// @param {Color}  $dark       [#000]  - Default color to return if `$color` is a light color
+/// @param {Color}  $dark       [#fff]  - Default color to return if `$color` is a dark color
+/// @param {Number} $threshold  [50%]   - Determines when the lightness of a given `$color` changes from 'dark' to 'light'
+/// ---
+/// @returns {Color} `$light` color when the `$color` is dark, and the `$dark` color when the `$color` is light
+///
+@function contrast-color(
+    $color,
+    $dark: $contrasted-dark-default,
+    $light: $contrasted-light-default,
+    $threshold: $contrasted-lightness-threshold
+) {
+    @return if(lightness($color) < $threshold, $light, $dark)
+}
+
+
+///
+/// Mix white with a given `$amount` of a given `$color` to easily produce a "shade" of a color that lines up with the way that UX resources often describe colors in their visual comps.
+/// ---
+/// @since 1.1.2
+/// ---
+/// @requires {external} SassScript/mix <http://bit.ly/sass_mix>
+/// ---
+/// @example scss
+///   // The comp my UX resource gave me said to use "12% main blue" for the background...
+///   .my-elem {
+///       background-color: shade-of($zc-blue, 12%);
+///   }
+/// ---
+/// @param {Color} $color
+/// @param {Number} $amount
+/// ---
+/// @returns {Color} - Shade of given color
+///
+@function shade-of($color, $amount) {
+    $_color: $color;
+    $_amount: $amount;
+
+    @if not is-color($color) {
+        @error "`shade-of` function expecting a color for the `$color` parameter. `#{type-of($color)}` given.";
+    }
+
+    @if not is-number($amount) {
+        @error "`shade-of` function expecting a number for the `$amount` parameter. `#{type-of($amount)}` given.";
+    } @else {
+        @if unitless($amount) {
+            @if $amount > 1 or $amount < 0 {
+                @error "`shade-of` function expecting a unitless number between 0 and 1 for the `$amount` parameter. `#{$amount}` given.";
+            } @else {
+                // Convert to a percentage
+                $_amount: percentage($amount);
+            }
+        } @else {
+            @if not is-percentage($amount) {
+                @error "`shade-of` function expecting a unit of `%` for the `$amount` parameter. `#{unit($amount)}` given.";
+            }
+        }
+    }
+
+    @if $_amount == 100% {
+        @return $_color;
+    }
+    @if $_amount == 0% {
+        @return #fff;
+    }
+
+    @return mix($_color, #fff, $_amount);
+}
+
+
+///
+/// Returns the % darkness of a given color
+/// (the inverse of built-in Sass `lightness` fn)
+/// ---
+/// @since 0.1.0
+/// @requires {external} SassScript/lightness <http://bit.ly/sass_lightness>
+/// @param {Color} $color
+/// @returns {Number} - % darkness of given `$color`
+///
+@function darkness($color) {
+    $dependencies-met: dependencies-met(for darkness, is-color);
+    @if not is-color($color) {
+        @error "`darkness` function expecting a color; #{type-of($color)} given.";
+    }
+
+    @return 100 - lightness($color);
+}
+
+
+///
+/// Returns muted color variation of a given color using Sass `mix()`.
+/// ---
+/// @since 0.1.0
+/// @link http://bit.ly/webskin-type-color-variations Color muting examples
+/// ---
+/// @requires {external} SassScript/mix <http://bit.ly/sass_mix>
+/// ---
+/// @param {Color}  $color              - color you want to mute
+/// @param {Color}  $bg     [$body-bg]  - color that sits behind the color you want to mute
+/// @param {Number} $amount [54%]       - how much `$bg` you want to mix together with `$color` to get the muted variation
+/// ---
+/// @returns {Color | Null} - muted color variation of `$color`
+///
+@function mute($color, $bg: $body-bg, $amount: $muted-pct) {
+    @if not is-color($color) {
+        @error "`mute` function expecting a color; #{type-of($color)} given.";
+    }
+    @if not is-color($bg) {
+        @error "`mute` function expecting a color; #{type-of($bg)} given.";
+    }
+    @if not is-number($amount) {
+        @error "`mute` function expecting a number; #{type-of($amount)} given.";
+    }
+
+    @return mix($bg, $color, $amount);
+}
+
+
+///
+/// Returns color suitable for use in a 'disabled' element.
+/// ---
+/// @since 0.4.0
+/// ---
+/// @requires {external} SassScript/mix <http://bit.ly/sass_mix>
+/// @requires {external} SassScript/percentage <http://bit.ly/sass_percentage>
+/// ---
+/// @param {Color}  $color       - text or bg color of element when it is not disabled
+/// @param {Number} $alpha [.45] - opacity of disabled element - _do not modify_
+/// ---
+/// @returns {Color} - disabled color variation of `$color`
+///
+@function disabled-color($color, $alpha: $disabled-alpha-default) {
+    @if not is-color($color) {
+        @error "`disabled-color` function expecting a color; #{type-of($color)} given.";
+    }
+    @if not is-number($alpha) {
+        @error "`disabled-color` function expecting a number; #{type-of($alpha)} given.";
+    }
+    @if $alpha < 0 or $alpha > 1 {
+        @error "`disabled-color` mixin expecting a number between `0` and `1`; #{$alpha} given.";
+    }
+
+    $mix-color-base: if($color == white, $black, $white);
+    $mix-amount: percentage(if($color == white, $alpha, 1 - $alpha));
+
+    @return mix($mix-color-base, $color, $mix-amount);
+}
+
+
+///
+/// Produce a dark or light color that appears as a subtle 'chisel' effect on a given bg color.
+/// ---
+/// @since 0.1.0
+/// ---
+/// @requires {external} SassScript/map-keys    <http://bit.ly/sass_map-keys>
+/// @requires {external} SassScript/call        <http://bit.ly/sass_call>
+/// @requires {external} SassScript/unquote     <http://bit.ly/sass_unquote>
+/// ---
+/// @param {Color}  $bg-color         - color of surface to 'chisel'
+/// @param {String} $type  ['darken'] - dark or light chisel color?
+/// @param {String} $depth ['base']   - depth of chisel
+/// ---
+/// @returns {Color}
+///
+@function chisel($bg-color, $type: 'darken', $depth: 'base') {
+    @if not is-color($bg-color) {
+        @error "`chisel` function expecting a color; #{type-of($bg-color)} given.";
+    }
+    @if not is(unquote($type), darken lighten) {
+        @error "`chisel` function expecting 'darken' or 'lighten'; #{$type} given.";
+    }
+    @if not list-has(map-keys($global-chisel-config), $depth) {
+        @error "`chisel` function could not find #{$depth} key within `$global-chisel-config`.";
+    }
+
+    @return call($type, $bg-color, get-deep($global-chisel-config, '#{$depth}.#{$type}'));
+}
+
+
+///
+/// Helper function to unify the logic for producing text color in various states of form-controls and alerts
+/// ---
+/// @since 1.0.0
+/// @group core.color.state
+/// @see {function} state-variation-bg
+/// @see {function} state-variation-bd
+/// ---
+/// @requires {external} SassScript/map-keys    <http://bit.ly/sass_map-keys>
+/// @requires {external} SassScript/desaturate  <http://bit.ly/sass_desaturate>
+/// @requires {external} SassScript/darken      <http://bit.ly/sass_darken>
+/// ---
+/// @param {String} $state-name
+/// @returns {Color}
+///
+@function state-variation-text($state-name) {
+    @if not list-has(map-keys($global-state-variation-config), $state-name) {
+        @error "`state-variation-text` function could not find #{$state-name} key within `$global-state-variation-config`.";
+    }
+
+    $state-color:       color('states.#{$state-name}');
+    $darken-amount:     get-deep($global-state-variation-config, '#{$state-name}.text-darken');
+    $desaturate-amount: get-deep($global-state-variation-config, '#{$state-name}.text-desaturate');
+
+    @return desaturate(darken($state-color, $darken-amount), $desaturate-amount);
+}
+
+
+///
+/// Helper function to unify the logic for producing background color in various states of form-controls and alerts
+/// ---
+/// @since 1.0.0
+/// @group core.color.state
+/// @see {function} state-variation-text
+/// @see {function} state-variation-bd
+/// ---
+/// @requires {external} SassScript/map-keys    <http://bit.ly/sass_map-keys>
+/// @requires {external} SassScript/desaturate  <http://bit.ly/sass_desaturate>
+/// @requires {external} SassScript/lighten     <http://bit.ly/sass_lighten>
+/// @requires {external} SassScript/lightness   <http://bit.ly/sass_lightness>
+/// @requires {function} get
+/// @requires {variable} $global-state-variation-defaults
+/// ---
+/// @param {String} $state-name
+/// @param {Number} $target-lightness [98%] - how light should the background color be?
+/// ---
+/// @returns {Color}
+///
+@function state-variation-bg($state-name,
+                             $target-lightness: get($global-state-variation-defaults, 'target-bg-lightness')
+                            )
+{
+    @if not list-has(map-keys($global-state-variation-config), $state-name) {
+        @error "`state-variation-bg` function could not find #{$state-name} key within `$global-state-variation-config`.";
+    }
+
+    $state-color:       color('states.#{$state-name}');
+    $lighten-amount:    $target-lightness - lightness($state-color);
+    $desaturate-amount: get-deep($global-state-variation-config, '#{$state-name}.bg-desaturate');
+
+    @return desaturate(lighten($state-color, $lighten-amount), $desaturate-amount);
+}
+
+
+///
+/// Helper function to unify the logic for producing border color in various states of form-controls and alerts
+/// ---
+/// @since 1.0.0
+/// @group core.color.state
+/// @see {function} state-variation-text
+/// @see {function} state-variation-bg
+/// ---
+/// @requires {external} SassScript/map-keys    <http://bit.ly/sass_map-keys>
+/// @requires {external} SassScript/lightness   <http://bit.ly/sass_lightness>
+/// @requires {external} SassScript/darken      <http://bit.ly/sass_darken>
+/// @requires {external} SassScript/adjust-hue  <http://bit.ly/sass_adjust-hue>
+/// @requires {function} get
+/// @requires {variable} $global-state-variation-defaults
+/// ---
+/// @param {String} $state-name
+/// @param {Color}  $state-bg-color
+/// @param {Number} $target-lightness [78%] - how light should the background color be?
+/// ---
+/// @returns {Color}
+///
+@function state-variation-bd($state-name,
+                             $state-bg-color,
+                             $target-lightness: get($global-state-variation-defaults, 'target-bd-lightness')
+                            )
+{
+    @if not is-color($state-bg-color) {
+        @error "`state-variation-bd` function expecting a color; #{type-of($state-bg-color)} given.";
+    }
+    @if not list-has(map-keys($global-state-variation-config), $state-name) {
+        @error "`state-variation-bd` function could not find #{$state-name} key within `$global-state-variation-config`.";
+    }
+
+    $hue-adjust-amount:    get-deep($global-state-variation-config, '#{$state-name}.bd-adjust-hue');
+    $darken-offset-amount: get-deep($global-state-variation-config, '#{$state-name}.bd-darken-offset');
+    $border-hue:           adjust-hue($state-bg-color, $hue-adjust-amount);
+    $darken-amount:        lightness($state-bg-color) - ($target-lightness - $darken-offset-amount);
+
+    @return darken($border-hue, $darken-amount);
+}
+
+///
+/// Provide a grayscale `$color` value and get an `rgba` value in-return.
+/// @since 1.4.0
+/// @returns {Color} - `rgba` equivalent of the provided `$color` assuming a white background
+///
+@function grayscale-to-rgba($color) {
+    $alpha: to-decimal(ceil(darkness($color)));
+
+    @return rgba($black, $alpha);
+}
+
+
+// ----------------------------------------------------
+//   COLOR DIFFS
+// ----------------------------------------------------
+    ///
+    /// Calculates the difference between two colors.
+    /// Enables the creation of related colors in two different parts of a palette.
+    /// ---
+    /// @since 1.0.0
+    /// @see {function} apply-color-diff
+    /// ---
+    /// @requires {external} SassScript/hue         <http://bit.ly/sass_hue>
+    /// @requires {external} SassScript/saturation  <http://bit.ly/sass_saturation>
+    /// @requires {external} SassScript/lightness   <http://bit.ly/sass_lightness>
+    /// @requires {external} SassScript/abs         <http://bit.ly/sass_abs>
+    /// ---
+    /// @param {Color} $color-a
+    /// ---
+    /// @returns {Map} - `hsl` function / value map `(fn-name: fn-arg)` - for use in sister fn `apply-color-diff`
+    ///
+    @function get-color-diff($color-a, $color-b) {
+        $dependencies-met: dependencies-met(for get-color-diff, is-color);
+        @if not is-color($color-a) {
+            @error "`get-color-diff` function expecting a color; #{type-of($color-a)} given.";
+        }
+        @if not is-color($color-b) {
+            @error "`get-color-diff` function expecting a color; #{type-of($color-b)} given.";
+        }
+
+        $hue: hue($color-a) - hue($color-b);
+        $saturation: saturation($color-a) - saturation($color-b);
+        $lightness: lightness($color-a) - lightness($color-b);
+
+        $function-hue: 'adjust-hue';
+        $function-saturation: if($saturation > 0, 'desaturate', 'saturate');
+        $function-lightness:  if($lightness  > 0, 'darken',     'lighten');
+
+        @return (
+            #{$function-hue}: -($hue),
+            #{$function-saturation}: abs($saturation),
+            #{$function-lightness}: abs($lightness),
+        );
+    }
+
+
+    ///
+    /// Modifies given color based on the hue, saturation and lightness values provided in the map returned by sister fn `get-color-diff`.
+    /// Enables the creation of related colors in two different parts of a palette.
+    /// ---
+    /// @since 1.0.0
+    /// @see {function} get-color-diff
+    /// ---
+    /// @requires {external} SassScript/call        <http://bit.ly/sass_call>
+    /// @requires {external} SassScript/unitless    <http://bit.ly/sass_unitless>
+    /// ---
+    /// @param {Color} $color - color to apply diff to
+    /// ---
+    /// @returns {Color} - color derived by applying `$diff` HSL functions to the given `$color`
+    ///
+    @function apply-color-diff($color, $diff) {
+        $dependencies-met: dependencies-met(for apply-color-diff, is-color, is-map, is-string);
+        @if not is-color($color) {
+            @error "`apply-color-diff` function expecting a color; #{type-of($color)} given.";
+        }
+        @if not is-map($diff) {
+            @error "`apply-color-diff` function expecting a map; #{type-of($diff)} given.";
+        }
+        // END initial error-checking
+
+        $new-color: $color;
+
+        @each $key, $value in $diff {
+            @if not is-string($key) {
+                @error "`apply-color-diff` function expecting a string; #{type-of($key)} given.";
+            }
+            @if unitless($value) {
+                @error "`apply-color-diff` function expecting a value with units; #{$value} given.";
+            }
+            // END individual key error-checking
+
+            //
+            // $key is the name of a function declared as a string
+            // $value is the amount of alteration we'll pass as an argument to $key via call()
+            //
+            $new-color: call($key, $new-color, $value);
+        }
+
+        @return $new-color;
+    }

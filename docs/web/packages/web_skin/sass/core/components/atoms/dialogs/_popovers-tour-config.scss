@@ -1,0 +1,53 @@
+// ********************************************************
+
+////
+/// Popover "tour" dialog component configuration
+/// ---
+/// @since 1.3.0
+/// @access public
+/// @group core.components.popovers
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/popovers-tour-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function extend,
+                                                function to-decimal,
+                                                function disabled-color);
+//
+// ********************************************************
+
+
+///
+/// Global configuration for `.popover-tour` dialog component.
+/// ---
+/// @type Map
+/// ---
+/// @requires {variable} $zc-blue-120
+/// @requires {variable} $white
+/// ---
+/// @prop {Color}           bg          [#026dce]
+/// @prop {Color}           text-color  [#ffffff]
+/// @prop {Color}           title-color [#ffffff]
+/// @prop {Number | String} max-width   [none]
+///
+/// @prop {Map} page-indicator-offsets
+/// @prop {Number} page-indicator-offsets.top       [16px]
+/// @prop {Number} page-indicator-offsets.bottom    [20px]
+///
+$popover-tour-config: (
+    'bg': $zc-blue-120,
+    'text-color': $white,
+    'title-color': $white,
+    'max-width': none,
+    'page-indicator-offsets': (
+        'top': 16px,
+        'bottom': 20px
+    )
+) !default;

@@ -1,0 +1,218 @@
+// ********************************************************
+
+////
+/// Pill nav component configuration
+/// ---
+/// @group core.components.navs
+/// @link http://bit.ly/webskin-nav-pills Pill navigation spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/config/nav-pill-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function box-model-height,
+                                                function disabled-color,
+                                                function get,
+                                                function extend);
+//
+// ********************************************************
+
+
+///
+/// Configuration for `.nav-pills .hitarea` elems (individual pills).
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {function} extend
+/// @requires {function} box-model-height
+/// @requires {function} disabled-color
+/// @requires {variable} $nav-base-config
+/// @requires {variable} $nav-link-config
+/// @requires {variable} $zc-gray
+/// @requires {variable} $zc-gray-120
+/// @requires {variable} $zc-gray-40
+/// ---
+/// @prop {Number} bd-width             [1px]       - Default border width
+/// @prop {Number} bd-radius            [4px]       - Default border radius
+/// @prop {Number} padding-vertical     [6px]       - Default vertical padding
+/// @prop {Number} padding-horizontal   [12px]      - Default horizontal padding
+/// @prop {List}   padding              [6px 12px]  - Combination of vertical and horizontal pill padding
+/// @prop {Number} height               [34px]      - Calculated height. _Added via `@extend`_
+/// @prop {Number} spacing              [2px]       - Default amount of space between adjacent pills
+/// @prop {Number} stacked-spacing      [4px]       - Default amount of space between vertically stacked adjacent pills. _Added via `@extend`_
+///
+/// @prop {Number} bar-block-link-inset [1px]       - Default amount of spacing between the edge of a `.nav-pills-bar` component, and a `.nav-blocks .hitarea` element nested within it
+///
+/// @prop {Color} text-color            [#595959]   - Default text color
+/// @prop {Color} text-color-hover      [#4c4c4c]   - Text color when hovered. _Added via `@extend`_
+/// @prop {Color} text-color-press      [#454545]   - Text color when pressed. _Added via `@extend`_
+/// @prop {Color} text-color-active     [#444444]   - Text color when active.
+/// @prop {Color} text-color-disabled   [#b4b4b4]   - Text color when disabled.
+///
+/// @prop {Color} bg            [#e9e9e9]   - Default background color
+/// @prop {Color} bg-hover      [#dbdbdb]   - Background color when hovered. _Added via `@extend`_
+/// @prop {Color} bg-press      [#d4d4d4]   - Background color when pressed. _Added via `@extend`_
+/// @prop {Color} bg-active     [#dbdbdb]   - Background color when active. _Added via `@extend`_
+/// @prop {Color} bg-disabled   [#f5f5f5]   - Background color when disabled. _Added via `@extend`_
+///
+$nav-pills-pill-config: (
+    'bd-width': get($nav-base-config, 'bd-width'),
+    'bd-radius': get($nav-base-config, 'bd-radius'),
+    'padding-vertical': get($nav-link-config, 'padding-vertical'),
+    'padding-horizontal': get($nav-link-config, 'padding-horizontal'),
+    'padding': get($nav-link-config, 'padding'),
+    'height': null, // actual calculated value inserted via @extend
+    'spacing': 2px,
+    'stacked-spacing': null, // actual calculated value inserted via @extend
+    //
+    'bar-block-link-inset': 1px,
+    //
+    'text-color': $zc-gray,
+    'text-color-hover': inherit, // actual color value inserted via @extend
+    'text-color-press': inherit, // actual color value inserted via @extend
+    'text-color-active': $zc-gray-120,
+    'text-color-disabled': disabled-color($zc-gray),
+    //
+    'bg': lighten($zc-gray-40, 2.2),
+    'bg-hover': inherit, // actual color value inserted via @extend
+    'bg-press': inherit, // actual color value inserted via @extend
+    'bg-active': inherit, // actual color value inserted via @extend
+    'bg-disabled': inherit // actual color value inserted via @extend
+) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $nav-pills-pill-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $nav-pills-pill-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $nav-pills-pill-height: box-model-height($font-size: get($nav-link-config, 'font-size'),
+                                                 $line-height: get($nav-link-config, 'line-height'),
+                                                 $padding-vertical: get($nav-pills-pill-config, 'padding-vertical'),
+                                                 $bd-width: get($nav-pills-pill-config, 'bd-width'));
+        $nav-stacked-pills-pill-spacing: get($nav-pills-pill-config, 'spacing') * 2;
+        $nav-pills-pill-color-hover: darken(get($nav-pills-pill-config, 'text-color'),
+                                            $elem-hover-bg-darken-amount-default);
+        $nav-pills-pill-color-press: darken($nav-pills-pill-color-hover,
+                                            $elem-pressed-bg-darken-amount-default);
+        $nav-pills-pill-bg-hover: darken(get($nav-pills-pill-config, 'bg'),
+                                         $elem-hover-bg-darken-amount-default + .2);
+        $nav-pills-pill-bg-press: darken($nav-pills-pill-bg-hover,
+                                         $elem-pressed-bg-darken-amount-default);
+        $nav-pills-pill-bg-active: $nav-pills-pill-bg-hover;
+        $nav-pills-pill-bg-disabled: disabled-color(get($nav-pills-pill-config, 'bg'));
+
+        // ----- EXTEND pills-pill config with calc'd values ----- //
+        $nav-pills-pill-config: extend($nav-pills-pill-config,
+            (
+                'height': $nav-pills-pill-height,
+                'stacked-spacing': $nav-stacked-pills-pill-spacing,
+                'text-color-hover': $nav-pills-pill-color-hover,
+                'text-color-press': $nav-pills-pill-color-press,
+                'bg-hover': $nav-pills-pill-bg-hover,
+                'bg-press': $nav-pills-pill-bg-press,
+                'bg-active': $nav-pills-pill-bg-active,
+                'bg-disabled': $nav-pills-pill-bg-disabled
+            )
+        );
+
+
+///
+/// Colors used by the pill navigation `.pill-link` skin variation.
+/// ---
+/// @requires {variable} $link-color
+/// @requires {variable} $link-color-hover
+/// @requires {variable} $link-color-pressed
+/// @requires {variable} $nav-link-config
+/// @requires {variable} $white
+/// ---
+/// @prop {Color} text-base      [#026dce]      - Pill link text color when not in a hovered or pressed state.
+/// @prop {Color} bg-base        [transparent]  - Pill link background color when not in a hovered or pressed state.
+/// @prop {Color} bd-base        [transparent]  - Pill link border color when not in a hovered or pressed state.
+///
+/// @prop {Color} text-hover     [#0094ff]      - Pill link text color when hovered.
+/// @prop {Color} bg-hover       [transparent]  - Pill link background color when hovered.
+/// @prop {Color} bd-hover       [transparent]  - Pill link border color when hovered.
+///
+/// @prop {Color} text-press     [#0085e6]      - Pill link text color when pressed.
+/// @prop {Color} bg-press       [transparent]  - Pill link background color when pressed.
+/// @prop {Color} bd-press       [transparent]  - Pill link border color when pressed.
+///
+/// @prop {Color} text-active     [#ffffff]     - Pill link text color when active.
+/// @prop {Color} bg-active       [#0085e6]     - Pill link background color when active.
+/// @prop {Color} bd-active       [#0085e6]     - Pill link border color when active.
+///
+$nav-pills-pill-link-skin-colors: (
+    'text-base': $link-color,
+    'bg-base': transparent,
+    'bd-base': transparent,
+    //
+    'text-hover': $link-color-hover,
+    'bg-hover': transparent,
+    'bd-hover': transparent,
+    //
+    'text-press': $link-color-pressed,
+    'bg-press': transparent,
+    'bd-press': transparent,
+    //
+    'text-active': $white,
+    'bg-active': $link-color-pressed,
+    'bd-active': $link-color-pressed,
+) !default;
+
+
+///
+/// Colors used by the pill navigation `.pill-link` skin variation when the pill is representing "help" - in which case our standard Wdesk help "purple" should be used instead of blue.
+/// ---
+/// @requires {variable} $zc-purple-80
+/// @requires {variable} $zc-purple
+/// @requires {variable} $link-color-pressed-darken-amount
+/// @requires {variable} $white
+/// ---
+/// @prop {Color} text-base      [#9a5bab]      - Pill link text color when not in a hovered or pressed state.
+/// @prop {Color} bg-base        [transparent]  - Pill link background color when not in a hovered or pressed state.
+/// @prop {Color} bd-base        [transparent]  - Pill link border color when not in a hovered or pressed state.
+///
+/// @prop {Color} text-hover     [#813296]      - Pill link text color when hovered.
+/// @prop {Color} bg-hover       [transparent]  - Pill link background color when hovered.
+/// @prop {Color} bd-hover       [transparent]  - Pill link border color when hovered.
+///
+/// @prop {Color} text-press     [#712c83]      - Pill link text color when pressed.
+/// @prop {Color} bg-press       [transparent]  - Pill link background color when pressed.
+/// @prop {Color} bd-press       [transparent]  - Pill link border color when pressed.
+///
+/// @prop {Color} text-active    [#ffffff]      - Pill link text color when active.
+/// @prop {Color} bg-active      [#712c83]      - Pill link background color when active.
+/// @prop {Color} bd-active      [#712c83]      - Pill link border color when active.
+///
+$nav-pills-pill-link-global-help-skin-colors: (
+    'text-base': $zc-purple-80,
+    'bg-base': transparent,
+    'bd-base': transparent,
+    //
+    'text-hover': $zc-purple,
+    'bg-hover': transparent,
+    'bd-hover': transparent,
+    //
+    'text-press': darken($zc-purple, $link-color-pressed-darken-amount),
+    'bg-press': transparent,
+    'bd-press': transparent,
+    //
+    'text-active': $white,
+    'bg-active': darken($zc-purple, $link-color-pressed-darken-amount),
+    'bd-active': darken($zc-purple, $link-color-pressed-darken-amount),
+) !default;

@@ -1,0 +1,53 @@
+// ********************************************************
+//
+//   Imports helper (atom) modules from
+//   core/components to make them available
+//   within core/api
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/module-component-helpers';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+@import "../../../core/foundation/icons/atoms/icons-helpers";
+@import "../../../core/foundation/grid/atoms/grid-helpers-v1";
+@import "../../../core/foundation/grid/atoms/grid-helpers-v2-flex";
+@import "../../../core/foundation/tools/atoms/draggables-helpers";
+@import "../../../core/components/atoms/shared/triangles/triangles-helpers";
+@import "../../../core/components/atoms/buttons/buttons-helpers";
+@import "../../../core/components/atoms/buttons/buttons-skins";
+@import "../../../core/components/atoms/code/code-helpers";
+@import "../../../core/components/atoms/list-groups/list-groups-helpers";
+@import "../../../core/components/atoms/forms/forms-helpers";
+@import "../../../core/components/atoms/tables/tables-helpers";
+@import "../../../core/components/atoms/dialogs/modals-helpers";
+@import "../../../core/components/atoms/dialogs/alerts-helpers";
+@import '../../../core/components/atoms/dialogs/color-picker-helpers';
+@import '../../../core/components/atoms/dialogs/hints-helpers';
+@import "../../../core/components/atoms/navs/dropdowns-helpers";
+@import "../../../core/components/atoms/navs/navs-shared-helpers";
+@import "../../../core/components/atoms/navs/navbars-helpers";
+@import "../../../core/components/atoms/progress/progress-shared-helpers";
+@import "../../../core/components/atoms/panels/panels-helpers";
+@import "../../../core/components/atoms/cards/cards-helpers";
+@import "../../../core/components/atoms/shared/xxs-component-size-helpers";
+
+
+// ----------------------------------------------------
+//   PERIPHERAL COMPONENT API HELPERS
+//
+//   -> Even though these modules require separate
+//      imports to get the rendered styles, they should
+//      still get the peripheral component API access
+//      when they import the "core" api.
+// ----------------------------------------------------
+@import "../../../peripherals/form-toggle-switches/atoms/form-toggle-switches-helpers";
+@import "../../../peripherals/comments/atoms/comments-helpers";
+@import "../../../peripherals/form-click-to-edit/atoms/form-click-to-edit-helpers";
+@import "../../../peripherals/nav-wizards/atoms/nav-wizards-helpers";
+@import "../../../peripherals/workspaces/atoms/workspaces-helpers";
+@import "../../../peripherals/list-group-tree/atoms/list-group-tree-helpers";

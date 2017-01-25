@@ -1,0 +1,1013 @@
+// ********************************************************
+
+////
+/// Atoms (building blocks / API methods) for version 2 of
+/// the grid system, built atop the Flexible Box Model
+/// ---
+/// @access public
+/// @group core.grid-flex
+/// @since 1.1.0
+/// @link http://bit.ly/webskin-grid-v2 Grid v2 Layout Spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/grid/atoms/grid-helpers-v2-flex';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function is-number,
+                                                function list-has,
+                                                function is-true);
+//
+// ********************************************************
+
+
+// Rem-ify the grid gutter width
+$flex-grid-gutter-width: to-rem(get($grid-config, 'gutter-width'), $html-font-size-px);
+
+
+///
+/// Generates all selectors and styles necessary to build a flexbox grid system based on a specified number of blocks, and "gutter" spacing between them.
+/// Web Skin provides a 12 block flexbox grid in the core module, but this helper can be used to create a custom grid for your app with any number of
+/// columns you want, and any amount of gutter spacing between your grid blocks.
+/// ---
+/// @requires {function} get
+/// @requires {variable} $grid-config
+/// ---
+/// @param {Number} $columns     [12]   - Total number of columns in the grid system
+/// @param {Number} $gutter      [3rem] - Amount of negative space between content in adjacent columns
+///
+@mixin make-grid-flex($columns: get($grid-config, 'columns'),
+                      $gutter: $flex-grid-gutter-width
+                     )
+{
+    // ----------------------------------------------------
+    //   BASE GRID CLASSES
+    //   -> Classes that make grid elements work together
+    //      to make flexible layouts possible at any screen width.
+    //   -> No breakpoint-specific class variations available.
+    // ----------------------------------------------------
+        //
+        // Should wrap around the entire app to fill width / height.
+        //
+        .grid-frame {
+            @include grid-frame();
+        }
+
+        //
+        // This is sorta like our grid v1 `.container`,
+        // but has no built-in padding.
+        //
+        .grid-container {
+            @include grid-container();
+
+            &.align-left {
+                @include grid-container-align(left);
+            }
+
+            &.align-right {
+                @include grid-container-align(right);
+            }
+        }
+
+
+    // ----------------------------------------------------
+    //   BREAKPOINT SPECIFIC GRID CLASSES
+    //   -> Classes with no `-{breakpoint}` suffix represent
+    //      the "mobile-first" implementation.
+    // ----------------------------------------------------
+    @each $breakpoint in get($grid-config, 'breakpoints-v2') {
+        @include _breakpoint-respond-to($breakpoint) {
+            // ------------------------------------------------
+            //   CLASSES THAT HAVE NO SIZE ASSOCIATED
+            //   -> The notion of `n` columns is irrelevant
+            //      to these classes.
+            // ------------------------------------------------
+                $breakpoint-suffix: if($breakpoint != null, '-#{$breakpoint}', '');
+                //
+                // Include the base grid-content class no matter which
+                // breakpoint we're including the selector within to prevent
+                // https://github.com/Workiva/web-skin/issues/1121
+                //
+                $grid-content-selectors: if($breakpoint == null, '.grid-content', '.grid-content, .grid-content#{$breakpoint-suffix}');
+
+                //
+                // GRID BLOCKS WITHOUT A SPECIFIED SIZE
+                // ---
+                // [1] Without `-{$breakpoint}` suffix:
+                //     -> Will scale to be whatever size is
+                //        available on the flexbox primary
+                //        axis - at any screen size.
+                //
+                // [2] With `-{$breakpoint}` suffix:
+                //     -> Will scale to be whatever size is
+                //        available on the flexbox primary
+                //        axis - at `$breakpoint` size and up.
+                //
+                .grid-block#{$breakpoint-suffix} {
+                    @include grid-block();
+                }
+
+                //
+                // GRID BLOCKS WITHOUT A SPECIFIED SIZE (AUTO)
+                // ---
+                // Our standard `grid-block` CSS class sets
+                // `flex-basis` to `0%` instead of auto to
+                // address https://github.com/Workiva/web-skin/issues/1097.
+                //
+                // However, there are cases in which a `flex-basis` value
+                // of `auto` is useful (for MSIE) to create a side-by-side
+                // layout like the one seen in the wTable cell format
+                // dropdown menu where the name of the format is on the left,
+                // and an example of the cell value, formatted using that format,
+                // is displayed to the right.
+                //
+                .grid-block-auto#{$breakpoint-suffix} {
+                    @include flex-basis(auto);
+                }
+
+                //
+                // GRID CONTAINERS
+                // This lacks a breakpoint suffix on purpose.
+                // Its placed here to re-use the media query
+                //
+                .grid-container {
+                    @include grid-container($breakpoint: $breakpoint);
+                }
+
+                //
+                // GRID CONTENT BLOCKS
+                //
+                #{$grid-content-selectors} {
+                    @include grid-content($size: false, $gutter: $gutter);
+
+                    // Collapse padding modifier classes based on the breakpoint-specific
+                    // CSS class assuming that the block is a `.grid-content` block.
+
+                }
+
+                //
+                // COLLAPSE PADDING MODIFIER CLASSES
+                // ---
+                // Utility class that can be used to remove padding added - typically
+                // as a result of being a content block (`.grid-content`).
+                //
+                // [1] Does not require that the block is a `.grid-content` block, and
+                //     collapses the padding based on the breakpoint-specific `*-collapse`
+                //     CSS class.
+                //
+                // [2] Requires that the block is a `.grid-content` block, and
+                //     removes the padding conditionally based on the breakpoint-specific
+                //     `*-content` CSS class.
+                //
+
+                // ----- [1] ----- //
+                .grid-collapse#{$breakpoint-suffix} {
+                    @include grid-content-collapse($collapse: true);
+                }
+
+                .grid-collapse-horizontal#{$breakpoint-suffix} {
+                    @include grid-content-collapse($collapse: false, $collapse-horizontal: true);
+                }
+
+                .grid-collapse-left#{$breakpoint-suffix} {
+                    @include grid-content-collapse($collapse: false, $collapse-horizontal: left);
+                }
+
+                .grid-collapse-right#{$breakpoint-suffix} {
+                    @include grid-content-collapse($collapse: false, $collapse-horizontal: right);
+                }
+
+                .grid-collapse-vertical#{$breakpoint-suffix} {
+                    @include grid-content-collapse($collapse: false, $collapse-vertical: true);
+                }
+
+                .grid-collapse-top#{$breakpoint-suffix} {
+                    @include grid-content-collapse($collapse: false, $collapse-vertical: top);
+                }
+
+                .grid-collapse-bottom#{$breakpoint-suffix} {
+                    @include grid-content-collapse($collapse: false, $collapse-vertical: bottom);
+                }
+
+                // ----- [2] ----- //
+                #{$grid-content-selectors} {
+                    &.grid-collapse {
+                        @include grid-content-collapse($collapse: true);
+                    }
+
+                    &.grid-collapse-horizontal {
+                        @include grid-content-collapse($collapse: false, $collapse-horizontal: true);
+                    }
+
+                    &.grid-collapse-left {
+                        @include grid-content-collapse($collapse: false, $collapse-horizontal: left);
+                    }
+
+                    &.grid-collapse-right {
+                        @include grid-content-collapse($collapse: false, $collapse-horizontal: right);
+                    }
+
+                    &.grid-collapse-vertical {
+                        @include grid-content-collapse($collapse: false, $collapse-vertical: true);
+                    }
+
+                    &.grid-collapse-top {
+                        @include grid-content-collapse($collapse: false, $collapse-vertical: top);
+                    }
+
+                    &.grid-collapse-bottom {
+                        @include grid-content-collapse($collapse: false, $collapse-vertical: bottom);
+                    }
+                }
+
+
+                //
+                // GUTTER PADDING MODIFIER CLASS
+                // ---
+                // Utility class that can be used to add padding equal to the
+                // default gutter amount / 2, but on a flexbox block. So,
+                // essentially .grid-content - but it remains a valid flexible block.
+                //
+                .grid-gutter#{$breakpoint-suffix} {
+                    @include grid-gutter();
+                }
+
+                .grid-gutter-vertical#{$breakpoint-suffix} {
+                    @include grid-gutter($horizontal: false);
+                }
+
+                .grid-gutter-horizontal#{$breakpoint-suffix} {
+                    @include grid-gutter($vertical: false);
+                }
+
+                .grid-gutter-top#{$breakpoint-suffix} {
+                    @include grid-gutter($horizontal: false, $vertical: top);
+                }
+
+                .grid-gutter-bottom#{$breakpoint-suffix} {
+                    @include grid-gutter($horizontal: false, $vertical: bottom);
+                }
+
+                .grid-gutter-right#{$breakpoint-suffix} {
+                    @include grid-gutter($horizontal: right, $vertical: false);
+                }
+
+                .grid-gutter-left#{$breakpoint-suffix} {
+                    @include grid-gutter($horizontal: left, $vertical: false);
+                }
+
+                //
+                // ORIENTATION MODIFIER CLASSES
+                //
+                .grid-vertical#{$breakpoint-suffix} {
+                    @include grid-orient(vertical, $breakpoint-suffix);
+                }
+
+                .grid-horizontal#{$breakpoint-suffix} {
+                    @include grid-orient(horizontal, $breakpoint-suffix);
+                }
+
+                //
+                // WRAPPING BEHAVIOR MODIFIER CLASSES
+                //
+                .grid-wrap#{$breakpoint-suffix} {
+                    @include grid-wrap(true);
+                }
+
+                .grid-nowrap#{$breakpoint-suffix} {
+                    @include grid-wrap(false);
+                }
+
+                //
+                // SHRINK-TO-FIT MODIFIER CLASS
+                //
+                .grid-shrink#{$breakpoint-suffix} {
+                    @include grid-size(shrink);
+                }
+
+                //
+                // BLOCK ALIGNMENT MODIFIER CLASSES
+                //
+                .grid-align-right#{$breakpoint-suffix}   { @include grid-align(right);   }
+                .grid-align-center#{$breakpoint-suffix}  { @include grid-align(center);  }
+                .grid-align-justify#{$breakpoint-suffix} { @include grid-align(justify); }
+                .grid-align-spaced#{$breakpoint-suffix}  { @include grid-align(spaced);  }
+
+
+            // ----------------------------------------------------
+            //   CLASSES THAT CAN CHANGE SIZE / ORDER / OFFSETS
+            //   -> An `-{n}` suffix is added where `n`
+            //      represents a relative number out of the
+            //      total number of columns in the grid.
+            // ----------------------------------------------------
+                @for $i from 1 through $columns {
+                    $size-suffix: if($breakpoint != null, '#{$breakpoint-suffix}-#{$i}', '-#{$i}');
+
+                    //
+                    // GRID BLOCKS WITH A SPECIFIED SIZE
+                    // ---
+                    // [1] Without `-{$breakpoint}` suffix:
+                    //     -> Will be a % size based on
+                    //        `{n} / {total columns}` at the
+                    //        specified breakpoint screen width.
+                    //
+                    // [2] With `-{$breakpoint}` suffix:
+                    //     -> Will be a % size based on
+                    //        `n / total columns` at
+                    //        any screen width.
+                    //
+                    .grid-block#{$size-suffix} {
+                        @include grid-size($i);
+                    }
+
+                    // Source ordering no matter the screen width
+                    .grid-order#{$size-suffix} {
+                        @include grid-order($i);
+                    }
+
+                    // Offset no matter the screen width
+                    .grid-offset#{$size-suffix} {
+                        @include grid-offset($i);
+                    }
+
+                    @if $i < 7 {
+                        // Parent sizing (block grids) for a specified breakpoint
+                        // Only allows 6 children at a time.
+                        .grid-up#{$size-suffix} {
+                            @include grid-layout($i);
+                        }
+                    }
+                }
+        }
+    }
+}
+
+
+///
+/// Define the size of a grid block. Blocks are flex items. By default, they stretch to fill all available space, based on the size of sibling blocks. This is the "grow" behavior.
+/// If set to "shrink", the block will contract and only fill as much space as it needs for its content.
+/// If set to a number, the block will be given a percentage width, based on the total number of columns (12 by default). Percentage widths don't work if a block is inside a vertical grid.
+/// ---
+/// @requires {function} get
+/// @requires {mixin}    force-overflow
+/// @requires {variable} $grid-config
+/// ---
+/// @example scss - Shrink-to-fit behavior
+///   .custom-block {
+///     @include grid-block(shrink); // will shrink to fit its contents
+///   }
+///
+/// @example scss - Specifying relative width
+///   .custom-block {
+///     @include grid-block(4); // will be width of 33% (4 / $columns)
+///   }
+///
+/// @example scss - Specifying fixed width
+///   .custom-block {
+///     @include grid-block(40rem); // will be fixed width of 40rem (400px)
+///   }
+///
+/// @example scss - Specifying relative height
+///   .custom-block {
+///     @include grid-block(4, vertical); // will be height of 33% (4 / $columns)
+///   }
+///
+/// @example scss - Specifying fixed height
+///   .custom-block {
+///     @include grid-block(40rem, vertical); // will be fixed height of 40rem (400px)
+///   }
+///
+/// @example scss - Specifying fixed size at specific viewport width
+///   @include respond-to('screen-sm and up') {
+///     .custom-block {
+///       // will be fixed height of 40rem (400px)
+///       // when the viewport width is gte the 'sm' responsive breakpoint
+///       @include grid-block(40rem, vertical);
+///     }
+///   }
+/// ---
+/// @param {Number|String}  $size                           - Sizing behavior of the block. Should be grow, grow-auto, shrink, or a number. A unitless number will be used to calculate a percentage based on the total number of grid columns. A number with a unit will be added as the `flex-basis`
+/// @param {String}         $orientation    [horizontal]    - `horizontal` or `vertical`
+/// @param {Number}         $columns        [12]            - Total number of columns in the grid system
+/// ---
+/// @output The `flex-basis`, `flex-grow`, and `flex-shrink` properties.
+///
+@mixin grid-size($size: grow,
+                 $orientation: horizontal,
+                 $columns: get($grid-config, 'columns')
+                )
+{
+    @if is-number($size) {
+        // shrink to be the size specified by the number
+        $basis: $size;
+
+        @if unitless($size) {
+            $basis: percentage($size / $columns);
+        }
+
+        @include flex(0 0 $basis);
+
+        @if unquote($orientation) == horizontal {
+            // max-width prevents columns from wrapping early in IE10/11
+            max-width: $basis;
+        }
+    } @else if ($size == shrink) {
+        @include flex(0 0 auto);
+        @include force-overflow(visible);
+    } @else if ($size == grow) {
+        @include flex(1 1 0);
+    } @else if ($size == grow-auto) {
+        @include flex(1 1 auto);
+    }
+}
+
+/// Reusable styles for the `.grid-reset` selector that must be wrapped around a `.grid-vertical` elem when nested within a layout that has already been split vertically once. Acts as a sort of "reset" for the flex axis.
+/// ---
+/// @since 1.2.2
+///
+@mixin grid-vertical-reset-styles() {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+///
+/// Apply the selectors and styling required for a `.grid-block` nested within a `.grid-vertical` element.
+/// ---
+/// @since 1.2.2
+/// ---
+/// @param {String} $breakpoint-suffix [''] - Breakpoint suffix passed from `make-grid()`
+///
+@mixin grid-vertical-child-block($breakpoint-suffix: '') {
+    $child-block-selector: '> .grid-block';
+
+    @if $breakpoint-suffix != '' {
+        $child-block-selector: '> .grid-block, > .grid-block#{$breakpoint-suffix}';
+    }
+
+    #{$child-block-selector} {
+        // We want the flex-basis to only affect the height
+        // So we over-write the max-width added in grid-size()
+        max-width: none;
+    }
+}
+
+
+///
+/// Set the orientation of blocks within this block. The grid is re-oriented by changing the flex direction of the block.
+/// __When setting the orientation to `vertical`, be sure to follow the best practices shown in the examples below.__
+/// ---
+/// @example html - Incorrect vertical orientation nesting
+///   <div class="grid-block grid-block-3 grid-vertical">
+///     If you try to stack boxes here vertically, the
+///     grid-vertical elem that wraps around it would have to
+///     have a fixed height, which defeats the purpose of a flexbox grid.
+///   </div>
+///
+/// @example html - Correct vertical orientation nesting
+///   <div class="grid-block grid-block-3">
+///     <div class="grid-block grid-vertical">
+///       Boxes you want to stack vertically go here
+///     </div>
+///   </div>
+/// ---
+/// @param {String} $orientation [horizontal] - Direction of the grid, either `horizontal` or `vertical`
+/// @param {String} $breakpoint-suffix [''] - Breakpoint suffix passed from `make-grid()`
+/// @param {Boolean} $is-frame [false]
+/// ---
+/// @output A `flex-flow` property to match the direction given.
+///
+@mixin grid-orient($orientation: horizontal, $breakpoint-suffix: '', $is-frame: false) {
+    @if $orientation == vertical {
+        @include flex-direction(column);
+        @include grid-vertical-child-block($breakpoint-suffix);
+
+        @if not $is-frame {
+            // Override default auto height
+            height: 100%;
+        }
+    } @elseif $orientation == horizontal {
+        @include flex-direction(row);
+    }
+}
+
+
+///
+/// Whether or not to Stretch a grid's child blocks across its cross-axis, making every column appear to have the same height.
+/// ---
+/// @param {bool} $wrap [true] - Align blocks to top if true, stretch blocks if false
+/// ---
+/// @output Sets `align-items` to "stretch" if `$wrap` is `false`, or "flex-start" (the default value) if `true`.
+///
+@mixin grid-wrap($wrap: true) {
+    @if $wrap {
+        @include flex-wrap(wrap);
+        @include align-items(flex-start);
+    } @else {
+        @include flex-wrap(nowrap);
+        @include align-items(stretch);
+    }
+}
+
+///
+/// Set the alignment of blocks within a grid.
+/// `left`: Items align to the left.
+/// `right`: Items align to the right.
+/// `center`: Items align to the center.
+/// `justify`: Items are spaced equally apart so they occupy the space of the entire grid.
+/// `spaced`: Items are given equal space to their left and right.
+/// ---
+/// @param {String} $align [left] - Alignment to use.
+/// ---
+/// @output An appropriate `justify-content` value.
+///
+@mixin grid-align($align: left) {
+    @if $align {
+        $options: (
+            left: flex-start,
+            right: flex-end,
+            center: center,
+            justify: space-between,
+            spaced: space-around
+        );
+
+        @include justify-content(get($options, $align));
+    }
+}
+
+///
+/// Change the alignment of a grid container.
+/// ---
+/// @requires {function} get
+/// @requires {variable} $grid-config
+/// ---
+/// @param {Number} $align [center] - `left`, `right` or `center`
+///
+@mixin grid-container-align($align: center) {
+    $margins: (
+        left: 0 auto 0 0,
+        right: 0 0 0 auto,
+        center: 0 auto
+    );
+
+    margin: get($margins, unquote($align));
+}
+
+///
+/// Set the source order of a block. Items with lower numbers appear first. If multiple items have the same number, the one in the HTML first will appear first.
+/// ---
+/// @param {number} $order - Position in source order.
+/// ---
+/// @output An `order` property.
+///
+@mixin grid-order($order: 0) {
+    @include order($order);
+}
+
+///
+/// Offset a Grid Block by adding a left margin.
+/// ---
+/// @param {Number|Boolean} $offset     [false] - If `false`, nothing is output. If a number, offsets the column by the specified number of columns.
+/// @param {Number}         $columns    [12]    - Total number of columns
+/// ---
+/// @output A left margin based on the number of columns specified, and the global number of columns.
+///
+@mixin grid-offset($offset: false, $columns: get($grid-config, 'columns')) {
+    @if is-number($offset) {
+        margin-left: percentage($offset / $columns);
+    }
+}
+
+///
+/// Collapse or Un-collapse a Grid Content element by removing / re-adding the padding.
+/// ---
+/// @example scss - Un-collapse all sides
+///   &.grid-collapse {
+///     @include grid-content-collapse($collapse: false);
+///   }
+///
+/// @example scss - Collapse all sides
+///   &.grid-collapse {
+///     @include grid-content-collapse($collapse: true);
+///   }
+///
+/// @example scss - Collapse left and right side
+///   &.grid-collapse-horizontal {
+///     @include grid-content-collapse($collapse: false,
+///                                    $collapse-horizontal: true);
+///   }
+///
+/// @example scss - Collapse left side
+///   &.grid-collapse-left {
+///     @include grid-content-collapse($collapse: false,
+///                                    $collapse-horizontal: left);
+///   }
+///
+/// @example scss - Collapse right side
+///   &.grid-collapse-right {
+///     @include grid-content-collapse($collapse: false,
+///                                    $collapse-horizontal: right);
+///   }
+///
+/// @example scss - Collapse top and bottom sides
+///   &.grid-collapse-vertical {
+///     @include grid-content-collapse($collapse: false,
+///                                    $collapse-vertical: true);
+///   }
+///
+/// @example scss - Collapse top side
+///   &.grid-collapse-top {
+///     @include grid-content-collapse($collapse: false,
+///                                    $collapse-vertical: top);
+///   }
+///
+/// @example scss - Collapse bottom side
+///   &.grid-collapse-bottom {
+///     @include grid-content-collapse($collapse: false,
+///                                    $collapse-vertical: bottom);
+///   }
+/// ---
+/// @param {Boolean}        $collapse              [true]  - Collapses both the vertical and horizontal padding if `true`, Un-collapses them if `false`
+/// @param {Boolean|String} $collapse-vertical     [false] - Collapses only the vertical padding if `true`, or can collapse a single side if set to `top` or `bottom`
+/// @param {Boolean|String} $collapse-horizontal   [false] - Collapses only the horizontal padding if `true`, or can collapse a single side if set to `left` or `right`
+/// @param {Number}         $gutter                [3rem]  - Amount of negative space between content in adjacent grid blocks
+///
+@mixin grid-content-collapse($collapse: true,
+                             $collapse-vertical: false,
+                             $collapse-horizontal: false,
+                             $gutter: $flex-grid-gutter-width
+                            )
+{
+    $collapse-vertical:   if($collapse, true, $collapse-vertical);
+    $collapse-horizontal: if($collapse, true, $collapse-horizontal);
+    $padding-amount: $gutter / 2;
+    $padding-side-amounts: (
+        top:    if($collapse-vertical   == top    or $collapse-vertical   == true, 0, $padding-amount),
+        right:  if($collapse-horizontal == right  or $collapse-horizontal == true, 0, $padding-amount),
+        bottom: if($collapse-vertical   == bottom or $collapse-vertical   == true, 0, $padding-amount),
+        left:   if($collapse-horizontal == left   or $collapse-horizontal == true, 0, $padding-amount)
+    );
+
+    @if not $collapse-vertical and not $collapse-horizontal {
+        // un-collapse all sides
+        padding: $padding-amount;
+    } @else {
+        @if is-true($collapse) {
+            // collapse all sides
+            padding: 0;
+        } @else {
+            // collapse 1 or more sides
+            @each $side, $side-value in $padding-side-amounts {
+                //
+                // Only add the side padding rule if we're zero-ing it out
+                // since thats the purpose of the mixin
+                //
+                @if $side-value == 0 {
+                    padding-#{$side}: $side-value;
+                }
+            }
+        }
+    }
+}
+
+///
+/// Add padding or "gutter" to a Grid Block.
+/// ---
+/// @example scss - Add gutter to all sides
+///   &.grid-gutter {
+///     @include grid-gutter();
+///   }
+///
+/// @example scss - Add gutter to left and right side
+///   &.grid-gutter-horizontal {
+///     @include grid-gutter($vertical: false);
+///   }
+///
+/// @example scss - Add gutter to left side only
+///   &.grid-gutter-left {
+///     @include grid-gutter($vertical: false, $horizontal: left);
+///   }
+///
+/// @example scss - Add gutter to right side only
+///   &.grid-gutter-right {
+///     @include grid-gutter($vertical: false, $horizontal: right);
+///   }
+///
+/// @example scss - Add gutter to top and bottom side
+///   &.grid-gutter-vertical {
+///     @include grid-gutter($horizontal: false);
+///   }
+///
+/// @example scss - Add gutter to top side only
+///   &.grid-gutter-top {
+///     @include grid-gutter($vertical: top, $horizontal: false);
+///   }
+///
+/// @example scss - Add gutter to bottom side only
+///   &.grid-gutter-bottom {
+///     @include grid-gutter($vertical: bottom, $horizontal: false);
+///   }
+/// ---
+/// @param {Boolean|String} $vertical       [true] - Whether to add padding to the top and bottom sides: `true` will set both, or a string value will set padding on that side only
+/// @param {Boolean|String} $horizontal     [true] - Whether to add padding to the left and right sides: `true` will set both, or a string value will set padding on that side only
+/// @param {Number}         $gutter         [3rem] - Amount of gutter to add between adjacent blocks
+///
+@mixin grid-gutter($vertical: true,
+                   $horizontal: true,
+                   $gutter: $flex-grid-gutter-width
+                  )
+{
+    $padding-amount: $gutter / 2;
+    $padding-side-amounts: (
+        top:    if($vertical   == top    or $vertical   == true, $padding-amount, 0),
+        right:  if($horizontal == right  or $horizontal == true, $padding-amount, 0),
+        bottom: if($vertical   == bottom or $vertical   == true, $padding-amount, 0),
+        left:   if($horizontal == left   or $horizontal == true, $padding-amount, 0)
+    );
+
+    @if $vertical and $horizontal {
+        // add padding to all sides
+        padding: $padding-amount;
+    } @else {
+        // Zero-out all previously applied padding to ensure breakpoint-specific gutter amounts are distinct
+        // See: https://jira.atl.workiva.net/browse/UIP-979
+        padding: 0;
+
+        // add padding to 1 or more sides
+        @each $side, $side-value in $padding-side-amounts {
+            //
+            // Only add the side padding rule if we're NOT zero-ing it out
+            // since thats the purpose of the mixin
+            //
+            @if $side-value > 0 {
+                padding-#{$side}: $side-value;
+            }
+        }
+    }
+}
+
+///
+/// Add negative margins to a Grid Block, equal to the padding of a Grid Content elem.
+/// This aligns the edges of a block nested inside a content block.
+/// ---
+/// @param {Boolean} $nest              [true]  - Adds negative margin to all four sides if true.
+/// @param {Boolean} $nest-vertical     [false] - Adds negative top and bottom margin if true.
+/// @param {Boolean} $nest-horizontal   [false] - Adds negative left and right margin if true.
+/// @param {Number}  $gutter            [3rem]  - Amount of gutter padding to negate.
+/// ---
+/// @output Negative margin values
+///
+@mixin grid-nested-flush($nest: true,
+                         $nest-vertical: false,
+                         $nest-horizontal: false,
+                         $gutter: $flex-grid-gutter-width
+                        )
+{
+    $nest-vertical:   if($nest, true, $nest-vertical);
+    $nest-horizontal: if($nest, true, $nest-horizontal);
+    $margin-amount: $gutter / -2;
+
+    margin: (if($nest-vertical, 0, $margin-amount)) (if($nest-horizontal, 0, $margin-amount));
+}
+
+
+
+// ----------------------------------------------------
+//   INDIVIDUAL GRID ELEMENT SELECTOR HELPERS
+//
+//   -> Helpers that are used to generate a single selector,
+//      or base styles to deliver to a single selector
+// ----------------------------------------------------
+
+///
+/// Styles shared between `.grid-frame` and `.grid-block` elements that create the foundation of our flexbox grid system.
+/// ---
+/// @since 1.4.0
+/// @access private
+/// @group core.internals.grid-flex
+/// ---
+/// @param {String}     $size           [grow]          - `grow` or `shrink`
+/// @param {String}     $orientation    [horizontal]    - `horizontal` or `vertical`
+/// @param {Boolean}    $wrap           [false]         - Stretch blocks if `true`, or align blocks to top if `false`
+/// @param {String}     $align          [left]          - See the `grid-align()` mixin
+/// @param {Number}     $order          [0]             - Position in source order
+/// @param {Boolean}    $is-frame       [false]
+///
+@mixin _grid-block-base($size: grow,
+                        $orientation: horizontal,
+                        $wrap: false,
+                        $align: left,
+                        $order: 0,
+                        $is-frame: false
+                       )
+{
+    position: relative;
+
+    @include backface-visibility(hidden);
+    @include display-flex();
+    @include grid-size($size);
+    @include grid-orient($orientation, $is-frame: $is-frame);
+    @include grid-wrap($wrap);
+    @include grid-align($align);
+
+    @if $order and $order != get($flexbox-defaults, 'ordinal-group') {
+        @include grid-order($order);
+    }
+}
+
+
+///
+/// Base styles for Grid Frames: containers that stretch to the full dimmensions of the browser window.
+/// ---
+/// @param {String}     $size           [grow]          - `grow` or `shrink`
+/// @param {String}     $orientation    [horizontal]    - `horizontal` or `vertical`
+/// @param {Boolean}    $wrap           [false]         - Stretch blocks if `true`, or align blocks to top if `false`
+/// @param {String}     $align          [left]          - See the `grid-align()` mixin
+/// @param {Number}     $order          [0]             - Position in source order
+///
+@mixin grid-frame($size: grow,
+                  $orientation: horizontal,
+                  $wrap: false,
+                  $align: left,
+                  $order: 0
+                 )
+{
+    height: 100vh;
+    overflow: hidden;
+
+    @include _grid-block-base($size, $orientation, $wrap, $align, $order, $is-frame: true);
+}
+
+
+///
+/// Base styles for Grid Blocks: flexible blocks that can stack or stretch, vertically or horizontally.
+/// ---
+/// @example scss - Use a single mixin to create a Grid Block
+///   .custom-block {
+///     @include grid-block(
+///       $size: grow,
+///       $orientation: horizontal,
+///       $wrap: false,
+///       $align: left,
+///       $order: 0
+///     );
+///   }
+///
+/// @example scss - Use individual feature mixins instead
+///   .custom-block {
+///     @include grid-block();
+///     @include grid-size(grow);
+///     @include grid-orient(horizontal);
+///     @include grid-wrap(false);
+///     @include grid-align(left);
+///     @include grid-order(0);
+///   }
+/// ---
+/// @param {String}     $size           [grow]          - `grow` or `shrink`
+/// @param {String}     $orientation    [horizontal]    - `horizontal` or `vertical`
+/// @param {Boolean}    $wrap           [false]         - Stretch blocks if `true`, or align blocks to top if `false`
+/// @param {String}     $align          [left]          - See the `grid-align()` mixin
+/// @param {Number}     $order          [0]             - Position in source order
+/// @param {Boolean}    $allow-nested-vblocks [true]    - If `true`, a `> .grid-reset` selector will be nested here
+/// @param {Boolean}    $scroll         [true]          - If `false`, `overflow: visible` will be set, otherwise overflow / scroll-direction will be determined by the value of `$orientation`
+///
+@mixin grid-block($size: grow,
+                  $orientation: horizontal,
+                  $wrap: false,
+                  $align: left,
+                  $order: 0,
+                  $allow-nested-vblocks: true,
+                  $scroll: true
+                 )
+{
+    @include _grid-block-base($size, $orientation, $wrap, $align, $order);
+
+    @if $scroll {
+        overflow: hidden;
+
+        // Blocks will scroll by default if their content overflows
+        @if $orientation == vertical {
+            overflow-x: auto;
+        } @else {
+            overflow-y: auto;
+        }
+
+        @include scroll-inertia();
+    }
+
+    //
+    // Required as a wrapper around a `.grid-vertical` elem
+    // when nested within a layout that has already been split
+    // vertically once. Acts as a sort of "reset" for the flex axis.
+    //
+    @if $allow-nested-vblocks {
+        > .grid-reset {
+            @include grid-vertical-reset-styles();
+        }
+    }
+}
+
+
+///
+/// Grid Content elems within Grid Blocks serve are containers for actual content. They're the "columns" of the v2 Grid.
+/// ---
+/// @param {String|Boolean} $size   [grow] - `grow`, `shrink` or `false`: Use `false` if you want to set the size elsewhere
+/// @param {Number}         $offset [null] - Amount of horizontal offset
+/// @param {Number}         $order  [null] - Position in source order
+/// @param {Number}         $gutter [3rem] - Amount of negative space between content in adjacent grid blocks
+/// @param {Bool}           $scroll [true] - If `false`, `overflow: hidden` will be set
+///
+@mixin grid-content($size: grow,
+                    $offset: null,
+                    $order: null,
+                    $gutter: $flex-grid-gutter-width,
+                    $scroll: true
+                   )
+{
+    @if $size {
+        @include grid-size($size);
+    }
+
+    @if $offset != null {
+        @include grid-offset($offset);
+    }
+
+    @if $order != null {
+        @include grid-order($order);
+    }
+
+    // Content blocks are not flex items and have padding if specified
+    @if $gutter != 0 {
+        @include grid-content-collapse(false, $gutter: $gutter);
+    }
+
+    display: block;
+
+    @if $scroll == true {
+        overflow-y: auto;
+        @include scroll-inertia();
+    }
+
+    @if $scroll == false {
+        overflow: hidden;
+    }
+
+    //
+    // Prevent large images from widening the content block beyond it's flex-basis
+    // Fixes an issue in Firefox
+    //
+    img {
+        max-width: 100%;
+    }
+}
+
+
+///
+/// Make all children inside this container share a common % width calculated to fit the number passed as `$up` to fit.
+/// ---
+/// @param {Number} $up - How many boxes do you want to fit in this box?
+/// @param {String} $child-selector ['.grid-block']
+///
+@mixin grid-layout($up, $child-selector: '.grid-block') {
+    @include flex-flow(row wrap);
+    @include force-overflow(visible);
+    list-style-type: none;
+
+    > #{$child-selector} {
+        @include flex(0 0 percentage(1 / $up));
+        // max-width prevents columns from wrapping early in IE10/11
+        max-width: percentage(1 / $up);
+    }
+}
+
+
+///
+/// Constrain the size of a block to the size of the average grid row, and center-align it. This imitates the behavior of Web Skin v1 Grid.
+/// ---
+/// @param {Number}         $align      [center] - `left`, `right` or `center`
+/// @param {String | Null}  $breakpoint [null]
+///
+@mixin grid-container($align: center, $breakpoint: null) {
+    @if $breakpoint == null {
+        //
+        // GLOBAL ALIGNMENTS
+        //
+        @include grid-container-align($align);
+    } @else {
+        //
+        // BREAKPOINT-SPECIFIC WIDTHS
+        // ---
+        // These don't have the padding that the v1 grid containers did...
+        // so we need to remove the gutter width from the config values
+        // to keep things consistent across v1 and v2
+        //
+        max-width: to-rem(get-deep($grid-config, 'container-width.#{$breakpoint}'), $html-font-size-px) - $flex-grid-gutter-width;
+    }
+}

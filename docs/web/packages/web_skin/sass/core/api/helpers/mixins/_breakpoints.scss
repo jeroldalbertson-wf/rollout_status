@@ -1,0 +1,293 @@
+// ********************************************************
+
+////
+/// Helper mixins pertaining to media queries / breakpoints
+/// ---
+/// @since 1.0.0
+/// @access public
+/// @group core.breakpoints
+/// @link https://github.com/Team-Sass/breakpoint/wiki/Respond-To Breakpoint Respond-To Function
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/breakpoints';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function is-map,
+                                                function add-breakpoint,
+                                                function comma-list,
+                                                function append);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   `respond-to()` HELPERS
+//
+//   -> These mixins self-include below mixin definitions
+//      in order to append the global `$BREAKPOINTS` map
+//
+// ********************************************************
+    ///
+    /// Add named resolution breakpoint(s) to the global `$BREAKPOINTS` variable for use via the `respond-to` function.
+    /// ---
+    /// @example scss - Sass implementation
+    ///   .visible-retina-and-up {
+    ///       display: none;
+    ///   }
+    ///   // Param value will always be
+    ///   //   `#{$key}+ resolution` for inclusive-ascending
+    ///   // Or
+    ///   //   `#{$key}- resolution` for inclusive-descending
+    ///   // Where $key is a map key within the
+    ///   //   `$ddpx-resolutions` map
+    ///   @include respond-to('retina+ resolution') {
+    ///       // resolutions 2dppx and higher
+    ///       .visible-retina-and-up {
+    ///           display: block;
+    ///       }
+    ///   }
+    /// ---
+    /// @example css - CSS Output
+    ///   .visible-retina-and-up {
+    ///       display: none;
+    ///   }
+    ///
+    ///   @media only screen and (min-resolution: 2dppx),
+    ///          only screen and (-webkit-min-device-pixel-ratio: 2),
+    ///          only screen and (min--moz-device-pixel-ratio: 2),
+    ///          only screen and (min-resolution: 192dpi) {
+    ///       .visible-retina-and-up {
+    ///           display: block;
+    ///       }
+    ///   }
+    /// ---
+    /// @requires {variable} $dppx-resolutions
+    /// ---
+    /// @param {Map} $resolutions [$dppx-resolutions] - Map consisting of `'name': 'resolution'` pairs
+    /// ---
+    /// @output Updated value for global `$BREAKPOINTS` variable
+    ///
+    @mixin add-resolution-breakpoints($resolutions: $dppx-resolutions) {
+        @if not is-map($resolutions) {
+            @error "Mixin `add-resolution-breakpoints` expecting `$resolutions` param to be a `map`. Received `#{type-of($resolutions)}`.";
+        }
+
+        @each $resolution-name, $resolution in $resolutions {
+            // No reason to produce a media query for the base resolution, since that is the default
+            @if $resolution-name != 'base' {
+                // Update the global $BREAKPOINTS var
+                // provided by the vendor breakpoints library
+                @include add-breakpoint('#{$resolution-name}+ resolution', 'only screen' min-resolution $resolution);
+                @include add-breakpoint('#{$resolution-name}- resolution', 'only screen' max-resolution $resolution);
+            }
+        }
+    }
+
+
+    ///
+    /// Add named device breakpoints to the global `$BREAKPOINTS` variable for use via the `respond-to` function.
+    /// __Targeting specific devices is NOT recommended__ except in very rare cases. Use with caution _(Look at the CSS example output if you really need a reason, and we're not even displaying the -webkit / --moz prefixed versions, which TRIPLE the size of the query)_.
+    /// ---
+    /// @example scss - Sass implementation
+    ///   .visible-iphone-only {
+    ///       display: none;
+    ///   }
+    ///   .visible-iphone-5-only {
+    ///       display: none;
+    ///   }
+    ///   // Param value will always be
+    ///   //   `#{$device-name}` for all versions of a device
+    ///   // Or
+    ///   //   `#{$device-name} #{$device-version}` for a single version of a device
+    ///   // Where $device-name is a top-level map key within the
+    ///   //   `$all-devices` map
+    ///   // And Where $device-version is a child key of $device-name
+    ///   @include respond-to('iphone') {
+    ///       // any version of the iphone
+    ///       .visible-iphone-only {
+    ///           display: block;
+    ///       }
+    ///   }
+    ///   @include respond-to('iphone retina-5') {
+    ///       // iphone 5
+    ///       .visible-iphone-5-only {
+    ///           display: block;
+    ///       }
+    ///   }
+    /// ---
+    /// @example css - CSS Output
+    ///   .visible-iphone-only {
+    ///       display: none;
+    ///   }
+    ///   .visible-iphone-5-only {
+    ///       display: none;
+    ///   }
+    ///
+    ///   @media only screen and (min-device-width: 20em)
+    ///                      and (max-device-width: 30em)
+    ///                      and (min-resolution: 1dppx)
+    ///          only screen and (min-device-width: 20em)
+    ///                      and (max-device-width: 30em)
+    ///                      and (min-resolution: 2dppx)
+    ///          only screen and (min-device-width: 20em)
+    ///                      and (max-device-width: 35.5em)
+    ///                      and (min-resolution: 2dppx) {
+    ///       .visible-iphone-only {
+    ///           display: block;
+    ///       }
+    ///   }
+    ///
+    ///   @media only screen and (min-device-width: 20em)
+    ///                      and (max-device-width: 35.5em)
+    ///                      and (min-resolution: 2dppx) {
+    ///       .visible-iphone-5-only {
+    ///           display: block;
+    ///       }
+    ///   }
+    /// ---
+    /// @requires {variable} $all-devices
+    /// ---
+    /// @param {Map} $devices [$all-devices] - Map consisting of ['device': ['device-version': ['query': 'value']]] nested maps
+    /// ---
+    /// @output Updated value for global `$BREAKPOINTS` variable
+    ///
+    @mixin add-device-breakpoints($devices: $all-devices) {
+        @if not is-map($devices) {
+            @error "Mixin `add-device-breakpoints` expecting `$devices` param to be a `map`. Received `#{type-of($devices)}`.";
+        }
+
+        @each $device-name, $device-versions in $devices {
+            $device-queries: comma-list();
+
+            @each $device-version-name, $device-version-config in $device-versions {
+                $min-device-width: get($device-version-config, 'min-device-width');
+                $max-device-width: get($device-version-config, 'max-device-width');
+                $max-device-height: $max-device-width; // just for clarity
+                $device-resolution: get($device-version-config, 'min-resolution-dppx');
+
+                $device-query: 'only screen' (device-width $min-device-width $max-device-width) (min-resolution $device-resolution);
+                $device-queries: append($device-queries, $device-query, comma);
+                // Update the global $BREAKPOINTS var
+                // provided by the vendor breakpoints library
+                @include add-breakpoint('#{$device-name} #{$device-version-name}', $device-query);
+            }
+
+            // Add an alias for any version of the device
+            @include add-breakpoint('#{$device-name}', $device-queries);
+        }
+    }
+
+
+    ///
+    /// Add named screen breakpoints to the global `$BREAKPOINTS` variable for use via the `respond-to` function.
+    /// ---
+    /// @example scss - Sass implementation
+    ///   .col-sm-6 {
+    ///       float: none;
+    ///       width: 100%;
+    ///   }
+    ///   @include respond-to('screen-sm and up') {
+    ///       .col-sm-6 {
+    ///           float: left;
+    ///           width: 50%;
+    ///       }
+    ///   }
+    /// ---
+    /// @example css - CSS Output
+    ///   .col-sm-6 {
+    ///       float: none;
+    ///       width: 100%;
+    ///   }
+    ///   @media only screen and (min-width: 48em) {
+    ///       .col-sm-6 {
+    ///           float: left;
+    ///           width: 50%;
+    ///       }
+    ///   }
+    /// ---
+    /// @requires {variable} $screen-widths
+    /// ---
+    /// @param {Map} $widths [$screen-widths] - Map consisting of `'width-alias': ['min': pixel-value, 'max': pixel-value]` nested maps
+    /// ---
+    /// @output Updated value for global `$BREAKPOINTS` variable
+    ///
+    @mixin add-screen-breakpoints($widths: $screen-widths) {
+        @if not is-map($widths) {
+            @error "Mixin `add-screen-breakpoints` expecting `$widths` param to be a `map`. Received `#{type-of($widths)}`.";
+        }
+
+        $size-aliases: map-keys($widths);
+        $min-widths: comma-list();
+        $max-widths: comma-list();
+
+        @each $size-alias, $size-alias-config in $widths {
+            $min-widths: append($min-widths, get($size-alias-config, 'min'), comma);
+            $max-widths: append($max-widths, get($size-alias-config, 'max'), comma);
+        }
+
+        // ----------------------------------------------------
+        //   Create Size Range Queries
+        // ----------------------------------------------------
+        @for $i from 1 through length($min-widths) {
+            // name of alias
+            $size-alias: nth($size-aliases, $i);
+            // sizes for individual aliases
+            $min-width: nth($min-widths, $i);
+            $max-width: nth($max-widths, $i);
+
+            // query that will match this screen size and larger
+            $inclusive-query-ascending: (min-width $min-width);
+            @include add-breakpoint('screen-#{$size-alias} and up', screen $inclusive-query-ascending);
+
+            // query that will match this screen size and smaller
+            $inclusive-query-descending: (max-width $min-width - 1);
+            @include add-breakpoint('below screen-#{$size-alias}', screen $inclusive-query-descending);
+
+            // query that will match this screen size only
+            $exclusive-query: ($min-width $max-width);
+            @include add-breakpoint('screen-#{$size-alias} only', screen $exclusive-query);
+        }
+    }
+
+
+    ///
+    /// Private helper mixin to keep the logic of whether or not to wrap styles in a media query clean.
+    /// ---
+    /// @since 1.4.0
+    /// @access private
+    /// @group core.internals.breakpoints
+    /// @param {String | Null} $breakpoint
+    ///
+    @mixin _breakpoint-respond-to($breakpoint) {
+        $use-mq: $breakpoint != null;
+
+        @if $use-mq {
+            @include respond-to('screen-#{$breakpoint} and up') {
+                @content;
+            }
+        } @else {
+            @content;
+        }
+    }
+
+
+// ********************************************************
+//
+//   BUILD `respond-to()` ALIASES
+//
+// ********************************************************
+$api-breakpoints-added: false !default;
+
+@if not $api-breakpoints-added {
+    @include add-resolution-breakpoints();
+    @include add-device-breakpoints();
+    @include add-screen-breakpoints();
+
+    $api-breakpoints-added: true;
+}

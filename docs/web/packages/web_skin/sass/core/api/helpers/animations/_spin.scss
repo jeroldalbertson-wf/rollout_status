@@ -1,0 +1,54 @@
+// ********************************************************
+
+////
+/// Global mixins pertaining to spinning / rotating animations
+/// ---
+/// @since 0.1.3
+/// @access public
+/// @group core.animation
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/animations/spin';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function is-true,
+                                                function list-has,
+                                                function get);
+//
+// ********************************************************
+
+
+///
+/// Reusable spinning animation styles
+/// ---
+/// @requires {variable} $progress-spinner-config
+/// @requires {variable} $rotate-direction-default
+/// ---
+/// @param {Number}          $speed                                   - How long one rotation should take
+/// @param {Number | String} $duration   [infinite]                   - How long the elem should continue to rotate
+/// @param {List | Bool}     $steps      [false]                      - Animation steps
+/// @param {String}          $direction  [$rotate-direction-default]  - The direction of rotation
+///
+@mixin spin-animation($speed,
+                      $duration: infinite,
+                      $steps: false,
+                      $direction: $rotate-direction-default
+                     )
+{
+    $valid-directions: map-keys($rotate-config);
+
+    @if not list-has($valid-directions, $direction) {
+        @error "`spinner` mixin `$direction` param expects one of the following: `#{$valid-directions}` values. `#{$direction}` given.";
+    }
+
+    $animation-name: get-deep($rotate-config, '#{$direction}.name');
+    $animation-duration: if(is-true($steps), $duration steps($steps), $duration);
+    $animation: $animation-name $speed linear $animation-duration;
+
+    @include animation($animation);
+}

@@ -1,0 +1,420 @@
+// ********************************************************
+
+////
+/// Iconography helper methods
+/// ---
+/// @since 1.0.0
+/// @access public
+/// @group core.iconography
+/// @link http://bit.ly/webskin-icon-sizes2 Icon size variation spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/icons/atoms/icons-helpers';
+    $module: add-api-module($module);
+
+//
+//   DEPENDENCIES
+//
+    @import 'glyphs/glyphs-two-color';
+    @import 'glyphs/glyphs-main';
+    @import 'glyphs/glyphs-doctypes';
+
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function list-has,
+                                                function get,
+                                                function get-deep,
+                                                function to-string,
+                                                function to-rem,
+                                                function to-unicode,
+                                                function is);
+//
+// ********************************************************
+
+
+///
+/// Whether to output CSS selectors that horizontally center certain icons that are purposefully aligned left within their artboard / canvas.
+/// ---
+/// @since 1.3.0
+///
+$output-icon-halign-adjustment-selectors: false !default;
+
+///
+/// Reusable styles for vertically / horizontally centering an off-center glyph within it's `.icon` container.
+/// ---
+/// @see {variable} output-icon-halign-adjustment-selectors
+/// ---
+/// @param {Number} $offset-vertical        [0]     - Amount of vertical offset from the top edge of the `.icon` container needed to center the pseudo elem containing the glyph
+/// @param {Number} $offset-horizontal      [0]     - Amount of horizontal adjustment from the left edge of the `.icon` container needed to center pseudo elem containing the glyph
+/// @param {Bool}   $halign-needs-selector  [false] - Since `1.3.0` - Set to true if the amount set in the `$offset-horizontal` param should only be set in-combination with a `.no-text` / `.text-align-center` CSS parent selector when the global '$output-icon-halign-adjustment-selectors' flag var is set to true.
+///
+@mixin ws-icon-glyph-alignment($offset-vertical: 0, $offset-horizontal: 0, $halign-needs-selector: false) {
+    @if remove-unit($offset-vertical) != 0 {
+        top: to-rem($offset-vertical);
+    }
+
+    @if remove-unit($offset-horizontal) != 0 {
+        @if not $halign-needs-selector {
+            left: to-rem($offset-horizontal);
+        } @else {
+            @if $output-icon-halign-adjustment-selectors {
+                .no-text &,
+                .text-align-center & {
+                    left: to-rem($offset-horizontal);
+                }
+            }
+        }
+    }
+}
+
+///
+/// Generates the CSS selectors needed to horizontally center icons that are otherwise left-aligned on purpose.
+/// Only called by `ws-icon-glyph()` when the global `$output-icon-halign-adjustment-selectors` flag is true, which is currently only in the `icons-halign.scss` peripheral module.
+/// ---
+/// @since 1.3.0
+/// @see {variable} output-icon-halign-adjustment-selectors
+/// ---
+/// @param {Number}         $left                               - Amount of horizontal alignment adjustment needed to center glyph within `.icon` container
+/// @param {String}         $selector                           - CSS Selector for the icon, required since `1.1.0` because libsass does not support the `selector-append` fn.
+/// @param {Bool | Color}   $second-color           [false]     - Optional custom second color
+/// @param {String}         $second-color-selector  [':after']  - Pseudo elem selector used to render the optional second color glyph
+/// @param {String}         $first-color-selector   [':before'] - Pseudo elem selector used to render the primary icon glyph
+///
+@mixin ws-icon-glyph-alignment-adjustment-selectors($left,
+                                                    $selector,
+                                                    $second-color: false,
+                                                    $second-color-selector: ':after',
+                                                    $first-color-selector: ':before'
+                                                   )
+{
+    #{$selector} {
+        &#{$first-color-selector} {
+            @include ws-icon-glyph-alignment($offset-horizontal: $left, $halign-needs-selector: true);
+        }
+
+        @if $second-color {
+            &.#{$icon-class-two-color}#{$second-color-selector} {
+                @include ws-icon-glyph-alignment($offset-horizontal: $left, $halign-needs-selector: true);
+            }
+        }
+    }
+}
+
+///
+/// Reusable styles for building one and two color icon glyphs using our icon font.
+/// ---
+/// @see {mixin} ws-icon-glyph-alignment
+/// @todo Switch this back to using `selector-append()` once libsass supports it.
+/// ---
+/// @param {String}         $pua                                - ASCII PUA code for the icon
+/// @param {String}         $selector                           - CSS Selector for the icon, required since `1.1.0` because libsass does not support the `selector-append` fn.
+/// @param {Number}         $top                    [0]         - Amount of vertical alignment adjustment needed to center glyph within `.icon` container
+/// @param {Number}         $left                   [0]         - Amount of horizontal alignment adjustment needed to center glyph within `.icon` container
+/// @param {Bool | Color}   $second-color           [false]     - Optional custom second color
+/// @param {Bool | Color}   $first-color            [false]     - Optional custom first / single color
+/// @param {String}         $second-color-selector  [':after']  - Pseudo elem selector used to render the optional second color glyph
+/// @param {String}         $first-color-selector   [':before'] - Pseudo elem selector used to render the primary icon glyph
+/// @param {Bool | String}  $second-color-font      [false]     - Optional custom font name for optional second color glyph
+/// @param {Bool | String}  $first-color-font       [false]     - Optional custom font name for the primary glyph
+/// @param {Bool | String}  $second-color-fn        [false]     - Optional custom function name used to retrieve the PUA code for the optional second color glyph
+/// @param {Bool}           $halign-needs-selector  [false]     - Since `1.3.0` - Set to true if the amount set in the `$left` param should only be set in-combination with a `.no-text` / `.text-align-center` CSS parent selector since the offset of the icon within its canvas is purposeful in order to left-align certain related icons by default. When true, these styles will only be produced if the global '$output-icon-halign-adjustment-selectors' flag var is set to true.
+/// @param {Bool}           $require-two-color-selector [true]  - Since `1.3.0` - Whether the `.icon-two-color` CSS class should be pre-pended onto the selector when `$second-color` is `true`
+/// @param {Bool}           $icon-with-solid-white-backing [false] - Set to true if you need to render a glyph that has a white background. Simply sets a bunch of the individual arguments to appropriate values as a shortcut.
+///
+@mixin ws-icon-glyph($pua,
+                     $selector,
+                     $top: 0,
+                     $left: 0,
+                     $second-color: false,
+                     $first-color: false,
+                     $second-color-selector: ':after',
+                     $first-color-selector: ':before',
+                     $second-color-font: false,
+                     $first-color-font: false,
+                     $second-color-fn: false,
+                     $halign-needs-selector: false,
+                     $require-two-color-selector: true,
+                     $icon-with-solid-white-backing: false
+                    )
+{
+    // ERROR CHECKING
+    $valid-glyph-selectors: ':after', ':before';
+    @if not is($second-color-selector, $valid-glyph-selectors) {
+        @error "`ws-icon-glyph` mixin expecting either '#{nth($valid-glyph-selectors, 1)}' or '#{nth($valid-glyph-selectors, 2)}' for the `$second-color-selector` parameter. '#{$second-color-selector}' given.";
+    }
+    @if not is($first-color-selector, $valid-glyph-selectors) {
+        @error "`ws-icon-glyph` mixin expecting either '#{nth($valid-glyph-selectors, 1)}' or '#{nth($valid-glyph-selectors, 2)}' for the `$first-color-selector` parameter. '#{$first-color-selector}' given.";
+    }
+    @if not is-string($pua) {
+        @error "`ws-icon-glyph` mixin expecting a string for the `$pua` param for the `#{$selector}` glyph. Was #{$pua} (#{type-of($pua)}).";
+    }
+    //
+
+    @if $icon-with-solid-white-backing == true {
+        $first-color-selector: ':after';
+        $first-color-font: if($first-color-font != false, $first-color-font, $icon-font-name-main);
+        $second-color-selector: ':before';
+        $second-color-font: if($second-color-font != false, $second-color-font, $icon-font-name-color);
+        $second-color: $white;
+    }
+
+    $is-multicolor: $second-color-font == 'img';
+
+    @if $output-icon-halign-adjustment-selectors {
+        // ----------------------------------------------------
+        //   IF `$halign-needs-selector` is true, and the global
+        //   `$output-icon-halign-adjustment-selectors` flag is
+        //   also true, then we'll generate selectors for the
+        //   `icons-halign.scss` peripheral module only.
+        // ----------------------------------------------------
+        @include ws-icon-glyph-alignment-adjustment-selectors($left, $selector, $second-color, $second-color-selector, $first-color-selector);
+    } @else {
+        // ----------------------------------------------------
+        //   Not for the `icons-halign.scss` peripheral module,
+        //   generate all the selectors
+        // ----------------------------------------------------
+
+    #{$selector} { // OPEN SELECTOR
+
+    &#{$first-color-selector} {
+        content: to-unicode($pua);
+
+        @if $first-color-font {
+            // font for first color selector was customized
+            font-family: $first-color-font !important;
+        }
+
+        @include ws-icon-glyph-alignment($top, $left);
+    }
+
+    @if $first-color {
+        @if $second-color or $is-multicolor {
+            $first-color-selector: if($require-two-color-selector, '.#{$icon-class-two-color}#{$first-color-selector}', '#{$first-color-selector}');
+
+            // first AND second color are being customized
+            // meaning this is likely one of the edge cases where
+            // the "first" glyph is below the "second"
+            &#{$first-color-selector} {
+                color: $first-color;
+            }
+        } @else {
+            // just a simple single color default
+            // that shouldn't inherit from its parent
+            &.#{$icon-class-one-color}#{$first-color-selector} {
+                color: $first-color;
+            }
+        }
+    }
+
+    @if $second-color or $is-multicolor {
+        $icon-second-color-class: '#{$selector}-after';
+        $icon-second-color-fn: nth(explode($icon-second-color-class, '.'), 2);
+        $second-color-selector: if($require-two-color-selector, '.#{$icon-class-two-color}#{$second-color-selector}', '#{$second-color-selector}');
+
+        // second color glyph fn was customized
+        @if $second-color-fn {
+            $icon-second-color-fn: quote($second-color-fn);
+        }
+
+        // ERROR CHECKING
+        @if not function-exists($icon-second-color-fn) {
+            @error "`ws-icon-glyph` mixin cannot find the '#{$icon-second-color-fn}' function. Are you sure it exists?";
+        }
+        //
+
+        &#{$second-color-selector} {
+            @if $is-multicolor {
+                // Must have content set for pseudo glyph to display
+                content: "";
+                // We use an svg image as a background when we need
+                // more than 2 colors for a given icon
+                background-image: call($icon-second-color-fn);
+                padding: 0;
+                margin: 0;
+            } @else {
+                content: call($icon-second-color-fn);
+                color: $second-color !important;
+
+                @if $second-color-font {
+                    // font for second color selector was customized
+                    font-family: $second-color-font !important;
+                }
+            }
+
+            @include ws-icon-glyph-alignment($top, $left);
+        }
+    }
+
+    } // CLOSE SELECTOR
+
+    } // END if ($output-icon-halign-adjustment-selectors)
+}
+
+///
+/// Reusable styles for pseudo glyph(s) within the 'main' icon set.
+///
+@mixin icon-set-main {
+    font-family: get-deep($icon-font-config, 'main.name');
+}
+
+///
+/// Reusable styles for pseudo glyph(s) within the 'doctype' icon set.
+///
+@mixin icon-set-doctype {
+    font-family: get-deep($icon-font-config, 'doctype.name');
+}
+
+///
+/// Reusable styles for pseudo glyph(s) within the 'xbrl' icon set.
+///
+@mixin icon-set-xbrl {
+    font-family: get-deep($icon-font-config, 'xbrl.name');
+}
+
+///
+/// Reusable styles for second-color pseudo glyph(s) within the `#{$icon-class-two-color}` element.
+///
+@mixin icon-set-second-color {
+    &:after {
+        font-family: get-deep($icon-font-config, 'two-color.name');
+        // We use svg background images for multi-color glyphs
+        // so we need to establish the base background styles required
+        // to ensure that the glyph scales the same way
+        background-repeat: no-repeat;
+        background-position: bottom center;
+        background-color: transparent;
+    }
+}
+
+///
+/// Prevent Google Chrome's "blink" renderer from clipping the edges of certain icons that have paths that go flush to the edge of the artboard.
+/// ---
+/// @since 1.1.3
+/// @link https://github.com/Workiva/web-skin/issues/1059 web-skin/#1059
+///
+@mixin fix-chrome-icon-edge-clipping() {
+    padding: to-rem($icon-edge-clipping-padding);
+    margin-left: to-rem($icon-edge-clipping-padding) * -1;
+    margin-top: to-rem($icon-edge-clipping-padding) * -1;
+}
+
+///
+/// Reusable styles for pseudo glyph(s) within the global `.icon` element.
+///
+@mixin icon-props-glyphs {
+    @include fix-chrome-icon-edge-clipping();
+
+    position: absolute;
+    top: to-rem($icon-pseudo-shift-vertical);
+    left: 0;
+    display: block;
+    width: inherit;
+    height: inherit;
+    text-align: center;
+    color: inherit;
+    font-size: inherit;
+    line-height: 1em;
+}
+
+///
+/// Shared styles for both the .icon container, and the pseudo glyph(s) within it.
+///
+@mixin icon-props-base {
+    // prevent ios "magnifying glass" bug: http://bit.ly/1eQuSNj
+    @include disable-user-select();
+    cursor: inherit;
+    text-decoration: none !important;
+    // make sure all is clear for the glyph to show-through
+    background-color: transparent;
+    background-image: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+
+    // If Aria Labels are included, use them for screen readers
+    // Otherwise, say nothing.
+    speak: none;
+
+    &[aria-label] {
+        speak: attr(aria-label);
+    }
+
+    @if $webkit-support {
+        -webkit-font-smoothing: antialiased;
+    }
+    @if $firefox-support {
+        -moz-osx-font-smoothing: grayscale;
+    }
+    font-smoothing: antialiased;
+}
+
+///
+/// Reusable styles for global `.icon` element.
+/// ---
+/// @since 0.2.0
+///
+@mixin icon-base {
+    $default-icon-size: to-rem(get-deep($icon-size-config, 'base16.base'));
+
+    position: relative; // so we can position the :after and :before glyphs using absolute
+    top: 0;
+    left: 0;
+    display: inline-block; // @todo should this be inline?
+    overflow: visible;
+    width: $default-icon-size;
+    height: $default-icon-size;
+    padding: 0;
+    vertical-align: text-bottom; // https://github.com/Workiva/web-skin/issues/1221
+    color: inherit;
+    font-size: $default-icon-size;
+    line-height: inherit; // make sure :before / :after glyphs are not cut off
+    @include icon-set-main();
+    @include icon-props-base();
+
+    &:before,
+    &:after {
+        @include icon-props-base();
+        @include icon-props-glyphs();
+        background-size: 1em 1em;
+    }
+}
+
+
+///
+/// Styles for icon size variations.
+/// ---
+/// @param {String} $suffix               - size suffix
+/// @param {String} $size-base ['base16'] - key for map within the global `$icon-size-config` map
+///
+@mixin icon-size($suffix, $size-base: 'base16') {
+    @if not list-has(map-keys($icon-size-config), $size-base) {
+        @error "`icon-size` mixin could not find #{$size-base} key within `$icon-size-config`.";
+    }
+
+    $icon-size: to-rem(get-deep($icon-size-config, '#{$size-base}.#{$suffix}'));
+
+    width:     $icon-size;
+    height:    $icon-size;
+    font-size: $icon-size;
+}
+
+
+///
+/// Set `color: inherit` on the `.icon` and it's `:before` / `:after` pseudo elements to completely reset any declared colors.
+/// ---
+/// @since 1.4.0
+///
+@mixin reset-icon-colors($important: false) {
+    $important: if($important, '!important', '');
+    $parent-selector: &;
+    $selectors: if($parent-selector, '&, &:before, &:after', '.icon, .icon:before, .icon:after');
+
+    #{$selectors} {
+        color: inherit #{$important};
+    }
+}

@@ -1,0 +1,178 @@
+// ********************************************************
+
+////
+/// Form validation state configuration
+/// ---
+/// @access public
+/// @group core.components.form-controls
+/// @link http://bit.ly/webskin-form-validation Form validation states spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/forms/config/controls/form-control-validation-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   PUBLIC VALIDATION STATE CONFIG(S)
+//
+// ********************************************************
+    ///
+    /// Collection of form validation state colors used for elements within a `.form-group` component's `.has-success` variation.
+    /// ---
+    /// @since 1.0.0
+    /// @type Map
+    /// ---
+    /// @requires {variable} $zc-green
+    /// @requires {variable} $zc-green-80
+    /// ---
+    /// @prop {Color} control-text-base  [inherit]
+    /// @prop {Color} control-bg-base    [inherit]
+    /// @prop {Color} control-bd-base    [#85d633]
+    ///
+    /// @prop {Color} control-text-focus [inherit]
+    /// @prop {Color} control-bd-focus   [#85d633]
+    ///
+    /// @prop {Color} icon-color [#66cc00]
+    ///
+    $form-group-state-success: (
+        // form control colors
+        'control-text-base':  inherit,
+        'control-bg-base':    inherit,
+        'control-bd-base':    $zc-green-80,
+        // form control colors (focused)
+        'control-text-focus': inherit,
+        'control-bd-focus':   $zc-green-80,
+        //
+        'icon-color': $zc-green
+    ) !default;
+
+    ///
+    /// Collection of form validation state colors used for elements within a `.form-group` component's `.has-warning` variation.
+    /// ---
+    /// @since 1.0.0
+    /// @type Map
+    /// ---
+    /// @requires {variable} $zc-orange
+    /// ---
+    /// @prop {Color} control-text-base  [inherit]
+    /// @prop {Color} control-bg-base    [inherit]
+    /// @prop {Color} control-bd-base    [#fbad17]
+    ///
+    /// @prop {Color} control-text-focus [inherit]
+    /// @prop {Color} control-bd-focus   [#fbad17]
+    ///
+    /// @prop {Color} icon-color [#fbad17]
+    ///
+    $form-group-state-warning: (
+        // form control colors
+        'control-text-base':  inherit,
+        'control-bg-base':    inherit,
+        'control-bd-base':    $zc-orange,
+        // form control colors (focused)
+        'control-text-focus': inherit,
+        'control-bd-focus':   $zc-orange,
+        //
+        'icon-color': $zc-orange
+    ) !default;
+
+    ///
+    /// Collection of form validation state colors used for elements within a `.form-group` component's `.has-error` variation.
+    /// ---
+    /// @since 1.0.0
+    /// @type Map
+    /// ---
+    /// @requires {variable} $zc-red
+    /// @requires {variable} $zc-red-80
+    /// ---
+    /// @prop {Color} control-text-base  [inherit]
+    /// @prop {Color} control-bg-base    [inherit]
+    /// @prop {Color} control-bd-base    [#f15250]
+    ///
+    /// @prop {Color} control-text-focus [inherit]
+    /// @prop {Color} control-bd-focus   [#f15250]
+    ///
+    /// @prop {Color} icon-color [#ee2724]
+    ///
+    $form-group-state-error: (
+        // form control colors
+        'control-text-base':  inherit,
+        'control-bg-base':    inherit,
+        'control-bd-base':    $zc-red-80,
+        // form control colors (focused)
+        'control-text-focus': inherit,
+        'control-bd-focus':   $zc-red-80,
+        //
+        'icon-color': $zc-red
+    ) !default;
+
+    ///
+    /// Collection of colors associated with various form validation states.
+    /// ---
+    /// @since 1.0.0
+    /// @type Map
+    /// ---
+    /// @requires {variable} $form-group-state-success
+    /// @requires {variable} $form-group-state-warning
+    /// @requires {variable} $form-group-state-error
+    /// ---
+    /// @prop {Map} success - Color config map used to indicate successful form validation state
+    /// @prop {Map} warning - Color config map used to indicate potentially invalid form validation state
+    /// @prop {Map} error   - Color config map used to indicate invalid form validation state
+    ///
+    $form-group-states: (
+        'success': $form-group-state-success,
+        'warning': $form-group-state-warning,
+        'error':   $form-group-state-error
+    ) !default;
+
+    $form-group-without-validation-selector: '';
+    @each $state in map-keys($form-group-states) {
+        $form-group-without-validation-selector: '#{$form-group-without-validation-selector}:not(.has-#{$state})';
+    }
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED CONFIG ALIAS / SHORTHAND
+//
+//   -> DO NOT MODIFY THESE (modify the map config)
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   SUCCESS
+    // ----------------------------------------------------
+        $input-success-bg: get($form-group-state-success, 'control-bg-base');
+        $input-success-text-color: get($form-group-state-success, 'control-text-base');
+        $input-success-text-color-focus: get($form-group-state-success, 'control-text-focus');
+        $input-success-bd-color: get($form-group-state-success, 'control-bd-base');
+        $input-success-bd-color-focus: get($form-group-state-success, 'control-bd-focus');
+
+
+    // ----------------------------------------------------
+    //   WARNING
+    // ----------------------------------------------------
+        $input-warning-bg: get($form-group-state-warning, 'control-bg-base');
+        $input-warning-text-color: get($form-group-state-warning, 'control-text-base');
+        $input-warning-text-color-focus: get($form-group-state-warning, 'control-text-focus');
+        $input-warning-bd-color: get($form-group-state-warning, 'control-bd-base');
+        $input-warning-bd-color-focus: get($form-group-state-warning, 'control-bd-focus');
+
+
+    // ----------------------------------------------------
+    //   ERROR
+    // ----------------------------------------------------
+        $input-error-bg: get($form-group-state-error, 'control-bg-base');
+        $input-error-text-color: get($form-group-state-error, 'control-text-base');
+        $input-error-text-color-focus: get($form-group-state-error, 'control-text-focus');
+        $input-error-bd-color: get($form-group-state-error, 'control-bd-base');
+        $input-error-bd-color-focus: get($form-group-state-error, 'control-bd-focus');

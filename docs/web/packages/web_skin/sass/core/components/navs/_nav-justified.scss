@@ -1,0 +1,105 @@
+// ********************************************************
+//
+//   TABBED NAV COMPONENTS STYLE MODULE
+//   http://bit.ly/webskin-navs-justified
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/navs/nav-justified';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    // $nav-justified-module-config:  'core/components/atoms/navs/config/nav-tab-config';
+    $nav-justified-module-helpers: 'core/components/atoms/navs/navs-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          // $nav-justified-module-config,
+                                          $nav-justified-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE JUSTIFIED VARIATION CLASS (MOBILE FIRST)
+//
+// ********************************************************
+.nav-justified {
+    width: 100%;
+
+    > .nav-item {
+        float: none; // Stacked by default (mobile first)
+
+        > .hitarea {
+            margin-right: 0; // override margin from .nav-tabs
+            margin-bottom: to-rem(get($nav-pills-pill-config, 'stacked-spacing'));
+            margin-left: 0; // Override margin from .nav-pills
+            text-align: center;
+
+            //
+            // Since we're centering the text, adding an
+            // icon throws the centering off and we want
+            // the icon to sit to the left of the centering.
+            //
+            .icon {
+                margin-left: to-rem($icon-size-base + $nav-link-icon-margin-horizontal + 3) * -1;
+
+                &.align-right {
+                    margin-left: to-rem($nav-link-icon-margin-horizontal); // reset to default
+                    margin-right: to-rem($icon-size-base + $nav-link-icon-margin-horizontal + 3) * -1;
+                }
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    //   DROPDOWN MENUS IN JUSTIFIED NAVS
+    // ----------------------------------------------------
+    > .dropdown .dropdown-menu {
+        top: auto;
+        left: auto;
+    }
+
+    // ----------------------------------------------------
+    //   JUSTIFIED NAV TABS
+    // ----------------------------------------------------
+    &.nav-tabs {
+        border-bottom: 0;
+
+        > .nav-item {
+            > .hitarea {
+                margin-right: 0; // Override margin from .nav-tabs
+                border-radius: to-rem(get($nav-pills-pill-config, 'bd-radius'));
+            }
+
+            // ----- ACTIVE / OPEN ITEM STATE ----- //
+            &.active,
+            &.open {
+                > .hitarea {
+                    border: to-rem(get($nav-tabs-tab-config, 'bd-width')) solid get($nav-tabs-tab-config, 'bd-color');
+                }
+            }
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   JUSTIFIED VARIATION (767px viewport +)
+//
+// ********************************************************
+@include respond-to('screen-sm and up') {
+    .nav-justified {
+        @include nav-item-justified();
+
+        &.nav-tabs {
+            @include nav-tabs-tab-justified();
+        }
+
+        &.nav-pills {
+            @include nav-pills-pill-justified();
+        }
+    }
+}

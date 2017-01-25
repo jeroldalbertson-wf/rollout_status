@@ -1,0 +1,44 @@
+// ********************************************************
+//
+//   TABLE COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-tables
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/tables';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $tables-module-config:  'core/components/atoms/tables/tables-config';
+    $tables-module-helpers: 'core/components/atoms/tables/tables-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $tables-module-config,
+                                          $tables-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE TABLE STYLES
+//
+//   -> These styles DO NOT need to be re-generated
+//      when creating virtualized table selectors
+//      using CSS classes instead of table elems.
+//
+// ********************************************************
+    @import './tables/tables-base';
+
+
+// ********************************************************
+//
+//   GENERATED TABLE STYLES
+//
+//   -> These styles DO need to be re-generated
+//      when creating virtualized table selectors
+//      using CSS classes instead of table elems.
+//
+// ********************************************************
+    @import './tables/tables-generated';

@@ -1,0 +1,76 @@
+// ********************************************************
+
+////
+/// Zesty Crayon Gray Color Aliases
+/// ---
+/// @access public
+/// @type Color
+/// @group core.color.zesty
+/// ---
+/// @requires {variable} $zc-grays
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/aliases/zesty-grays';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+/// Zesty Crayon Gray
+/// @color #595959
+$zc-gray: get($zc-grays, '100');
+
+/// @alias zc-gray
+/// @since 1.6.0
+$zc-gray-100: $zc-gray;
+
+/// Zesty Crayon Gray 120
+/// @since 1.6.0
+/// @color #444444
+$zc-gray-120: get($zc-grays, '120');
+
+/// Zesty Crayon Gray 90
+/// @since 1.6.0
+/// @color #707070
+$zc-gray-90: get($zc-grays, '90');
+
+/// Zesty Crayon Gray 80
+/// @since 1.6.0
+/// @color #8a8a8a
+$zc-gray-80: get($zc-grays, '80');
+
+/// Zesty Crayon Gray 70
+/// @since 1.6.0
+/// @color #b2b2b2
+$zc-gray-70: get($zc-grays, '70');
+
+/// Zesty Crayon Gray 60
+/// @since 1.6.0
+/// @color #cbcbcb
+$zc-gray-60: get($zc-grays, '60');
+
+/// Zesty Crayon Gray 50
+/// @since 1.6.0
+/// @color #d8d8d8
+$zc-gray-50: get($zc-grays, '50');
+
+/// Zesty Crayon Gray 40
+/// @since 1.6.0
+/// @color #e3e3e3
+$zc-gray-40: get($zc-grays, '40');
+
+/// Zesty Crayon Gray 30
+/// @since 1.6.0
+/// @color #eaeaea
+$zc-gray-30: get($zc-grays, '30');
+
+/// Zesty Crayon Gray 20
+/// @since 1.6.0
+/// @color #f3f3f3
+$zc-gray-20: get($zc-grays, '20');

@@ -1,0 +1,16 @@
+// ********************************************************
+//
+//  HINT POSITION
+//
+//  Defines the positioning logic for the hints.
+//
+// ********************************************************
+
+
+@each $hint-direction-key, $hint-direction-cfg in $hint-position-configs {
+    .hint--#{$hint-direction-key} {
+        // Generate box-model positioning / offsets and default arrow colors
+        // for all possible positions
+        @include _hint-direction($hint-direction-key, $hint-direction-cfg, $global: true);
+    }
+}

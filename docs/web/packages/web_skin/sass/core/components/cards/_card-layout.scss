@@ -1,0 +1,223 @@
+// ********************************************************
+//
+//   LAYOUT STYLES FOR ARRANGING MULTIPLE CARDS
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/cards/card-layout';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $cards-module-config:  'core/components/atoms/cards/cards-config';
+    $cards-module-helpers: 'core/components/atoms/cards/cards-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $cards-module-config,
+                                          $cards-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   MAKE CARDS PLAY NICE WITH GRID BLOCKS
+//
+//   [1] Card within a flexbox `.grid-block` needs 100%
+//       width since it will automatically try to align
+//       itself along the flexbox axis of the parent block.
+//
+//   [2] Card that IS a flexbox grid block should act
+//       like a grid content block.
+//
+// ********************************************************
+.card {
+    [class*="grid-block"] & {
+        width: 100%; // [1]
+    }
+
+    &[class*="grid-block"] {
+        display: block; // [2]
+    }
+}
+
+
+
+// ********************************************************
+//
+//   HORIZONTAL CARD LAYOUTS (above `sm` viewport width)
+//
+// ********************************************************
+@include respond-to('screen-sm and up') {
+    // ----------------------------------------------------
+    //   CARD GROUP
+    //
+    //   -> Display multiple cards where each card
+    //      has an equal width and height, and there is
+    //      no space displayed between them.
+    // ----------------------------------------------------
+    .card-group {
+        @include display-flex();
+        @include flex-flow(row wrap);
+
+        .card {
+            + .card {
+                // Prevent double border
+                border-left: 0;
+                // Override default vertical stack spacing
+                margin: 0;
+            }
+        }
+
+        // Group of rounded cards
+        .card--rounded {
+            &:first-child {
+                @include border-right-radius(0);
+
+                .card__img--top {
+                    @include border-top-right-radius(0);
+                }
+
+                .card__img--bottom {
+                    @include border-bottom-right-radius(0);
+                }
+            }
+
+            &:last-child {
+                @include border-left-radius(0);
+
+                .card__img--top {
+                    @include border-top-left-radius(0);
+                }
+
+                .card__img--bottom {
+                    @include border-bottom-left-radius(0);
+                }
+            }
+
+            // Cards surrounded on both sides by other cards
+            &:not(:first-child):not(:last-child) {
+                &,
+                .card__img--top,
+                .card__img--bottom {
+                    border-radius: 0;
+                }
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   CARD DECK
+    //
+    //   -> Display multiple cards where each card
+    //      has an equal width and height, and there is
+    //      a gutter displayed between them.
+    // ----------------------------------------------------
+    .card-deck {
+        @include display-flex();
+        @include flex-flow(row wrap);
+
+        margin-right: $card-deck-gutter * -1;
+        margin-left:  $card-deck-gutter * -1;
+
+        .card {
+            margin-top: 0; // Override default vertical stack spacing
+            margin-right: $card-deck-gutter;
+            margin-left:  $card-deck-gutter;
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   CARD COLUMNS
+    //
+    //   -> Display cards in a "Masonry"-like column layout
+    //      by utilizing the `.columns-up-{n}` CSS class on
+    //      the `.card-columns` element, and by adding the
+    //      `.column` class to the `.card` element.
+    // ----------------------------------------------------
+    .columns {
+        .card + .card {
+            margin-top: 0;
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   CARD TABLES
+//
+//   [1] Mimic the vertical spacing between adjacent
+//       non-table-row cards.
+//
+// ********************************************************
+.card-table {
+    border-collapse: separate;
+    border-spacing: 0 get($card-size-base-config, 'spacer-vertical'); // [1]
+
+    // Use an actual table cell for the "selected" platform indicator
+    // since table elems cannot have relative positioning which we need
+    // in order to absolutely position the `:after` pseudo element we use
+    // on non-table-row card implementations.
+    .card {
+        // Hide the default `:after` pseudo-elem
+        #{$card-selected-platform-elem-selector} {
+            display: none !important;
+        }
+
+        // Implement styling for the table cell
+        .card__cap--selected-platform {
+            @include card-selected-platform($is-pseudo-element: false);
+            padding: 0;
+        }
+    }
+
+    // Collapsible card rows require a nested table
+    .card--collapsible {
+        > td,
+        > .td {
+            padding: 0;
+        }
+
+        .table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        tr,
+        .tr {
+            &.collapse {
+                display: none;
+
+                &.in {
+                    display: table-row;
+                }
+            }
+        }
+
+        .card__body {
+            td,
+            .td {
+                &:not(.card__block) {
+                    // So that empty cells used to left-align the `.card__block` don't add
+                    // more width than is necessary.
+                    padding: 0;
+                }
+            }
+
+            .card__block {
+                padding-top: 0;
+                padding-left: 0;
+
+                // Footers must be placed within `.card-block` since it is a column,
+                // and we need to add another "row" beneath the other contents within the block.
+                .card__footer {
+                    padding: 0;
+                }
+            }
+        }
+    }
+}

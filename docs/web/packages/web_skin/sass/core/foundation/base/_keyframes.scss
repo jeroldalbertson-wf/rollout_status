@@ -1,0 +1,56 @@
+// ********************************************************
+//
+    $module: 'core/foundation/base/keyframes';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+///
+/// Builds CSS keyframe animations for named keyframe animation types that exist in `$global-keyframe-types`.
+/// ---
+/// @access private
+/// @since 1.0.0
+/// @group core.internals.animation
+/// ---
+/// @see {variable} rotate-clockwise-config
+/// ---
+/// @output CSS `@keyframes` for each `name` within each map nested in `$global-keyframe-config`, e.g. `$rotate-clockwise-config`.
+///
+@mixin set-keyframes {
+    @each $animation-type in $global-keyframe-types {
+        $animation-map: get($global-keyframe-config, $animation-type);
+        //
+        @each $animation, $animation-config in $animation-map {
+            $animation-name: get-deep($animation-map, '#{$animation}.name');
+            $animation-keys: get-deep($animation-map, '#{$animation}.keys');
+            //
+            @if not is-true($animation-name) {
+                @error "`set-keyframes` mixin cannot find a `name` key within the #{$animation} map.";
+            } @else if not is-true($animation-keys) {
+                @error "`set-keyframes` mixin cannot find a `keys` key within the #{$animation} map.";
+            } @else if not is-map($animation-keys) {
+                @error "`set-keyframes` mixin expecting `keys` for #{$animation-name} to be a map. #{type-of($keys)} given.";
+            } @else {
+                @include keyframes(unquote($animation-name)) {
+                    @each $key, $properties in $animation-keys {
+                        #{$key} {
+                            @each $property, $value in $properties {
+                                @if $property == 'transform' {
+                                    @include transform(#{$value});
+                                } @else {
+                                    #{$property}: #{$value};
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ----------------------------------------------------
+//   BUILD THE KEYFRAMES HERE
+// ----------------------------------------------------
+@include set-keyframes();

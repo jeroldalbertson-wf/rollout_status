@@ -1,0 +1,53 @@
+// ********************************************************
+//
+//   STYLE RESETS FOR HTML ELEMS NESTED WITHIN CARDS
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/cards/card-resets';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $cards-module-config:  'core/components/atoms/cards/cards-config';
+    $cards-module-helpers: 'core/components/atoms/cards/cards-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $cards-module-config,
+                                          $cards-module-helpers);
+//
+// ********************************************************
+
+
+.card__header,
+.card__footer {
+    dl {
+        margin: 0;
+    }
+
+    dt {
+        font-weight: normal;
+    }
+
+    abbr {
+        cursor: inherit;
+        border-bottom: 0 none;
+    }
+}
+
+.card-table {
+    tbody,
+    thead {
+        display: table-row-group;
+    }
+
+    tr {
+        display: table-row;
+    }
+
+    td,
+    th {
+        display: table-cell;
+        border: 0;
+    }
+}

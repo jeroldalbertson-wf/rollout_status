@@ -1,0 +1,92 @@
+// ********************************************************
+//
+//   DEPENDENCIES:
+//
+    @import '../../peripherals/form-toggle-switches/atoms/form-toggle-switches-helpers';
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-forms';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Misc tweaks
+// ----------------------------------------------------
+.ws-example {
+    &.input-group-example-stacked .input-group {
+        margin-bottom: to-rem($docs-spacing-md);
+    }
+
+    .form-group .input-group {
+        margin-bottom: 0;
+    }
+
+    > textarea.form-control {
+        resize: vertical; // TODO: is this necessary?
+    }
+}
+
+
+// ----------------------------------------------------
+//   Form control size examples
+// ----------------------------------------------------
+.wdesk-example-control-sizing {
+    .chosen-container {
+        &,
+        .chosen-drop {
+            width: 100% !important;
+        }
+    }
+
+    // ----- Vertical spacing ----- //
+    > .docs-input-sizes {
+        > .form-control {
+            &,
+            + .form-control {
+                margin-top: to-rem($docs-spacing-md);
+            }
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   DropdownSelect Demos
+// ----------------------------------------------------
+.ws-example {
+    .dropdown-select--typeahead .dropdown-menu {
+        // Make our docs demos mimic the WSD "MATCH_WIDTH" menu-width option
+        right: 0;
+    }
+
+    .dd-typeahead__search__input {
+        // Make our docs demos mimic how the WSD TypeaheadSelect component
+        // does not apply a dynamic width to this element, and instead relies on
+        // flexbox / min-widths via `flex-basis` to do the job.
+        //
+        // See: UIP-1146 / UIP-1369
+        width: 100% !important;
+    }
+}
+
+// ----------------------------------------------------
+//   File browser custom text examples
+// ----------------------------------------------------
+.ws-file-browser-customization {
+    @include file-browser-input-text('Choose a fizzle bizzle...');
+    @include file-browser-button-text('Uplizzle');
+}
+
+
+// ----------------------------------------------------
+//   Form control state simulations
+// ----------------------------------------------------
+.form-control {
+    // ----- Simulate `:invalid` ----- //
+    &.invalid-demo:not(.valid) {
+        @include input-variant('error');
+    }
+}

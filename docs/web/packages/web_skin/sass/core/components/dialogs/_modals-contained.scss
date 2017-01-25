@@ -1,0 +1,116 @@
+// ********************************************************
+//
+//   "CONTAINED" MODAL DIALOG VARIATION STYLE MODULE
+//   http://bit.ly/webskin-modals
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/dialogs/modals-contained';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $dialogs-modals-contained-module-config:  'core/components/atoms/dialogs/modals-config';
+    $dialogs-modals-contained-module-helpers: 'core/components/atoms/dialogs/modals-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $dialogs-modals-contained-module-config,
+                                          $dialogs-modals-contained-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   CONTAINED MODAL DIALOGS
+//   -> Used for list / panel / popover confirmation dialogs
+//      that appear within that component - not above it.
+//      Contained modal backgrounds serve as the
+//      "overlay / backdrop"
+//
+// ********************************************************
+.modal.contained {
+    position: absolute;
+    width: auto; // respect negative absolute position values
+    overflow: hidden; // reset scroll
+    color: contrast-color(get($modal-config, 'backdrop-bg'));
+    background-color: get($modal-config, 'backdrop-bg'); // fallback
+    background-color: rgba(get($modal-config, 'backdrop-bg'), get($modal-config, 'contained-backdrop-alpha'));
+
+    .modal-dialog {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: auto;
+        margin: 0;
+        padding: 0;
+    }
+
+    .modal-content {
+        position: relative;
+        border: 0 none;
+        background-color: transparent;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .modal-header {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 0;
+        line-height: 1;
+
+        .close {
+            display: none;
+        }
+    }
+
+    .modal-title {
+        font-size: 1.6rem;
+        padding: 0;
+        color: contrast-color(get($modal-config, 'backdrop-bg'));
+        border: 0 none;
+    }
+
+    .modal-body {
+        overflow: hidden;
+        max-height: 100%;
+        padding: 0;
+        text-align: right;
+    }
+
+    // contains the confirmation buttons
+    .modal-footer {
+        position: absolute;
+        right: to-rem($modal-sm-content-padding);
+        bottom: to-rem($modal-sm-content-padding);
+        left: 0;
+        min-height: 0;
+        padding: 0;
+    }
+
+    // this only works in list items where we want the buttons to be to the right of the confirmation text
+    .hitarea & {
+        @include align-contained-modal-actions($actions-width: 10rem);
+    }
+}
+
+
+// ********************************************************
+//
+//   CONTAINED MODAL BACKDROPS
+//
+// ********************************************************
+// if .no-backdrop or .contained class is added to .modal... hide the backdrop
+.modal.no-backdrop + .modal-backdrop,
+.modal.contained + .modal-backdrop {
+    // cannot "hide" this element any other way
+    // or else the wdesk-modal plugin won't show the content either
+    background-color: transparent;
+}

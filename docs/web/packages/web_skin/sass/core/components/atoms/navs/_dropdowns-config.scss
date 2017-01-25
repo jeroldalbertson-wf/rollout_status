@@ -1,0 +1,15 @@
+// ********************************************************
+//
+//   Configuration for Web Skin Dropdown Components
+//   Implemented as a component within the "secondary" nav grouping
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/dropdowns-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+@import 'config/dropdown-size-config';
+@import 'config/dropdown-color-config';

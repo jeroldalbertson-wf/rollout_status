@@ -1,0 +1,22 @@
+// ********************************************************
+//
+    $module: 'peripherals/panels-global-jobs/body-footer';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   GLOBAL STATUS BAR
+// ----------------------------------------------------
+    .body-footer {
+        position: fixed;
+        // needs to have a z-index so that is remains above any body-wrapper type elements
+        // that likely sit just above it.
+        z-index: 10;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        min-height: to-rem(get-deep($panel-config, 'sm.header-height')); // height of collapsed jobs panel
+        height: auto;
+    }

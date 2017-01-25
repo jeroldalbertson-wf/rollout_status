@@ -1,0 +1,32 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for Collapsible Tree Navigation
+ * ---
+ * MSIE Support: 10+
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ *   web-skin v{{ws_css_version}} Core Plugin JS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import '../core/api';
+
+
+// ----------------------------------------------------
+//   Tree List Navigation Atoms
+// ----------------------------------------------------
+    @import 'list-group-tree/atoms/list-group-tree-helpers';
+
+
+// ----------------------------------------------------
+//   Tree List Navigation Components
+// ----------------------------------------------------
+    @import 'list-group-tree/list-group-tree-base';

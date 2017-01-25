@@ -1,0 +1,410 @@
+// ********************************************************
+
+////
+/// Table component configuration
+/// ---
+/// @access public
+/// @group core.components.tables
+/// @link http://bit.ly/webskin-tables Table component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/tables/tables-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   TABLE ELEMENT SELECTOR CONFIGS
+//
+// ********************************************************
+    ///
+    /// Table element selector prefix.
+    /// When set to `.`, CSS classes can be used to style all table elements
+    ///
+    $table-selector-prefix: '' !default;
+
+    ///
+    /// Configuration used to declare what selectors are used
+    /// to target table elements.
+    ///
+    $table-selectors: (
+        caption: '.table #{$table-selector-prefix}caption', // Must have the `.table` selector prepended because the `.caption` CSS class is not properly namespaced
+        colgroup: '#{$table-selector-prefix}col',
+        thead: '#{$table-selector-prefix}thead',
+        tbody: '#{$table-selector-prefix}tbody',
+        tfoot: '#{$table-selector-prefix}tfoot',
+        col: '#{$table-selector-prefix}col',
+        tr: '#{$table-selector-prefix}tr',
+        td: '#{$table-selector-prefix}td',
+        th: '#{$table-selector-prefix}th'
+    );
+
+    ///
+    /// Map of table elements, and their default `display` property value.
+    ///
+    $table-element-display: (
+        caption: table-caption,
+        colgroup: table-column-group,
+        thead: table-header-group,
+        tbody: table-row-group,
+        tfoot: table-footer-group,
+        col: table-column,
+        tr: table-row,
+        td: table-cell,
+        th: table-cell
+    );
+
+    // ----------------------------------------------------
+    //   PRIVATE ALIASES
+    // ----------------------------------------------------
+        $_caption: get($table-selectors, caption);
+        $_colgroup: get($table-selectors, colgroup);
+        $_thead: get($table-selectors, thead);
+        $_tbody: get($table-selectors, tbody);
+        $_tfoot: get($table-selectors, tfoot);
+        $_col: get($table-selectors, col);
+        $_tr: get($table-selectors, tr);
+        $_td: get($table-selectors, td);
+        $_th: get($table-selectors, th);
+
+
+// ********************************************************
+//
+//   BASE CONFIG
+//
+// ********************************************************
+    ///
+    /// Base configuration for `.table` components.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @todo Write unit test asserting that `bg-accent` is slightly lighter than `bd-color`
+    /// ---
+    /// @requires {function} get-deep
+    /// @requires {variable} $font-family-base
+    /// @requires {variable} $global-component-size-config
+    /// @requires {variable} $global-component-bd-width
+    /// @requires {variable} $base-elem-margin-vertical
+    /// @requires {variable} $zc-gray-40
+    /// @requires {variable} $almost-white
+    /// ---
+    /// @prop {List}   font-family              [$font-family-base] - Default font-family for a `.table` component
+    /// @prop {Number} bd-width                 [1px]               - Default border width for a `.table` component
+    /// @prop {Number} margin-bottom            [20px]              - Default amount of negative space to preserve beneath a `.table` component
+    /// @prop {Number} transition-speed         [.1s]               - Default speed used for the `.table` component hover / resizing transitions
+    /// @prop {List}   transition-properties                        - Default `.table` component properties affected by CSS3 transitions
+    /// @prop {Number} striped-row-bd-width     [1px]               - Default border width between rows in a `.table-striped` table component variation
+    /// @prop {Number} rounded-bd-radius        [4px]               - Default corner radius for the `.table` component when `table-rounded-corners()` mixin is utilized
+    ///
+    /// @prop {Color} bd-color      [#e3e3e3]       - Default border color for a `.table` component
+    /// @prop {Color} bg            [transparent]   - Default background color for a `.table` component
+    /// @prop {Color} caption-bg    [#fafafa]       - Background color of optional `<caption>` element within a `.table` component
+    ///
+    $table-config: (
+        // sizes / misc
+        'font-family': $font-family-base,
+        'bd-width': $global-component-bd-width,
+        'margin-bottom': $base-elem-margin-vertical * 2,
+        'transition-speed': .1s,
+        'transition-properties': opacity color width height background-color border-top-color border-right-color border-bottom-color border-left-color,
+        'striped-row-bd-width': $global-component-bd-width,
+        'rounded-bd-radius': get-deep($global-component-size-config, 'bd-radius.base'),
+        // colors
+        'bd-color': $zc-gray-40,
+        'bg': transparent,
+        'caption-bg':  $almost-white
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   CELL CONFIG
+//
+// ********************************************************
+    ///
+    /// Configuration for `<td>` and `<th>` elems within `.table` components.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @todo Write unit test asserting that `bg-accent` is slightly lighter than `bd-color`
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $table-config
+    /// @requires {variable} $colors-global-selection
+    /// @requires {variable} $zc-gray
+    /// @requires {variable} $zc-gray-80
+    /// @requires {variable} $zc-gray-60
+    /// @requires {variable} $zc-gray-20
+    /// @requires {variable} $line-height-base
+    /// @requires {variable} $padding-base-vertical
+    /// @requires {variable} $padding-sm-vertical
+    /// @requires {variable} $font-size-base
+    /// ---
+    /// @prop {Color} text-color        [#595959]   - Default text color
+    /// @prop {Color} text-color-hover  [#505050]   - Text color of cells within hovered rows for `.table-hover` table component variation
+    /// @prop {Color} text-color-press  [#4b4b4b]   - Text color of cells within pressed rows for `.table-selectable` table component variation
+    /// @prop {Color} text-color-active [#474747]   - Text color of cells within selected rows for `.table-selectable` table component variation
+    ///
+    /// @prop {Color} bg-accent         [#f3f3f3]   - Alternating row background color for `.table-striped` table component variation
+    /// @prop {Color} bg-hover          [#ebf6ff]   - Background color of cells within hovered rows for `.table-hover` table component variation
+    /// @prop {Color} bg-press          [#e0f2ff]   - Background color of cells within pressed rows for `.table-selectable` table component variation
+    /// @prop {Color} bg-active         [#d6eeff]   - Background color of cells within selected rows for `.table-selectable` table component variation
+    ///
+    /// @prop {Color} header-bd-bottom-color [#cbcbcb]  - Default bottom border color for `<th>` elems within a `.table` component's `<thead>`
+    /// @prop {Color} header-text-color      [#8a8a8a]  - Default text color for `<th>` elems within a `.table` component's `<thead>`
+    ///
+    /// @prop {Number} line-height          [1.428571429]   - Default cell line-height
+    /// @prop {Number} padding              [8px]           - Default cell padding
+    /// @prop {Number} height               [36px]          - Calculated cell height. _Added via `@extend`_
+    /// @prop {Number} header-padding       [8px]           - Default padding for `<th>` elems within a `.table` component's `<thead>`. _Added via `@extend`_
+    /// @prop {Number} header-font-size     [13px]          - Default font size for `<th>` elems within a `.table` component's `<thead>`
+    /// @prop {Number} header-line-height                   - Calculated line height for `<th>` elems within a `.table` component's `<thead>`. _Added via `@extend`_
+    /// @prop {Number} header-height        [36px]          - Calculated height for `<th>` elems within a `.table` component's `<thead>`. _Added via `@extend`_
+    ///
+    /// @prop {Number} padding-sm           [5px]   - Default cell padding in a `.table-condensed` table component variation
+    /// @prop {Number} height-sm            [30px]  - Calculated cell height in a `.table-condensed` table component variation. _Added via `@extend`_
+    /// @prop {Number} header-padding-sm    [5px]   - Default padding for `<th>` elems within a `.table-condensed` table component variation's `<thead>`. _Added via `@extend`_
+    /// @prop {Number} header-height-sm     [30px]  - Calculated height for `<th>` elems within a `.table-condensed` table component variation's `<thead>`. _Added via `@extend`_
+    ///
+    $table-cell-config: (
+        // colors
+        'text-color':  $zc-gray,
+        'text-color-hover':  get($colors-global-selection, 'text-hover'),
+        'text-color-press':  get($colors-global-selection, 'text-press'),
+        'text-color-active': get($colors-global-selection, 'text-active'),
+        'bg-accent': $zc-gray-20,
+        'bg-hover':  get($colors-global-selection, 'bg-hover'),
+        'bg-press':  get($colors-global-selection, 'bg-press'),
+        'bg-active': get($colors-global-selection, 'bg-active'),
+        'header-bd-bottom-color': $zc-gray-60,
+        'header-text-color': $zc-gray-80,
+        // sizes
+        'line-height': $line-height-base,
+        'padding': $padding-base-vertical + (get($table-config, 'bd-width') * 2),
+        'height': null, // actual calculated value inserted via @extend
+        'header-padding': null, // actual calculated value inserted via @extend
+        'header-font-size': $font-size-base - 1,
+        'header-line-height': null, // actual calculated value inserted via @extend
+        'header-height': null, // actual calculated value inserted via @extend
+        // small ("condensed") sizes
+        'padding-sm': $padding-sm-vertical,
+        'height-sm': null, // actual calculated value inserted via @extend
+        'header-padding-sm': null, // actual calculated value inserted via @extend
+        'header-height-sm': null  // actual calculated value inserted via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $table-cell-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $table-cell-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $table-header-cell-padding: get($table-cell-config, 'padding');
+        $table-header-cell-line-height: $line-height-base-px / get($table-cell-config, 'header-font-size');
+        $table-cell-height: $line-height-base-px + (get($table-cell-config, 'padding') * 2);
+        $table-header-cell-height: $table-cell-height;
+        $table-sm-cell-height: $line-height-base-px + (get($table-cell-config, 'padding-sm') * 2);
+        $table-sm-header-cell-padding: get($table-cell-config, 'padding-sm');
+        $table-sm-header-cell-height: $table-sm-cell-height;
+
+        // ----- EXTEND cell config with calc'd values ----- //
+        $table-cell-config: extend($table-cell-config,
+            (
+                'height': $table-cell-height,
+                'header-padding': $table-header-cell-padding,
+                'header-line-height': $table-header-cell-line-height,
+                'header-height': $table-header-cell-height,
+                'height-sm': $table-sm-cell-height,
+                'header-padding-sm': $table-sm-header-cell-padding,
+                'header-height-sm': $table-sm-header-cell-height
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   COMPONENT VARIATIONS
+//
+// ********************************************************
+    ///
+    /// Collection of configs used for the headers of a `.table-sortable` table component variation.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @link http://bit.ly/webskin-tables-sortable Sortable table component spec
+    /// ---
+    /// @requires {function} get
+    /// @requires {variable} $zc-green
+    /// @requires {variable} $table-cell-config
+    /// ---
+    /// @prop {Color}  text-hover           [#66cc00]   - Text color of sortable table header cell when hovered.
+    /// @prop {Color}  text-sorted          [#66cc00]   - Text color of sortable table header cell to indicate it is the active sorted column.
+    /// @prop {Color}  caret-color          [#8a8a8a]   - Color of nested `.caret` elem within the sortable table header cell.
+    /// @prop {Color}  caret-color-hover    [#66cc00]   - Color of nested `.caret` elem within a hovered sortable table header cell.
+    /// @prop {Color}  caret-color-sorted   [#66cc00]   - Color of nested `.caret` elem within the active sorted column header cell.
+    /// @prop {Number} caret-alpha          [0]         - Alpha transparency value of nested `.caret` elem within an inactive sortable column header cell.
+    /// @prop {Number} caret-alpha-hover    [1]         - Alpha transparency value of nested `.caret` elem within a hovered inactive sortable column header cell.
+    /// @prop {Number} caret-alpha-sorted   [1]         - Alpha transparency value of nested `.caret` elem within the active sorted column header cell.
+    ///
+    $table-sortable-header-config: (
+        'text-hover':  $zc-green,
+        'text-sorted': $zc-green,
+        'caret-color': get($table-cell-config, 'header-text-color'),
+        'caret-color-hover': $zc-green,
+        'caret-color-sorted': $zc-green,
+        'caret-alpha': 0,
+        'caret-alpha-hover':  1,
+        'caret-alpha-sorted': 1
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   ROW STATE COLOR VARIATIONS
+//
+// ********************************************************
+    ///
+    /// Colors used to indicate an application state within a `.table` component row.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @todo Write unit test asserting these hex color values
+    /// @link http://bit.ly/webskin-tables-row-state Table Row State Colors Spec
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {function} extend
+    /// @requires {variable} $component-state-alt-bg
+    /// @requires {variable} $component-state-alt-bg-hover
+    /// @requires {variable} $component-state-alt-bd
+    /// @requires {variable} $component-state-success-bg
+    /// @requires {variable} $component-state-success-bg-hover
+    /// @requires {variable} $component-state-success-bd
+    /// @requires {variable} $component-state-warning-bg
+    /// @requires {variable} $component-state-warning-bg-hover
+    /// @requires {variable} $component-state-warning-bd
+    /// @requires {variable} $component-state-danger-bg
+    /// @requires {variable} $component-state-danger-bg-hover
+    /// @requires {variable} $component-state-danger-bd
+    /// @requires {variable} $table-config
+    /// @requires {variable} $elem-hover-bg-darken-amount-default
+    /// ---
+    /// @prop {Map} alt
+    /// @prop {Color} alt.bg         [#ebf7ff] - Background color of cells within `<tr class="row-alt">`
+    /// @prop {Color} alt.bg-hover   [#d6eeff] - Background color of cells within a hovered `<tr class="row-alt">`
+    /// @prop {Color} alt.bd         [#e3e3e3] - Border color of cells within `<tr class="row-alt">`
+    ///
+    /// @prop {Map} success
+    /// @prop {Color} success.bg        [#f6fcf0] - Background color of cells within `<tr class="row-success">`
+    /// @prop {Color} success.bg-hover  [#e7f3e0] - Background color of cells within a hovered `<tr class="row-success">`
+    /// @prop {Color} success.bd        [#e3e3e3] - Border color of cells within `<tr class="row-success">`
+    ///
+    /// @prop {Map} warning
+    /// @prop {Color} warning.bg        [#fffaf1] - Background color of cells within `<tr class="row-warning">`
+    /// @prop {Color} warning.bg-hover  [#fff5e3] - Background color of cells within a hovered `<tr class="row-warning">`
+    /// @prop {Color} warning.bd        [#e3e3e3] - Border color of cells within `<tr class="row-warning">`
+    ///
+    /// @prop {Map} danger
+    /// @prop {Color} danger.bg         [#fef2f2] - Background color of cells within `<tr class="row-danger">`
+    /// @prop {Color} danger.bg-hover   [#fde5e5] - Background color of cells within a hovered `<tr class="row-danger">`
+    /// @prop {Color} danger.bd         [#e3e3e3] - Border color of cells within `<tr class="row-danger">`
+    ///
+    $table-row-states: (
+        'alt': (
+            'bg': $component-state-alt-bg,
+            'bg-hover': $component-state-alt-bg-hover,
+            'bd': get($table-config, 'bd-color')
+        ),
+        'success': (
+            'bg': $component-state-success-bg,
+            'bg-hover': $component-state-success-bg-hover,
+            'bd': get($table-config, 'bd-color')
+        ),
+        'warning': (
+            'bg': $component-state-warning-bg,
+            'bg-hover': $component-state-warning-bg-hover,
+            'bd': get($table-config, 'bd-color')
+        ),
+        'danger': (
+            'bg': $component-state-danger-bg,
+            'bg-hover': $component-state-danger-bg-hover,
+            'bd': get($table-config, 'bd-color')
+        )
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED CONFIG ALIASES
+//
+//   -> DO NOT MODIFY THESE! (Modify the config map value)
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   MISC SIZES / PROPERTIES
+    // ----------------------------------------------------
+        $table-font-family: get($table-config, 'font-family');
+        $table-bd-width: get($table-config, 'bd-width');
+        $table-margin-bottom: get($table-config, 'margin-bottom');
+        $table-transition-properties: get($table-config, 'transition-properties');
+        $table-transition-speed: get($table-config, 'transition-speed');
+        //
+        $table-cell-padding: get($table-cell-config, 'padding');
+        $table-sm-cell-padding: get($table-cell-config, 'padding-sm');
+
+
+    // ----------------------------------------------------
+    //   BASE COLORS
+    // ----------------------------------------------------
+        $table-bg: get($table-config, 'bg');
+        $table-bd-color: get($table-config, 'bd-color');
+
+        $table-cell-bg-hover: get($table-cell-config, 'bg-hover');
+        $table-cell-bg-press: get($table-cell-config, 'bg-press');
+        $table-cell-bg-active: get($table-cell-config, 'bg-active');
+        $table-cell-color: get($table-cell-config, 'text-color');
+        $table-cell-color-hover: get($table-cell-config, 'text-color-hover');
+        $table-cell-color-press: get($table-cell-config, 'text-color-press');
+        $table-cell-color-active: get($table-cell-config, 'text-color-active');
+
+        $table-cell-bg-accent: get($table-cell-config, 'bg-accent'); // must be slightly lighter than $table-bd-color
+        $table-cell-bg-accent-darkness: lightness($body-bg) - lightness($table-cell-bg-accent);
+
+        $table-header-bd-color: get($table-cell-config, 'header-bd-bottom-color');
+        $table-header-color: get($table-cell-config, 'header-text-color');
+
+        $table-caption-bg: get($table-config, 'caption-bg');
+        $table-caption-bd: inherit; // inherit border color from table it is nested within
+
+
+    // ----------------------------------------------------
+    //   SORTABLE HEADER CONFIG
+    // ----------------------------------------------------
+        $table-sortable-header-color-hover: get($table-sortable-header-config, 'text-hover');
+        $table-sortable-header-color-sorted: get($table-sortable-header-config, 'text-sorted');
+
+        $table-sortable-caret-color: get($table-sortable-header-config, 'caret-color');
+        $table-sortable-caret-color-hover: get($table-sortable-header-config, 'caret-color-hover');
+        $table-sortable-caret-color-sorted: get($table-sortable-header-config, 'caret-color-sorted');
+
+        $table-sortable-caret-alpha: get($table-sortable-header-config, 'caret-alpha');
+        $table-sortable-caret-alpha-hover: get($table-sortable-header-config, 'caret-alpha-hover');
+        $table-sortable-caret-alpha-sorted: get($table-sortable-header-config, 'caret-alpha-sorted');
+

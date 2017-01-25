@@ -1,0 +1,76 @@
+// ********************************************************
+//
+//   NUMBER FORM CONTROL SHIM STYLE MODULE
+//   http://bit.ly/webskin-form-controls-number
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/forms/form-number';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $forms-number-module-config:  'core/components/atoms/forms/forms-config';
+    $forms-number-module-helpers: 'core/components/atoms/forms/forms-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $forms-number-module-config,
+                                          $forms-number-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   COMBO BOX SPIN BUTTONS
+//
+//   All the overly-specific selectors are deemed necessary
+//   at this time barring a complete refactor.
+//
+// ********************************************************
+    .input-group-btn.number-spin-btn-container {
+        width: to-rem(get-deep($form-control-config, 'height.sm'));
+        height: to-rem(get-deep($form-control-config, 'height.base'));
+    }
+
+    .btn.number-spin-btn {
+        padding: 0 !important;
+        @include border-left-radius(0 !important);
+    }
+
+    .number-spin-btn-container .btn.number-spin-btn {
+        $form-control-radius: to-rem(get-deep($form-control-config, 'bd-radius.base'));
+
+        &.number-spin-btn-up {
+            // Match the radius of the input, not the xs button
+            @include border-top-right-radius($form-control-radius !important);
+        }
+
+        &.number-spin-btn-down {
+            // Match the radius of the input, not the xs button
+            @include border-bottom-right-radius($form-control-radius !important);
+        }
+
+        .caret {
+            margin-top: to-rem(input-number-caret-margin()) !important;
+            margin-left: 0 !important;
+        }
+    }
+
+    .btn.number-spin-btn-up {
+        @include border-bottom-right-radius(0 !important);
+    }
+
+    .btn.number-spin-btn-down {
+        @include border-top-right-radius(0 !important);
+    }
+
+
+// ********************************************************
+//
+//   SIZE VARIATIONS
+//
+// ********************************************************
+@include input-number-size(xs);
+@include input-number-size(sm);
+@include input-number-size(lg);

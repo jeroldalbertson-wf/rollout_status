@@ -1,0 +1,129 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/navs/navbar';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+$docs-navbar-height-rem: to-rem($docs-navbar-height);
+
+// ----------------------------------------------------
+//   Adjust Docs Navbar Sizes
+// ----------------------------------------------------
+.ws-navbar {
+    // keep it above all other examples in the documentation
+    z-index: $zindex-fixed-navbar-docs;
+    min-height: $docs-navbar-height-rem;
+    height: auto;
+    width: 100%;
+    margin-bottom: 0;
+    line-height: $line-height-base;
+    font-family: $font-family-base;
+    text-shadow: 0 -.1rem 0 rgba(0,0,0,.15);
+
+    .navbar-form {
+        text-shadow: none;
+    }
+
+    .navbar-brand {
+        // use the W symbol instead of full Wdesk logo
+        max-width: auto;
+    }
+
+    .navbar-brand,
+    .navbar-brand .brand-link {
+        font-size: $docs-section-font-size;
+        height: to-rem($docs-navbar-height - get($navbar-base-config, 'bd-width'));
+        max-height: to-rem($docs-navbar-height - get($navbar-base-config, 'bd-width'));
+        line-height: to-rem($docs-navbar-height + 13);
+
+        color: mix($docs-navbar-link-color, $docs-navbar-bg, 50%);
+        text-shadow: 0 .1rem 0 $docs-navbar-bd-color;
+    }
+
+    .navbar-brand .brand-link {
+        #{$link-hover-focus} {
+            color: $docs-navbar-link-color-active;
+        }
+    }
+
+    .navbar-brand .brand-logo {
+        margin-right: .6rem;
+        min-height: $docs-navbar-height-rem !important;
+
+        @include img-retina($file-1x: $docs-navbar-logo-url,
+                            $file-2x: '#{$wdesk-logo-dir}#{$docs-navbar-logo-name}_retina.png',
+                            // since the "W" symbol file doesn't have the extra
+                            // padding around the symbol, we'll need to fudge this a bit
+                            $container-height: $docs-navbar-height,
+                            $offset-vertical: 10);
+    }
+
+    .navbar-nav {
+        font-family: $font-family-base;
+        font-weight: 500;
+        min-height: $docs-navbar-height-rem;
+        height: auto;
+
+        > .nav-item > .hitarea {
+            border-color: transparent !important;
+        }
+
+        @include uncollapsed-navbar-mq {
+            > .nav-item > .hitarea {
+                height: $docs-navbar-height-rem;
+                line-height: $docs-navbar-height-rem;
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+        }
+    }
+
+    .navbar-toggle {
+        width: $docs-navbar-height-rem;
+        height: $docs-navbar-height-rem;
+    }
+
+    // Docs Options Nav (cog)
+    .docs-options-nav {
+        margin: 0;
+        position: absolute;
+        z-index: 1001; // keep below docs search results dd menu
+        top: 0;
+        right: to-rem($docs-navbar-block-nav-btn-width) !important;
+
+        @include uncollapsed-navbar-mq {
+            right: to-rem($docs-navbar-collapsed-block-nav-right-offset) !important;
+        }
+
+        > .nav-item {
+            &,
+            > .hitarea {
+                width: $docs-navbar-height-rem;
+                height: $docs-navbar-height-rem;
+            }
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   Adjust Docs Navbar Skin
+// ----------------------------------------------------
+.ws-navbar {
+    @include navbar-skin($base-config: $docs-navbar-base-config,
+                         $link-config: $docs-navbar-link-config,
+                         $block-link-config: $docs-navbar-block-link-config
+                        );
+
+    outline: 0;
+
+    .navbar-toggle {
+        &.active,
+        &[aria-expanded="true"] {
+            background-color: get($docs-navbar-link-config, 'bg-active') !important;
+        }
+    }
+}

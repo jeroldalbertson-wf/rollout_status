@@ -1,0 +1,506 @@
+// ********************************************************
+//
+//   MODAL DIALOG COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-modals
+//
+//   .modal-open    -> body class for killing the scroll
+//   .modal         -> container to scroll within
+//   .modal-dialog  -> positioning shell for the actual modal
+//   .modal-content -> actual modal w/ bg and corners and shit
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/dialogs/modals';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $dialogs-modals-module-config:  'core/components/atoms/dialogs/modals-config';
+    $dialogs-modals-module-helpers: 'core/components/atoms/dialogs/modals-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $dialogs-modals-module-config,
+                                          $dialogs-modals-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   COMPONENT UTILITY CLASSES
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   Kill the scroll on the `<body>`
+    // ----------------------------------------------------
+    .modal-open {
+        overflow: hidden;
+    }
+
+
+// ********************************************************
+//
+//   BASE MODAL DIALOG CLASSES
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   Container that the modal scrolls within
+    // ----------------------------------------------------
+    .modal {
+        overflow: hidden;
+        position: fixed;
+        z-index: z('modal');
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        //
+        // MSIE cannot bind to a click event unless the
+        // element has a bg color, or a bg image.
+        // @see https://github.com/WebFilings/web-skin/issues/635
+        //
+        background: image-url("invisible.gif") repeat;
+
+        // Kick in the scroll
+        .modal-open & {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+    }
+
+    // ----------------------------------------------------
+    //   Shell div to position modal with margins
+    // ----------------------------------------------------
+    .modal-dialog {
+        position: relative;
+        width: auto;
+        margin: to-rem($modal-dialog-offset-mobile);
+        border-radius: to-rem(get($modal-config, 'bd-radius'));
+
+        &.fade,
+        &.slide {
+            display: block;
+        }
+
+        &:focus {
+            @include remove-focus-outline($remove-box-shadow: false);
+        }
+    }
+
+    // ----------------------------------------------------
+    //   Acutal modal dialog
+    // ----------------------------------------------------
+    .modal-content {
+        @include background-clip(padding-box);
+
+        position: relative;
+        height: 100%; // Take up entire height of surrounding `.modal-dialog` automatically
+        background-color: get($modal-config, 'bg');
+        border: to-rem(get($modal-config, 'bd-width')) solid get($modal-config, 'bd-color');
+        border-radius: to-rem(get($modal-config, 'bd-radius'));
+        outline: 0; // Remove focus outline from opened modal
+
+        @if lightness(get($modal-config, 'bg')) >= $dialog-shadow-threshold {
+            box-shadow: #{get($modal-config, 'shadow')};
+        }
+    }
+
+    // ----------------------------------------------------
+    //   Modal backdrop
+    // ----------------------------------------------------
+    .modal-backdrop {
+        @include dialog-backdrop-default($bg: get($modal-config, 'backdrop-bg'));
+
+        z-index: z('modal-backdrop');
+
+        // Opacity for backdrop
+        @include opacity(0);
+
+        .in &,
+        &.in {
+            // Override default opacity of 1 for the global `.in` selector
+            @include opacity(get($modal-config, 'backdrop-alpha'));
+        }
+    }
+
+
+// ********************************************************
+//
+//   MODAL DIALOG CONTENT ELEMS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   HEADER
+    //   -> Top section of the modal w/ title and dismiss
+    //   -> Sibling of `.modal-body` and `.modal-footer`
+    // ----------------------------------------------------
+    .modal-header {
+        position: relative;
+        width: 100%;
+        padding-right: to-rem(get-deep($modal-config, 'base.header-padding-right'));
+        padding-left: to-rem(get-deep($modal-config, 'base.header-padding-left'));
+    }
+
+    // ----------------------------------------------------
+    //   CLOSE BUTTON
+    // ----------------------------------------------------
+    .modal-header .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 1; // ensure it is clickable even in callout modals where header padding may overlap
+        float: none;
+        padding: to-rem(get-deep($modal-config, 'base.close-btn-padding'));
+        font-size: to-rem(get-deep($modal-config, 'base.close-btn-font-size'));
+        line-height: to-rem(get-deep($modal-config, 'base.close-btn-line-height'));
+
+        @include windows-support {
+            line-height: to-rem(ceil(get($close-btn-config, 'line-height-windows') * get-deep($modal-config, 'base.close-btn-line-height')));
+        }
+    }
+
+    // ----------------------------------------------------
+    //   DIALOG TITLE
+    // ----------------------------------------------------
+    .modal-title {
+        @include truncate-text();
+
+        margin: 0;
+        padding: to-rem(get-deep($modal-config, 'base.title-padding-top') 0 get-deep($modal-config, 'base.title-padding-bottom'));
+        font-size: to-rem(get-deep($modal-config, 'base.header-font-size'));
+        font-weight: get-deep($modal-config, 'base.header-font-weight');
+        line-height: to-rem(get-deep($modal-config, 'base.header-line-height'));
+    }
+
+    // ----------------------------------------------------
+    //   BODY
+    //   -> Where all modal content resides
+    //   -> Sibling of `.modal-header` and `.modal-footer`
+    // ----------------------------------------------------
+    .modal-body {
+        position: relative;
+        padding: to-rem($modal-content-padding);
+
+        // Prevent duplicate spacing w/ `.modal-body` padding
+        p:last-child {
+            margin: 0;
+        }
+    }
+
+    // ----------------------------------------------------
+    //   OPTIONAL BODY WRAPPER
+    //   -> Optional wrapper (within `.modal-body`) used
+    //      to space out distinct, adjacent content areas
+    // ----------------------------------------------------
+    .modal-body-content {
+        padding: to-rem($modal-content-padding) 0;
+
+        // Prevent duplicate padding w/ `.modal-body`
+        &:first-child {
+            padding-top: 0;
+        }
+
+        &:last-child {
+            padding-bottom: 0;
+        }
+
+        &:only-child {
+            padding: 0;
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   DIALOG FOOTER
+    //   -> Where all modal actions reside
+    //   -> Sibling of `.modal-header` and `.modal-body`
+    // ----------------------------------------------------
+    .modal-footer {
+        @include clearfix(); // clear it in case folks use .pull-* classes on buttons
+
+        position: relative;
+        min-height: to-rem(get-deep($modal-config, 'base.footer-height'));
+        padding: to-rem(get-deep($modal-config, 'base.footer-padding'));
+        padding-top: 0;
+        text-align: right; // default action button alignment
+
+        // Vertically align paragraphs with action buttons within footers
+        p:first-child {
+            margin-top: .7rem;
+        }
+
+        // Properly space out buttons
+        .btn + .btn {
+            margin-left: to-rem($spacing-sm);
+        }
+
+        // but override that for button groups
+        .btn-group .btn + .btn {
+            margin-left: to-rem(get($btn-config, 'bd-width')) * -1;
+        }
+
+        // and override it for block buttons as well
+        .btn-block + .btn-block {
+            margin-left: 0;
+        }
+    }
+
+
+// ********************************************************
+//
+//   MODAL NOTIFICATION / ALERT CONTAINERS
+//
+// ********************************************************
+.modal-alert {
+    min-height: 0;
+    padding: 0;
+    margin-top: to-rem(round($modal-content-padding / 2));
+    margin-left: to-rem($modal-content-padding);
+    margin-right: to-rem($modal-content-padding);
+
+    .alert {
+        margin-bottom: 0;
+    }
+}
+
+
+// ********************************************************
+//
+//   DIALOG LOADING OVERLAYS
+//   -> Puts a white overlay over the top of an
+//      "advanced" modal while its loading
+//
+//   @todo add an example of this to the documentation
+//
+// ********************************************************
+    .modal-loading {
+        @include dialog-backdrop-default($position: absolute, $bg: rgba($white, .8), $fallback-bg: $white);
+        z-index: z('modal') + 1; // keep above modal contents
+        border-radius: to-rem(get($modal-config, 'bd-radius'));
+    }
+
+    .modal-loading-progress-wrapper {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        // horizontal centering
+        width: to-rem($progress-spinner-size-base);
+        // vertical centering
+        height: to-rem($progress-spinner-size-base);
+        margin-top: to-rem(round($progress-spinner-size-base / -2));
+        margin-left: to-rem(round($progress-spinner-size-base / -2));
+    }
+
+
+// ********************************************************
+//
+//   DIALOG "CALLOUT" CONTENT VARIATION
+//
+// ********************************************************
+.modal-callout {
+    .modal-header {
+        min-height: to-rem(get-deep($modal-config, 'base.header-min-height'));
+    }
+
+    // hide the .modal-title just in-case the implementer
+    // forgets to exclude it when using within a
+    // callout modal as instructed in the spec
+    .modal-title {
+        display: none;
+    }
+
+    // center all text in the body
+    .modal-body {
+        padding-top: 0;
+        text-align: center;
+    }
+
+    // container for optional callout icon / image
+    .modal-callout-image {
+        display: block;
+        // horizontal and vertical alignment
+        margin: to-rem($modal-callout-first-elem-margin-top) auto to-rem($modal-callout-image-margin-bottom) auto;
+        // since the callout image has a negative top margin
+        // that aligns it's top edge with the bottom edge of the
+        // .close element, we need to ensure that any image
+        // or images placed within this container never "touch"
+        // that .close element.
+        padding: 0 to-rem($modal-callout-first-elem-padding-horizontal);
+
+        .icon {
+            // dividing by 2 gives us a total amount of spacing
+            // of roughly $spacing-base between adjacent icons
+            margin-left: to-rem(ceil($spacing-base / 2));
+            margin-right: to-rem(ceil($spacing-base / 2));
+            vertical-align: middle;
+        }
+    }
+
+    // increase white-space around the heading within the callout body
+    // to provide correct amount of affordance for messaging
+    .modal-callout-heading {
+        // !important necessary to override .modal-body > .h4:first-child
+        margin-top: to-rem($modal-callout-first-elem-margin-top) !important;
+        margin-bottom: to-rem($modal-callout-header-margin-bottom);
+        padding: 0 to-rem($modal-callout-first-elem-padding-horizontal);
+        font-size: to-rem($modal-callout-header-font-size);
+    }
+
+    //
+    // Callout heading under a .modal-callout-image
+    //
+    // This means that the heading is not the first element
+    // and is not at risk of intersecting with the close
+    // button in the header
+    //
+    .modal-callout-image + .modal-callout-heading {
+        // !important necessary to override .modal-body > .h4:first-child
+        margin-top: 0 !important;
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+
+// ********************************************************
+//
+//   DIALOG SIZE VARIATIONS
+//
+// ********************************************************
+    .modal-sm {
+        // Top section of the modal w/ title and dismiss
+        .modal-header {
+            padding-right: to-rem(get-deep($modal-config, 'sm.header-padding-right'));
+            padding-left: to-rem(get-deep($modal-config, 'sm.header-padding-left'));
+        }
+
+        // Title text within header
+        .modal-title {
+            padding: to-rem(get-deep($modal-config, 'sm.title-padding-top') 0 to-rem(get-deep($modal-config, 'sm.title-padding-bottom')));
+            font-size: to-rem(get-deep($modal-config, 'sm.header-font-size'));
+            font-weight: get-deep($modal-config, 'sm.header-font-weight');
+            line-height: to-rem(get-deep($modal-config, 'sm.header-line-height'));
+        }
+
+        // Close icon
+        .modal-header .close {
+            // need the double padding on the left side to keep the hitarea square
+            padding: to-rem(get-deep($modal-config, 'sm.close-btn-padding'));
+            font-size: to-rem(get-deep($modal-config, 'sm.close-btn-font-size'));
+            line-height: to-rem(get-deep($modal-config, 'sm.close-btn-line-height'));
+
+            @include windows-support {
+                line-height: to-rem(ceil(get($close-btn-config, 'line-height-windows') * get-deep($modal-config, 'sm.close-btn-line-height')));
+            }
+        }
+
+        .modal-body {
+            padding: to-rem($modal-sm-content-padding);
+        }
+
+        .modal-body-content {
+            padding: to-rem($modal-sm-content-padding) 0;
+
+            // Prevent duplicate padding w/ `.modal-sm .modal-body`
+            // Necessary to override specificity of `.modal-sm .modal-body-content`
+            &:first-child {
+                padding-top: 0;
+            }
+
+            &:last-child {
+                padding-bottom: 0;
+            }
+
+            &:only-child {
+                padding: 0;
+            }
+        }
+
+        .modal-footer {
+            min-height: to-rem(get-deep($modal-config, 'sm.footer-height'));
+            padding: to-rem(get-deep($modal-config, 'sm.footer-padding'));
+        }
+    }
+
+    // ----------------------------------------------------
+    //   SMALL SIZE VARIATION + "CALLOUT" VARIATION
+    // ----------------------------------------------------
+    .modal-sm.modal-callout {
+        .modal-header {
+            min-height: to-rem(get-deep($modal-config, 'sm.header-min-height'));
+        }
+
+        .modal-callout-image {
+            margin-top: to-rem($modal-sm-callout-first-elem-margin-top);
+            margin-bottom: to-rem($modal-sm-callout-image-margin-bottom);
+            padding: 0 to-rem($modal-sm-callout-first-elem-padding-horizontal);
+        }
+
+        .modal-callout-heading {
+            margin-top: to-rem($modal-sm-callout-first-elem-margin-top);
+            margin-bottom: to-rem($modal-sm-callout-header-margin-bottom);
+            // since the callout heading has a negative top margin
+            // that aligns it's top edge with the bottom edge of the
+            // .close element, we need to ensure that any heading
+            // never "touch" that .close element.
+            padding: 0 to-rem($modal-sm-callout-first-elem-padding-horizontal);
+            font-size: to-rem($modal-sm-callout-header-font-size);
+        }
+    }
+
+
+// ********************************************************
+//
+//   RESPONSIVE DIALOG WIDTH / PLACEMENT
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   ABOVE SMALL VIEWPORT WIDTH
+    // ----------------------------------------------------
+    @include respond-to('screen-sm and up') {
+        // ----- DEFAULT DIALOG WIDTH ----- //
+        .modal-dialog {
+            width: to-rem($modal-dialog-width);
+            margin-top: to-rem($modal-dialog-offset-base);
+            margin-bottom: to-rem($modal-dialog-offset-base);
+            margin-left: to-rem(round($modal-dialog-width / -2));
+            left: 50%;
+        }
+
+        // ----- SMALL DIALOG WIDTH ----- //
+        .modal-sm .modal-dialog {
+            width: to-rem($modal-dialog-sm-width);
+            margin-left: to-rem(round($modal-dialog-sm-width / -2));
+        }
+
+        // ----- SESSION TIMEOUT DIALOG VALIGN ----- //
+        .session-timeout-dialog .modal-dialog {
+            @include align-modal-center($content-height: $modal-session-timeout-height, $footer: true);
+        }
+    }
+
+    // ------------------------------------------------
+    //   ABOVE MEDIUM VIEWPORT WIDTH
+    // ------------------------------------------------
+    @include respond-to('screen-md and up') {
+        // ----- LARGE DIALOG WIDTH ----- //
+        .modal-lg .modal-dialog {
+            width: to-rem($modal-dialog-lg-width);
+            margin-left: to-rem(round($modal-dialog-lg-width / -2));
+        }
+    }
+
+
+// ********************************************************
+//
+//  SESSION TIMEOUT DIALOG LEGEND BORDER OVERRIDE
+//
+//  -> TODO: Address global .sub-legend styles (should the
+//           class be placed on the `<legend>` instead of
+//           within it?).
+//
+// ********************************************************
+    .session-timeout-dialog legend {
+        border: 0;
+    }

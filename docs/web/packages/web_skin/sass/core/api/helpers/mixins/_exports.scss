@@ -1,0 +1,38 @@
+// ********************************************************
+//
+$module: 'core/api/helpers/mixins/exports';
+//
+//   Helper mixin / var to manage
+//   encapsulated module imports
+//
+// ********************************************************
+
+
+///
+/// @access private
+/// @group core.internals.utils
+/// @ignore List of imported modules that is continually
+/// @ignore updated / checked by the exports mixin
+/// @ignore @type List
+/// @ignore @since 1.0.0
+/// @ignore @see {mixin} exports
+///
+$modules: () !global !default;
+
+
+///
+/// @access private
+/// @group core.internals.utils
+/// @ignore Prevent duplicate styles from being generated when a single Sass partial is imported more than once, allowing every Sass module to declare its own dependencies, promoting encapulation and allows modules to standalone if need be.
+/// @ignore @since 1.0.0
+/// @ignore @todo Write unit tests
+/// @ignore @requires {variable} $modules
+/// @ignore @param {String} $name
+///
+@mixin exports($name) {
+    @if (not index($modules, $name)) {
+        $modules: append($modules, $name) !global;
+
+        @content;
+    }
+}

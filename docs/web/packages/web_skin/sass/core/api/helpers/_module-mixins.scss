@@ -1,0 +1,36 @@
+// ********************************************************
+//
+    $module: 'core/api/helpers/mixins';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+//
+// DEPRECATED MIXIN WARNING MESSAGES HELPERS
+//
+@mixin deprecated-mixin($deprecated-name, $deprecated-in: '1.0.0', $use-instead: false) {
+    $use-instead-message: if($use-instead != false, '. Use `#{$use-instead}` instead.', '.');
+    @warn "The Web Skin `#{$deprecated-name}` mixin was deprecated in the `#{$deprecated-in}` release, and will be removed completely in an upcoming release#{$use-instead-message}";
+}
+
+@mixin removed-mixin($removed-name, $deprecated-in: false, $removed-in: '1.0.0', $use-instead: false) {
+    $use-instead-message: if($use-instead != false, '. Use `#{$use-instead}` instead.', '.');
+    $deprecated-message: if($deprecated-in != false, 'was deprecated in the `#{$deprecated-in}` release, and was ', 'was');
+    @error "The Web Skin `#{$removed-name}` mixin #{$deprecated-message} removed in the `#{$removed-in}` release#{$use-instead-message}";
+}
+
+
+//
+// MIXIN MODULE IMPORTS
+//
+@import "mixins/browsers";
+@import "mixins/os";
+@import "mixins/breakpoints";
+@import "mixins/css3";
+@import "mixins/calculation";
+@import "mixins/typography";
+@import "mixins/display";
+@import "mixins/visibility";
+@import "mixins/images";
+@import "mixins/alignment";
+@import "mixins/spacing";

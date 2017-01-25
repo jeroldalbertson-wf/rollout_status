@@ -1,0 +1,808 @@
+// ----------------------------------------------------
+
+//+  PARTIAL:  _deprecated/_constants/_mixins.scss
+//+  PARENT:   _deprecated/_manifest.scss
+
+// NOTE: DO NOT USE THESE!!! They were deprecated in `1.0.0` will be removed no later than `2.0.0`
+// TODO: Remove no later than `2.0.0`
+
+// ----------------------------------------------------
+
+
+//
+// GLOBAL UTILITIES
+//
+    @mixin blockCenter {
+        @include deprecated-mixin('blockCenter', $use-instead: 'block-center');
+        @include block-center();
+    }
+    @mixin imgResponsive($display: block) {
+        @include deprecated-mixin('imgResponsive', $use-instead: 'img-responsive');
+        @include img-responsive($display);
+    }
+    @mixin buttonReset {
+        @include deprecated-mixin('buttonReset', $use-instead: 'button-normalize');
+        @include button-normalize();
+    }
+    @mixin scrollbarCompensation($existing-pad: 0) {
+        @include deprecated-mixin('scrollbarCompensation', $use-instead: 'scrollbar-compensation');
+        @include scrollbar-compensation($existing-pad);
+    }
+    @mixin textOverflow($symbol: ellipsis, $allow-wrap: false) {
+        @include deprecated-mixin('textOverflow', $use-instead: 'truncate-text');
+        @include truncate-text($symbol, $allow-wrap);
+    }
+    @mixin tableCellWidth($width) {
+        @include deprecated-mixin('tableCellWidth', $use-instead: 'table-cell-width');
+        @include table-cell-width($width);
+    }
+    @mixin hideTableCell {
+        @include deprecated-mixin('hideTableCell', $use-instead: 'hide-table-cell');
+        @include hide-table-cell();
+    }
+    @mixin overlay($pos: fixed, $top: 0, $right: 0, $bottom: 0, $left: 0, $zindex: z('modal-backdrop'), $scrollable: false) {
+        @include deprecated-mixin('overlay');
+
+        position: $pos;
+        top: $top;
+        right: $right;
+        bottom: $bottom;
+        left: $left;
+        z-index: $zindex;
+        overflow: if($scrollable == false, hidden, auto);
+    }
+    @mixin tabFocus {
+        @include deprecated-mixin('tabFocus', $use-instead: 'focus-outline');
+        @include focus-outline();
+    }
+    @mixin responsiveVisibility($parent) {
+        @include deprecated-mixin('responsiveVisibility', $use-instead: 'responsive-visibility');
+        @include responsive-visibility($parent);
+    }
+    @mixin responsiveInvisibility($parent) {
+        @include deprecated-mixin('responsiveInvisibility', $use-instead: 'responsive-invisibility');
+        @include responsive-invisibility($parent);
+    }
+    @mixin wdeskFontFace($font-face-name, $font-face, $weight: false, $style: false) {
+        @include deprecated-mixin('wdeskFontFace', $use-instead: 'ws-font-face');
+        @include ws-font-face($font-face-name, $font-face, $weight, $style);
+    }
+    @mixin disableTapHighlight {
+        @include deprecated-mixin('disableTapHighlight', $use-instead: 'disable-tap-highlight');
+        @include disable-tap-highlight();
+    }
+    @mixin disableUserSelect {
+        @include deprecated-mixin('disableUserSelect', $use-instead: 'disable-user-select');
+        @include disable-user-select();
+    }
+    @mixin enableUserSelect($el: text) {
+        @include deprecated-mixin('enableUserSelect', $use-instead: 'enable-user-select');
+        @include enable-user-select($el);
+    }
+    @mixin _rotateKeyframes($prefix, $direction: right) {
+        @include deprecated-mixin('_rotateKeyframes', $use-instead: 'rotate-keyframes');
+        @include rotate-keyframes($prefix, $direction);
+    }
+    @mixin slideDown($height, $speed: .3s, $delay: 0s) {
+        @include deprecated-mixin('slideDown', $use-instead: 'slide(down)');
+        @include slide(down, $start: $height, $speed: $speed, $delay: $delay);
+    }
+    @mixin slideUp($height, $speed: .3s, $delay: 0s) {
+        @include deprecated-mixin('slideUp', $use-instead: 'slide(up)');
+        @include slide(up, $start: $height, $speed: $speed, $delay: $delay);
+    }
+    @mixin slideLeft($height, $speed: .3s, $delay: 0s) {
+        @include deprecated-mixin('slideLeft', $use-instead: 'slide(left)');
+        @include slide(left, $start: $height, $speed: $speed, $delay: $delay);
+    }
+    @mixin slideRight($height, $speed: .3s, $delay: 0s) {
+        @include deprecated-mixin('slideRight', $use-instead: 'slide(right)');
+        @include slide(right, $start: $height, $speed: $speed, $delay: $delay);
+    }
+    @mixin fadeTimer($duration-out, $delay-out: 0s, $duration-in: false, $delay-in: false) {
+        @include deprecated-mixin('fadeTimer', $use-instead: 'fade-timer');
+        @include fade-timer($duration-out, $delay-out, $duration-in, $delay-in);
+    }
+    @mixin filter-gradient($start-color, $end-color, $orientation: vertical, $important: false) {
+        @include deprecated-mixin('filter-gradient');
+
+        $gradient-type: if($orientation == vertical, 0, 1);
+        $important: if($important == false, "", "!important");
+        $filter: unquote("progid:DXImageTransform.Microsoft.gradient(gradientType=#{$gradient-type}, startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}')");
+        @if $filter-gradient-support {
+            @include has-layout();
+
+            @if $ie-support and $min-ie-supported < 10 {
+                // IE8+9
+                -ms-filter: $filter unquote($important);
+            }
+        }
+    }
+    @mixin ltie10 {
+        @include deprecated-mixin('ltie10', $use-instead: 'ie-support("<10")');
+        @include ie-support('<10') {
+            @content;
+        }
+    }
+    @mixin ltie9 {
+        @include deprecated-mixin('ltie9', $use-instead: 'ie-support("<9")');
+        @include ie-support('<9') {
+            @content;
+        }
+    }
+    @mixin ie($ver: all, $append: true) {
+        @if $ie-support {
+            @include deprecated-mixin('ie', $use-instead: 'ie-support');
+            @include ie-support($ver, $append) {
+                @content;
+            }
+        }
+    }
+    @mixin firefox($ver: all, $append: true) {
+        @if $firefox-support {
+            @include deprecated-mixin('firefox', $use-instead: 'firefox-support');
+            @include firefox-support($ver, $append) {
+                @content;
+            }
+        }
+    }
+    @mixin opera($ver: all, $append: true) {
+        @if $opera-support {
+            @include deprecated-mixin('opera', $use-instead: 'opera-support');
+            @include opera-support($ver, $append) {
+                @content;
+            }
+        }
+    }
+    @mixin safari($ver: all, $append: true) {
+        @if $safari-support {
+            @include deprecated-mixin('safari', $use-instead: 'safari-support');
+            @include safari-support($ver, $append) {
+                @content;
+            }
+        }
+    }
+    @mixin chrome($ver: all, $append: true) {
+        @if $chrome-support {
+            @include deprecated-mixin('chrome', $use-instead: 'chrome-support');
+            @include chrome-support($ver, $append) {
+                @content;
+            }
+        }
+    }
+    @mixin webkit($append: true) {
+        @if $webkit-support {
+            @include deprecated-mixin('webkit', $use-instead: 'webkit-support');
+            @include webkit-support($append) {
+                @content;
+            }
+        }
+    }
+    @mixin mac($ver: all, $append: true) {
+        @if $macosx-support {
+            @include deprecated-mixin('mac', $use-instead: 'macosx-support');
+            @include macosx-support($ver, $append) {
+                @content;
+            }
+        }
+    }
+    @mixin windows($ver: all, $append: true) {
+        @if $win-support {
+            @include deprecated-mixin('windows', $use-instead: 'windows-support');
+            @include windows-support($ver, $append) {
+                @content;
+            }
+        }
+    }
+    @mixin ios($ver: all, $append: true) {
+        @if $ios-support {
+            @include deprecated-mixin('ios', $use-instead: 'ios-support');
+            @include ios-support($ver, $append) {
+                @content;
+            }
+        }
+    }
+    @mixin android($ver: all, $append: true) {
+        @if $droid-support {
+            @include deprecated-mixin('android', $use-instead: 'android-support');
+            @include android-support($ver, $append) {
+                @content;
+            }
+        }
+    }
+    @mixin ie7-inline-block {
+        @warn "Web Skin no longer support MSIE 7 as of the `1.0.0` release, and this mixin (`ie7-inline-block()`) will be removed completely in a future release.";
+        @if $ie-support and $min-ie-supported < 8 {
+            *display: inline;
+            *zoom: 1;
+        }
+    }
+    @mixin ie7-restore-left-whitespace {
+        @warn "Web Skin no longer support MSIE 7 as of the `1.0.0` release, and this mixin (`ie7-restore-left-whitespace()`) will be removed completely in a future release.";
+        @if $ie-support and $min-ie-supported < 8 {
+            *margin-left: .3em;
+
+            &:first-child {
+                *margin-left: 0;
+            }
+        }
+    }
+    @mixin ie7-restore-right-whitespace {
+        @warn "Web Skin no longer support MSIE 7 as of the `1.0.0` release, and this mixin (`ie7-restore-right-whitespace()`) will be removed completely in a future release.";
+        @if $ie-support and $min-ie-supported < 8 {
+            *margin-right: .3em;
+        }
+    }
+    @mixin crispImages {
+        @include deprecated-mixin('crispImages', $use-instead: 'crisp-images');
+        @include crisp-images();
+    }
+    @mixin hideText {
+        @include deprecated-mixin('hideText', $use-instead: 'hide-text');
+        @include hide-text();
+    }
+    @mixin bgImagePreventClip {
+        @include deprecated-mixin('bgImagePreventClip', $use-instead: 'prevent-bg-image-clip');
+        @include prevent-bg-image-clip();
+    }
+    @mixin bgImageAlignment($valign, $halign, $final-height, $final-width) {
+        @include deprecated-mixin('bgImageAlignment', $use-instead: 'align-bg-image');
+        @include align-bg-image($valign, $halign, $final-height, $final-width);
+    }
+    @mixin bgImage($name, $mime: "png", $suffix: "_retina", $dir: "", $valign: false, $halign: false, $child-attrs: false, $v-pad: 0, $h-pad: 0, $img-src: true) {
+        @include deprecated-mixin('bgImage', $use-instead: 'img-retina');
+
+        $img:     #{$dir}#{$name};
+        $file-1x: '#{$img}.#{$mime}';
+        $file-2x: '#{$img}#{$suffix}.#{$mime}';
+
+        @include img-retina($file-1x, $file-2x, $container-height: $valign, $container-width: $halign);
+    }
+    @mixin centeredDialog($modal-cnt-height: 250px, $width: get-deep($modal-config, 'base.width'), $footer: true, $content-class: '.modal-body') {
+        @include deprecated-mixin('centeredDialog', $use-instead: 'align-modal-center');
+        @include align-modal-center($modal-cnt-height, $width, $footer);
+    }
+    @mixin containedModalActions($actions-width: 100px) {
+        @include deprecated-mixin('containedModalActions', $use-instead: 'align-contained-modal-actions');
+        @include align-contained-modal-actions($actions-width);
+    }
+    @mixin dialogArrow($size, $direction, $dialog-bd-width: $dialog-bd-width, $radius: $dialog-bd-radius) {
+        @include deprecated-mixin('dialogArrow', $use-instead: 'dialog-arrow');
+        @include dialog-arrow($size, $direction, $dialog-bd-width, $radius);
+    }
+    @mixin tooltip-variation($bg-color) {
+        @include deprecated-mixin('tooltip-variation', $use-instead: 'popover-tooltip-skin');
+        @include popover-tooltip-skin($bg-color);
+    }
+    @mixin dropdownMenuSize($size, $min-width, $padding-vertical, $padding-horizontal, $border-radius) {
+        @include deprecated-mixin('dropdownMenuSize', $use-instead: 'dropdown-menu-size');
+
+        $size-config: null;
+        @if $size == 'md' {
+            $size-config: $dropdown-menu-size-config-md;
+        }
+        @if $size == 'lg' {
+            $size-config: $dropdown-menu-size-config-lg;
+        }
+
+        @include dropdown-menu-size($size-config);
+    }
+    @mixin dropdownMenuItemSize {
+        @include removed-mixin('dropdownMenuItemSize', $use-instead: 'dropdown-menu-size');
+    }
+    @mixin dropdownMenuItemHeaderPadding($padding-vertical, $padding-horizontal, $icon-margin) {
+        @include removed-mixin('dropdownMenuItemHeaderPadding', $use-instead: 'dropdown-menu-size');
+    }
+    @mixin dropdownMenuItemHoverDefault {
+        @include menuVerticalItemHoverDefault();
+    }
+    @mixin dropdownMenuItemPressDefault {
+        @include menuVerticalItemPressDefault();
+    }
+    @mixin dropdownMenuItemChecked($padding-horizontal) {
+        @include deprecated-mixin('dropdownMenuItemChecked', $use-instead: 'dropdown-menu-link-checked');
+        @include dropdown-menu-link-checked();
+    }
+    @mixin inputFocusDefault($bd-color: get-deep($form-control-config, 'colors.bd-focus'), $color: get-deep($form-control-config, 'colors.text-focus'), $bd-width: get($form-control-config, 'bd-width'), $inset-shadow: $form-control-inset-shadow, $select-elem: false) {
+        @include deprecated-mixin('inputFocusDefault', $use-instead: 'form-control-focus');
+        @include form-control-focus($bd-color, $color);
+    }
+    @mixin inputScaffolding {
+        @include deprecated-mixin('inputScaffolding', $use-instead: 'form-control-base');
+        @include form-control-base();
+    }
+    @mixin inputScaffoldingSmall {
+        @include removed-mixin('inputScaffoldingSmall', $deprecated-in: '0.3.2', $removed-in: '1.0.0', $use-instead: 'input-size(sm)');
+        @include input-size(sm);
+    }
+    @mixin inputScaffoldingXsmall {
+        @include removed-mixin('inputScaffoldingXsmall', $deprecated-in: '0.3.2', $removed-in: '1.0.0', $use-instead: 'input-size(xs)');
+        @include input-size(xs);
+    }
+    @mixin inputScaffoldingLarge {
+        @include removed-mixin('inputScaffoldingXsmall', $deprecated-in: '0.3.2', $removed-in: '1.0.0', $use-instead: 'input-size(lg)');
+        @include input-size(lg);
+    }
+    @mixin inputSize($class, $input-height, $padding-vertical, $padding-horizontal, $font-size, $line-height, $border-radius, $nested: false) {
+        @include deprecated-mixin('inputSize', $use-instead: 'form-control-size');
+        @include form-control-size($class);
+    }
+    @mixin inputGroupSize($class, $input-height, $padding-vertical, $padding-horizontal, $font-size, $line-height, $border-radius) {
+        @include deprecated-mixin('inputGroupSize', $use-instead: 'input-group-size');
+        @include input-group-size($class);
+    }
+    @mixin clearSearchBtn($input-height: get-deep($form-control-config, 'height.base'), $font-size: get($close-btn-config, 'font-size'), $input-bd-width: get($form-control-config, 'bd-width'), $input-bd-radius: get-deep($form-control-config, 'bd-radius.base'), $btn-paddingX: get-deep($btn-config, 'padding.base.horizontal'), $global: false) {
+        @include deprecated-mixin('clearSearchBtn', $use-instead: '@extend .input-group-search');
+        @extend .input-group-search;
+    }
+    @mixin formHorizontalWidths($label-width: $horizontal-component-offset, $col-offset: $horizontal-component-lbl-right-pad) {
+        @include deprecated-mixin('formHorizontalWidths');
+
+        > .control-label {
+            @include makeMdColumn(2);
+        }
+        > .controls {
+            @include makeMdColumn(10);
+        }
+    }
+    @mixin btnHoverDefault($override-active: false) {
+        @include deprecated-mixin('btnHoverDefault');
+
+        @if $override-active {
+            &,
+            #{$link-pressed} {
+        }
+
+        color: get($btn-colors-default, 'text-base');
+        background-color: lighten(get($btn-colors-default, 'bg-base'), 5%);
+
+        @if $override-active {
+            }
+        }
+    }
+    @mixin btnActiveDefault($revert: false) {
+        @include removed-mixin('btnActiveDefault');
+    }
+    @mixin btnDisabledDefault {
+        @include deprecated-mixin('btnDisabledDefault', $use-instead: 'btn-disabled');
+        @include btn-disabled();
+    }
+    @mixin btnScaffolding($global: false) {
+        @include removed-mixin('btnScaffolding', $deprecated-in: '0.3.2', $removed-in: '1.0.0');
+    }
+    @mixin btnScaffoldingSmall($global: false) {
+        @include removed-mixin('btnScaffoldingSmall', $deprecated-in: '0.3.2', $removed-in: '1.0.0', $use-instead: 'btn-size(sm)');
+        @include btn-size(sm);
+    }
+    @mixin btnScaffoldingXsmall($global: false) {
+        @include removed-mixin('btnScaffoldingXsmall', $deprecated-in: '0.3.2', $removed-in: '1.0.0', $use-instead: 'btn-size(xs)');
+        @include btn-size(xs);
+    }
+    @mixin btnScaffoldingLarge($global: false) {
+        @include removed-mixin('btnScaffoldingXsmall', $deprecated-in: '0.3.2', $removed-in: '1.0.0', $use-instead: 'btn-size(lg)');
+        @include btn-size(lg);
+    }
+    @mixin btnIconValign($btn-size-class, $btn-font-size) {
+        @include deprecated-mixin('btnIconValign', $use-instead: 'btn-icon-valign');
+        @include btn-symbol-valign();
+    }
+    @mixin btnSize($size, $padding-vertical, $padding-horizontal, $font-size, $line-height, $border-radius, $icon-margin: 0, $global: false) {
+        @include deprecated-mixin('btnSize', $use-instead: 'btn-size');
+        @include btn-size($size, $global);
+    }
+    @mixin btnVariant($state) {
+        @include deprecated-mixin('btnVariant', $use-instead: 'btn-skin');
+        @include btn-skin($state);
+    }
+    @mixin closeScaffolding {
+        @include deprecated-mixin('closeScaffolding', $use-instead: 'close-button-base');
+        @include close-button-base();
+    }
+    @mixin closeHoverDefault {
+        @include deprecated-mixin('closeHoverDefault', $use-instead: 'close-button-hover');
+        @include close-button-hover();
+    }
+    @mixin closePressDefault {
+        @include deprecated-mixin('closePressDefault', $use-instead: 'close-button-press');
+        @include close-button-press();
+    }
+    @mixin progressBarSize($size, $bar-height, $bar-radius, $lbl-font-size) {
+        @include deprecated-mixin('progressBarSize', $use-instead: 'progress-bar-size');
+        @include progress-bar-size($size);
+    }
+    @mixin checkboxSwitchWidth($default-text: "off", $checked-text: "on", $size-variation: false) {
+        @include deprecated-mixin('checkboxSwitchWidth', $use-instead: 'checkbox-switch-width');
+        @include checkbox-switch-width($default-text, $checked-text, $size-variation);
+    }
+    @mixin checkboxSwitchText($default-text: "off", $checked-text: "on", $size-variation: false) {
+        @include deprecated-mixin('checkboxSwitchText', $use-instead: 'checkbox-switch-text');
+        @include checkbox-switch-text($default-text, $checked-text, $size-variation);
+    }
+    @mixin placeholder($color: get-deep($form-control-config, 'colors.placeholder-text-base')) {
+        @include deprecated-mixin('placeholder', $use-instead: 'form-control-placeholder-text');
+        @include form-control-placeholder-text($color);
+    }
+    @mixin inputDisabledDefault {
+        @include deprecated-mixin('inputDisabledDefault', $use-instead: 'form-control-disabled');
+        @include form-control-disabled();
+    }
+    @mixin formFieldStateInputStyle($text-color: get-deep($form-control-config, 'colors.text-base'), $border-color: $input-border, $background-color: $input-background) {
+        @include deprecated-mixin('formFieldStateInputStyle', $use-instead: 'input-variant');
+
+        $state: 'success';
+        @if $text-color == $state-warning-text {
+            $state: 'warning';
+        }
+        @if $text-color == $state-danger-text {
+            $state: 'error';
+        }
+
+        @include input-variant($state: $state);
+    }
+    @mixin formFieldState($text-color: get-deep($form-control-config, 'colors.text-base'), $border-color: $input-border, $background-color: $input-background, $control-group: true) {
+        @include deprecated-mixin('formFieldState', $use-instead: 'form-group-variant');
+
+        @if $control-group == false {
+            @error "Mixin `form-group-variant` no longer supports `false` as a valid param value for `$control-group`.  Use `input-variant()` instead for styling single `.form-control` elements.";
+        }
+
+        $state: 'success';
+        @if $text-color == $state-warning-text {
+            $state: 'warning';
+        }
+        @if $text-color == $state-danger-text {
+            $state: 'error';
+        }
+
+        @include form-group-variant($state: $state);
+    }
+    @mixin menuVerticalItemHoverDefault {
+        @include deprecated-mixin('menuVerticalItemHoverDefault', $use-instead: 'secondary-nav-link-hover');
+        @include secondary-nav-link-hover();
+    }
+    @mixin menuVerticalItemPressDefault {
+        @include deprecated-mixin('menuVerticalItemPressDefault', $use-instead: 'secondary-nav-link-press');
+        @include secondary-nav-link-press();
+    }
+    @mixin linedListMenu {
+        @include removed-mixin('linedListMenu');
+    }
+    @mixin navbarBlockLinks($global: false, $navbar-height: get($navbar-base-config, 'height'), $navbar-bd-width: get($navbar-base-config, 'bd-width'), $nav-link-platform-bd-width: get($nav-link-config, 'platform-bd-width'), $nav-block-color-hover: get($nav-block-link-config, 'text-color-hover'), $nav-block-bg-hover: get($nav-block-link-config, 'bg-hover')) {
+        @include deprecated-mixin('navbarBlockLinks', $use-instead: 'navbar-link-block');
+        @include navbar-link-block($global, get($navbar-base-config, 'height'), $navbar-bd-width, get($nav-base-config, 'bd-width'), get($nav-link-config, 'platform-bd-width'), get($nav-block-link-config, 'text-color-hover'), get($nav-block-link-config, 'bg-hover'));
+    }
+    @mixin navPillItemDefault {
+        @include deprecated-mixin('navPillItemDefault', $use-instead: 'nav-pills-pill');
+        @include nav-pills-pill();
+    }
+    @mixin navPillItemHoverDefault {
+        @include deprecated-mixin('navPillItemHoverDefault', $use-instead: 'nav-pills-pill-hover');
+        @include nav-pills-pill-hover();
+    }
+    @mixin navPillItemPressDefault {
+        @include deprecated-mixin('navPillItemPressDefault', $use-instead: 'nav-pills-pill-press');
+        @include nav-pills-pill-press();
+    }
+    @mixin navPillItemActiveDefault {
+        @include deprecated-mixin('navPillItemActiveDefault', $use-instead: 'nav-pills-pill-active');
+        @include nav-pills-pill-active();
+    }
+    @mixin navPillItemDisabledDefault {
+        @include deprecated-mixin('navPillItemDisabledDefault', $use-instead: 'nav-pills-pill-disabled');
+        @include nav-pills-pill-disabled();
+    }
+    @mixin navLinksJustified {
+        @include deprecated-mixin('navLinksJustified', $use-instead: 'nav-item-justified');
+        @include nav-item-justified();
+    }
+    @mixin navTabsJustified {
+        @include deprecated-mixin('navTabsJustified', $use-instead: 'nav-tabs-tab-justified');
+        @include nav-tabs-tab-justified();
+    }
+    @mixin navPillsJustified {
+        @include deprecated-mixin('navPillsJustified', $use-instead: 'nav-pills-pill-justified');
+        @include nav-pills-pill-justified();
+    }
+    @mixin navPillsWizardJustified {
+        @include deprecated-mixin('navPillsWizardJustified', $use-instead: 'nav-pills-wizard-justified');
+        @include nav-pills-wizard-justified();
+    }
+    @mixin navbarVerticalAlign($element-height) {
+        @include deprecated-mixin('navbarVerticalAlign', $use-instead: 'navbar-valign');
+        @include navbar-valign($element-height);
+    }
+    @mixin navbarWizards($height: get($navbar-base-config, 'height'), $inset: 1px, $navbar-bd-radius: get($navbar-base-config, 'bd-radius'), $navbar-bg: get($navbar-base-config, 'bg'), $navbar-link-color: get($navbar-link-config, 'text-color'), $navbar-ribbon-tab-link-bd-color-active: get($nav-ribbon-tab-link-config, 'bd-color-active')) {
+        @include removed-mixin('navbarWizards', $use-instead: 'nav-wizards peripheral css module');
+    }
+    @mixin collapsedNavbar {
+        @include deprecated-mixin('collapsedNavbar', $use-instead: 'navbar-collapse');
+        @include navbar-collapse();
+    }
+    @mixin navbarRibbonShareBtnContainerWidth($padding-right, $padding-left: $navbarPadLeft) {
+        @include deprecated-mixin('navbarRibbonShareBtnContainerWidth', $use-instead: 'navbar-ribbon-share-btn-container-width');
+        @include navbar-ribbon-share-btn-container-width($padding-right, $padding-left);
+    }
+    @mixin navbarRibbonBreakpoints($breakpoint: default, $breakpointMedium: $screenTablet, $breakpointLarge: $screenDesktop) {
+        @include deprecated-mixin('navbarRibbonBreakpoints', $use-instead: 'navbar-ribbon-breakpoints');
+        @include navbar-ribbon-breakpoints();
+    }
+    @mixin dividerHorizontal($bg: $body-bg, $margin: $line-height-base-px 0, $bd-top: false, $bd-bottom: false) {
+        @include deprecated-mixin('dividerHorizontal', $use-instead: 'divider-horizontal');
+        @include divider-horizontal($bg, $margin, $bd-top, $bd-bottom);
+    }
+    @mixin dividerVertical($bg: $body-bg) {
+        @include deprecated-mixin('dividerVertical', $use-instead: 'divider-vertical');
+        @include divider-vertical($bg);
+    }
+    @mixin gradientStriped($color, $angle: 45deg) {
+        @include deprecated-mixin('gradientStriped', $use-instead: 'gradient-striped');
+        @include gradient-striped($color, $angle);
+    }
+    @mixin hoveredTableRowCell {
+        @include deprecated-mixin('hoveredTableRowCell', $use-instead: 'table-cell-hover');
+        @include table-cell-hover();
+    }
+    @mixin selectableTableRow {
+        @include deprecated-mixin('selectableTableRow', $use-instead: 'table-row-selectable');
+        @include table-row-selectable();
+    }
+    @mixin responsiveTables {
+        @include deprecated-mixin('responsiveTables', $use-instead: 'table-responsive');
+        @include table-responsive();
+    }
+    @mixin roundedCornerTables($radius) {
+        @include deprecated-mixin('roundedCornerTables', $use-instead: 'table-rounded-corners');
+        @include table-rounded-corners($radius);
+    }
+    @mixin wdeskHeadings($elems: true) {
+        @include deprecated-mixin('wdeskHeadings', $use-instead: 'generate-headings');
+        @include generate-headings($selector: if($elems == true, elem, class));
+    }
+    @mixin containerFixed($gutter: $grid-gutter-width) {
+        @include deprecated-mixin('containerFixed', $use-instead: 'grid-container');
+        @include grid-container-base($gutter);
+    }
+    @mixin makeRow($gutter: $grid-gutter-width) {
+        @include deprecated-mixin('makeRow', $use-instead: 'grid-row-base');
+        @include grid-row-base($gutter);
+    }
+    @mixin makeXsColumn($columns, $gutter: $grid-gutter-width) {
+        @include deprecated-mixin('makeXsColumn', $use-instead: 'make-grid-column');
+        @include make-grid-column(xs, $columns, $gutter: $gutter);
+    }
+    @mixin makeSmColumn($columns, $gutter: $grid-gutter-width) {
+        @include deprecated-mixin('makeSmColumn', $use-instead: 'make-grid-column');
+        @include make-grid-column(sm, $columns, $gutter: $gutter);
+    }
+    @mixin makeSmColumnOffset($columns) {
+        @include deprecated-mixin('makeSmColumnOffset', $use-instead: 'make-grid-column-offset');
+        @include make-grid-column-offset(sm, $columns);
+    }
+    @mixin makeSmColumnPush($columns) {
+        @include deprecated-mixin('makeSmColumnPush', $use-instead: 'make-grid-column-push');
+        @include make-grid-column-push(sm, $columns);
+    }
+    @mixin makeSmColumnPull($columns) {
+        @include deprecated-mixin('makeSmColumnPull', $use-instead: 'make-grid-column-pull');
+        @include make-grid-column-pull(sm, $columns);
+    }
+    @mixin makeMdColumn($columns, $gutter: $grid-gutter-width) {
+        @include deprecated-mixin('makeMdColumn', $use-instead: 'make-grid-column');
+        @include make-grid-column(md, $columns, $gutter: $gutter);
+    }
+    @mixin makeMdColumnOffset($columns) {
+        @include deprecated-mixin('makeMdColumnOffset', $use-instead: 'make-grid-column-offset');
+        @include make-grid-column-offset(md, $columns);
+    }
+    @mixin makeMdColumnPush($columns) {
+        @include deprecated-mixin('makeMdColumnPush', $use-instead: 'make-grid-column-push');
+        @include make-grid-column-push(md, $columns);
+    }
+    @mixin makeMdColumnPull($columns) {
+        @include deprecated-mixin('makeMdColumnPull', $use-instead: 'make-grid-column-pull');
+        @include make-grid-column-pull(md, $columns);
+    }
+    @mixin makeLgColumn($columns, $gutter: $grid-gutter-width) {
+        @include deprecated-mixin('makeLgColumn', $use-instead: 'make-grid-column');
+        @include make-grid-column(lg, $columns, $gutter: $gutter);
+    }
+    @mixin makeLgColumnOffset($columns) {
+        @include deprecated-mixin('makeLgColumnOffset', $use-instead: 'make-grid-column-offset');
+        @include make-grid-column-offset(lg, $columns);
+    }
+    @mixin makeLgColumnPush($columns) {
+        @include deprecated-mixin('makeLgColumnPush', $use-instead: 'make-grid-column-push');
+        @include make-grid-column-push(lg, $columns);
+    }
+    @mixin makeLgColumnPull($columns) {
+        @include deprecated-mixin('makeLgColumnPull', $use-instead: 'make-grid-column-pull');
+        @include make-grid-column-pull(lg, $columns);
+    }
+
+//
+// "Chisel" mixins - no longer needed because we are using a completely flat UI
+// Books editor UI is probably the only one still using this, so they can localize them if they still need them
+//
+    @mixin chiselBorder($bg-color, $bd-width, $direction: "down") {
+        @include deprecated-mixin('chiselBorder');
+
+        $top-border:  if($direction == "down", darken($bg-color, 14%), lighten($bg-color, 20%));
+        $side-border: if($direction == "down", darken($bg-color, 4%),  lighten($bg-color, 7%));
+        $bot-border:  if($direction == "down", lighten($bg-color, 7%), darken($bg-color, 12%));
+
+        border-width: $bd-width $bd-width $bd-width $bd-width;
+        border-style: solid solid solid solid;
+        border-color: $top-border $side-border $bot-border $side-border;
+    }
+    @mixin chiseledIcon(
+          $bg-color
+        , $depth:       "deep"
+        , $is-important: false
+        , $colorize:    false
+        , $shadow-only:  false
+    ) {
+        @include deprecated-mixin('chiseledIcon');
+
+        //
+        // determine whether we should darken or lighten the icon color
+        // compared to the bgColor based on the contrast settings of the skin
+        //
+        $ico-color: transparentize(if($colorize == false, chisel($bg-color, "", $depth, "icon"), $colorize), 1 - $text-shadow-alpha - .1);
+
+        @if not $shadow-only {
+            color: $ico-color if($is-important == true, !important, #{''});
+            text-shadow:
+                  #{$chisel-ico-shadow} lighten($bg-color, 5)
+                , #{$chisel-ico-shadow-mid} darken($ico-color, $chisel-ico-shadow-darken-amount) if($is-important == true, !important, #{''});
+        } @else {
+            text-shadow: #{$chisel-ico-shadow} darken($ico-color, $chisel-ico-shadow-darken-amount) if($is-important == true, !important, #{''});
+        }
+        // inset the icon text-shadow by using the same color as the bgColor
+
+        // don't show shadows when selecting the text
+        @include cursor-selected {
+            background: transparent;
+            color: inherit;
+            text-shadow: none !important;
+        }
+    }
+    @mixin chiseledIconStates(
+          $bg:               get($nav-secondary-link-config, 'bg')
+        , $bg-hover:         get($nav-secondary-link-config, 'bg-hover')
+        , $bg-pressed:       get($nav-secondary-link-config, 'bg-press')
+        , $bg-active:        $nav-secondary-link-bg-selected
+        , $child-elem:       "a"
+        , $hover-selector:   $hover
+    ) {
+        @include deprecated-mixin('chiseledIconStates');
+
+        @if $bg != false {
+            .icon {
+                @include chiseledIcon($bg-color: $bg);
+            }
+        }
+        @if $bg-hover != false {
+            #{$hover-selector} .icon {
+                @include chiseledIcon($bg-color: $bg-hover);
+            }
+        }
+        @if $bg-pressed != false {
+            #{$child-elem} {
+                .no-touch &:active {
+                    .icon {
+                        @include chiseledIcon($bg-color: $bg-pressed);
+                    }
+                }
+            }
+        }
+        @if $bg-active {
+            &.active, &.ui-selected {
+                &,
+                #{$hover-selector} {
+                    .icon {
+                        @include chiseledIcon($bg-color: $bg-active);
+                    }
+                }
+            }
+        }
+
+    }
+    @mixin chiseledButtonText($bg-color) {
+        @include deprecated-mixin('chiseledButtonText');
+        @include chiseledIcon($bg-color: $bg-color, $colorize: $bg-color, $shadow-only: true);
+    }
+
+
+///
+/// Change the width of a `.checkbox-switch` component based on the text value within it
+/// ---
+/// @group peripherals.components.form-controls
+/// @since 0.2.2
+/// @deprecated since `1.6.0`, text for switch toggles is no longer displayed within the control, which makes this function unnecessary.
+/// @todo remove completely in 2.0.0
+/// @link http://bit.ly/webskin-form-toggle-switch-custom-text DOCS: Customizable checkbox-switch width
+/// ---
+/// @param {String} $default-text ['off']  - Text when the switch is inactive
+/// @param {String} $checked-text ['on']   - Text when the switch is active
+/// @param {String} $size         ['base'] - Size variation CSS class suffix
+///
+@mixin checkbox-switch-width($default-text: "off", $checked-text: "on", $size: 'base') {
+    @include deprecated-mixin('checkbox-switch-width', $deprecated-in: '1.6.0');
+
+    $elem-width:   checkbox-switch-value($property: "width", $default-text: $default-text, $checked-text: $checked-text, $size: $size);
+    $height:       checkbox-switch-value($property: "height", $default-text: $default-text, $checked-text: $checked-text, $size: $size);
+    $text-indent:  checkbox-switch-value($property: "text-indent", $default-text: $default-text, $checked-text: $checked-text, $size: $size);
+
+    $is-default-text: if($default-text == 'off' and $checked-text == 'on', true, false);
+    $is-sm-xs-size-variation: if(unquote($size) == xs, true, if(unquote($size) == sm, true, false));
+    $elem-min-width-sm-xs: if($is-sm-xs-size-variation, $elem-width + 8, false);
+    $bg-void-width-denominator: if($is-sm-xs-size-variation and $is-default-text, (get($cbox-switch-config, 'void-denominator') * 1.1), get($cbox-switch-config, 'void-denominator'));
+
+    // use max() here to make sure the button doesn't get too skinny compared to it's height
+    $bg-void: max(round($elem-width / 1.5), round($height * .9));
+    $btn-width: min($elem-width - $bg-void, $height);
+
+    &,
+    label,
+    input[type="checkbox"] {
+        width: to-rem($elem-width);
+
+        //
+        // SM and XS size variations need a min-width
+        // becaus their default text ('off' and 'on') doesn't
+        // result in a width that is sufficient for centering the label.
+        //
+        // Longer labels (like 'private' in popover comments, work fine)
+        //
+        @if $is-sm-xs-size-variation and $is-default-text {
+            min-width: to-rem($elem-min-width-sm-xs);
+        }
+    }
+
+    #{get-deep($cbox-switch-config, 'btn-elem.default')} {
+        width: to-rem($btn-width);
+    }
+
+    //
+    // :checked style has to be it's own un-comma-separated
+    // statement in order to make older browsers happy
+    //
+    #{nth(get-deep($cbox-switch-config, 'text-elem.checked'), 1)} {
+        // :checked
+        left: to-rem($text-indent);
+    }
+}
+
+///
+/// Change the text of a `.checkbox-switch` component
+/// ---
+/// @group peripherals.components.form-controls
+/// @since 0.2.2
+/// @deprecated since `1.6.0`, text for switch toggles is no longer displayed within the control, which makes this function unnecessary.
+/// @todo remove completely in 2.0.0
+/// @link http://bit.ly/webskin-form-toggle-switch-custom-text DOCS: Customizable checkbox-switch text
+/// ---
+/// @param {String} $default-text ['off']  - Text when the switch is inactive
+/// @param {String} $checked-text ['on']   - Text when the switch is active
+/// @param {String} $size         ['base'] - Size variation CSS class suffix
+///
+@mixin checkbox-switch-text($default-text: 'off', $checked-text: 'on', $size: 'base') {
+    @include deprecated-mixin('checkbox-switch-text', $deprecated-in: '1.6.0');
+
+    @include checkbox-switch-width($default-text: $default-text, $checked-text: $checked-text, $size: $size);
+
+    #{get-deep($cbox-switch-config, 'text-elem.default')} {
+        content: attr("data-unchecked-text");
+        content: $default-text;
+    }
+
+    //
+    // :checked style has to be it's own un-comma-separated
+    // statement in order to make older browsers happy
+    //
+    #{nth(get-deep($cbox-switch-config, 'text-elem.checked'), 1)} {
+        // :checked
+        content: attr("data-unchecked-text");
+        content: $checked-text;
+    }
+}

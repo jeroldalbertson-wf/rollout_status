@@ -1,0 +1,350 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/comments/atoms/comments-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCIES:
+//
+    @import 'comments-config';
+    @import 'comments-panel-config';
+    @import 'comments-popover-config';
+//
+// ********************************************************
+
+
+//
+// BASE COMMENTS ELEM RESETS
+//
+@mixin comment-elem-resets() {
+    .comments {
+        form {
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-pills {
+            > .nav-item {
+                margin-right: to-rem($spacing-base);
+
+                &:last-child {
+                    margin-right: 0 !important;
+                }
+            }
+
+            &.nav-justified.halve {
+                > .nav-item {
+                    display: block;
+                    float: left;
+                    width: 47%;
+                    border-left-width: 0 !important;
+
+                    // DIVIDER (via pseudo elem)
+                    &:after {
+                        content: "";
+                        background-color: mix($black, $dialog-gray-bg, 20%); // fallback
+                        background-color: rgba($black, .2);
+                        width: .1rem;
+                        height: 100%;
+                        display: block;
+                        position: absolute;
+                        top: 0;
+                        right: $nav-justified-halved-margin * -1;
+                        margin-right: -.1rem; // perfectly centered based on divider width
+                    }
+
+                    &:last-child:after {
+                        display: none;
+                    }
+
+                    &:first-child {
+                        margin-right: $nav-justified-halved-margin;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+//
+// "WARNING-HOVER" PILL VARIATION
+//
+@mixin comment-warning-hover-pill() {
+    .comments .nav-pills > .nav-item {
+        @include pill-skin('warning', $hover-only: true);
+    }
+}
+
+
+//
+// BASE COMMENTS COMPONENT MIXINS
+//
+// We're using mixins instead of declaring actual CSS classes here because declaring
+// common class styles here, and then the specific popover/panel styles again
+// just results in more selectors. By using mixins to store the shared styles,
+// we can reuse the styles without duplicating the selectors.
+//
+    @mixin comment-header-navbar {
+        height: auto;
+        min-height: 0; // override .navbar default
+        margin: 0; // override .navbar default
+        border-width: 0 0 to-rem(get($navbar-base-config, 'bd-width')) 0;
+        @include border-bottom-radius(0);
+
+        //
+        // keep comment thread actions btn/menu above the thread
+        // overlay so they are still clickable when thread is "closed"
+        //
+        .dropdown {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: z('dropdown') + 1;
+        }
+    }
+
+    //
+    // Base styles shared by both the .nav-item and it's child hitarea
+    // in `.panel-comment .comment-header .thread-actions`
+    //
+    @mixin panel-comment-thread-action-nav-item {
+        height: to-rem($panel-thread-actions-btn-height) !important;
+        width: to-rem($panel-thread-actions-btn-width);
+        border-radius: 0;
+        border-top-width: 0; // prevent dupe top border w/ panel-header
+        line-height: 1 !important;
+    }
+
+    @mixin comment-title {
+        display: inline-block;
+        // because of the overflow: hidden, we ned this to ensure that drop-case chars are not clipped
+        min-height: to-rem($panel-thread-title-min-height);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: default;
+    }
+
+    @mixin comment-title-icon {
+        margin-right: .4rem;
+    }
+
+    @mixin comment-meta {
+        font-family: $font-family-base;
+        font-size: to-rem($font-size-sm);
+        line-height: inherit;
+
+        .text-sm {
+            // the text is too small using percentage
+            font-size: to-rem($font-size-sm);
+        }
+
+        .comment-timestamp {
+            position: absolute;
+            right: 0;
+            display: block;
+            font-style: italic;
+            color: $zc-gray-90;
+            text-align: right;
+            cursor: default;
+        }
+    }
+
+    @mixin comment-textarea {
+        //
+        // COMMENT TEXTAREAS
+        //
+        // We need width/height 100% since sizing using
+        // top/left/right/bottom doesn't work in MSIE
+        //
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        margin-bottom: 0 !important;
+        resize: none;
+
+        //
+        // A comment that cannot be edited
+        // also present in default saved comment state
+        //
+        &[readonly] {
+            // saved comments have readonly attributes on the textarea
+            position: static;
+            width: 100%;
+            height: 100%;
+
+            // smaller text with a tad more white space makes things easier to read
+            padding: to-rem(round($popover-comment-content-padding / 2) $popover-comment-content-padding);
+            font-size: to-rem($font-size-md);
+            line-height: $line-height-sm;
+            color: $zc-gray-120;
+
+            // no bg, border, shadow, etc... (mimic .form-control-static)
+            background-color: transparent !important;
+            border-color: transparent !important;
+            box-shadow: none !important;
+            cursor: default !important;
+
+            //
+            // if the textarea is empty, don't show it when its not being edited
+            // this prevents the placeholders from displaying.
+            //
+            &:empty { display: none; }
+        }
+    }
+
+    @mixin comment-body {
+        position: relative;
+        height: auto;
+        max-height: to-rem($default-comment-textarea-height);
+        min-height: to-rem($default-comment-textarea-height / 2);
+        overflow: hidden;
+        cursor: pointer;
+
+        .comment-editing & {
+            height: 100%;
+            max-height: 100%;
+            min-height: to-rem($default-comment-textarea-height);
+        }
+    }
+
+    @mixin comment-modal-confirmations($bd-radius, $content-pad, $header-height, $inner-elem: ".comment", $inner-pad: 0, $is-outer-elem: false) {
+        $inner-pad: if($inner-pad >= $content-pad, $inner-pad, 0);
+        $footer-pad: if($content-pad > 0, $content-pad, $inner-pad);
+        $ie-header-height: $header-height + 1;
+
+        //
+        // when this mixin is called - put a relative position style
+        // on whatever elem the include is nested within
+        // unless its the outermost element (like .popover)
+        //
+        @if not $is-outer-elem {
+            position: relative;
+        }
+
+        .modal.contained {
+            top: to-rem($header-height + get($dialog-config, 'padding')) * -1;
+            right: to-rem($content-pad + get($dialog-config, 'padding')) * -1;
+            bottom: to-rem($content-pad + get($dialog-config, 'padding')) * -1;
+            left: to-rem($content-pad + get($dialog-config, 'padding')) * -1;
+            border-radius: 0;
+
+            @include ie-support {
+                top: to-rem($ie-header-height + get($dialog-config, 'padding')) * -1;
+            }
+
+            .modal-body,
+            .modal-header {
+                // these get vertically centered by wdesk-modal.js
+                position: absolute;
+                top: auto;
+                right: 0;
+                bottom: to-rem(get-deep($modal-config, 'base.footer-height') - $footer-pad);
+                left: 0;
+                text-align: center;
+            }
+
+            .modal-footer {
+
+                // this gets horizontally centered by wdesk-modals.js
+                top: auto;
+                right: to-rem($footer-pad);
+                bottom: to-rem($footer-pad);
+                left: to-rem($footer-pad);
+                width: auto;
+            }
+        }
+
+        // entire thread confirmation modal
+        .comments > .modal.contained {
+            border-radius: to-rem($bd-radius);
+        }
+
+        //
+        // for panel comments, thread deletion confirmation
+        // modals have the same container / parent container
+        //
+        &.modal-open.modal-container,
+        .modal-open.modal-container {
+            .modal.contained {
+                // for some reason when container/parent container
+                // are the same elem, the width of the panel-group bd
+                // needs to be accounted for when positioning
+                right: to-rem($content-pad + get($dialog-config, 'padding')) * -1;
+                left:  to-rem($content-pad + get($dialog-config, 'padding')) * -1;
+            }
+        }
+
+        //
+        // individual thread comment deletion confirmation
+        // must be absolute pos so it doesn't fill up the entire popover
+        //
+        #{$inner-elem} {
+            // if its inside a comment... don't overlap adjacent comments
+            .modal {
+                min-height: 11.6rem; // ensure the confirmation message shows on replies where there was no previously declared min-height
+                border-radius: 0; // no corner radius for comments nested within a thread
+                top: 0;
+                bottom: 0;
+
+                @include ie-support {
+                    top: 0; // override MSIE-only .contained (thread) modal positioning
+                }
+
+                @if $inner-pad > 0 {
+                    right: to-rem($inner-pad + get($dialog-config, 'padding')) * -1;
+                    left: to-rem($inner-pad + get($dialog-config, 'padding')) * -1;
+                }
+            }
+            //
+            // if its the first comment in a thread
+            // we need to cover up the extended title navbar area as well.
+            //
+            &:first-of-type .modal {
+                top: to-rem($header-height + get($dialog-config, 'padding')) * -1;
+                @include border-top-radius(to-rem($bd-radius));
+
+                @include ie-support {
+                    top: to-rem($ie-header-height + get($dialog-config, 'padding')) * -1;
+                }
+            }
+            //
+            // if its the last comment in a thread
+            // we need to cover up the bottom edge of the popover
+            //
+            &:last-of-type .modal,
+            &.comment-last + .comment-editing .modal,
+            &.comment-last .modal {
+                bottom: to-rem($content-pad + get($dialog-config, 'padding')) * -1;
+                @include border-bottom-radius(to-rem($bd-radius));
+            }
+            //
+            // if its the only comment in a thread...
+            // use fixed positioning to simplify the alignment
+            //
+            &:only-of-type .modal {
+                top: to-rem($header-height + get($dialog-config, 'padding')) * -1;
+                bottom: to-rem($content-pad + get($dialog-config, 'padding')) * -1;
+                border-radius: to-rem($bd-radius);
+
+                @include ie-support {
+                    top: to-rem($ie-header-height + get($dialog-config, 'padding')) * -1;
+                }
+            }
+        }
+
+        //
+        // modal backdrops are transparent no matter what within comments
+        // because the modal elem itself has the darker "backdrop" appearance
+        //
+        .modal-backdrop {
+            background-color: transparent;
+            @include opacity(0);
+            @include transition(none);
+        }
+    }

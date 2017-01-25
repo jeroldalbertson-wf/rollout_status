@@ -1,0 +1,428 @@
+// ********************************************************
+
+////
+/// Card component helpers
+/// ---
+/// @since 1.4.0
+/// @access public
+/// @group core.components.cards
+/// @link http://bit.ly/webskin-cards Card component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/cards/cards-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCIES:
+//
+    @import 'cards-config';
+//
+// ********************************************************
+
+
+///
+/// Reusable logic that generates all the permutations of skin variation classes for `.card`s.
+/// ---
+/// @link http://bit.ly/webskin-card-colors Card component color variation spec
+/// ---
+/// @param {Map} $skin-colors [$card-colors] - Map config of colors used for specified skin variation
+///
+@mixin generate-card-skin-styles($skin-colors: $card-colors) {
+    // ----------------------------------------------------
+    //   Skin Color Variations
+    // ----------------------------------------------------
+        @each $skin-name, $skin-color-config in $skin-colors {
+            @include card-skin($skin-name, $skin-color-config);
+        }
+
+
+    // ----------------------------------------------------
+    //   Selected State Skinning
+    // ----------------------------------------------------
+        @include card-selected-skins($skin-colors: $skin-colors);
+
+
+    // ----------------------------------------------------
+    //   Selected State Skinning (for cards in tables)
+    //
+    //   -> Since table elements cannot use relative position,
+    //      we cannot use the `:after` pseudo-element like
+    //      we do for non-table-row cards.
+    // ----------------------------------------------------
+        $parent-selector: &;
+        $card-table-selector: if($parent-selector, '.card-table &', '.card-table');
+
+        #{$card-table-selector} {
+            @include card-selected-skins($platform-elem-selector: '.card__cap--selected-platform', $skin-colors: $skin-colors);
+        }
+}
+
+
+///
+/// Reusable `.card` skin color variation styles
+/// ---
+/// @link http://bit.ly/webskin-card-colors Card component color variation spec
+/// ---
+/// @param {String}  $skin-name     - Name of skin variation
+/// @param {Map}     $skin-colors   - Map config of colors used for specified skin variation
+///
+@mixin card-skin($skin-name, $skin-colors) {
+    $parent-selector: &;
+    $skin-variant-selector: if($parent-selector, '&.card--#{$skin-name}', '.card--#{$skin-name}');
+
+    #{$skin-variant-selector} {
+        background-color: get($skin-colors, 'bg');
+
+        // ----- COLLAPSIBLE VARIATION ----- //
+        &.card--collapsed {
+            background-color: get($skin-colors, 'bg-collapsed');
+
+            #{$link-hover-focus} {
+                background-color: get($skin-colors, 'bg-collapsed-hover');
+            }
+        }
+
+        // ----- PANEL VARIATION ----- //
+        &.card--panel {
+            .card__footer {
+                background-color: get($skin-colors, 'bg');
+                border-top-color: get($skin-colors, 'bd-color')
+            }
+        }
+
+        // ----- BORDERED VARIATION ----- //
+        &.card--bordered {
+            border-color: get($skin-colors, 'bd-color');
+
+            // ----- BORDERED + PANEL VARIATION ----- //
+            &.card--panel {
+                .card__body {
+                    border-color: get($skin-colors, 'bd-color');
+                }
+            }
+        }
+    }
+}
+
+
+///
+/// Denote a set of "selected" states for a card by adding a background color to the platform created by the `card-selected-platform()` mixin.
+/// ---
+/// @see {mixin} card-selected-platform
+/// ---
+/// @param {String} $platform-elem-selector ['&::after']    - The CSS selector used for the "selected" state platform border
+/// @param {Map}    $skin-colors            [$card-colors]  - Map config of colors used for specified skin variation
+///
+@mixin card-selected-skins($platform-elem-selector: get($card-shared-config, 'selected-platform-elem-selector'), $skin-colors: $card-colors) {
+    $parent-selector: &;
+
+    // ----------------------------------------------------
+    //   By default, the color of the platform will be based
+    //   on the state / skin variation of the entire card.
+    // ----------------------------------------------------
+    @each $skin-name, $skin-colors in $skin-colors {
+        $selected-skin-variant-selector: if($parent-selector, '&.card--selected.card--#{$skin-name}', '.card--selected.card--#{$skin-name}');
+
+        #{$selected-skin-variant-selector} {
+            #{$platform-elem-selector} {
+                background-color: get($skin-colors, 'selected-platform-bg');
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   But color variations can also be applied directly
+    //   to the platform color as well regardless of the
+    //   state / skin variation of the entire card.
+    //
+    //   This is done using the base zesty color palette
+    //   color names like "red", "green", "purple", etc
+    //
+    //   [1] !important necessary to trump the specificity
+    //       of the compound selector used to style the
+    //       selected card platform based on the card
+    //       skin variation.
+    // ----------------------------------------------------
+    @each $palette-name, $palette in get($card-shared-config, 'selected-platform-color-palette') {
+        $selected-skin-variant-classname: 'card--selected--#{$palette-name}';
+        $selected-skin-variant-selector: if($parent-selector, '&.#{$selected-skin-variant-classname}', '.#{$selected-skin-variant-classname}');
+
+        #{$selected-skin-variant-selector} {
+            #{$platform-elem-selector} {
+                background-color: get($palette, 'base') !important; // [1]
+            }
+        }
+    }
+
+    $light-gray-skin-variant-selector: if($parent-selector, '&.card--selected--light-gray', '.card--selected--light-gray');
+    #{$light-gray-skin-variant-selector} {
+        #{$platform-elem-selector} {
+            background-color: get($card-colors-default, 'bd-color') !important; // [1]
+        }
+    }
+}
+
+
+///
+/// Generate card styles for text colors of elements within a `.card--inverse` skin variation.
+///
+@mixin card-inverse-skin-text-colors() {
+    &:not(.card--panel) {
+        color: get($card-shared-config, 'body-text-color-inverse');
+    }
+
+    .card__header__title,
+    &:not(.card--panel) .card__title,
+    &:not(.card--panel) .card__subtitle {
+        color: get($card-shared-config, 'header-title-color-inverse');
+    }
+
+    &:not(.card--panel) .card__link {
+        color: get($card-shared-config, 'link-color-inverse');
+    }
+
+    &.card--collapsed {
+        .card__header__title {
+            color: get($card-shared-config, 'header-title-color-collapsed-inverse');
+        }
+    }
+
+    &.card--panel {
+        .card__footer {
+            color: get($card-shared-config, 'body-text-color-inverse');
+        }
+    }
+}
+
+
+///
+/// Generate card styles that depend on its size variation
+/// ---
+/// @param {String} $size     ['base'] - String key representing the size variation of the card
+/// @param {Bool}   $bordered [false]  - Whether the card is a `.card--bordered` variation
+///
+@mixin card-size($size: 'base', $bordered: false) {
+    $card-size-config: get($card-sizes, $size);
+
+    $card-padding-key:                  if($bordered, 'padding-bordered', 'padding');
+    $card-footer-padding-top-key:       if($bordered, 'footer-padding-top-bordered', 'footer-padding-top');
+    $card-footer-padding-bottom-key:    if($bordered, 'footer-padding-bottom-bordered', 'footer-padding-bottom');
+    $card-cap-padding-key:              if($bordered, 'cap-padding-bordered', 'cap-padding');
+    $card-outer-left-cap-padding-key:   if($bordered, 'cap-outer-left-padding-bordered',  'cap-outer-padding');
+    $card-outer-right-cap-padding-key:  if($bordered, 'cap-outer-right-padding-bordered', 'cap-outer-padding');
+
+    @if unquote($size) != base {
+        & {
+            font-size: get($card-size-config, 'font-size');
+        }
+    }
+
+    .card__header {
+        height: get($card-size-config, 'header-height');
+    }
+
+    // ----------------------------------------------------
+    //  [1] Assume no left or right cap adjacent
+    //  [2] Assume left cap precedes title
+    //  [3] Assume title precedes right cap
+    //  [4] In a non "panel" card variation, where there is
+    //      no visible border separating the header from the
+    //      body... prevent the appearance of "double" padding.
+    //      Perceived total padding between the bottom of any
+    //      header text and the top of adjacent body text is 20px.
+    // ----------------------------------------------------
+
+    &.card__block,
+    .card__block {
+        padding: get($card-size-config, $card-padding-key);
+    }
+
+    .card__block + .card__block {
+        padding-top: get($card-size-config, 'adjacent-sibling-padding-top');
+    }
+
+    .card__footer {
+        $_padding: get($card-size-config, $card-padding-key);
+        $_padding-horizontal: if(length($_padding) == 2, nth($_padding, 2), $_padding);
+        padding: get($card-size-config, $card-footer-padding-top-key) $_padding-horizontal get($card-size-config, $card-footer-padding-bottom-key);
+    }
+
+    .card__header__title {
+        font-size: get($card-size-config, 'font-size');
+        padding: get($card-size-config, $card-cap-padding-key); // [1]
+    }
+
+    .card__cap--left {
+        padding: get($card-size-config, $card-outer-left-cap-padding-key);
+
+        + .card__header__title {
+            padding-left: 0; // [2]
+        }
+    }
+
+    .card__cap--right {
+        padding: get($card-size-config, $card-outer-right-cap-padding-key);
+        padding-left: 0; // [3]
+    }
+
+    &:not(.card--panel) { // [4]
+        .card__header + .card__block,
+        .card__header + .card__body > .card__block:first-child {
+            padding-top: get($card-size-config, 'adjacent-sibling-padding-top');
+        }
+    }
+
+    // ----- PANEL VARIATION ----- //
+    $panel-selector: '.card--panel';
+
+    @if unquote($size) != base or $bordered {
+        $panel-selector: '&.card--panel';
+    }
+
+    #{$panel-selector} {
+        // Slightly different padding to reproduce the `.panel-condensed` appearance
+        // as opposed to just a standard `.card--sm` variation.
+        @if unquote($size) == sm {
+            &.card__block,
+            .card__block,
+            .list-group-item {
+                padding: to-rem(get-deep($panel-config, 'sm.body-padding'));
+            }
+
+            .card__header__title,
+            .card__footer {
+                padding: to-rem(get-deep($panel-config, 'sm.header-padding'));
+                line-height: to-rem(get-deep($panel-config, 'sm.header-line-height'));
+            }
+        } @else {
+            .card__footer {
+                padding: (get($card-size-config, $card-padding-key) / 2) get($card-size-config, $card-padding-key);
+            }
+        }
+    }
+}
+
+
+///
+/// Denote a "selected" state for a card by adding a "platform" border on the left side of the card, which can be skinned using the `card-selected-skins()` mixin.
+/// ---
+/// @see {mixin} card-selected-skins
+/// ---
+/// @param {Bool} $is-pseudo-element [true] - Whether the CSS selector being used for the "selected" platform is a pseudo-element, e.g. `::after`.
+///
+@mixin card-selected-platform($is-pseudo-element: true) {
+    @if $is-pseudo-element {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+    }
+    width: get($card-size-base-config, 'selected-platform-width');
+}
+
+
+///
+/// Styling for the `.card__header` element when it has focus as a result of being clicked to control the collapsible `.card__body` element.
+///
+@mixin card-header-focus() {
+    #{$focus},
+    &#{$focus-class} {
+        @include focus-border();
+    }
+}
+
+
+///
+/// Helper that sets defaults when calling the `grid-block()` mixin for it's optional "caps" - `.card__header`, `.card__footer` and the children of those "caps".
+///
+/// Used to give the blocks the flexbox context they need without adding all the additional properties / options that these blocks do not need to keep complexity low.
+///
+/// Sets overflow to visible so that menus spawned from the header are visible.
+/// ---
+/// @see {mixin} grid-block
+/// @see {mixin} grid-align
+/// ---
+/// @param {String}  $size  [grow]  - `grow` or `shrink`
+/// @param {Boolean} $wrap  [false] - Stretch blocks if `true`, or align blocks to top if `false`
+/// @param {String}  $align [left]  - See the `grid-align()` mixin
+///
+@mixin card-cap-grid-block($size: grow, $wrap: false, $align: left) {
+    @include grid-block(
+        $size: $size,
+        $orientation: false,
+        $wrap: $wrap,
+        $align: $align,
+        $order: false,
+        $allow-nested-vblocks: false,
+        $scroll: false
+    );
+
+    line-height: 1;
+    // Vertically align children center
+    @include align-items(center);
+}
+
+
+///
+/// Helper that generates the styling used for "dividers" shown between non-expanded, non-hovered adjacent
+/// `.card--invisible` elements within a parent `.card-collapse--invisible-list` parent.
+///
+@mixin card-invisible-list-divider($placement: above) {
+    $divider-height: .1rem;
+    $offset: (get($card-size-base-config, 'spacer-vertical') / -2) - $divider-height;
+    $top-offset: if($placement == above, $offset, auto);
+    $bottom-offset: if($placement == below, $offset, auto);
+
+    content: "";
+    position: absolute;
+    top: $top-offset;
+    bottom: $bottom-offset;
+    left: 0;
+    right: 0;
+    height: $divider-height;
+    background-color: $zc-gray-40;
+    // Prevent hovers on the divider from triggering the hover state on the card.
+    pointer-events: none;
+
+    @include transition(background-color $default-fade-speed ease);
+}
+
+///
+/// Helper that generates the styling used to make a `.card__header__actions` fade in when a collapsed "invisible" card is hovered or focused.
+/// ---
+/// @access private
+/// @group core.internals.components.cards
+///
+@mixin card-invisible-collapsed-card-header-actions() {
+    .card--collapsed {
+        .card__header__actions {
+            @include transition(opacity $default-fade-speed ease);
+
+            opacity: 0;
+        }
+
+        @include card-invisible-list-hover-focus-selectors() {
+            .card__header__actions {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+///
+/// A group of selectors that are the direct inverse of `card-invisible-list-hover-focus-negation-selectors()`.
+/// ---
+/// @access private
+/// @group core.internals.components.cards
+///
+@mixin card-invisible-list-hover-focus-selectors() {
+    #{$link-hover-focus},
+    &.js-focus,
+    &.card--focused {
+        @content;
+    }
+}

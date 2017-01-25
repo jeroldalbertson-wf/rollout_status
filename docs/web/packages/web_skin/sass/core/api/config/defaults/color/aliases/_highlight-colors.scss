@@ -1,0 +1,36 @@
+// ********************************************************
+
+////
+/// Highlighted Elem Color Aliases
+/// ---
+/// @access private
+/// @type Color
+/// @group core.internals.color.base
+/// ---
+/// @requires {variable} $colors-global-highlight
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/aliases/highlight-colors';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+/// Highlighted Elem Orange Background Color Alias
+/// @color #fbad17
+$ws-highlight-bg-orange: get($colors-global-highlight, 'orange');
+
+/// Highlighted Elem Yellow Background Color Alias
+/// @color #fdec7f
+$ws-highlight-bg-yellow: get($colors-global-highlight, 'yellow');
+
+/// Highlighted Elem Default Background Color Alias
+/// @color #fbad17
+$ws-highlight-bg-default: get($colors-global-highlight, 'default');

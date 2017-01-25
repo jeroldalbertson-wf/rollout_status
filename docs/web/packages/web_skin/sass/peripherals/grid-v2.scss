@@ -1,0 +1,64 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for Grid v2
+ * Built using the CSS3 Flexible Box Model
+ * ---
+ * This will be built into web-skin.css (CORE)
+ * in version 2.0.0
+ * ---
+ * MSIE Support: 10+
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import '../core/api';
+
+
+// ----------------------------------------------------
+//   MSIE 11 Full Screen Fix
+//
+//   See: https://github.com/Workiva/web-skin/issues/1089
+// ----------------------------------------------------
+    body {
+        width: 100vw;
+    }
+
+
+// ----------------------------------------------------
+//   Form style helpers to ensure compatibility
+//   of form-group grid behavior
+// ----------------------------------------------------
+    @import 'grid-v2/form-groups';
+
+
+// ----------------------------------------------------
+//   Build the Grid (v2)
+// ----------------------------------------------------
+    @import 'grid-v2/index';
+
+
+// ----------------------------------------------------
+//   Re-implement pertinent utility CSS classes
+//   for specificity.
+//
+//   TODO: Remove this in 2.0.0 once the v2 grid is part
+//         of the core module. It's only necessary
+//         right now because of the typical consumption
+//         via a separate peripheral CSS module, which
+//         is declared within the consumer's template
+//         `<head>` after core - meaning it's trumping
+//         the contents of classes found in
+//         `_utilities.scss`.
+//
+//   SEE: https://github.com/Workiva/web-skin/issues/1098
+// ----------------------------------------------------
+    @import '../core/foundation/tools/utilities';

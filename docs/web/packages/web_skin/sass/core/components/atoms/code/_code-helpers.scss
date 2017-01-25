@@ -1,0 +1,105 @@
+// ********************************************************
+//
+//   Atoms (building blocks) for the
+//   Web Skin code
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/code/code-helpers';
+    $module: add-api-module($module);//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function to-em,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+@mixin code-pre-base {
+    padding: .1em .3em;
+    font-family: $font-family-monospace;
+    font-weight: normal;
+}
+
+@mixin code-inline-skin() {
+    color: $code-color;
+    white-space: nowrap;
+    text-transform: none;
+    // down-level fallback
+    background-color: $code-bg;
+    border-radius: to-em($border-radius-base, $font-size-base);
+}
+
+@mixin code-block-base() {
+    display: block;
+    padding: $pre-padding;
+    margin: 0 0 ($pre-padding / 2);
+    overflow: none;
+    font-size: 1em;
+    line-height: $line-height-base;
+    color: $pre-color;
+    text-shadow: 0 .1rem $white;
+    background-color: $pre-bg;
+    border: .1rem solid $pre-bd-color;
+    border-radius: to-em($border-radius-base, $font-size-base * .9);
+
+    // no scrolling by default
+    word-break: break-all;
+    word-wrap: break-word;
+
+    // remove text shadow when text is selected
+    // and in print media cases
+    @include cursor-selected {
+        text-shadow: none;
+    }
+    @media print {
+        text-shadow: none;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Word wrap control in code blocks
+// ----------------------------------------------------
+@mixin disable-pre-code-word-wrap($important: false) {
+    $important: if($important == false, '', '!important');
+
+    word-wrap: normal #{$important};
+    white-space: pre #{$important};
+}
+
+@mixin disable-pre-word-wrap($nested-code: true, $important: false) {
+    $important: if($important == false, '', '!important');
+
+    overflow: auto #{$important};
+    word-wrap: normal #{$important};
+    white-space: pre #{$important};
+
+    @if $nested-code {
+        code {
+            @include disable-pre-code-word-wrap($important: $important);
+        }
+    }
+}
+
+@mixin enable-pre-code-word-wrap($important: false) {
+    $important: if($important == false, '', '!important');
+
+    word-wrap: nowrap #{$important};
+    white-space: pre-wrap #{$important};
+}
+
+@mixin enable-pre-word-wrap($nested-code: true, $important: false) {
+    $important: if($important == false, '', '!important');
+
+    white-space: nowrap #{$important};
+    word-break: normal #{$important};
+    word-wrap: nowrap #{$important};
+
+    @if $nested-code {
+        code {
+            @include enable-pre-code-word-wrap($important: $important);
+        }
+    }
+}

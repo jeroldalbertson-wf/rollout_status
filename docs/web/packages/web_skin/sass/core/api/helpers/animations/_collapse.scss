@@ -1,0 +1,83 @@
+// ********************************************************
+
+////
+/// Global mixins pertaining to collapse animations
+/// ---
+/// @since 1.0.0
+/// @access public
+/// @group core.animation
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/animations/collapse';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// Reusable styles for a collapsing animation
+///
+@mixin collapsing {
+    @include transition(all $default-collapse-speed ease);
+
+    position: relative;
+    overflow: hidden;
+    height: 0;
+}
+
+///
+/// Reusable styles for a collapsed element
+///
+@mixin collapsed {
+    display: none;
+}
+
+///
+/// Reusable styles for an un-collapsed element
+///
+@mixin collapse-in {
+    display: block;
+}
+
+///
+/// Reusable styles for an un-collapsed `<table>`, `<tbody>`, `<thead>`, `<tr>`, `<td>` or `<th>` element.
+/// @since 1.4.0
+///
+@mixin collapse-table-elems-in() {
+    $collapsing-base-and-expanded: '#{get($collapsing-selectors, 'base')}#{get($collapsing-selectors, 'expanded')}';
+
+    table,
+    .table {
+        &#{$collapsing-base-and-expanded} {
+            display: table;
+        }
+    }
+
+    tbody,
+    thead,
+    .tbody,
+    .thead {
+        &#{$collapsing-base-and-expanded} {
+            display: table-row-group;
+        }
+    }
+
+    tr,
+    .tr {
+        &#{$collapsing-base-and-expanded} {
+            display: table-row;
+        }
+    }
+
+    td,
+    th,
+    .td,
+    .th {
+        &#{$collapsing-base-and-expanded} {
+            display: table-cell;
+        }
+    }
+}

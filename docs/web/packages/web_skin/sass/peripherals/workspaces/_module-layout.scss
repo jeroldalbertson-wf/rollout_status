@@ -1,0 +1,33 @@
+// ********************************************************
+//
+//   WORKSPACES LAYOUT STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/module-layout';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $wksp-module-config:  'peripherals/workspaces/atoms/workspaces-config';
+    $wksp-module-helpers: 'peripherals/workspaces/atoms/workspaces-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $wksp-module-config,
+                                          $wksp-module-helpers);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   MAIN CONTENT AREA
+// ----------------------------------------------------
+@import 'layout/main/base';
+
+
+// ----------------------------------------------------
+//   SIDEBARS
+// ----------------------------------------------------
+@import 'layout/sidebars/base';
+@import 'layout/sidebars/masthead';
+@import 'layout/sidebars/footer';

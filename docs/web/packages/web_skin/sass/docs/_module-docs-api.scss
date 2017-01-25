@@ -1,0 +1,18 @@
+// ********************************************************
+//
+//   DEPENDENCIES:
+//
+    @import '../core/api';
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/module-docs-api';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+@import "api/config/docs-variables";
+@import "api/config/code-colors";
+@import "api/helpers/docs-mixins";
+@import "api/helpers/scss-var-content-color";

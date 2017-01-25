@@ -1,0 +1,60 @@
+// ********************************************************
+//
+//   WELL COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-wells
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/wells';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $wells-module-config:  'core/components/atoms/wells/wells-config';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $wells-module-config);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE WELL CONTAINER
+//
+// ********************************************************
+.well {
+    min-height: to-rem($line-height-base-px);
+    margin-bottom: to-rem($line-height-base-px);
+    padding: to-rem($line-height-base-px - 1);
+    border: to-rem($well-bd-width) solid $well-bd-color;
+    border-radius: to-rem($border-radius-base);
+    background-color: $well-bg;
+    box-shadow: inset 0 .1rem .1rem rgba(0,0,0,.05);
+}
+
+
+// ********************************************************
+//
+//   BLOCKQUOTES WITHIN WELLS
+//
+// ********************************************************
+.well blockquote {
+    border-color: darken($well-bg, 15%);
+}
+
+
+// ********************************************************
+//
+//   SIZE VARIATIONS
+//
+// ********************************************************
+.well-lg {
+    padding: 2.4rem;
+    border-radius: to-rem($border-radius-lg);
+}
+
+.well-sm {
+    padding: .9rem;
+    border-radius: to-rem($border-radius-sm);
+}

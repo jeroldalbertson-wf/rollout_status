@@ -1,0 +1,436 @@
+// ********************************************************
+
+////
+/// Internal helpers that provide basic support for CSS3 properties
+/// ---
+/// @since 1.1.0
+/// @access private
+/// @group core.internals.utils.css3
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/css3/support';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, mixin set-experimental-support,
+                                                function is,
+                                                function get,
+                                                function get-deep,
+                                                function explode,
+                                                function to-number,
+                                                variable browser-minimum-versions,
+                                                variable prefixed-property-value-categories,
+                                                variable prefixed-property-categories,
+                                                variable prefixed-property-category-browser-versions);
+//
+// ********************************************************
+
+///
+/// Global prefix value set within the scope of a mixin.
+/// @type String | Null
+///
+$current-prefix: null;
+
+///
+/// List of prefixes to exclude within the scope of a mixin when iterating over prefixes.
+/// @type List
+///
+$exclude-prefixes: ();
+
+///
+/// @return {Bool} - Whether the given `$browser` needs a browser prefix based on the given `$property-category` according to our current minimum browser support levels.
+/// @since 1.8.0
+/// ---
+/// @param {String} $property - Must be a key found within `$prefixed-property-category-browser-versions`
+/// @param {String} $browser  - Must be a key found within `$browser-minimum-versions`
+///
+@function property-category-needs-prefix($property-category, $browser) {
+    @if $property-category == null {
+        // If we have no property within `$prefixed-property-categories` that has an analogous category within
+        // `$prefixed-property-category-browser-versions`, chances are it needs a prefix.
+        @return true;
+    }
+
+    // ----- ERROR CHECKING ----- //
+    $valid-properties: map-keys($prefixed-property-category-browser-versions);
+    @if not is($property-category, $valid-properties) {
+        @error "`property-category-needs-prefix` function expecting the `$property-category` param to be one of (#{$valid-properties}). Was #{$property-category}";
+    }
+
+    $valid-browsers: map-keys($browser-minimum-versions);
+    @if not is($browser, $valid-browsers) {
+        @error "`property-category-needs-prefix` function expecting the `$browser` param to be one of (#{$valid-browsers}). Was #{$browser}";
+    }
+    // ----- END ERROR CHECKING ----- //
+
+    $browser-version-supported: to-number(get($browser-minimum-versions, $browser));
+    $browser-version-that-requires-prefix: get-deep($prefixed-property-category-browser-versions, '#{$property-category}.#{$browser}');
+
+    @return ($browser-version-supported <= $browser-version-that-requires-prefix);
+}
+
+///
+/// Helper fn that formats a prefixed property.
+///
+@function prefix-identifier($ident, $prefix: $current-prefix) {
+    @return unquote('#{$prefix}#{if($prefix, '-', null)}#{$ident}');
+}
+
+///
+/// Output a property and value using the "current" prefix (determined while looping through `with-each-prefix()`).
+/// It will be unprefixed if `$current-prefix` is `null`.
+/// ---
+/// @see {mixin} with-each-prefix
+/// ---
+/// @param {String} $property
+/// @param {*}      $value
+/// @param {String} $prefix [null]
+///
+@mixin prefix-prop($property, $value, $prefix: $current-prefix) {
+    @if $prefix != false {
+        #{prefix-identifier($property, $prefix)}: $value;
+    }
+}
+
+///
+/// Yields to the mixin content once for each prefix required.
+/// The current prefix is set to the $current-prefix global for use by the included content.
+/// Also yields to the content once with `$current-prefix` set to null for the official version
+/// as long as there's not already a prefix in scope.
+/// ---
+/// @param {List} $exclusions - Optional list of prefix keys to exclude from the `$browser-prefixes` map
+///
+@mixin with-each-prefix($exclusions: (), $property-type: null) {
+    $valid-property-types: map-keys($prefixed-property-category-browser-versions);
+    @if $property-type != null and not is($property-type, $valid-property-types) {
+        @error "`with-each-prefix` function expecting the `$property-type` param to be one of (#{$valid-property-types}). Was #{$property-type}";
+    }
+
+    $included-browser-prefixes: $browser-prefixes;
+
+    // Exclude certain prefixes based on provided `$exclusions`
+    @if length($exclusions) > 0 {
+        @each $key-to-exclude in $exclusions {
+            $included-browser-prefixes: map-remove($included-browser-prefixes, $key-to-exclude);
+        }
+    }
+
+    // Exclude certain prefixes based on browser support
+    @if $property-type != null {
+        @each $browser, $browser-version in get($prefixed-property-category-browser-versions, $property-type) {
+            $prefix: get($browser-name-to-prefix, $browser);
+
+            @if not property-category-needs-prefix($property-type, $browser) {
+                $included-browser-prefixes: map-remove($included-browser-prefixes, $prefix);
+            }
+        }
+    }
+
+    @each $prefix-key, $prefix in $included-browser-prefixes {
+        $current-prefix: $prefix !global;
+        @content;
+    }
+}
+
+///
+/// Emit a set of properties with the prefix.
+/// ---
+/// @example scss
+///   @include prefixed-properties((animation-name: foo, animation-duration: 2s));
+/// ---
+/// @param {List}  $properties
+/// @param {List}  $exclusions - Optional list of prefixed keys to exclude from the `$browser-prefixes` map
+/// @param {String} $property-type [null] - The type of property we're prefixing (See `$prefixed-property-category-browser-versions`)
+///
+@mixin prefixed-properties($properties, $exclusions: (), $property-type: null) {
+    $valid-property-types: map-keys($prefixed-property-category-browser-versions);
+    @if $property-type != null and not is($property-type, $valid-property-types) {
+        @error "`prefixed-properties` function expecting the `$property-type` param to be one of (#{$valid-property-types}). Was #{$property-type}";
+    }
+
+    @include with-each-prefix($exclusions, $property-type: $property-type) {
+        @each $prop, $value in $properties {
+            @include prefix-prop($prop, $value);
+        }
+    }
+}
+
+///
+/// Provides basic support for CSS3 properties and their corresponding experimental CSS2 properties when the implementations are identical except for the _vendorized_ property prefix.
+/// ---
+/// @output CSS3 `-prefix-property: value` styles
+/// ---
+/// @param {String}   $property                                       - CSS3 property name
+/// @param {*}        $value                                          - Value to set for the property
+/// @param {Boolean}  $moz      [$experimental-support-for-mozilla]   - Whether to output the `-moz` prefixed property
+/// @param {Boolean}  $webkit   [$experimental-support-for-webkit]    - Whether to output the `-webkit` prefixed property
+/// @param {Boolean}  $o        [$experimental-support-for-opera]     - Whether to output the `-o` prefixed property
+/// @param {Boolean}  $ms       [$experimental-support-for-microsoft] - Whether to output the `-ms` prefixed property
+/// @param {Boolean}  $khtml    [$experimental-support-for-khtml]     - Whether to output the `-khtml` prefixed property
+/// @param {Boolean}  $official [true]                                - Whether to output the un-prefixed property
+///
+@mixin experimental($property, $value,
+    $moz      : $experimental-support-for-mozilla,
+    $webkit   : $experimental-support-for-webkit,
+    $o        : $experimental-support-for-opera,
+    $ms       : $experimental-support-for-microsoft,
+    $khtml    : $experimental-support-for-khtml,
+    $official : true
+) {
+    @if $webkit  and _should-prefix-webkit-property($property)     { -webkit-#{$property}: $value; }
+    @if $khtml   and _should-prefix-khtml-property($property)      {  -khtml-#{$property}: $value; }
+    @if $moz     and _should-prefix-firefox-property($property)    {    -moz-#{$property}: $value; }
+    @if $ms      and _should-prefix-ie-property($property)         {     -ms-#{$property}: $value; }
+    @if $o       and _should-prefix-opera-property($property)      {      -o-#{$property}: $value; }
+    @if $official                                                  {         #{$property}: $value; }
+}
+
+///
+/// Same as `experimental()`, but for cases when the property is the same and the value is _vendorized_.
+/// ---
+/// @output CSS3 `property: -prefix-value` styles
+/// @see {mixin} experimental
+/// ---
+/// @param {String}   $property                                       - CSS3 property name
+/// @param {*}        $value                                          - Value to set for the property
+/// @param {Boolean}  $moz      [$experimental-support-for-mozilla]   - Whether to output the `-moz` prefixed value
+/// @param {Boolean}  $webkit   [$experimental-support-for-webkit]    - Whether to output the `-webkit` prefixed value
+/// @param {Boolean}  $o        [$experimental-support-for-opera]     - Whether to output the `-o` prefixed value
+/// @param {Boolean}  $ms       [$experimental-support-for-microsoft] - Whether to output the `-ms` prefixed value
+/// @param {Boolean}  $khtml    [$experimental-support-for-khtml]     - Whether to output the `-khtml` prefixed value
+/// @param {Boolean}  $official [true]                                - Whether to output the un-prefixed value
+///
+@mixin experimental-value($property, $value,
+    $moz      : $experimental-support-for-mozilla,
+    $webkit   : $experimental-support-for-webkit,
+    $o        : $experimental-support-for-opera,
+    $ms       : $experimental-support-for-microsoft,
+    $khtml    : $experimental-support-for-khtml,
+    $official : true
+) {
+    @if $webkit  and _should-prefix-webkit-property-value($value)    { #{$property}: -webkit-#{$value}; }
+    @if $khtml   and _should-prefix-khtml-property-value($value)     { #{$property}:  -khtml-#{$value}; }
+    @if $moz     and _should-prefix-firefox-property-value($value)   { #{$property}:    -moz-#{$value}; }
+    @if $ms      and _should-prefix-ie-property-value($value)        { #{$property}:     -ms-#{$value}; }
+    @if $o       and _should-prefix-opera-property-value($value)     { #{$property}:      -o-#{$value}; }
+    @if $official                                                    { #{$property}:         #{$value}; }
+}
+
+///
+/// Combination of `experimental()` and `experimental-value()` - in rare cases when the property AND the value is _vendorized_.
+/// ---
+/// @output CSS3 `-prefix-property: -prefix-value` styles
+/// @see {mixin} experimental
+/// @see {mixin} experimental-value
+/// ---
+/// @param {String}   $property                                       - CSS3 property name
+/// @param {*}        $value                                          - Value to set for the property
+/// @param {Boolean}  $moz      [$experimental-support-for-mozilla]   - Whether to output the `-moz` prefixed property and value
+/// @param {Boolean}  $webkit   [$experimental-support-for-webkit]    - Whether to output the `-webkit` prefixed property and value
+/// @param {Boolean}  $o        [$experimental-support-for-opera]     - Whether to output the `-o` prefixed property and value
+/// @param {Boolean}  $ms       [$experimental-support-for-microsoft] - Whether to output the `-ms` prefixed property and value
+/// @param {Boolean}  $khtml    [$experimental-support-for-khtml]     - Whether to output the `-khtml` prefixed property and value
+/// @param {Boolean}  $official [true]                                - Whether to output the un-prefixed property and value
+///
+@mixin experimental-property-and-value($property, $value,
+    $moz      : $experimental-support-for-mozilla,
+    $webkit   : $experimental-support-for-webkit,
+    $o        : $experimental-support-for-opera,
+    $ms       : $experimental-support-for-microsoft,
+    $khtml    : $experimental-support-for-khtml,
+    $official : true
+) {
+    $use-webkit-prefix:     $webkit and (
+        _should-prefix-webkit-property($property) or _should-prefix-webkit-property-value($value)
+    );
+    $use-khtml-prefix:      $khtml and (
+        _should-prefix-khtml-property($property) or _should-prefix-khtml-property-value($value)
+    );
+    $use-firefox-prefix:    $moz and (
+        _should-prefix-firefox-property($property) or _should-prefix-firefox-property-value($value)
+    );
+    $use-ie-prefix:         $ms and (
+        _should-prefix-ie-property($property) or _should-prefix-ie-property-value($value)
+    );
+    $use-opera-prefix:      $o and (
+        _should-prefix-opera-property($property) or _should-prefix-opera-property-value($value)
+    );
+
+    @if $use-webkit-prefix  { -webkit-#{$property}: -webkit-#{$value}; }
+    @if $use-khtml-prefix   {  -khtml-#{$property}:  -khtml-#{$value}; }
+    @if $use-firefox-prefix {    -moz-#{$property}:    -moz-#{$value}; }
+    @if $use-ie-prefix      {     -ms-#{$property}:     -ms-#{$value}; }
+    @if $use-opera-prefix   {      -o-#{$property}:      -o-#{$value}; }
+    @if $official           {         #{$property}:         #{$value}; }
+}
+
+///
+/// Shortcut for applying only a single experimental property prefix.
+/// ---
+/// @output Prefixed CSS3 `-prefix-property: value` styles
+/// ---
+/// @param {String}   $property         - CSS3 property name
+/// @param {*}        $value            - Value to set for the property
+/// @param {Boolean}  $moz      [false] - Whether to output the `-moz` prefixed property
+/// @param {Boolean}  $webkit   [false] - Whether to output the `-webkit` prefixed property
+/// @param {Boolean}  $o        [false] - Whether to output the `-o` prefixed property
+/// @param {Boolean}  $ms       [false] - Whether to output the `-ms` prefixed property
+/// @param {Boolean}  $khtml    [false] - Whether to output the `-khtml` prefixed property
+/// @param {Boolean}  $official [false] - Whether to output the un-prefixed property
+///
+@mixin experimental-only-for($property, $value,
+    $moz      : false,
+    $webkit   : false,
+    $o        : false,
+    $ms       : false,
+    $khtml    : false,
+    $official : false
+) {
+    @include experimental($property, $value, $moz, $webkit, $o, $ms, $khtml, $official);
+}
+
+///
+/// Shortcut for applying only a single experimental value prefix.
+/// ---
+/// @output Prefixed CSS3 `property: -prefix-value` styles
+/// ---
+/// @param {String}   $property         - CSS3 property name
+/// @param {*}        $value            - Value to set for the property
+/// @param {Boolean}  $moz      [false] - Whether to output the `-moz` prefixed value
+/// @param {Boolean}  $webkit   [false] - Whether to output the `-webkit` prefixed value
+/// @param {Boolean}  $o        [false] - Whether to output the `-o` prefixed value
+/// @param {Boolean}  $ms       [false] - Whether to output the `-ms` prefixed value
+/// @param {Boolean}  $khtml    [false] - Whether to output the `-khtml` prefixed value
+/// @param {Boolean}  $official [false] - Whether to output the un-prefixed value
+///
+@mixin experimental-value-only-for($property, $value,
+    $moz      : false,
+    $webkit   : false,
+    $o        : false,
+    $ms       : false,
+    $khtml    : false,
+    $official : false
+) {
+    @include experimental-value($property, $value, $moz, $webkit, $o, $ms, $khtml, $official);
+}
+
+///
+/// Shortcut for applying only a single experimental property and value prefix.
+/// ---
+/// @output Prefixed CSS3 `-prefix-property: -prefix-value` styles
+/// ---
+/// @param {String}   $property         - CSS3 property name
+/// @param {*}        $value            - Value to set for the property
+/// @param {Boolean}  $moz      [false] - Whether to output the `-moz` prefixed property and value
+/// @param {Boolean}  $webkit   [false] - Whether to output the `-webkit` prefixed property and value
+/// @param {Boolean}  $o        [false] - Whether to output the `-o` prefixed property and value
+/// @param {Boolean}  $ms       [false] - Whether to output the `-ms` prefixed property and value
+/// @param {Boolean}  $khtml    [false] - Whether to output the `-khtml` prefixed property and value
+/// @param {Boolean}  $official [false] - Whether to output the un-prefixed property and value
+///
+@mixin experimental-property-and-value-only-for($property, $value,
+    $moz      : false,
+    $webkit   : false,
+    $o        : false,
+    $ms       : false,
+    $khtml    : false,
+    $official : false
+) {
+    @include experimental-property-and-value($property, $value, $moz, $webkit, $o, $ms, $khtml, $official);
+}
+
+
+// ********************************************************
+//
+//  PRIVATE HELPERS
+//
+// ********************************************************
+// @private
+@function _get-property-category($property) {
+    $category: get($prefixed-property-categories, $property);
+
+    @if $category == null {
+        @warn "Web Skin does not have any built-in vendor prefix configuration data for the `#{$property}` property, and will default to generating every vendor prefixed property. Check http://caniuse.com/#search=#{$property} to see if a prefix is necessary for certain browsers.";
+    }
+
+    @return $category;
+}
+
+// @private
+@function _should-prefix-webkit-property($property) {
+    @return $experimental-support-for-webkit and (
+        property-category-needs-prefix(_get-property-category($property), chrome) or
+        property-category-needs-prefix(_get-property-category($property), safari)
+    );
+}
+
+// @private
+@function _should-prefix-khtml-property($property) {
+    @return $experimental-support-for-khtml;
+}
+
+// @private
+@function _should-prefix-firefox-property($property) {
+    @return $experimental-support-for-mozilla and
+        property-category-needs-prefix(_get-property-category($property), firefox);
+}
+
+// @private
+@function _should-prefix-ie-property($property) {
+    @return $experimental-support-for-microsoft and
+        property-category-needs-prefix(_get-property-category($property), ie);
+}
+
+// @private
+@function _should-prefix-opera-property($property) {
+    @return $experimental-support-for-opera and
+        property-category-needs-prefix(_get-property-category($property), opera);
+}
+
+// @private
+@function _should-prefix-webkit-property($property) {
+    @return $experimental-support-for-webkit and (
+        property-category-needs-prefix(_get-property-category($property), chrome) or
+        property-category-needs-prefix(_get-property-category($property), safari)
+    );
+}
+
+// @private
+@function _get-property-value-category($value) {
+    $prefixable-value-portion: nth(explode($value, ' '), 1);
+    $category: get($prefixed-property-value-categories, $prefixable-value-portion);
+
+    @if $category == null {
+        @warn "Web Skin does not have any built-in vendor prefix configuration data for the `#{$prefixable-value-portion}` property value, and will default to generating every vendor prefixed property value. Check http://caniuse.com/#search=#{$value} to see if a prefix is necessary for certain browsers.";
+    }
+
+    @return $category;
+}
+
+// @private
+@function _should-prefix-khtml-property-value($property-value) {
+    @return $experimental-support-for-khtml;
+}
+
+// @private
+@function _should-prefix-firefox-property-value($property-value) {
+    @return $experimental-support-for-mozilla and
+        property-value-category-needs-prefix(_get-property-value-category($property-value), firefox);
+}
+
+// @private
+@function _should-prefix-ie-property-value($property-value) {
+    @return $experimental-support-for-microsoft and
+        property-value-category-needs-prefix(_get-property-value-category($property-value), ie);
+}
+
+// @private
+@function _should-prefix-opera-property-value($property-value) {
+    @return $experimental-support-for-opera and
+        property-value-category-needs-prefix(_get-property-value-category($property), opera);
+}
+

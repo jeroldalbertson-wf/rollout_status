@@ -1,0 +1,405 @@
+{
+  //
+  // CSS Class Constants
+  //
+  "CLASSES": {
+    "COMPONENTS": {
+      "alert": "alert",
+      "badge": "badge",
+      //
+      "button": "btn",
+      "button-group": "btn-group",
+      "button-toolbar": "btn-toolbar",
+      "button-close": "close",
+      //
+      "caret": "caret",
+      "carousel": "carousel",
+      //
+      "dropdown": "dropdown",
+      "dropup": "dropup",
+      "dropdown-button": "dropdown-toggle",
+      "dropdown-menu": "dropdown-menu",
+      "menu-item": "menu-item",
+      //
+      "form": "form",
+      "form-control": "form-control",
+      "form-label": "control-label",
+      "form-group": "form-group",
+      "input-group": "input-group",
+      "checkbox": "checkbox",
+      "radio": "radio",
+      //
+      "grid-container": "container",
+      "grid-row": "row",
+      "grid-column": "col",
+      //
+      "hitarea": "hitarea",
+      //
+      "icon": "icon",
+      "label": "label",
+      //
+      "list-group": "list-group",
+      "list-group-item": "list-group-item",
+      //
+      "panel-group": "panel-group",
+      "panel": "panel",
+      //
+      "popover": "popover",
+      //
+      "progress-bar": "progress-bar",
+      "progress-spinner": "progress-spinner",
+      //
+      "nav": "nav",
+      "nav-item": "nav-item",
+      "navbar": "navbar",
+      //
+      "modal": "modal",
+      "table": "table",
+      "tooltip": "tooltip",
+      "well": "well"
+    },
+    "UTIL": {
+      "float-left": "pull-left",
+      "float-right": "pull-right",
+      //
+      "CONTROL_STATES": {
+        "disabled": "disabled",
+        "active": "active",
+        "open": "open",
+        "animate-in": "in",
+        "hover": "js-hover",
+        "focus": "js-focus",
+        "press": "js-pressed"
+      },
+      "APP_STATE_COLOR_SUFFIXES": {
+        "default": "default", // standard gray
+        "light": "light",     // light gray
+        "inverse": "inverse", // inverted dark gray
+        "primary": "primary",
+        "alt": "alt",
+        "success": "success",
+        "warning": "warning",
+        "danger": "danger",
+        "link": "link"
+      },
+      "SIZE_SUFFIXES": {
+        "xsmall": "xs",
+        "small": "sm",
+        "medium": "md",
+        "large": "lg",
+        "xl": "xl",
+        "xxl": "xxl"
+      }
+    }
+  },
+
+  //
+  // Global component border radius constants
+  // @see core/api/config/defaults/_component-sizes.scss
+  //
+  "BORDER_RADIUS": {
+    "base": "4px",
+    "xs":   "2px",
+    "sm":   "3px",
+    "lg":   "6px"
+  },
+
+  //
+  // Typographic rhythm constants
+  // @see core/api/config/defaults/_type-rhythm.scss
+  //
+  "TYPE_RHYTHM": {
+    "browser-default-font-size": "16px",
+    "html-font-size": "62.5%", // gives us a base font size of 10px
+    "font-size-base": "14px",
+    "line-height-base-px": "20px"
+  },
+
+  //
+  // Grid layout constants
+  // @see core/api/config/defaults/_grid.scss
+  //
+  "LAYOUT": {
+    "GRID": {
+      "columns": "12",
+      "gutter-width": "30px",      // TYPE_RHYTHM.LINE_HEIGHT_BASE_PX * 1.5
+      "gutter-width-wide": "48px", // (TYPE_RHYTHM.LINE_HEIGHT_LG * TYPE_RHYTHM.FONT_SIZE_LG) * 2
+      "float-breakpoint": "sm",
+      "CONTAINER_WIDTH": {
+        "wide": "100%",
+        "sm": "720px",  // 750px once you add the gutter-width
+        "md": "940px",  // 970px once you add the gutter width
+        "lg": "1140px", // 1170px once you add the gutter width
+        "xl": "1540px"  // 1570px once you add the gutter width
+      }
+    }
+  },
+
+  //
+  // Global Color Palette
+  // @see core/api/config/defaults/_global-colors.scss
+  //
+  // NOTE: do not wrap keys in strings
+  // when referencing these keys in Web Skin's
+  // get-deep method.  Otherwise, you'll run in to
+  // https://github.com/vigetlabs/sass-json-vars/issues/7
+  //
+  // Instead, call nested color-ish keys like so:
+  // ```
+  // get-deep($COLOR, GLOBAL GRAY, ' ');
+  // ```
+  //
+  "COLOR": {
+    "GLOBAL": {
+      "GRAY": {
+        "base":     "#595959",
+        "darker":   "#444444",
+        "lighter":  "#707070",
+        "lighter2": "#8a8a8a",
+        "pastel1":  "#b2b2b2",
+        "lighter4": "#cbcbcb",
+        "pastel2":  "#e3e3e3",
+        "lighter6": "#f3f3f3"
+      },
+      "GREEN": {
+        "base":    "#66cc00",
+        "darker":  "#339900",
+        "lighter": "#9bd83a",
+        "pastel1": "#bfe577",
+        "pastel2": "#dcf2b7"
+      },
+      "GREEN_IN_GAMUT": {
+        "base":    "#6ebe44",
+        "darker":  "#349946",
+        "lighter": "#9dcc40",
+        "pastel1": "#c0db79",
+        "pastel2": "#dceab6"
+      },
+      "GREEN_ALT": {
+        "base":    "#0f7f40",
+        "darker":  "#246130",
+        "lighter": "#9acc6d",
+        "pastel1": "#c0dda2",
+        "pastel2": "#e5efd9"
+      },
+      "GREEN_ALT2": {
+        "base":    "#42ad48",
+        "darker":  "#113f1e",
+        "lighter": "#6abd5e",
+        "pastel1": "#9dd394",
+        "pastel2": "#d5ead0"
+      },
+      "BLUE": {
+        "base":    "#0094ff",
+        "darker":  "#026dce",
+        "lighter": "#46b5f9",
+        "pastel1": "#8cd6f4",
+        "pastel2": "#c5e8f9"
+      },
+      "ORANGE": {
+        "base":    "#fbad17",
+        "darker":  "#f26c21",
+        "lighter": "#fcda04",
+        "pastel1": "#f9e68a",
+        "pastel2": "#f9efc7"
+      },
+      "PURPLE": {
+        "base":    "#813296",
+        "darker":  "#491f60",
+        "lighter": "#af76b3",
+        "pastel1": "#caa4cc",
+        "pastel2": "#e3d0e5"
+      },
+      "RED": {
+        "base":    "#ee2724",
+        "darker":  "#a71b19",
+        "lighter": "#ff5547",
+        "pastel1": "#ff7368",
+        "pastel2": "#ffa29b"
+      }
+    },
+    //
+    // List of color group keys from within COLOR.GLOBAL
+    // and the swatch from within that color group
+    // that correlate to a given state
+    //
+    // NOTE: The keys in this object should line up closely with
+    // the keys in the CLASSES.UTIL.APP_STATE_COLOR_SUFFIXES object
+    //
+    // EXAMPLE: The color value for COLOR.STATES.DEFAULT can be fetched via
+    // `COLOR.GLOBAL.#{COLOR.STATES.DEFAULT.group}.#{COLOR.STATES.DEFAULT.swatch}`
+    //
+    "STATES": {
+      "DEFAULT": {
+        "group": "GRAY",
+        "swatch": "pastel1"
+      },
+      "PRIMARY": {
+        "group": "GREEN",
+        "swatch": "base"
+      },
+      "ALT": {
+        "group": "BLUE",
+        "swatch": "base"
+      },
+      "SUCCESS": {
+        "group": "GREEN",
+        "swatch": "base"
+      },
+      "WARNING": {
+        "group": "ORANGE",
+        "swatch": "base"
+      },
+      "DANGER": {
+        "group": "RED",
+        "swatch": "base"
+      }
+    }
+  },
+
+  //
+  // Screen widths used for responsive breakpoints
+  // @see core/api/config/defaults/_breakpoints.scss
+  //
+  "VIEWPORT": {
+    "BREAKPOINTS_WIDTH": {
+      // Must keep these lowercase for now as they
+      // are heavily used in CSS class suffixes
+      "xs": {
+          "min": "480px",
+          "max": "767px"
+      },
+      "sm": {
+          "min": "768px",
+          "max": "991px"
+      },
+      "md": {
+          "min": "992px",
+          "max": "1199px"
+      },
+      "lg": {
+          "min": "1200px",
+          "max": "1599px"
+      },
+      "xl": {
+          "min": "1600px",
+          "max": "10000px"
+      }
+    }
+  },
+
+  //
+  // Mobile device constants used for responsive design
+  // @see core/api/config/defaults/_breakpoints.scss
+  //
+  "DEVICE": {
+    //
+    // 1:96 fixed ratio of CSS `in` to `px` used
+    // to calculate things like dpi
+    //
+    "CSS_IN_TO_PX_RATIO": "96",
+    //
+    // A.K.A. "dpr"
+    // Used to calculate things like dpi
+    //
+    // NOTE: The keys for this object correlate to the
+    // device classification ("dpr-classification") / nickname
+    // used in all the device resolution map configurations
+    // in core/api/config/defaults/_breakpoints.scss
+    //
+    "PIXEL_RATIO": {
+      "base":    "1",
+      "ldpi":    "1.3",
+      "mdpi":    "1.5",
+      "retina":  "2",
+      "hdpi":    "2.5",
+      "xhdpi":   "3",
+      "xxhdpi":  "5",
+      "xxxhdpi": "6.66667"
+    },
+    // iPhone device display properties for CSS media queries
+    "IPHONE": {
+      "BASE": {
+          "min-device-width":     "320px",
+          "max-device-width":     "480px",
+          "dpr-classification":   "base"
+      },
+      "RETINA_4": {
+          "min-device-width":     "320px",
+          "max-device-width":     "480px",
+          "dpr-classification":   "retina"
+      },
+      "RETINA_5": {
+          "min-device-width":     "320px",
+          "max-device-width":     "568px",
+          "dpr-classification":   "retina"
+      },
+      "RETINA_6": {
+          "min-device-width":     "375px",
+          "max-device-width":     "667px",
+          "dpr-classification":   "retina"
+      },
+      "RETINA_6_PLUS": {
+          "min-device-width":     "414px",
+          "max-device-width":     "736px",
+          "dpr-classification":   "xhdpi"
+      }
+    },
+    // iPad device display properties for CSS media queries
+    "IPAD": {
+      "BASE": {
+          "min-device-width":     "768px",
+          "max-device-width":     "1024px",
+          "dpr-classification":   "base"
+      },
+      "GEN_3_4": {
+          "min-device-width":     "768px",
+          "max-device-width":     "1024px",
+          "dpr-classification":   "retina"
+      },
+      "MINI_2": {
+          "min-device-width":     "768px",
+          "max-device-width":     "1024px",
+          "dpr-classification":   "retina"
+      }
+    },
+    // Android device display properties for CSS media queries
+    "ANDROID": {
+      "NEXUS_7": {
+          "min-device-width":     "601px",
+          "max-device-width":     "906px",
+          "dpr-classification":   "ldpi"
+      },
+      "NEXUS_4": {
+          "min-device-width":     "384px",
+          "max-device-width":     "592px",
+          "dpr-classification":   "retina"
+      },
+      "NEXUS_5": {
+          "min-device-width":     "360px",
+          "max-device-width":     "592px",
+          "dpr-classification":   "xhdpi"
+      },
+      "GALAXY_S2": {
+          "min-device-width":     "320px",
+          "max-device-width":     "534px",
+          "dpr-classification":   "mdpi"
+      },
+      "GALAXY_S3": {
+          "min-device-width":     "320px",
+          "max-device-width":     "640px",
+          "dpr-classification":   "retina"
+      },
+      "GALAXY_S4": {
+          "min-device-width":     "320px",
+          "max-device-width":     "640px",
+          "dpr-classification":   "xhdpi"
+      },
+      "GALAXY_S5": {
+          "min-device-width":     "360px",
+          "max-device-width":     "640px",
+          "dpr-classification":   "xhdpi"
+      }
+    }
+  }
+}

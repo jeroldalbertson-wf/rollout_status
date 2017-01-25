@@ -1,0 +1,38 @@
+// ********************************************************
+
+////
+/// Helper mixins pertaining to CSS3 prefixed / experimental properties and progressive enhancement
+/// ---
+/// @access public
+/// @group core.utils.css3
+////
+
+//
+//   DEPENDENCIES:
+//
+    @import 'css3/support';
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/css3';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, mixin experimental,
+                                                mixin experimental-value);
+//
+// ********************************************************
+
+
+@import "css3/border-radius";
+@import "css3/columns";
+@import "css3/flexbox";
+@import "css3/gradients";
+@import "css3/background";
+@import "css3/font-face";
+@import "css3/transform";
+@import "css3/transition";
+@import "css3/appearance";
+@import "css3/animation";
+@import "css3/user-interface";

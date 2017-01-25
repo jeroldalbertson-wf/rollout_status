@@ -1,0 +1,158 @@
+// ----------------------------------------------------
+
+//+  PARTIAL:  _deprecated/_constants/_zesty-crayon/_palette.scss
+//+  PARENT:   _deprecated/_manifest.scss
+
+// NOTE: DO NOT USE THESE!!! They were deprecated in `1.0.0` will be removed no later than `2.0.0`
+// TODO: Remove no later than `2.0.0`
+
+// ----------------------------------------------------
+
+@import "./zc-1-dot-6-deprecations";
+
+//
+// DEPRECATED VARS
+//
+// TODO: Remove no later than the 2.0.0 release
+//
+
+$almostWhite: $almost-white;
+
+//
+// WF Grays ("Secondary")
+//
+$wf_gray:           $zc-gray;
+$wf_gray_dk:        $zc-gray-120;
+$wf_gray_lt:        $zc-gray-90;
+$wf_gray_lt2:       $zc-gray-80;
+$wf_gray_lt3:       $zc-gray-70;
+    $wf_gray_ps1:   $wf_gray_lt3;
+$wf_gray_lt4:       $zc-gray-60;
+$wf_gray_lt5:       $zc-gray-40;
+    $wf_gray_ps2:   $wf_gray_lt5;
+$wf_gray_lt6:       $zc-gray-20;
+
+    //
+    // Gray palette aliases
+    //
+    $grayDark:      $zc-gray-120;
+    $gray:          $zc-gray;
+    $grayLight:     $zc-gray-70;
+    $grayLightC:    $zc-gray-60;
+    $grayLighter:   $zc-gray-40;
+    $grayLightest:  $zc-gray-20;
+
+//
+// WF Greens ("Primary")
+//
+$wf_green:          $zc-green;
+$wf_green_dk:       $zc-green-120;
+$wf_green_lt:       $zc-green-80;
+$wf_green_ps1:      $zc-green-60;
+$wf_green_ps2:      $zc-green-40;
+
+$wf_green_alt:      $zc-green-b;
+$wf_green_dk_alt:   $zc-green-b-120;
+$wf_green_lt_alt:   $zc-green-b-80;
+$wf_green_ps1_alt:  $zc-green-b-60;
+$wf_green_ps2_alt:  $zc-green-b-40;
+
+$wf_green_alt2:     $zc-green-c;
+$wf_green_dk_alt2:  $zc-green-c-120;
+$wf_green_lt_alt2:  $zc-green-c-80;
+$wf_green_ps1_alt2: $zc-green-c-60;
+$wf_green_ps2_alt2: $zc-green-c-40;
+
+
+//
+// WF Blues ("Alternate")
+//
+$wf_blue:           $zc-blue;
+$wf_blue_dk:        $zc-blue-120;
+$wf_blue_lt:        $zc-blue-80;
+$wf_blue_ps1:       $zc-blue-60;
+$wf_blue_ps2:       $zc-blue-40;
+
+
+//
+// WF Orange ("Warning")
+//
+$wf_orange:         $zc-orange;
+$wf_orange_dk:      $zc-orange-120;
+$wf_orange_lt:      $zc-orange-80;
+$wf_orange_ps1:     $zc-orange-60;
+$wf_orange_ps2:     $zc-orange-40;
+
+
+//
+// WF Purple ("University/Help")
+//
+$wf_purple:         $zc-purple;
+$wf_purple_dk:      $zc-purple-120;
+$wf_purple_lt:      $zc-purple-80;
+$wf_purple_ps1:     $zc-purple-60;
+$wf_purple_ps2:     $zc-purple-40;
+
+
+//
+// WF Red ("Danger/Error")
+//
+$wf_red:            $zc-red;
+$wf_red_dk:         $zc-red-120;
+$wf_red_lt:         $zc-red-80;
+$wf_red_ps1:        $zc-red-60;
+$wf_red_ps2:        $zc-red-40;
+
+
+//
+// Annotations
+//
+$wf_yellow_highlight: color('highlight.yellow');
+$wf_orange_highlight: color('highlight.orange');
+
+$defaultAnnotationsColor: color('highlight.default');
+
+
+//
+// DOCTYPES
+//
+$pdf_red:           color('doctypes.pdf');
+$xls_green:         color('doctypes.xls');
+$ppt_orange:        color('doctypes.ppt');
+$doc_blue:          color('doctypes.doc');
+
+$wfmlWorkbook_green:    color('doctypes.wfml-wb.base');
+$wfmlWorkbook_greenDk:  color('doctypes.wfml-wb.darker');
+
+$secDoc_Gray:       color('doctypes.wfml-doc.gray.base');
+$secDoc_Green:      color('doctypes.wfml-doc.green.base');
+$secDoc_Orange:     color('doctypes.wfml-doc.orange.base');
+$secDoc_Red:        color('doctypes.wfml-doc.red.base');
+$secDoc_Purple:     color('doctypes.wfml-doc.purple.base');
+$secDoc_Teal:       color('doctypes.wfml-doc.teal.base');
+$secDoc_Blue:       color('doctypes.wfml-doc.blue.base');
+$secDoc_BlueLt:     color('doctypes.wfml-doc.blue-light.base');
+
+    $wfmlDoc_green:     $wf_green;
+    $wfmlDoc_greenDk:   $wf_green_alt;
+    $wfmlDoc_blue:      $wf_blue;
+    $secDoc_BlueDk:     $wf_blue_dk;
+    $wfmlDoc_orange:    $wf_orange;
+    $wfmlDoc_red:       $wf_red;
+    $wfmlDoc_redDk:     #CE002A;
+    $secDoc_redDk:      $wfmlDoc_redDk;
+    $wfmlDoc_purple:    #A702CE;
+    $wfml_LightGreen:   $wf_green;
+
+
+//
+// Misc
+//
+$wf_blue_selectBgBase:     color('selection.bg-base');
+$wf_blue_selectBgHover:    color('selection.bg-hover');
+$wf_blue_selectBgPress:    color('selection.bg-press');
+$wf_blue_selectBgActive:   color('selection.bg-active');
+
+$wf_blue_selectTextHover:  color('selection.text-hover');
+$wf_blue_selectTextPress:  color('selection.text-press');
+$wf_blue_selectTextActive: color('selection.text-active');

@@ -1,0 +1,542 @@
+// ********************************************************
+
+////
+/// List group component configuration
+/// ---
+/// @since 0.2.0
+/// @group core.components.list-group
+/// @link http://bit.ly/webskin-list-groups List group component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/list-groups/list-groups-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend,
+                                                function component-height,
+                                                function component-padding-horizontal,
+                                                function component-padding-vertical);
+//
+// ********************************************************
+
+
+///
+/// Base configuration for `.list-group` components.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {variable} $nav-secondary-config
+/// @requires {variable} $global-component-bd-width
+/// @requires {variable} $global-component-bd-radius-config
+/// @requires {variable} $base-elem-margin-vertical
+/// @requires {variable} $zc-gray-20
+/// ---
+/// @prop {Number} margin-bottom [20px] - Default amount of negative space to preserve beneath a `.list-group`
+///
+/// @prop {Color} bg [transparent] - Default background color
+///
+/// @prop {Color}  bd-color    [#cbcbcb] - Default border color
+/// @prop {Number} bd-width    [1px]     - Default border width
+/// @prop {Map}    bd-radius             - `$global-component-bd-radius-config` map containing `base`, `xs`, `sm` and `lg` keys with corresponding `border-radius` values
+///
+/// @prop {Color} divider-bd-color [#e3e3e3] - Border color of `.list-group-divider` elems
+///
+$list-group-base-config: (
+    'margin-bottom': $base-elem-margin-vertical * 2,
+    //
+    'bg': transparent,
+    //
+    'bd-color': get($nav-secondary-config, 'bd-color'),
+    'bd-width': $global-component-bd-width,
+    'bd-radius': $global-component-bd-radius-config,
+    //
+    'divider-bd-color': $zc-gray-40
+) !default;
+
+
+///
+/// Configuration for `.list-group-item` components.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// @todo add unit tests
+/// ---
+/// @requires {function} get
+/// @requires {function} get-deep
+/// @requires {function} extend
+/// @requires {function} component-padding-horizontal
+/// @requires {function} component-padding-vertical
+/// @requires {function} component-height
+/// @requires {variable} $list-group-base-config
+/// @requires {variable} $dialog-size-base-config
+/// @requires {variable} $dialog-size-sm-config
+/// @requires {variable} $dialog-size-lg-config
+/// @requires {variable} $dropdown-menu-base-size-config
+/// @requires {variable} $dropdown-menu-md-size-config
+/// @requires {variable} $global-component-size-config
+/// ---
+/// @prop {Number} margin-bottom [-1px]
+///
+/// @prop {Map} padding.base
+/// @prop {Number} padding.base.horizontal    [12px]            - Horizontal padding for `.list-group-item` elems at their base size
+/// @prop {Number} padding.base.top           [6px]             - Top padding for `.list-group-item` elems at their base size
+/// @prop {Number} padding.base.bottom        [7px]             - Bottom padding for `.list-group-item` elems at their base size. _Added via `@extend`_
+/// @prop {List}   padding.base.all           [6px 12px 7px]    - Vertical and horizontal padding for `.list-group-item` elems at their base size. _Added via `@extend`_
+///
+/// @prop {Map} padding.xs
+/// @prop {Number} padding.xs.horizontal    [11px]          - Horizontal padding for `.list-group-item` elems at their extra small size variation
+/// @prop {Number} padding.xs.top           [3px]           - Top padding for `.list-group-item` elems at their extra small size variation
+/// @prop {Number} padding.xs.bottom        [4px]           - Bottom padding for `.list-group-item` elems at their extra small size variation. _Added via `@extend`_
+/// @prop {List}   padding.xs.all           [3px 11px 4px]  - Vertical and horizontal padding for `.list-group-item` elems at their extra small size variation. _Added via `@extend`_
+///
+/// @prop {Map} padding.sm
+/// @prop {Number} padding.sm.horizontal    [11px]          - Horizontal padding for `.list-group-item` elems at their small size variation
+/// @prop {Number} padding.sm.top           [4px]           - Top padding for `.list-group-item` elems at their small size variation
+/// @prop {Number} padding.sm.bottom        [5px]           - Bottom padding for `.list-group-item` elems at their small size variation. _Added via `@extend`_
+/// @prop {List}   padding.sm.all           [5px 11px 6px]  - Vertical and horizontal padding for `.list-group-item` elems at their small size variation. _Added via `@extend`_
+///
+/// @prop {Map} padding.lg
+/// @prop {Number} padding.lg.horizontal    [16px]           - Horizontal padding for `.list-group-item` elems at their large size variation
+/// @prop {Number} padding.lg.top           [10px]           - Top padding for `.list-group-item` elems at their large size variation
+/// @prop {Number} padding.lg.bottom        [11px]           - Bottom padding for `.list-group-item` elems at their large size variation. _Added via `@extend`_
+/// @prop {List}   padding.lg.all           [10px 16px 11px] - Vertical and horizontal padding for `.list-group-item` elems at their large size variation. _Added via `@extend`_
+///
+/// @prop {Map} min-height
+/// @prop {Number} min-height.base [34px] - Calculated min-height of `.list-group-item` elems. _Added via `@extend`_
+/// @prop {Number} min-height.xs   [28px] - Calculated min-height of `.list-group-item-xs` elems. _Added via `@extend`_
+/// @prop {Number} min-height.sm   [30px] - Calculated min-height of `.list-group-item-sm` elems. _Added via `@extend`_
+/// @prop {Number} min-height.lg   [44px] - Calculated min-height of `.list-group-item-lg` elems. _Added via `@extend`_
+///
+/// @prop {Map} heading-padding.base
+/// @prop {Number} heading-padding.base.top    [13px] - Top padding for `.list-group-item-heading` elems
+/// @prop {Number} heading-padding.base.bottom [0]    - Bottom padding for `.list-group-item-heading` elems
+///
+/// @prop {Map} heading-padding.xs
+/// @prop {Number} heading-padding.xs.top    [5px] - Top padding for `.list-group-item-heading` elems at their `xs` size variation
+/// @prop {Number} heading-padding.xs.bottom [5px] - Bottom padding for `.list-group-item-heading` elems at their `xs` size variation
+///
+/// @prop {Map} heading-padding.sm
+/// @prop {Number} heading-padding.sm.top    [13px] - Top padding for `.list-group-item-heading` elems at their `sm` size variation
+/// @prop {Number} heading-padding.sm.bottom [0px]  - Bottom padding for `.list-group-item-heading` elems at their `sm` size variation
+///
+/// @prop {Map} heading-padding.lg
+/// @prop {Number} heading-padding.lg.top    [13px] - Top padding for `.list-group-item-heading` elems at their `lg` size variation
+/// @prop {Number} heading-padding.lg.bottom [0px]  - Bottom padding for `.list-group-item-heading` elems at their `lg` size variation
+///
+/// @prop {Map} line-height               - Map of `line-height` values for content within a `list-group-item`
+/// @prop {Number} base [1.428571429]
+/// @prop {Number} xs   [1.5]
+/// @prop {Number} sm   [1.5]
+/// @prop {Number} lg   [1.428571429]
+///
+/// @prop {Map} font-size                 - Map of `font-size` values for content within a `list-group-item`
+/// @prop {Number} font-size.base [14px]
+/// @prop {Number} font-size.xs   [12px]
+/// @prop {Number} font-size.sm   [13px]
+/// @prop {Number} font-size.lg   [14px]
+///
+/// @prop {Map} heading-font-size         - Map of `font-size` values for `.list-group-item-heading` elems
+/// @prop {Number} heading-font-size.base [18px]
+/// @prop {Number} heading-font-size.xs   [14px]
+/// @prop {Number} heading-font-size.sm   [18px]
+/// @prop {Number} heading-font-size.lg   [18px]
+///
+/// @prop {Map} heading-line-height         - Map of `line-height` values for `.list-group-item-heading` elems
+/// @prop {Number} heading-line-height.base [1.2]
+/// @prop {Number} heading-line-height.xs   [1.1]
+/// @prop {Number} heading-line-height.sm   [1.2]
+/// @prop {Number} heading-line-height.lg   [1.2]
+///
+$list-group-item-config: (
+    'margin-bottom': get($list-group-base-config, 'bd-width') * -1,
+    'padding': (
+        'base': (
+            'horizontal': component-padding-horizontal('base'),
+            'top': component-padding-vertical('base'),
+            'bottom': null, // actual calculated value inserted via @extend
+            'all': null // actual calculated value inserted via @extend
+        ),
+        'xs': (
+            'horizontal': get($dropdown-menu-base-size-config, 'link-padding-horizontal'),
+            'top': get($dropdown-menu-base-size-config, 'link-padding-vertical'),
+            'bottom': null, // actual calculated value inserted via @extend
+            'all': null // actual calculated value inserted via @extend
+        ),
+        'sm': (
+            'horizontal': get($dropdown-menu-md-size-config, 'link-padding-horizontal'),
+            'top': get($dropdown-menu-md-size-config, 'link-padding-vertical'),
+            'bottom': null, // actual calculated value inserted via @extend
+            'all': null // actual calculated value inserted via @extend
+        ),
+        'lg': (
+            'horizontal': component-padding-horizontal('lg'),
+            'top': component-padding-vertical('lg'),
+            'bottom': null, // actual calculated value inserted via @extend
+            'all': null // actual calculated value inserted via @extend
+        )
+    ),
+    'min-height': (
+        'base': component-height($size: 'base'),
+        'xs':   28px, // TODO: unit test to assert that it matches .dropdown-menu .hitarea
+        'sm':   30px, // TODO: unit test to assert that it matches .dropdown-menu-md .hitarea
+        'lg':   44px
+    ),
+    'heading-padding': (
+        'base': (
+            'top': get($dialog-size-base-config, 'title-padding-top'),
+            'bottom': get($dialog-size-base-config, 'title-padding-bottom')
+        ),
+        'xs': (
+            'top': get($dialog-size-sm-config, 'title-padding-top'),
+            'bottom': get($dialog-size-sm-config, 'title-padding-bottom')
+        ),
+        'sm': (
+            'top': get($dialog-size-base-config, 'title-padding-top'),
+            'bottom': get($dialog-size-base-config, 'title-padding-bottom')
+        ),
+        'lg': (
+            'top': get($dialog-size-base-config, 'title-padding-top'),
+            'bottom': get($dialog-size-base-config, 'title-padding-bottom')
+        )
+    ),
+    'line-height': (
+        'base': get-deep($global-component-size-config, 'line-height.base'),
+        'xs': get($dropdown-menu-base-size-config, 'line-height'),
+        'sm': get($dropdown-menu-md-size-config, 'line-height'),
+        'lg': get-deep($global-component-size-config, 'line-height.base')
+    ),
+    'font-size': (
+        'base': get-deep($global-component-size-config, 'font-size.base'),
+        'xs': get($dropdown-menu-base-size-config, 'font-size'),
+        'sm': get($dropdown-menu-md-size-config, 'font-size'),
+        'lg': get-deep($global-component-size-config, 'font-size.base')
+    ),
+    'heading-font-size': (
+        'base': get($dialog-size-base-config, 'header-font-size'),
+        'xs': get($dialog-size-sm-config, 'header-font-size'),
+        'sm': get($dialog-size-base-config, 'header-font-size'),
+        'lg': get($dialog-size-base-config, 'header-font-size')
+    ),
+    'heading-line-height': (
+        'base': get($dialog-size-base-config, 'header-line-height'),
+        'xs': get($dialog-size-sm-config, 'header-line-height'),
+        'sm': get($dialog-size-base-config, 'header-line-height'),
+        'lg': get($dialog-size-base-config, 'header-line-height')
+    )
+) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $list-group-item-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $list-group-item-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $list-group-item-margin-bottom: get($list-group-item-config, 'margin-bottom');
+        //
+        $list-group-item-padding-top: get-deep($list-group-item-config, 'padding.base.top');
+        $list-group-item-padding-top-xs: get-deep($list-group-item-config, 'padding.xs.top');
+        $list-group-item-padding-top-sm: get-deep($list-group-item-config, 'padding.sm.top');
+        $list-group-item-padding-top-lg: get-deep($list-group-item-config, 'padding.lg.top');
+        //
+        // account for the negative bottom margin used between
+        // list group items so that the items end up being
+        // the standard component height
+        //
+        $list-group-item-padding-bottom: $list-group-item-padding-top + abs($list-group-item-margin-bottom);
+        $list-group-item-padding-bottom-xs: $list-group-item-padding-top-xs + abs($list-group-item-margin-bottom);
+        $list-group-item-padding-bottom-sm: $list-group-item-padding-top-sm + abs($list-group-item-margin-bottom);
+        $list-group-item-padding-bottom-lg: $list-group-item-padding-top-lg + abs($list-group-item-margin-bottom);
+        //
+        $list-group-item-padding-horizontal: get-deep($list-group-item-config, 'padding.base.horizontal');
+        $list-group-item-padding-horizontal-xs: get-deep($list-group-item-config, 'padding.xs.horizontal');
+        $list-group-item-padding-horizontal-sm: get-deep($list-group-item-config, 'padding.sm.horizontal');
+        $list-group-item-padding-horizontal-lg: get-deep($list-group-item-config, 'padding.lg.horizontal');
+        //
+
+        // ----- EXTEND list group item config with calc'd values ----- //
+        $list-group-item-config: extend($list-group-item-config,
+            (
+                'padding': (
+                    'base': (
+                        'bottom': $list-group-item-padding-bottom,
+                        'all': $list-group-item-padding-top $list-group-item-padding-horizontal $list-group-item-padding-bottom
+                    ),
+                    'xs': (
+                        'bottom': $list-group-item-padding-bottom-xs,
+                        'all': $list-group-item-padding-top-xs $list-group-item-padding-horizontal-xs $list-group-item-padding-bottom-xs
+                    ),
+                    'sm': (
+                        'bottom': $list-group-item-padding-bottom-sm,
+                        'all': $list-group-item-padding-top-sm $list-group-item-padding-horizontal-sm $list-group-item-padding-bottom-sm
+                    ),
+                    'lg': (
+                        'bottom': $list-group-item-padding-bottom-lg,
+                        'all': $list-group-item-padding-top-lg $list-group-item-padding-horizontal-lg $list-group-item-padding-bottom-lg
+                    )
+                )
+            )
+        );
+
+
+
+///
+/// Configuration for clickable `.list-group.hitarea` elems, typically used to render vertical navigation lists.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {variable} $list-group-base-config
+/// @requires {variable} $nav-link-config
+/// @requires {variable} $nav-pills-pill-link-skin-colors
+/// @requires {variable} $btn-config
+/// ---
+/// @prop {Color} bg          [transparent]   - Default background color
+/// @prop {Color} bg-hover    [transparent]   - Hovered background color
+/// @prop {Color} bg-press    [transparent]   - Pressed background color
+/// @prop {Color} bg-active   [transparent]   - Active background color
+/// @prop {Color} bg-disabled [inherit]       - Disabled background color
+///
+/// @prop {Color} text-color          [#595959]   - Default text color
+/// @prop {Color} text-color-hover    [#0094ff]   - Hovered text color
+/// @prop {Color} text-color-press    [#0085e6]   - Pressed text color
+/// @prop {Color} text-color-active   [#0085e6]   - Active text color
+/// @prop {Color} text-color-disabled [inherit]   - Disabled text color
+///
+/// @prop {Number} disabled-alpha [.45] - Opacity alpha value when disabled
+///
+$list-group-link-config: (
+    'bg': get($list-group-base-config, 'bg'),
+    'bg-hover': get($list-group-base-config, 'bg'),
+    'bg-press': get($list-group-base-config, 'bg'),
+    'bg-active': get($list-group-base-config, 'bg'),
+    'bg-disabled': inherit,
+    //
+    'text-color': get($nav-link-config, 'text-color'),
+    'text-color-hover': get($nav-pills-pill-link-skin-colors, 'text-hover'),
+    'text-color-press': get($nav-pills-pill-link-skin-colors, 'text-press'),
+    'text-color-active': get($nav-pills-pill-link-skin-colors, 'bg-active'),
+    'text-color-disabled': inherit,
+    //
+    'disabled-alpha': get($btn-config, 'disabled-alpha')
+) !default;
+
+
+
+// ********************************************************
+//
+//   LIST GROUP ITEM SKIN COLOR VARIATIONS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   SHARED SKIN VARIATION COLOR CONFIG
+    // ----------------------------------------------------
+        ///
+        /// These colors are shared amongst all of the configs found in `$list-group-item-colors` since list group item color variations since they all have a muted color background and need a non-link color scheme for text colors.
+        /// ---
+        /// @since 1.4.0
+        /// ---
+        /// @requires {function} get
+        /// @requires {variable} $nav-secondary-link-config
+        /// ---
+        /// @prop {Color}  text-color          [#595959]   - Default text color
+        /// @prop {Color}  text-color-hover    [#505050]   - Hovered text color
+        /// @prop {Color}  text-color-press    [#4b4b4b]   - Pressed text color
+        /// @prop {Color}  text-color-active   [#474747]   - Active text color
+        /// @prop {Color}  text-color-disabled [inherit]   - Disabled text color
+        ///
+        $list-group-item-variation-shared-colors: (
+            'text-color': get($nav-secondary-link-config, 'text-color'),
+            'text-color-hover': get($nav-secondary-link-config, 'text-color-hover'),
+            'text-color-press': get($nav-secondary-link-config, 'text-color-press'),
+            'text-color-active': get($nav-secondary-link-config, 'text-color-active'),
+            'text-color-disabled': inherit
+        ) !default;
+
+
+    // ----------------------------------------------------
+    //   ALTERNATE COLOR CONFIG
+    // ----------------------------------------------------
+        ///
+        /// Colors used by the `.list-group-item` component's `.list-group-item-alt` color variation.
+        ///
+        /// Extends `$list-group-item-variation-shared-colors`.
+        /// ---
+        /// @requires {function} get
+        /// @requires {function} extend
+        /// @requires {variable} $nav-secondary-link-config
+        /// @requires {variable} $component-state-alt-bg
+        /// @requires {variable} $component-state-alt-bg-hover
+        /// @requires {variable} $component-state-alt-bg-press
+        /// @requires {variable} $component-state-alt-bd
+        /// ---
+        /// @prop {Color} bg         [#ebf7ff] - Background color of `.list-group-item-alt`
+        /// @prop {Color} bg-hover   [#d6eeff] - Background color of a hovered, clickable `.list-group-item-alt .hitarea`.
+        /// @prop {Color} bg-press   [#bde3ff] - Background color of a pressed, clickable `.list-group-item-alt .hitarea`. Since `1.4.0`
+        /// @prop {Color} bg-active  [#d6eeff] - Background color of an active, clickable `.list-group-item-alt .hitarea`. Since `1.4.0`
+        /// @prop {Color} bd-color   [#0085e6] - Border color of `.list-group-item-alt`
+        ///
+        /// @prop {Color}  text-color          [#595959]   - Default text color. Since `1.4.0`
+        /// @prop {Color}  text-color-hover    [#505050]   - Hovered text color. Since `1.4.0`
+        /// @prop {Color}  text-color-press    [#4b4b4b]   - Pressed text color. Since `1.4.0`
+        /// @prop {Color}  text-color-active   [#474747]   - Active text color. Since `1.4.0`
+        /// @prop {Color}  text-color-disabled [inherit]   - Disabled text color. Since `1.4.0`
+        ///
+        $list-group-item-colors-alt: extend($list-group-item-variation-shared-colors, (
+            'bg': $component-state-alt-bg,
+            'bg-hover': $component-state-alt-bg-hover,
+            'bg-press': $component-state-alt-bg-press,
+            'bg-active': $component-state-alt-bg-hover,
+            'bd-color': $component-state-alt-bd
+        )) !default;
+
+
+    // ----------------------------------------------------
+    //   SUCCESS COLOR CONFIG
+    // ----------------------------------------------------
+        ///
+        /// Colors used by the `.list-group-item` component's `.list-group-item-success` color variation.
+        ///
+        /// Extends `$list-group-item-variation-shared-colors`.
+        /// ---
+        /// @requires {function} get
+        /// @requires {function} extend
+        /// @requires {variable} $nav-secondary-link-config
+        /// @requires {variable} $component-state-success-bg
+        /// @requires {variable} $component-state-success-bg-hover
+        /// @requires {variable} $component-state-success-bg-press
+        /// @requires {variable} $component-state-success-bd
+        /// ---
+        /// @prop {Color} bg         [#f6fcf0] - Background color of `.list-group-item-success`
+        /// @prop {Color} bg-hover   [#e7f3e0] - Background color of a hovered, clickable `.list-group-item-success .hitarea`.
+        /// @prop {Color} bg-press   [#e1f5cb] - Background color of a pressed, clickable `.list-group-item-success .hitarea`. Since `1.4.0`
+        /// @prop {Color} bg-active  [#e7f3e0] - Background color of an active, clickable `.list-group-item-success .hitarea`. Since `1.4.0`
+        /// @prop {Color} bd-color   [#70b84d] - Border color of `.list-group-item-success`
+        ///
+        /// @prop {Color}  text-color          [#595959]   - Default text color. Since `1.4.0`
+        /// @prop {Color}  text-color-hover    [#505050]   - Hovered text color. Since `1.4.0`
+        /// @prop {Color}  text-color-press    [#4b4b4b]   - Pressed text color. Since `1.4.0`
+        /// @prop {Color}  text-color-active   [#474747]   - Active text color. Since `1.4.0`
+        /// @prop {Color}  text-color-disabled [inherit]   - Disabled text color. Since `1.4.0`
+        ///
+        $list-group-item-colors-success: extend($list-group-item-variation-shared-colors, (
+            'bg': $component-state-success-bg,
+            'bg-hover': $component-state-success-bg-hover,
+            'bg-press': $component-state-success-bg-press,
+            'bg-active': $component-state-success-bg-hover,
+            'bd-color': $component-state-success-bd
+        )) !default;
+
+
+    // ----------------------------------------------------
+    //   WARNING COLOR CONFIG
+    // ----------------------------------------------------
+        ///
+        /// Colors used by the `.list-group-item` component's `.list-group-item-warning` color variation.
+        ///
+        /// Extends `$list-group-item-variation-shared-colors`.
+        /// ---
+        /// @requires {function} get
+        /// @requires {function} extend
+        /// @requires {variable} $nav-secondary-link-config
+        /// @requires {variable} $component-state-warning-bg
+        /// @requires {variable} $component-state-warning-bg-hover
+        /// @requires {variable} $component-state-warning-bg-press
+        /// @requires {variable} $component-state-warning-bd
+        /// ---
+        /// @prop {Color} bg         [#fffaf1] - Background color of `.list-group-item-warning`
+        /// @prop {Color} bg-hover   [#fff5e3] - Background color of a hovered, clickable `.list-group-item-warning .hitarea`.
+        /// @prop {Color} bg-press   [#ffecc9] - Background color of a pressed, clickable `.list-group-item-warning .hitarea`. Since `1.4.0`
+        /// @prop {Color} bg-active  [#fff5e3] - Background color of an active, clickable `.list-group-item-warning .hitarea`. Since `1.4.0`
+        /// @prop {Color} bd-color   [#f69864] - Border color of `.list-group-item-warning`
+        ///
+        /// @prop {Color}  text-color          [#595959]   - Default text color
+        /// @prop {Color}  text-color-hover    [#505050]   - Hovered text color
+        /// @prop {Color}  text-color-press    [#4b4b4b]   - Pressed text color
+        /// @prop {Color}  text-color-active   [#474747]   - Active text color
+        /// @prop {Color}  text-color-disabled [inherit]   - Disabled text color
+        ///
+        $list-group-item-colors-warning: extend($list-group-item-variation-shared-colors, (
+            'bg': $component-state-warning-bg,
+            'bg-hover': $component-state-warning-bg-hover,
+            'bg-press': $component-state-warning-bg-press,
+            'bg-active': $component-state-warning-bg-hover,
+            'bd-color': $component-state-warning-bd
+        )) !default;
+
+
+    // ----------------------------------------------------
+    //   DANGER COLOR CONFIG
+    // ----------------------------------------------------
+        ///
+        /// Colors used by the `.list-group-item` component's `.list-group-item-danger` color variation.
+        ///
+        /// Extends `$list-group-item-variation-shared-colors`.
+        /// ---
+        /// @requires {function} get
+        /// @requires {function} extend
+        /// @requires {variable} $nav-secondary-link-config
+        /// @requires {variable} $component-state-danger-bg
+        /// @requires {variable} $component-state-danger-bg-hover
+        /// @requires {variable} $component-state-danger-bg-press
+        /// @requires {variable} $component-state-danger-bd
+        /// ---
+        /// @prop {Color} bg         [#fef2f2] - Background color of `.list-group-item-danger`
+        /// @prop {Color} bg-hover   [#fde5e5] - Background color of a hovered, clickable `.list-group-item-danger .hitarea`.
+        /// @prop {Color} bg-press   [#fbcdcd] - Background color of a pressed, clickable `.list-group-item-danger .hitarea`. Since `1.4.0`
+        /// @prop {Color} bg-active  [#fde5e5] - Background color of an active, clickable `.list-group-item-danger .hitarea`. Since `1.4.0`
+        /// @prop {Color} bd-color   [#c15f5e] - Border color of `.list-group-item-danger`
+        ///
+        /// @prop {Color}  text-color          [#595959]   - Default text color. Since `1.4.0`
+        /// @prop {Color}  text-color-hover    [#505050]   - Hovered text color. Since `1.4.0`
+        /// @prop {Color}  text-color-press    [#4b4b4b]   - Pressed text color. Since `1.4.0`
+        /// @prop {Color}  text-color-active   [#474747]   - Active text color. Since `1.4.0`
+        /// @prop {Color}  text-color-disabled [inherit]   - Disabled text color. Since `1.4.0`
+        ///
+        $list-group-item-colors-danger: extend($list-group-item-variation-shared-colors, (
+            'bg': $component-state-danger-bg,
+            'bg-hover': $component-state-danger-bg-hover,
+            'bg-press': $component-state-danger-bg-press,
+            'bg-active': $component-state-danger-bg-hover,
+            'bd-color': $component-state-danger-bd
+        )) !default;
+
+
+    // ----------------------------------------------------
+    //   COLOR COLLECTION
+    // ----------------------------------------------------
+        ///
+        /// Convenience collection of colors for each `.list-group-item` color variation.
+        /// Great for building dynamic values within loops, etc...
+        /// ---
+        /// @requires {variable} $list-group-item-colors-alt
+        /// @requires {variable} $list-group-item-colors-success
+        /// @requires {variable} $list-group-item-colors-warning
+        /// @requires {variable} $list-group-item-colors-danger
+        /// ---
+        /// @prop {Map} alt       - Color config map for `.list-group-item-alt` components
+        /// @prop {Map} success   - Color config map for `.list-group-item-success` components
+        /// @prop {Map} warning   - Color config map for `.list-group-item-warning` components
+        /// @prop {Map} danger    - Color config map for `.list-group-item-danger` components
+        ///
+        $list-group-item-colors: (
+            'alt':      $list-group-item-colors-alt,
+            'success':  $list-group-item-colors-success,
+            'warning':  $list-group-item-colors-warning,
+            'danger':   $list-group-item-colors-danger
+        ) !default;

@@ -1,0 +1,53 @@
+// ********************************************************
+//
+//   We use the flextext js plugin to simulate
+//   scalable textareas when we demo our
+//   comment peripheral module
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/vendor/flextext-js';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.popover-comment,
+.panel-comment {
+    .flex-text-wrap {
+        overflow: auto;
+        overflow-x: hidden;
+
+        pre {
+            // match the characteristics of a textarea
+            @include form-control-base();
+            border-color: transparent !important;
+            width: 100%;
+            // when in popovers... textareas have no margin, either.
+            margin: 0;
+            // make sure we cannot see it behind the textarea
+            background: transparent;
+            border-color: transparent;
+            box-shadow: none !important;
+
+            // hide until comment-editing is true
+            height: 0;
+            display: block;
+            visibility: hidden;
+            padding: 0;
+        }
+
+        textarea {
+            @include transition(height $default-collapse-speed ease);
+        }
+    }
+
+    &.comment-editing,
+    &.popover-thread .comment-editing {
+        .flex-text-wrap pre {
+            visibility: visible;
+            padding: to-rem($padding-base-vertical 0 $padding-base-vertical $padding-base-horizontal);
+            height: auto;
+        }
+    }
+}

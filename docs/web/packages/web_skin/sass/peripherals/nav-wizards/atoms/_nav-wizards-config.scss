@@ -1,0 +1,47 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/nav-wizards/atoms/nav-wizards-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   NAV WIZARD CONFIGS
+// ----------------------------------------------------
+    // ----- ALIAS CORE NAV CONFIG PROPERTIES ----- //
+    $nav-pills-pill-spacing: get($nav-pills-pill-config, 'spacing');
+    $nav-link-padding-left: get($nav-link-config, 'padding-horizontal');
+    $nav-link-height: get($nav-link-config, 'height');
+
+    // ----- WIZARD CONFIG PROPERTIES ----- //
+    $nav-wizard-selector: '.nav-justified.nav-wizard';
+    $nav-wizard-arrow-width: get($nav-link-config, 'height') / 2;
+    $nav-wizard-sep-arrow-width: $nav-wizard-arrow-width + get($nav-pills-pill-config, 'spacing');
+
+
+// ----------------------------------------------------
+//   NAVBAR NAV WIZARD CONFIGS
+// ----------------------------------------------------
+    // ----- ALIAS CORE NAVBAR CONFIG PROPERTIES ----- //
+    $navbar-height: get($navbar-base-config, 'height');
+    $navbar-bd-radius: get($navbar-base-config, 'bd-radius');
+    $navbar-bd-width: get($navbar-base-config, 'bd-width');
+    $navbar-bg: get($navbar-base-config, 'bg');
+    $navbar-link-color: get($navbar-link-config, 'text-color');
+    $navbar-ribbon-tab-link-bd-color-active: get($nav-ribbon-tab-link-config, 'bd-color-active');
+
+    // ----- NAVBAR WIZARD CONFIG PROPERTIES ----- //
+    $navbar-wizard-selector:        '.navbar #{$nav-wizard-selector}';
+    $navbar-wizard-inset:           0;
+    $navbar-wizard-link-height:     floor($navbar-height - ($navbar-bd-width * 2));
+    $navbar-wizard-link-bg:         if(get($navbar-base-config, 'bg') == white, darken(get($navbar-base-config, 'bg'), 10%), darken(get($navbar-base-config, 'bg'), 5%));
+    $navbar-wizard-link-bg-active:  $navbar-ribbon-tab-link-bd-color-active;
+    $navbar-wizard-arrow-width:     floor(($navbar-wizard-link-height + $navbar-bd-width) / 2);
+    $navbar-wizard-sep-arrow-width: floor($navbar-wizard-arrow-width + ($navbar-bd-width * 2));

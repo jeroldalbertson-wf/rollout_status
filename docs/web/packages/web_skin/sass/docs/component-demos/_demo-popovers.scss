@@ -1,0 +1,93 @@
+// ********************************************************
+//
+//   DEPENDENCIES:
+//
+    @import '../../peripherals/comments/atoms/comments-popover-config';
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-popovers';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Base popover example containers
+// ----------------------------------------------------
+.ws-example-popover {
+    padding-bottom: 2.4rem;
+    background-color: #f9f9f9;
+
+    + .highlight-wrapper .code-toggle {
+        border-top-color: #f9f9f9;
+        background-color: #f9f9f9;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Inline datepicker
+// ----------------------------------------------------
+.ws-example .popover.datepicker-inline {
+    z-index: 1;
+}
+
+
+// ----------------------------------------------------
+//   Popovers within example containers
+// ----------------------------------------------------
+.ws-popover-menu-example .popover {
+    z-index: 1;
+}
+
+.ws-example-popover .popover {
+    @include opacity(1);
+
+    display: block;
+    position: relative;
+    z-index: 1;
+    float: left;
+    width: 26rem;
+    margin: 2rem;
+}
+
+// ----------------------------------------------------
+//   Fixed position popover variation
+//
+//   @todo: figure out what this is used for
+// ----------------------------------------------------
+.popover-fixed {
+    position: fixed;
+}
+
+
+// ----------------------------------------------------
+//   Popover Comments Examples
+// ----------------------------------------------------
+.ws-example-comment-popover,
+.ws-example-comment-thread-popover {
+    .popover {
+        @include opacity(1);
+
+        display: block;
+        position: absolute;
+        z-index: 1;
+        top: auto;
+        // needs to be bottom aligned for accurate demo of how
+        // height adjusts, but arrow stays pointing at the same thing
+        bottom: 2rem;
+        // fill the width of the grid span
+        left: 50%;
+        margin-left: to-rem($popover-comment-width / -2);
+    }
+}
+
+.ws-example-comment-thread-popover {
+    min-height: 45rem;
+
+    [class*="col-"] {
+        min-height: 45rem;
+        position: relative;
+    }
+}

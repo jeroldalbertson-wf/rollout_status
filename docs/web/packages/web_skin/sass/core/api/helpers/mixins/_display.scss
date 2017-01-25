@@ -1,0 +1,493 @@
+// ********************************************************
+
+////
+/// Global mixins relating to display / alignment
+/// ---
+/// @access public
+/// @group core.display
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/display';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function chisel,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+///
+/// Reusable cursor styles to add to any element, or child of any element that is in a disabled state.
+/// ---
+/// @since 1.0.0
+/// ---
+/// @param {Bool} $important [false] - Whether or not to add the `!important` flag to the styles
+///
+@mixin disabled-cursor($important: false) {
+    $important: if($important == false, '', '!important');
+
+    cursor: default #{$important};        // down-level fallback
+    cursor: not-allowed #{$important};    // preferred
+    pointer-events: none #{$important};   // future-proofing (actually disables click events)
+}
+
+///
+/// Custom "grab" (open hand) cursor styles for draggable components.
+/// ---
+/// @since 1.6.0
+/// @see {mixin} grabbing-cursor
+/// ---
+/// @example scss
+///   .draggable {
+///     @include grab-cursor();
+///
+///     &:active {
+///       @include grabbing-cursor();
+///     }
+///   }
+/// ---
+/// @param {Bool} $important [false] - Whether or not to add the `!important` flag to the styles
+///
+@mixin grab-cursor($important: false) {
+    $important: if($important == false, '', '!important');
+
+    cursor: move #{$important}; // fallback: no `url()` support or images disabled
+    cursor: url('https://cdn.wdesk.com/web-skin/1.6.0/img/cursors/wgrab.cur'), move #{$important}; // fallback: Internet Explorer
+    cursor: -webkit-grab #{$important}; // Chrome 1-21
+    cursor:    -moz-grab #{$important}; // Firefox 1.5-26
+    cursor:         grab #{$important}; // W3C standard
+}
+
+///
+/// Custom "grabbing" (closed hand) cursor styles for draggable components.
+/// ---
+/// @since 1.6.0
+/// @see {mixin} grab-cursor
+/// ---
+/// @example scss
+///   .dragging {
+///     @include grabbing-cursor();
+///   }
+/// ---
+/// @param {Bool} $important [false] - Whether or not to add the `!important` flag to the styles
+///
+@mixin grabbing-cursor($important: false) {
+    $important: if($important == false, '', '!important');
+
+    cursor: move #{$important}; // fallback: no `url()` support or images disabled
+    cursor: url('https://cdn.wdesk.com/web-skin/1.6.0/img/cursors/wgrabbing.cur'), move #{$important}; // fallback: Internet Explorer
+    cursor: -webkit-grabbing #{$important}; // Chrome 1-21
+    cursor:    -moz-grabbing #{$important}; // Firefox 1.5-26
+    cursor:         grabbing #{$important}; // W3C standard
+}
+
+///
+/// Custom "select-data-row" _(right arrow)_ cursor styles for use in workbooks / data grids.
+/// ---
+/// @since 1.6.5
+/// @see {mixin} select-data-column-cursor
+/// ---
+/// @example scss
+///   .cursor-selectable-row {
+///     @include select-data-row-cursor();
+///   }
+/// ---
+/// @param {Bool} $important [false] - Whether or not to add the `!important` flag to the styles
+///
+@mixin select-data-row-cursor($important: false) {
+    $important: if($important == false, '', '!important');
+
+    cursor: cell #{$important}; // fallback: no `url()` support or images disabled
+    cursor: url('https://cdn.wdesk.com/web-skin/1.6.5/img/cursors/select-data-row-arrow.cur'), cell #{$important};
+}
+
+///
+/// Custom "select-data-column" _(down arrow)_ cursor styles for use in workbooks / data grids.
+/// ---
+/// @since 1.6.5
+/// @see {mixin} select-data-row-cursor
+/// ---
+/// @example scss
+///   .cursor-selectable-column {
+///     @include select-data-column-cursor();
+///   }
+/// ---
+/// @param {Bool} $important [false] - Whether or not to add the `!important` flag to the styles
+///
+@mixin select-data-column-cursor($important: false) {
+    $important: if($important == false, '', '!important');
+
+    cursor: cell #{$important}; // fallback: no `url()` support or images disabled
+    cursor: url('https://cdn.wdesk.com/web-skin/1.6.5/img/cursors/select-data-column-arrow.cur'), cell #{$important};
+}
+
+///
+/// Reusable styles to remove any focus styles added via `outline` or `box-shadow` properties.
+/// ---
+/// @since 1.0.0
+/// @see {mixin} focus-shadow
+/// @see {mixin} focus-shadow-inset
+/// @see {mixin} focus-outline
+/// ---
+/// @param {Bool} $important [false] - Whether or not to add the `!important` flag to the styles
+/// @param {Bool} $remove-box-shadow [true] - Whether or not to set `box-shadow: none;`
+///
+@mixin remove-focus-outline($important: false, $remove-box-shadow: true) {
+    $important: if($important == false, '', '!important');
+
+    outline: 0 #{$important};
+
+    @if $remove-box-shadow {
+        box-shadow: none #{$important};
+    }
+}
+
+///
+/// Reusable styles to add the default Web Skin `:focus` outline appearance using `outline`.
+/// Do not use on elems that have rounded corners.
+/// ---
+/// @since 0.4.23
+/// @see {mixin} focus-shadow
+/// @see {mixin} focus-shadow-inset
+/// @see {mixin} focus-border
+/// ---
+/// @requires {function} get
+/// @requires {variable} $form-control-colors
+/// ---
+/// @param {Color} $color   [#33a9ff]   - Color of the outline
+/// @param {Number} $width  [.1rem]     - Width of the outline
+/// @param {Number} $offset [.1rem]     - If `$width` matches `$offset`, the outline will line up with / overlap any border that is pre-existing.
+/// @param {String} $style  [solid]
+/// @param {Bool} $important [false]
+///
+@mixin focus-outline($color: get($form-control-colors, 'bd-focus'), $width: .1rem, $offset: .1rem, $style: solid, $important: false) {
+    $important: if($important == false, '', '!important');
+
+    outline-width: $width #{$important};
+    outline-offset: $offset #{$important};
+    outline-style: $style #{$important};
+    outline-color: $color #{$important};
+}
+
+
+///
+/// Reusable styles to add the default Web Skin `:focus` outline appearance using an inset `box-shadow` instead of `outline`.
+/// Typically used when the elem being focused is contained within a same-size item that has `overflow: hidden`, which prevents traditional `outline` styles from being rendered.
+/// __Do not use on elements that have a border color set.__
+/// ---
+/// @since 1.0.0
+/// @see {mixin} focus-outline
+/// @see {mixin} focus-border
+/// @see {mixin} focus-shadow
+/// ---
+/// @requires {function} get
+/// @requires {variable} $form-control-colors
+/// ---
+/// @param {Color}   $color  [#33a9ff]
+/// @param {Number}  $width  [.1rem]
+/// @param {Boolean} $global [true]     - If `true`, `outline` will be set to `0`
+/// @param {Boolean} $important [false]
+///
+@mixin focus-shadow-inset($color: get($form-control-colors, 'bd-focus'), $width: .1rem, $global: true, $important: false) {
+    $important: if($important == false, '', '!important');
+
+    @if $global {
+        outline: 0 #{$important};
+    }
+    box-shadow: inset 0 0 0 $width $color #{$important};
+}
+
+
+///
+/// Reusable styles to add the default Web Skin `:focus` outline appearance using `box-shadow` instead of `outline`.
+/// Typically used when the elem being focused has rounded corners.
+/// ---
+/// @since 0.4.23
+/// @see {mixin} focus-shadow-inset
+/// @see {mixin} focus-outline
+/// @see {mixin} focus-border
+/// ---
+/// @requires {function} get
+/// @requires {variable} $form-control-colors
+/// ---
+/// @param {Color}   $color  [#33a9ff]
+/// @param {Number}  $width  [.1rem]
+/// @param {Boolean} $global [true]     - If `true`, `outline` will be set to `0`
+/// @param {Boolean} $important [false]
+///
+@mixin focus-shadow(
+    $color: get($form-control-colors, 'bd-focus'),
+    $width: .1rem,
+    $global: true,
+    $inset: false,
+    $important: false
+) {
+    $important: if($important == false, '', '!important');
+
+    @if $global {
+        outline: 0 #{$important};
+    }
+
+    @if $inset {
+        box-shadow: inset 0 0 0 $width $color #{$important};
+    } @else {
+        box-shadow: 0 0 0 $width $color #{$important};
+    }
+}
+
+
+///
+/// Reusable styles to add the default Web Skin `:focus` outline appearance using `border` instead of `outline`.
+/// ---
+/// @since 0.4.23
+/// @see {mixin} focus-outline
+/// @see {mixin} focus-shadow
+/// @see {mixin} focus-shadow-inset
+/// ---
+/// @requires {function} get
+/// @requires {variable} $form-control-colors
+/// ---
+/// @param {Color}   $color     [#33a9ff]
+/// @param {Boolean} $global    [true]     - If `true`, `outline` will be set to `0`
+/// @param {Boolean} $important [false]
+///
+@mixin focus-border($color: get($form-control-colors, 'bd-focus'), $global: true, $important: false) {
+    $important: if($important, '!important', '');
+
+    @if $global {
+        outline: 0 #{$important};
+    }
+    border-color: $color #{$important};
+    box-shadow: none; // overrule any previously established focus-shadow() styles
+}
+
+
+///
+/// Reusable styles to reset all default styles applied to `<button>` elems
+/// ---
+/// @since 0.2.0
+/// ---
+/// @param {Boolean} $set-cursor  [true] - Whether the `cursor` property should be set to `pointer`
+///
+@mixin button-normalize($set-cursor: true) {
+    padding: 0;
+    margin: 0; // For input.btn
+    background-color: transparent;
+    border: 0 none;
+    @include appearance(none);
+    @include disable-user-select();
+
+    @if $set-cursor {
+        cursor: pointer;
+    }
+}
+
+
+///
+/// Reusable styles to make an element round
+/// ---
+/// @since 1.0.0
+///
+@mixin make-circle {
+    border-radius: 50%;
+}
+
+
+///
+/// A seemingly pointless mixin to automatically set the `overflow-x` and `overflow-y` properties
+/// to the same `$value` as the `overflow` property since MSIE doesn't know how to browser correctly.
+/// ---
+/// @since 1.7.3
+/// @link http://jira.atl.workiva.net/browse/UIP-1354 UIP-1354
+///
+@mixin force-overflow($value) {
+    overflow-x: $value;
+    overflow-y: $value;
+    overflow: $value;
+}
+
+
+///
+/// Reusable styles to make an element scroll with "inertia" in browsers / on devices that support it
+/// ---
+/// @since 1.1.0
+///
+@mixin scroll-inertia {
+    @if $ie-support {
+        -ms-overflow-style: -ms-autohiding-scrollbar;
+    }
+    @if $webkit-support {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+
+///
+/// Adjust the right padding of a vertically-scrollable element
+/// ---
+/// @since 0.4.6-2
+/// ---
+/// @requires {js} core/ua-sniffer-decorator
+/// ---
+/// @param {Number} $existing-pad [0] - amount of `padding-right` already applied to the element
+///
+@mixin scrollbar-compensation($existing-pad: 0) {
+    $width-default: get($scroll-bar-config, 'width-default');
+    $width-webkit:  get($scroll-bar-config, 'width-webkit');
+
+    $padding-adjustment:        if($existing-pad > $width-default,
+                                   $existing-pad - $width-default,
+                                   $width-default
+                                );
+    $padding-adjustment-webkit: if($existing-pad > $width-webkit,
+                                   $existing-pad - $width-webkit,
+                                   $width-webkit
+                                );
+
+    padding-right: to-rem($padding-adjustment);
+
+    @if $webkit-support {
+        .ua-chrome &,
+        .ua-safari & {
+            padding-right: to-rem($padding-adjustment-webkit);
+        }
+    }
+}
+
+
+///
+/// Reusable styles for an element that can be temporarily added to the DOM and used by JS to measure the width of a scrollbar if-present.
+/// ---
+/// @access private
+/// @since 1.0.0
+/// @group core.internals.display
+///
+@mixin scrollbar-measure {
+    position: absolute;
+    top: -999rem;
+    width: 5rem;
+    height: 5rem;
+    overflow: scroll;
+}
+
+
+///
+/// Vertically align an element using `top` or `margin-top` property based on it's height and the height of it's container
+/// ---
+/// @since 0.1.3
+/// @todo refactor
+/// ---
+/// @param {Number}  $container-height
+/// @param {Number}  $elem-height
+/// @param {String}  $property       [top]   - Accepts `top` or `margin-top`
+/// @param {Number}  $offset         [0]     - amount of vertical offset to apply once absolute vertical centering is calculated
+/// @param {String}  $offset-dir     [top]   - direction of vertical offset
+/// @param {Bool}    $need-bottom    [true]  - whether or not the `bottom` CSS property should be set to auto
+/// @param {Bool}    $is-important   [false] - whether or not the style declarations should have the `!important` flag added to them
+///
+@mixin valign($container-height,
+              $elem-height,
+              $property: top,
+              $offset: 0,
+              $offset-dir: top,
+              $need-bottom: true,
+              $is-important: false
+             )
+{
+    $property: unquote($property);
+
+    @if (not is-string($property)) or (not is($property, top margin-top)) {
+        @error "#{$property} is not a string with value of `top` or `margin-top`.";
+    }
+
+    $important: if($is-important == true, !important, '');
+    $neg-or-pos: if($offset-dir == top and $property == top, -1, 1);
+
+    #{$property}: to-rem(round($neg-or-pos * (($container-height - $elem-height) / 2)) + $offset) #{$important};
+
+    @if ($property == top) and $need-bottom {
+        bottom: auto #{$important};
+    }
+}
+
+
+///
+/// Micro clearfix utility that ensures the element clears any adjacent floated elements
+///
+@mixin clearfix {
+    &:before {
+        display: table;
+        content: "";
+    }
+    &:after {
+        display: table;
+        content: "";
+        clear: both;
+    }
+}
+
+
+///
+/// Properly size table cells when used in conjunction with `table-layout: fixed`
+/// ---
+/// @since 0.1.3
+/// @param {Number} $width
+///
+@mixin table-cell-width($width) {
+    width: to-rem($width);
+    max-width: to-rem($width);
+    min-width: to-rem($width);
+}
+
+
+///
+/// Display a horizontal divider based on the background color of the element it is within.
+/// ---
+/// @since 0.2.0
+/// ---
+/// @requires {variable} $body-bg
+/// @requires {variable} $line-height-base-px
+/// ---
+/// @param {Color}            $bg        [#ffffff]  - The background color of the 'surface' you want to place this divider on
+/// @param {Number | List}    $margin    [20px 0]   - Amount of distance you want between the divider and adjacent elements
+/// @param {Color | Boolean}  $bd-top    [false]    - Customize the top border color of the divider
+/// @param {Color | Boolean}  $bd-bottom [false]    - Customize the bottom border color of the divider
+///
+@mixin divider-horizontal($bg: $body-bg, $margin: $line-height-base-px 0, $bd-top: false, $bd-bottom: false) {
+
+    $bd-top-color: if($bd-top, $bd-top, chisel($bg, 'darken'));
+    $bd-bottom-color: if($bd-bottom, $bd-bottom, chisel($bg, 'lighten'));
+
+    clear: both;
+    margin: to-rem($margin);
+    overflow: hidden;
+    line-height: to-rem(get($nav-base-config, 'vertical-divider-height'));
+    background: transparent;
+    border: 0 none; // clear out default
+    border-top: to-rem($hr-bd-width) solid $bd-top-color;
+    border-bottom: to-rem($hr-bd-width) solid $bd-bottom-color;
+}
+
+
+///
+/// Display a vertical divider based on the background color of the element it is within.
+/// ---
+/// @since 0.2.0
+/// @requires {variable} $body-bg
+/// @param {Color} $bg [#ffffff] - The background color of the 'surface' you want to place this divider on.
+///
+@mixin divider-vertical($bg: $body-bg) {
+    position: absolute;
+    width: .1rem;
+    height: 100%;
+    margin: 0;
+    background-color: chisel($bg, 'darken');
+    border: 0 none;
+    border-left: to-rem($hr-bd-width) solid chisel($bg, 'lighten');
+}

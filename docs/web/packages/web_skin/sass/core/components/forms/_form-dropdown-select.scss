@@ -1,0 +1,343 @@
+// ********************************************************
+//
+//   ADVANCED DROPDOWN SELECT COMPONENTS STYLE MODULE
+//   http://bit.ly/webskin-forms-selects
+//
+//   Styling for the Web Skin Dart `DropdownSelect` component
+//   and its variations (multi select, typeahead, etc.)
+//
+//   Rendered into the web-skin docs using the wdesk-chosen.js
+//   jQuery plugin - but any true end-to-end testing for
+//   these components should be done using the Web Skin Dart docs.
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/forms/form-dropdown-select';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $forms-dd-select-module-config:  'core/components/atoms/forms/config/form-chosen-config';
+    $forms-dd-select-module-helpers: 'core/components/atoms/forms/forms-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $forms-dd-select-module-config,
+                                          $forms-dd-select-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//  BASE DROPDOWN SELECT WRAPPER, TRIGGER & MENU ELEMENTS
+//
+//  SINGLE - OR - MULTI-SELECT
+//
+//  [1] WRAPPER:
+//
+//      [1.1] Never allow the dd select to grow beyond the
+//            size of a parent container that has a
+//            prescribed width.
+//
+//            Necessary because of `.dropdown` being
+//            `inline-block`.
+//
+//
+//  [2] TRIGGER / "TOGGLE":
+//      Make text truncation work via absolute positioning
+//      on the caret, and a max-width applied to
+//      `inline-block` elements.
+//
+//      [2.1] Make room for the caret to the right of the
+//            selected value displayed within a single
+//            select's button trigger.
+//
+//      [2.2] Override inline width applied by web_skin_dart
+//            DropdownSelect component so that the trigger
+//            width does not flow outside the bounds of
+//            its horizontal layout flexbox parent.
+//            (Firefox only)
+//
+//  [3] MENU:
+//      `min-width` / `max-width` should not be set so that
+//      the width-setting logic in the dart component is
+//      the "source of truth" for menu width. (UIP-809)
+//
+//      TODO: In Web Skin `2.0.0`, the necessity of
+//      prescriptive min/max widths for dd menus should
+//      be re-evaluated altogether.
+//
+//
+//  [4] FILTERED RESULTS MENU:
+//      A `.dropdown-menu` nested within the top-level menu that
+//      contains filtered results.
+//
+//      [4.1] Should scroll independently since there is
+//            the potential for a "pinned" area containing
+//            a search input above it, and a "pinned" area
+//            beneath it containing "confirm" / "cancel"
+//            buttons. (UIP-1024 / UIP-984)
+//
+//      [4.2] When a sort button group is included beneath the
+//            .input-group-search, add top padding to it to
+//            add space between the input and btn group equal
+//            to the space before the input and after the btn group.
+//
+// ********************************************************
+// ----- [1] ----- //
+.dropdown-select {
+    max-width: 100%; // [1.1]
+
+    // ----- [2] ----- //
+    .dropdown-toggle {
+        max-width: 100%;
+
+        .form-horizontal & {
+            width: auto !important; // [2.2]
+        }
+
+        @at-root .dropdown-toggle__display-value {
+            margin-right: to-rem(get($caret-only-btn-widths, 'base') / 2); // [2.1]
+        }
+
+        .dropdown-toggle__display-value + .caret {
+            position: absolute;
+            top: to-rem($caret-offset-top);
+            right: to-rem(get-deep($btn-config, 'padding.base.horizontal'));
+        }
+    }
+
+    // ----- [3] ----- //
+    > .dropdown-menu,
+    > .dropdown-menu-md,
+    > .dropdown-menu-lg {
+        min-width: 0;
+        max-width: none;
+    }
+
+    // ----- [4] ----- //
+    @at-root .dropdown-menu--filterable {
+        @include dropdown-menu-outer();
+
+        @at-root .dropdown-menu__filtered-items {
+            @include dropdown-menu-nested(); // [4.1]
+        }
+
+        @at-root .dropdown-menu__sort-btn-group {
+          // [4.2]
+          padding-top: to-rem(get(get($dropdown-menu-sizes, 'base'), 'link-padding-vertical') +
+              get(get($dropdown-menu-sizes, 'base'), 'padding-vertical'));
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //  SIZE VARIATIONS
+    //
+    //  Accomplished by adding the `form-group-{size}` CSS class
+    //  to a parent `<div class="form-group">` that wraps around
+    //  the component.
+    // ----------------------------------------------------
+    @each $size-name, $size-config in $chsn-search-size-variations {
+        .form-group-#{$size-name} & {
+            .dropdown-toggle {
+                @include dropdown-select-size($size-name, $size-config);
+            }
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//  Form Group Size Wrapper for Pills
+//
+//  SINGLE - OR - MULTI-SELECT
+//
+//  [1] WRAPPER:
+//
+//      [1.1] Make sure that all pills get set to the appropriate size
+//            regardless of whether they are in a dropdown or not
+//
+// ********************************************************
+@each $size-name, $size-config in $chsn-search-size-variations {
+    // ----- [1] ----- //
+    .form-group-#{$size-name} {
+        .dd-typeahead__pill {
+            @include typeahead-pill-size($size-name, $size-config); // [1.1]
+        }
+
+        .dd-typeahead__pill--dismissible {
+            @include typeahead-pill-dismissible-size($size-name, $size-config); // [1.1]
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//  MULTI-SELECT + TYPEAHEAD
+//
+//  [1] WRAPPER:
+//
+//      [1.1] Don't allow the text input appear to change
+//            width as the user types.  Unlike a button
+//            trigger that is typically only as wide as
+//            the value it needs to display by default -
+//            a text input trigger should be as wide as
+//            its container will allow.
+//
+//
+//  [2] TRIGGER / "TOGGLE":
+//      Now appears as a `.dd-typeahead` text input with
+//      the addition of the `form-control` CSS class.
+//
+//      [2.1] Override default `.form-control` padding.
+//
+//      [2.2] The typeahead text input trigger must be able
+//            to grow in height to fit all the selected
+//            "pills" which may need to display on more
+//            than one horizontal "line".
+//
+//
+//  [3] Within the trigger, a "pill box" displays selected
+//      values as "pills".
+//
+//      [3.1] Ensure that the height of the nested "pillbox"
+//            does not increase the height of the toggle
+//            input.
+//
+//      [3.2] Ensure that selected pills with a really long
+//            string value do not flow outside the boundary
+//            of the pillbox. (UIP-1242)
+//
+//
+//  [4] Within the trigger, adjacent to the "pill box" is a
+//      typeahead search input container.
+//
+//
+//  [5] Within the typeahead search input container is a
+//      proper `<input>` that is used to filter items within
+//      the nested `.dropdown-menu__filtered-items` menu as
+//      the user types.
+//
+//      [5.1] Zero-out the border (even on focus) since
+//            we'll add the focus border style to the outer
+//            `.dd-typeahead` elem using the `js-focus` CSS
+//            class.
+//
+//      [5.2] Since we need an actual value to dynamically
+//            add the necessary width for the input, we need
+//            to adjust the color of the text to look like a
+//            placeholder when it isn't focused.
+//
+//
+//  [6] Wrap selected pills / search input to new line when
+//      they do not fit along a single axis given the
+//      width of the `.dd-typeahead__pillbox`.
+//
+//      See: UIP-1146 / UIP-1369 for all of [6]
+//
+//      [6.1] The pills should "shrink" to whatever size
+//            their children dictate (e.g. `.grid-shrink`).
+//
+//      [6.1] All the search input to grow / shrink based
+//            on the width of it's adjacent pills.
+//
+//            The `flex-basis` value is adjusted based on
+//            the size variation of the component.
+//            See: `@mixin typeahead-search-size`.
+//
+// ********************************************************
+// ----- [1] ----- //
+.dropdown-select--typeahead {
+    width: 100%; // [1.1]
+
+    // ----- [2] ----- //
+    @at-root .dd-typeahead {
+        padding: 0; // [2.1]
+        height: auto; // [2.2]
+        cursor: text;
+
+        // ----- [3] ----- //
+        @at-root .dd-typeahead__pillbox {
+            @include display-flex();
+            @include grid-size(grow);
+            @include grid-wrap(wrap); // [6]
+
+            position: relative;
+            top: to-rem(get($form-control-config, 'bd-width')) * -1;
+            margin-bottom: to-rem(get($form-control-config, 'bd-width')) * -2; // [3.1]
+            line-height: .8; // [3.1] (firefox)
+            overflow: hidden; // [3.2]
+
+            @at-root .dd-typeahead__pill {
+                @include typeahead-pill-base();
+                @include typeahead-pill-skin-base();
+
+                @include grid-size(shrink); // [6.1]
+
+                // ----- BASE "PLATFORM" STYLES ----- //
+                &#{$chsn-search-choice-selected-platform} {
+                    @include typeahead-pill-selected-platform-base();
+                }
+                &#{$chsn-search-choice-hover-platform} {
+                    @include typeahead-pill-hover-platform-base();
+                }
+
+                // ----- HOVER STATE ----- //
+                #{$hover} {
+                    @include typeahead-pill-skin-hover();
+                }
+
+                // ----- FOCUSED ("SELECTED") / PRESSED STATES ----- //
+                &:focus,
+                &.js-focus {
+                    &,
+                    &:active {
+                        @include typeahead-pill-skin-selected();
+                    }
+                }
+
+                // ----- DISABLED STATE ----- //
+                &.disabled,
+                &[disabled],
+                &[aria-disabled="true"] {
+                    @include typeahead-pill-skin-disabled();
+                }
+            }
+
+            // ----- "DISMISSIBLE" PILL ----- //
+            @at-root .dd-typeahead__pill--dismissible {
+                @include typeahead-pill-dismissible-base();
+            }
+
+            // ----- "STAGED" (uncommitted) STATE (WSD Component Only) ----- //
+            @at-root .dd-typeahead__pill--staged {
+                @include typeahead-pill-skin-staged();
+            }
+        }
+
+        // ----- [4] ----- //
+        @at-root .dd-typeahead__search {
+            @include flex(1 1 $chsn-search-field-min-width); // [6.2]
+
+            display: inline-block;
+            padding: 0;
+            white-space: nowrap;
+            line-height: normal;
+            cursor: text;
+
+            // ----- [5] ----- //
+            @at-root .dd-typeahead__search__input {
+                border: 0; // [5.1]
+                background-color: transparent;
+
+                .dd-typeahead:not(#{$focus-class}) & { // [5.2]
+                    color: get-deep($form-control-config, 'colors.placeholder-text-base');
+                    @include disable-user-select();
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,82 @@
+// ********************************************************
+
+////
+/// Helper mixins pertaining to [CSS3 background properties](http://www.w3.org/TR/css3-background/)
+/// ---
+/// @since 1.1.0
+/// @access public
+/// @group core.utils.css3
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/css3/background';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function compact,
+                                                function set-arglist-default,
+                                                function is-string,
+                                                function is-number,
+                                                function is-color,
+                                                function is);
+//
+// ********************************************************
+
+
+///
+/// Clip the `background-image` and `background-color` at the edge of the padding, border, or content.
+/// ---
+/// @link http://www.w3.org/TR/css3-background/#the-background-clip CSS3 Background Clip Spec
+/// ---
+/// @param {String} $clip [padding-box] - Legal values are `padding-box`, `border-box`, `content-box` and `text`
+///
+@mixin background-clip($clip: padding-box) {
+    $deprecated: false;
+    $clip: unquote($clip);
+    $valid-clips: padding-box, border-box, content-box, text;
+
+    @if not is($clip, $valid-clips) {
+        @error "`background-clip` mixin expecting `$clip` param value to be one of (#{$valid-clips}). Was `#{$clip}`";
+    }
+
+    @include experimental(background-clip, $clip);
+}
+
+///
+/// Set the origin of the `background-image` and `background-color` at the edge of the padding, border, or content.
+/// ---
+/// @link http://www.w3.org/TR/css3-background/#the-background-origin CSS3 Background Origin Spec
+/// ---
+/// @param {String} $origin [padding-box] - Legal values are `padding-box`, `border-box` and `content-box`
+///
+@mixin background-origin($origin: content-box) {
+    $origin: unquote($origin);
+    $deprecated: false;
+
+    $valid-origins: padding-box, border-box, content-box;
+
+    @if not is($origin, $valid-origins) {
+        @error "`background-origin` mixin expecting `$origin` param value to be one of (#{$valid-origins}). Was `#{$origin}`";
+    }
+
+    @include experimental(background-origin, $origin);
+}
+
+///
+/// Set the size of background images using px, width and height, or percentages.
+/// __NOTE:__ Percentages are relative to the `background-origin`
+/// ---
+/// @link http://www.w3.org/TR/css3-background/#the-background-size CSS3 Background Size Spec
+/// ---
+/// @param {Arglist...} $sizes [100% auto]
+///
+@mixin background-size($sizes...) {
+    $sizes: set-arglist-default($sizes, 100% auto);
+
+    @each $size in $sizes {
+        @include experimental(background-size, $size);
+    }
+}

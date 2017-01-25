@@ -1,0 +1,39 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-cards';
+    $module: add-component-module($module);
+//
+//   DEPENDENCIES
+//
+    @import '../../core/components/atoms/cards/cards-config';
+    @import '../../core/components/atoms/cards/cards-helpers';
+//
+// ********************************************************
+
+
+.ws-example > .card {
+    // Since the primary use-case for cards
+    // is in some sort of sidebar / secondary
+    // content area, let's limit the width of
+    // our default card examples to mimic that.
+    max-width: 30rem;
+}
+
+// Card layout width demo
+.card-custom-width-example {
+    @include grid-size(20rem);
+}
+
+.card-custom-width-example-2 {
+    @include grid-size(40rem);
+}
+
+.cards-layout-custom-width-tabbed-markup {
+    // Make sure the height of the code examples
+    // is at least as tall as the vertical tabs
+    .highlight {
+        min-height: 16.5rem;
+    }
+}

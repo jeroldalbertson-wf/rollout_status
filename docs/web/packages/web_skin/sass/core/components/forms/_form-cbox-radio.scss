@@ -1,0 +1,214 @@
+// ********************************************************
+//
+//   FORM CHECKBOX / RADIO BUTTON STYLE MODULE
+//   http://bit.ly/webskin-forms-cbox-radio
+//
+//   label:before is the appearance of the empty checkbox/radio
+//   label:after acts as the active "indicator" appearance
+//
+//   Assuming you have some markup like this:
+//
+//   <div class="checkbox">
+//       <input type="checkbox" id="cbox1">
+//       <label for="cbox1">Errmegerd, its a label!</label>
+//   </div>
+//
+//   OR
+//
+//   <div class="radio">
+//       <input type="radio" id="radio1">
+//       <label for="radio1">Errmegerd, its a label!</label>
+//   </div>
+//
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/forms/form-cbox-radio';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $forms-cbox-radio-module-config:  'core/components/atoms/forms/forms-config';
+    $forms-cbox-radio-module-helpers: 'core/components/atoms/forms/forms-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $forms-cbox-radio-module-config,
+                                          $forms-cbox-radio-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE STYLES (SCREEN AND PRINT)
+//
+//   [1] Inherit the font-size from the parent `.form-group`
+//       or `.checkbox` element. Without this, the fixed
+//       size applied to top-level `label, .control-label`
+//       selectors will cause the text / control size to
+//       always be based on a 1.4rem font-size, regardless
+//       of the font-size of the parent element.
+//
+//       See: UIP-1695
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   BASE RADIO BUTTONS AND CHECKBOXES
+    //   -> "Stacked" appearance is the default
+    // ----------------------------------------------------
+    .radio,
+    .checkbox {
+        display: block;
+        margin-top: to-rem($base-elem-margin-vertical);
+        margin-bottom: to-rem($base-elem-margin-vertical);
+        font-family: $font-family-base;
+        font-weight: normal;
+
+        // ----- ADJACENT SIBLING SPACING ----- //
+        + .radio,
+        + .checkbox {
+            margin-top: to-rem($spacing-base) * -1;
+        }
+
+        label,
+        .control-label {
+            font-family: $font-family-base;
+            font-weight: normal;
+            font-size: inherit; // [1]
+        }
+    }
+
+    // ----------------------------------------------------
+    //   INLINE VARIATION
+    // ----------------------------------------------------
+    .radio-inline,
+    .checkbox-inline {
+        display: inline-block;
+        margin: 0;
+
+        @include ie-support {
+            input {
+                margin-top: to-rem(get($cbox-radio-config, 'margin-top'));
+            }
+        }
+
+        // ----- ADJACENT SIBLING SPACING ----- //
+        + .radio-inline,
+        + .checkbox-inline {
+            margin-top: 0;
+            margin-left: to-rem(get($cbox-radio-config, 'spacing-horizontal') / 2);
+        }
+    }
+
+
+// ********************************************************
+//
+//   SCREEN ONLY STYLES ("PRETTY")
+//
+// ********************************************************
+@media screen {
+
+    // ----------------------------------------------------
+    //   CHECKBOX AND RADIO BUTTONS
+    // ----------------------------------------------------
+        // ------------------------------------------------
+        //   In order to support the browser's form
+        //   validation feedback, powered by the `required`
+        //   attribute, we have to "hide" the inputs via
+        //   `opacity`. We cannot use `display: none;` or
+        //   `visibility: hidden;` as that also hides the
+        //   popover. This way, we ensure a DOM element is
+        //   visible to position the popover form.
+        // ------------------------------------------------
+        %hide-nested-btn-radio-checkbox {
+            position: absolute;
+            z-index: -1;
+            @include opacity(0);
+        }
+
+        //
+        // WS support for checkbox/radio "buttons"
+        //
+        .btn-toggle-group,
+        [data-toggle*="button"] {
+            input {
+                @extend %hide-nested-btn-radio-checkbox;
+            }
+        }
+
+        //
+        // WSR support for checkbox/radio "buttons"
+        // (since the `data-*` api doesn't exist in that context)
+        //
+        [role="button"] {
+            > input {
+                @extend %hide-nested-btn-radio-checkbox;
+            }
+        }
+
+    // ----------------------------------------------------
+    //   RADIO BUTTONS
+    // ----------------------------------------------------
+    .radio {
+        @include form-checkbox-radio-shared-screen-styles($type: radio);
+        @include make-circle();
+
+        input[type="radio"] {
+            //
+            // Even though this elem is hidden, we still
+            // should have it line up / mimic the
+            // appearance of the "fake" input we're showing
+            //
+            @include form-checkbox-radio-base();
+            @include form-radio-base();
+        }
+
+        label {
+            // ----- HOVER / FOCUS STATE ----- //
+            #{$link-hover-focus} {
+                &:after {
+                    background-color: get($cbox-radio-config, 'bg-checked');
+                }
+            }
+
+            // ----- PRESSED STATE ----- //
+            #{$link-pressed} {
+                &:after {
+                    background-color: get($cbox-radio-config, 'bg-checked');
+                }
+            }
+        }
+
+        // ----- CHECKED STATE ----- //
+        input:checked + label:after {
+            background-color: get($cbox-radio-config, 'bg-checked');
+        }
+    }
+
+    // ----------------------------------------------------
+    //   CHECKBOXES
+    // ----------------------------------------------------
+    .checkbox {
+        @include form-checkbox-radio-shared-screen-styles($type: checkbox);
+        @include border-radius(to-em($border-radius-base, $font-size-base));
+
+        input[type="checkbox"] {
+            //
+            // Even though this elem is hidden, we still
+            // should have it line up / mimic the
+            // appearance of the "fake" input we're showing
+            //
+            @include form-checkbox-radio-base();
+            @include form-checkbox-base();
+        }
+
+        // ----- INDETERMINATE INDICATOR ----- //
+        //
+        // :indeterminate has to be its own selector
+        // for it to be a valid selector in older browsers
+        //
+        input:indeterminate + label:after {
+            content: to-unicode(get-deep($icon-shared-pua-codes, 'main.minus'));
+        }
+    }
+}

@@ -1,0 +1,29 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for "Outline" Buttons
+ *
+ * NOTE: Moved into core web-skin.css
+ *       in 1.4.0, will be removed completely
+ *       in 2.0.0.
+ * ---
+ * MSIE Support: 10+
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import '../core/api';
+
+
+// ----------------------------------------------------
+//   Outline Button Skins
+// ----------------------------------------------------
+    @include btn-outline-skins($include-standard-btn-skins: true);

@@ -1,0 +1,265 @@
+// ********************************************************
+
+////
+/// Global `:hover`, `:focus`, `:active` config vars that change based on the value of the global `$touch-only` config value.
+/// ---
+/// @since 1.0.0
+/// @type String
+/// @group core.utils.elem-state
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/elem-states';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   ELEM STATE CSS CLASS DEFAULTS
+//
+// ********************************************************
+    ///
+    /// CSS utility class that is used to mimic `:hover` state using JS.
+    ///
+    $hover-class: '.js-hover';
+
+    ///
+    /// CSS utility class that is used to mimic `:focus` state using JS.
+    ///
+    $focus-class: '.js-focus';
+
+    ///
+    /// CSS utility class that is used to indicate selected state using JS.
+    ///
+    /// Similar to the `.active` CSS class, but used in situations where more than one item can be selected in the same parent.
+    /// ---
+    /// @since 1.5.0
+    ///
+    $selected-class: '.js-selected';
+
+    ///
+    /// CSS utility class that is used to mimic `:hover:active` ('pressed') state using JS.
+    /// ---
+    /// @todo find where `.active` is used in this connotation
+    ///
+    $press-class: '.js-pressed';
+
+
+
+// ********************************************************
+//
+//   ELEM STATES
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   HOVER STATE
+    // ----------------------------------------------------
+        ///
+        /// CSS pseudo-class for `:hover` state (using Sass `&` operator) that will dynamically change to `$hover-class` when `$touch-only` is `true`. Consider using `$link-hover-focus` for better accessibility styling.
+        /// ---
+        /// @since 0.1.0
+        /// @see {variable} hover-class
+        /// @see {variable} touch-only
+        /// @see {variable} link-hover-focus
+        /// ---
+        /// @example scss
+        ///   .hitarea {
+        ///       color: $link-color;
+        ///
+        ///       #{$hover} {
+        ///           color: $link-color-hover;
+        ///       }
+        ///   }
+        ///
+        $hover: '&#{$cl}hover';
+
+        ///
+        /// CSS pseudo-class for `:hover` state (inline without Sass `&` operator) that will dynamically change to `$hover-class` when `$touch-only` is `true`.
+        /// ---
+        /// @since 0.1.0
+        /// @see {variable} hover-class
+        /// @see {variable} touch-only
+        /// ---
+        /// @example scss
+        ///   .hitarea#{$hover-inline} {
+        ///       color: $link-color-hover;
+        ///   }
+        ///
+        $hover-inline: '#{$cl}hover';
+            // undocumented alias
+            $hover-nested: $hover;
+
+
+    // ----------------------------------------------------
+    //   FOCUS STATE
+    // ----------------------------------------------------
+        ///
+        /// CSS pseudo-class for `:focus` state of both `.form-control` inputs, and clickable elems (using Sass `&` operator) that will dynamically change to `$focus-class` when `$touch-only` is `true`. Consider using `$link-hover-focus` for better accessibility styling.
+        /// ---
+        /// @since 0.1.0
+        /// @see {variable} focus-class
+        /// @see {variable} touch-only
+        /// @see {variable} link-hover-focus
+        /// ---
+        /// @example scss
+        ///   .hitarea {
+        ///       border-color: $btn-bd-color;
+        ///
+        ///       #{$focus} {
+        ///           border-color: $btn-bd-color-focus;
+        ///       }
+        ///   }
+        ///
+        $focus: '&#{$cl}focus';
+
+        ///
+        /// CSS pseudo-class for `:focus` state (inline without Sass `&` operator) that will dynamically change to `$focus-class` when `$touch-only` is `true`.
+        /// ---
+        /// @since 0.1.0
+        /// @see {variable} focus-class
+        /// @see {variable} touch-only
+        /// ---
+        /// @example scss
+        ///   .hitarea#{$focus-inline} {
+        ///       border-color: $btn-bd-color-focus;
+        ///   }
+        ///
+        $focus-inline: '#{$cl}focus';
+            // undocumented alias
+            $focus-nested: $focus;
+
+
+    // ----------------------------------------------------
+    //   HOVER AND FOCUS STATES
+    // ----------------------------------------------------
+        ///
+        /// CSS pseudo-classes for both `:hover` and `:focus` states (using Sass `&` operator) that will dynamically change to `$hover-class, $focus-class` when `$touch-only` is `true`.
+        ///
+        /// __This is the recommended method for adding a hover state to an element.__
+        /// ---
+        /// @since 0.1.0
+        /// @see {variable} hover-class
+        /// @see {variable} focus-class
+        /// @see {variable} touch-only
+        /// ---
+        /// @example scss
+        ///   .hitarea {
+        ///       color: $link-color;
+        ///
+        ///       #{$link-hover-focus} {
+        ///           color: $link-color-hover;
+        ///       }
+        ///   }
+        /// ---
+        /// @requires {variable} $hover
+        /// @requires {variable} $focus
+        ///
+        $link-hover-focus: '#{$hover}, #{$focus}';
+            // undocumented alias
+            $link-hover-focus-nested: $link-hover-focus;
+
+
+    // ----------------------------------------------------
+    //   FORM CONTROL FOCUS
+    //
+    //   -> :focus styles for form-controls
+    //      should always appear no matter
+    //      the device
+    // ----------------------------------------------------
+        ///
+        /// CSS pseudo-class for `:focus` state of `.form-control` inputs only (using Sass `&` operator) that will __not__ change based on `$touch-only` value.
+        /// ---
+        /// @since 0.1.0
+        /// @see {variable} touch-only
+        /// @see {variable} focus
+        /// ---
+        /// @example scss
+        ///   .form-control {
+        ///       border-color: get-deep($form-control-config, 'colors.bd-fallback');
+        ///
+        ///       #{$input-focus} {
+        ///           border-color: get-deep($form-control-config, 'colors.bd-focus');
+        ///       }
+        ///   }
+        ///
+        $input-focus: '&#{$cl}focus';
+
+        ///
+        /// CSS pseudo-class for `:focus` state of `.form-control` inputs only (inline without Sass `&` operator) that will __not__ change based on `$touch-only` value.
+        /// ---
+        /// @since 0.1.0
+        /// @see {variable} touch-only
+        /// @see {variable} focus-inline
+        /// ---
+        /// @example scss
+        ///   .form-control#{$input-focus-inline} {
+        ///       border-color: get-deep($form-control-config, 'colors.bd-focus');
+        ///   }
+        ///
+        $input-focus-inline: '#{$cl}focus';
+
+
+    // ----------------------------------------------------
+    //   PRESSED STATE
+    //
+    //   -> An action item should only appear
+    //      'pressed' if the cursor is also
+    //      hovering the elem at the same time.
+    // ----------------------------------------------------
+        ///
+        /// CSS pseudo-class for `:hover:active` ('pressed') state (using Sass `&` operator) that will dynamically change to `$press-class` when `$touch-only` is `true`.
+        /// ---
+        /// @since 0.1.0
+        /// @see {variable} touch-only
+        /// @see {variable} press-class
+        /// ---
+        /// @example scss
+        ///   .hitarea {
+        ///       color: $link-color;
+        ///
+        ///       #{$link-pressed} {
+        ///           color: $link-color-pressed;
+        ///       }
+        ///   }
+        ///
+        $link-pressed: '#{$hover}#{$cl}active';
+
+        ///
+        /// CSS pseudo-class for `:hover:active` ('pressed') state (inline without Sass `&` operator) that will dynamically change to `$press-class` when `$touch-only` is `true`.
+        /// ---
+        /// @since 0.1.0
+        /// @see {variable} touch-only
+        /// @see {variable} press-class
+        /// ---
+        /// @example scss
+        ///   .hitarea#{$link-pressed-inline} {
+        ///       color: $link-color-pressed;
+        ///   }
+        ///
+        $link-pressed-inline: '#{$hover-inline}#{$cl}active';
+            // undocumented alias
+            $link-pressed-nested: $link-pressed;
+
+
+
+// ********************************************************
+//
+//   TOUCH ONLY DEVICE ELEM STATE OVERRIDES
+//
+// ********************************************************
+    @if $touch-only {
+        $hover: '&#{$hover-class}' !global;
+        $hover-inline: $hover-class !global;
+        $hover-nested: $hover !global;
+
+        $link-hover-focus: '&#{$hover-class}, &#{$focus-class}' !global;
+        $link-hover-focus-nested: $link-hover-focus !global;
+
+        $link-pressed: '&#{$cl}active' !global;
+        $link-pressed-inline: '#{$cl}active' !global;
+        $link-pressed-nested: $link-pressed !global;
+    }

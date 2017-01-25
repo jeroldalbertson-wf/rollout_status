@@ -1,0 +1,79 @@
+// ********************************************************
+
+////
+/// Modal dialog component helpers
+/// ---
+/// @since 1.0.0
+/// @access public
+/// @group core.components.modals
+/// @link http://bit.ly/webskin-modals Modal dialog component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/modals-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                to-rem);
+//
+// ********************************************************
+
+
+///
+/// Returns the total height of a modal dialog
+/// ---
+/// @since 0.1.1
+/// ---
+/// @param {Number} $content-height         - Height of the `.modal-body` elem in your `.modal`
+/// @param {Bool}   $footer          [true] - Whether or not the modal has a footer in addition to a header and a content area
+///
+@function calculate-modal-height($content-height, $footer: true) {
+    $footer-height: if($footer == true, get-deep($modal-config, 'base.footer-height'), 0);
+    @return get-deep($modal-config, 'base.header-min-height') + $content-height + $footer-height;
+}
+
+///
+/// Vertically and Horizontally align a modal dialog in the center of the viewport
+/// ---
+/// @requires {function} get-deep
+/// ---
+/// @param {Number} $content-height         - Height of the `.modal-body` elem in your `.modal`
+/// @param {Number} $width          [694px]
+/// @param {Bool}   $footer         [true]  - Whether or not the modal has a footer in addition to a header and a content area
+///
+@mixin align-modal-center($content-height, $width: get-deep($modal-config, 'base.width'), $footer: true) {
+    $height: calculate-modal-height($content-height, $footer);
+    $neg-half-height: floor($height / -2);
+    //
+    position: absolute;
+    top: 50%;
+    margin-top: to-rem($neg-half-height + get($modal-config, 'dialog-offset-mobile')); // mobile first default
+
+    @include respond-to('screen-sm and up') {
+        margin-top: to-rem($neg-half-height + get($modal-config, 'dialog-offset-base'));
+        width: to-rem($width);
+    }
+}
+
+///
+/// Vertically and Horizontally align the actions div of a "contained" modal dialog
+/// ---
+/// @since 0.0.7
+/// @param {Number} $actions-width [10rem]
+///
+@mixin align-contained-modal-actions($actions-width: 10rem) {
+    .modal-body   {
+        padding-right: $actions-width;
+    }
+    .modal-footer {
+        bottom: auto;
+        top: 0;
+        width: $actions-width;
+        line-height: inherit; // center in the container its nested in
+    }
+}

@@ -1,0 +1,279 @@
+// ********************************************************
+
+////
+/// Color picker dialog component helpers
+/// ---
+/// @since 1.4.0
+/// @access public
+/// @group core.components.color-picker
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/color-picker-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function extend);
+//
+// ********************************************************
+
+
+///
+/// Styles for the `.cp__swatch-menu` element that contains a matrix of `.cp__swatch` elements.
+///
+/// @example html - Markup spec
+///   <div role="menu" class="cp__swatch-menu">
+///     <div role="presentation" class="menu-item">
+///       <div role="menuitem" class="cp__swatch"></div>
+///     </div>
+///     <div role="presentation" class="menu-item">
+///       <div role="menuitem" class="cp__swatch"></div>
+///     </div>
+///     ...
+///   </div>
+@mixin color-picker-swatch-menu() {
+    // ----------------------------------------------------
+    //   [1] Add negative margin to the right / bottom edges
+    //       to negate the right margin on swatches that
+    //       end up as the last swatch in a row, and to
+    //       negate the bottom margin on swatches that end
+    //       up as the last swatch in a column.
+    //
+    //   [2] Ensure that white-space between adjacent
+    //       `.cp__swatch` elements do not create more
+    //       white-space than we specify using margin on
+    //       the swatch.
+    // ----------------------------------------------------
+    $margin-right:  get($cp-swatch-config, 'margin') * -1; // [1]
+    $margin-bottom: get($cp-swatch-config, 'margin') * -1; // [1]
+
+    display: block;
+    position: relative;
+    padding: 0;
+    margin: 0 $margin-right $margin-bottom 0; // [1]
+    font-size: 0; // [2]
+
+    // The wrapping `.menu-item` should not affect layout in any way
+    > .menu-item {
+        display: inline-block;
+        overflow: visible;
+        width: auto;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        font-size: 0; // [2]
+    }
+}
+
+
+///
+/// Styles for the clickable `.cp__swatch` elements nested within `.cp__swatch-menu .menu-item`s.
+///
+@mixin color-picker-swatch() {
+    // ----------------------------------------------------
+    //  [1] The first row in the picker displays grayscale
+    //      colors which should be visually separated from
+    //      the rest of the palette.
+    //
+    //  [2] The last row in the picker displays "highlight"
+    //      colors which should be visually separated from
+    //      the rest of the palette.
+    //
+    //  [3] When a color is added to a custom color swatch,
+    //      this modifier class should be added.
+    //
+    //  [4] Remove any inherited focus `outline` / inset
+    //      `box-shadow` styles.
+    // ----------------------------------------------------
+    display: inline-block;
+    width: get($cp-swatch-config, 'width');
+    height: get($cp-swatch-config, 'height');
+    margin-right: get($cp-swatch-config, 'margin');
+    margin-bottom: get($cp-swatch-config, 'margin');
+    border: get($cp-swatch-config, 'bd-width') solid get($cp-swatch-config, 'bd-color');
+    cursor: pointer;
+
+    @at-root {
+        .cp__swatch--grayscale { // [1]
+            margin-bottom: get($cp-swatch-menu-config, 'divided-row-spacing-vertical');
+        }
+
+        .cp__swatch--highlight { // [2]
+            margin-top: get($cp-swatch-menu-config, 'divided-row-spacing-vertical') - get($cp-swatch-config, 'margin');
+        }
+
+        .cp__swatch--has-color { // [3]
+            border-color: get($cp-swatch-config, 'has-color-bd-color');
+        }
+    }
+
+
+    // ------------------------------------------------
+    //   INTERACTION STATE STYLES
+    // ------------------------------------------------
+
+    // ----- HOVER / FOCUS STATES ----- //
+    #{$link-hover-focus},
+    &#{$focus-class} {
+        @include remove-focus-outline(); // [4]
+
+        @if get($cp-swatch-config, 'hover-outline-width') != 0 {
+            @include focus-outline(
+                $color: get($cp-swatch-config, 'hover-outline-color'),
+                $width: get($cp-swatch-config, 'hover-outline-width'),
+                $offset: 0
+            );
+        }
+
+        border: get($cp-swatch-config, 'hover-bd-width') solid get($cp-swatch-config, 'hover-bd-color');
+    }
+
+    // ----- PRESSED STATE ----- //
+    #{$link-pressed} {
+        @include remove-focus-outline(); // [4]
+
+        @if get($cp-swatch-config, 'press-outline-width') != 0 {
+            @include focus-outline(
+                $color: get($cp-swatch-config, 'press-outline-color'),
+                $width: get($cp-swatch-config, 'press-outline-width'),
+                $offset: 0
+            );
+        }
+
+        border: get($cp-swatch-config, 'press-bd-width') solid get($cp-swatch-config, 'press-bd-color');
+    }
+
+    // ----- ACTIVE / SELECTED STATE ----- //
+    .active > &,
+    &.active {
+        @if get($cp-swatch-config, 'selected-outline-width') != 0 {
+            @include focus-outline(
+                $color: get($cp-swatch-config, 'selected-outline-color'),
+                $width: get($cp-swatch-config, 'selected-outline-width'),
+                $offset: 0,
+                $important: true
+            );
+        }
+
+        border: get($cp-swatch-config, 'selected-bd-width') solid get($cp-swatch-config, 'selected-bd-color');
+    }
+}
+
+
+///
+/// Generates the background / border color styles for the default color palette shown within the
+/// `.color-picker` component.
+///
+@mixin generate-default-color-picker-swatches() {
+    @each $swatch-palette-shade-name, $swatch-palette in $colors-global-picker-palette {
+        @each $swatch-shade-color-name, $swatch-shade-color in $swatch-palette {
+            $swatch-bd-color: null;
+            $swatch-name: #{$swatch-shade-color-name}-#{$swatch-palette-shade-name};
+
+            @if $swatch-palette-shade-name == 'highlight' {
+                $swatch-name: #{$swatch-palette-shade-name}-#{$swatch-shade-color-name};
+            }
+
+            // Simplify name for white and black
+            @if $swatch-palette-shade-name == 'gray' {
+                $swatch-name: #{$swatch-palette-shade-name}-#{$swatch-shade-color-name};
+
+                @if $swatch-shade-color-name == 'black' {
+                    $swatch-name: 'black';
+                }
+                @if $swatch-shade-color-name == 'white' {
+                    $swatch-name: 'white';
+                    $swatch-bd-color: get($cp-swatch-config, 'white-bd-color');
+                }
+            }
+
+            .cp__swatch--#{$swatch-name} {
+                background-color: $swatch-shade-color;
+
+                @if $swatch-bd-color != null {
+                    border-color: $swatch-bd-color;
+                } @else {
+                    border-color: get($cp-swatch-config, 'has-color-bd-color');
+                }
+            }
+        }
+    }
+}
+
+
+///
+/// Styles for the 2-pane default / custom color picker layout applied when the
+/// `color-picker--with-custom-colors` CSS class is present on the `.color-picker` element.
+///
+@mixin color-picker-two-pane-layout() {
+    // ----------------------------------------------------
+    //   [1] `color-picker--with-custom-colors` modifier
+    //       CSS class added to the base `.color-picker`
+    //       element to indicate that a fixed height is
+    //       needed on the base `.color-picker` elem and
+    //       each `.cp__pane` elem as a result of
+    //       `.cp__panes` having absolute position.
+    //
+    //   [2] Less height because the `.cp__custom-swatches`
+    //       element acts as a footer by default - but then
+    //       should still be visible as a header when
+    //       `cp__panes--lift` class is applied.
+    //
+    //   [3] `.cp__panes` contains both panes when custom
+    //       colors are enabled, but only one is visible at
+    //       any given time because of the fixed height /
+    //       hidden overflow applied to
+    //       `.color-picker--with-custom-colors`.
+    //
+    //   [4] Modifier class that is applied to "lift" the
+    //       shade to reveal the "lower" pane
+    //       (whichever pane is second in the DOM)
+    //
+    //   [5] Calculate the padding amount necessary to
+    //       achieve the documented UX spec for spacing
+    //       between the row of custom color swatches
+    //       within the `.cp__custom-swatches` elem and the
+    //       top of the available area within the
+    //       `.cp__pane--custom` element.
+    //
+    //   [6] Second pane is only shown when the
+    //       `color-picker--with-custom-colors` CSS class
+    //       is applied to the base `.color-picker` elem.
+    // ----------------------------------------------------
+    &,
+    .cp__pane--swatches {
+        height: get($cp-pane-config, 'height-with-custom-colors'); // [1]
+    }
+
+    @at-root {
+        .cp__pane--custom {
+            display: none; // [6]
+        }
+    }
+
+    .cp__pane--custom {
+        display: inherit; // [6]
+        padding-top: abs(get($cp-pane-config, 'custom-color-picker-pane-spacing-top') - (get($cp-pane-config, 'padding') * 2)); // [5]
+        height: get($cp-pane-config, 'custom-color-picker-pane-height'); // [2]
+    }
+
+    // ----- [3] ----- //
+    .cp__panes {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+
+        @include transition(get($cp-pane-config, 'transition'));
+        @include translate3d(0, 0, 0); // Activate GPU
+    }
+
+    // ----- [4] ----- //
+    .cp__panes--lift {
+        @include translate3d(0, (get($cp-pane-config, 'custom-color-picker-pane-height') * -1), 0);
+    }
+}

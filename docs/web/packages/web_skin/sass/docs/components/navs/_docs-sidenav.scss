@@ -1,0 +1,241 @@
+// ********************************************************
+//
+//   Scrollspy and affixed enhanced
+//   navigation to highlight sections
+//   and secondary sections of docs
+//   content.
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/navs/sidenav';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.ws-sidebar {
+    width: 100%;
+
+    // First level of nav
+    > .ws-sidenav {
+        display: block;
+        padding: to-rem($docs-spacing-md) 0;
+        border-radius: to-rem($border-radius-base);
+        font-weight: 500;
+    }
+
+    // All levels of nav
+    .nav > .nav-item {
+        > .hitarea {
+            display: block;
+            padding: to-rem($docs-spacing-sm $sidenav-link-bd-width $docs-spacing-sm $line-height-base-px);
+            border-right: to-rem($sidenav-link-bd-width) solid transparent;
+            color: $sidenav-link-color;
+            font-family: $font-family-base;
+            font-size: to-rem($font-size-base);
+            text-shadow: 0 .1rem 0 $white;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+
+            &:hover,
+            &:focus {
+                background-color: $sidenav-link-bg-hover !important;
+                border-right-color: $sidenav-link-bd-color;
+                color: $sidenav-link-color !important;
+                text-decoration: none;
+            }
+        }
+
+        // ----------------------------------------------------
+        //   Hide child .nav elements
+        // ----------------------------------------------------
+        > .nav {
+            display: none; // hide by default, but at >768px, show it
+        }
+
+        &.active {
+            &,
+            &:hover,
+            &:focus {
+                > .hitarea {
+                    font-weight: bold;
+                    color: $sidenav-link-color-active !important;
+                    background-color: transparent !important;
+                    border-right: to-rem($sidenav-link-bd-width) solid $sidenav-link-color-active;
+                    cursor: default;
+                }
+            }
+
+            .nav .nav-item {
+                .hitarea {
+                    cursor: pointer;
+                }
+
+                &.active {
+                    > .hitarea {
+                        cursor: default;
+                    }
+                }
+            }
+
+
+            // ----------------------------------------------------
+            //   Show child .nav elements when active
+            // ----------------------------------------------------
+            @include respond-to('screen-sm and up') {
+                > .nav {
+                    display: block;
+                }
+            }
+        }
+    }
+
+    // Nested navs (shown only when .active)
+    .nav .nav {
+        margin-bottom: .4rem;
+        padding-top: .3rem;
+        padding-bottom: .1rem;
+        font-size: to-rem($font-size-md);
+        line-height: $line-height-sm;
+    }
+
+    // Prevent bottom margin from adding extra space at the bottom of the .ws-sidebar elem
+    .nav:last-of-type {
+        &,
+        .nav {
+            margin-bottom: 0;
+        }
+    }
+
+    // Nested nav item indentations
+    .nav {
+        @include docs-sidenav-nested-item-indentations();
+    }
+
+
+    // ----------------------------------------------------
+    //   PARENT / CHILD NAV ITEMS
+    //   -> Represents "forward / back" hiearchial
+    // ----------------------------------------------------
+    .nav > .nav-item {
+        //
+        // "Parent" nav item (e.g. "back to {{ parent }}")
+        // Displayed at the top of the sidenav structure
+        //
+        &.parent-item {
+            margin-top: to-rem($docs-spacing-md - 4) * -1;
+
+            > .hitarea {
+                padding-left: .2rem;
+            }
+        }
+
+        //
+        // "Child" nav item (e.g. "{{ parent }} / {{ child }}")
+        // Displayed at the bottom of the sidenav structure
+        //
+        &.child-item {
+            margin-bottom: to-rem($docs-spacing-md - 4) * -1;
+        }
+    }
+}
+
+// ----------------------------------------------------
+//   Mobile first defaults
+// ----------------------------------------------------
+$sidenav-width-screen-sm: to-rem(205px);
+$sidenav-width-screen-md: to-rem(263px);
+$sidenav-width-screen-lg: to-rem(320px);
+
+// Content padding for nav / content (mobile-first)
+.ws-main,
+.ws-sidebar-block,
+.ws-footer {
+    padding-right: $docs-body-padding-horizontal;
+    padding-left: $docs-body-padding-horizontal;
+}
+
+.ws-footer {
+    margin-right: $docs-body-padding-horizontal * -1;
+    margin-left: $docs-body-padding-horizontal * -1;
+}
+
+.ws-sidebar-block {
+    background-color: $sidenav-bg;
+    border-style: solid;
+    border-color: $sidenav-link-bg-hover;
+    border-width: 0 0 .1rem 0;
+}
+
+.ws-sidenav.affix {
+    position: static;
+}
+
+.holder {
+    // does nothing except serve as a block level
+    // element to force the width of the surrounding
+    // flexbox container
+    min-height: .1rem;
+    font-size: 0;
+    line-height: 0;
+}
+
+@include respond-to('screen-sm and up') {
+    .ws-main,
+    .ws-footer {
+        padding-right: $docs-body-padding-horizontal-sm;
+        padding-left: $docs-body-padding-horizontal-sm;
+    }
+
+    .ws-footer {
+        margin-right: $docs-body-padding-horizontal-sm * -1;
+        margin-left: $docs-body-padding-horizontal-sm * -1;
+    }
+
+    .ws-sidebar-block {
+        @include grid-size($sidenav-width-screen-sm);
+
+        border-width: 0 .1rem 0 0;
+        padding: 0;
+    }
+
+    // From here, start to affix the nav because we keep columns here
+    .ws-sidenav {
+        &.affix {
+            width: $sidenav-width-screen-sm;
+            position: fixed;
+            top: 0;
+            margin-top: to-rem($docs-navbar-height);
+        }
+
+        &.affix-bottom {
+            width: $sidenav-width-screen-sm;
+            position: absolute;
+            top: auto;
+            bottom: 13rem;
+        }
+    }
+}
+
+@include respond-to('screen-md and up') {
+    .ws-sidebar-block {
+        @include grid-size($sidenav-width-screen-md);
+    }
+
+    .ws-sidenav,
+    .holder {
+        width: $sidenav-width-screen-md !important;
+    }
+}
+
+@include respond-to('screen-lg and up') {
+    .ws-sidebar-block {
+        @include grid-size($sidenav-width-screen-lg);
+    }
+
+    .ws-sidenav,
+    .holder {
+        width: $sidenav-width-screen-lg !important;
+    }
+}

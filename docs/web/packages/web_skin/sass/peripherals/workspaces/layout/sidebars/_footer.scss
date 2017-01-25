@@ -1,0 +1,35 @@
+// ********************************************************
+//
+//   WORKSPACES SIDEBAR FOOTER STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/layout/sidebars/footer';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $wksp-module-config:  'peripherals/workspaces/atoms/workspaces-config';
+    $wksp-module-helpers: 'peripherals/workspaces/atoms/workspaces-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $wksp-module-config,
+                                          $wksp-module-helpers);
+//
+// ********************************************************
+
+
+.wksp-sidebar-footer {
+    // Transitions of the border color are handled in `sidebars/base`
+    border-top: to-rem(get($wksp-sidebar-config, 'divider-height')) solid get($wksp-sidebar-config, 'divider-color');
+
+    // ----- MINIMIZED SIDEBAR ----- //
+    .wksp-sidebar-minimized & {
+        border-top-color: transparent;
+    }
+
+    // No border option
+    &.hide-border {
+        border-top-color: transparent;
+    }
+}

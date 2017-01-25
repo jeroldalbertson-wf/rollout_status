@@ -1,0 +1,87 @@
+
+$chrome-name: 'chrome';
+$chrome-x: 0px;
+$chrome-y: 0px;
+$chrome-offset-x: 0px;
+$chrome-offset-y: 0px;
+$chrome-width: 124px;
+$chrome-height: 124px;
+$chrome-total-width: 248px;
+$chrome-total-height: 248px;
+$chrome-image: '../../img/browser-upgrade-s96005be9b0.png';
+$chrome: (0px, 0px, 0px, 0px, 124px, 124px, 248px, 248px, '../../img/browser-upgrade-s96005be9b0.png', 'chrome', );
+$firefox-name: 'firefox';
+$firefox-x: 124px;
+$firefox-y: 0px;
+$firefox-offset-x: -124px;
+$firefox-offset-y: 0px;
+$firefox-width: 124px;
+$firefox-height: 124px;
+$firefox-total-width: 248px;
+$firefox-total-height: 248px;
+$firefox-image: '../../img/browser-upgrade-s96005be9b0.png';
+$firefox: (124px, 0px, -124px, 0px, 124px, 124px, 248px, 248px, '../../img/browser-upgrade-s96005be9b0.png', 'firefox', );
+$msie-name: 'msie';
+$msie-x: 0px;
+$msie-y: 124px;
+$msie-offset-x: 0px;
+$msie-offset-y: -124px;
+$msie-width: 124px;
+$msie-height: 124px;
+$msie-total-width: 248px;
+$msie-total-height: 248px;
+$msie-image: '../../img/browser-upgrade-s96005be9b0.png';
+$msie: (0px, 124px, 0px, -124px, 124px, 124px, 248px, 248px, '../../img/browser-upgrade-s96005be9b0.png', 'msie', );
+$safari-name: 'safari';
+$safari-x: 124px;
+$safari-y: 124px;
+$safari-offset-x: -124px;
+$safari-offset-y: -124px;
+$safari-width: 124px;
+$safari-height: 124px;
+$safari-total-width: 248px;
+$safari-total-height: 248px;
+$safari-image: '../../img/browser-upgrade-s96005be9b0.png';
+$safari: (124px, 124px, -124px, -124px, 124px, 124px, 248px, 248px, '../../img/browser-upgrade-s96005be9b0.png', 'safari', );
+$spritesheet-width: 248px;
+$spritesheet-height: 248px;
+$spritesheet-image: '../../img/browser-upgrade-s96005be9b0.png';
+$spritesheet-sprites: ($chrome, $firefox, $msie, $safari, );
+$spritesheet: (248px, 248px, '../../img/browser-upgrade-s96005be9b0.png', $spritesheet-sprites, );
+
+
+@mixin sprite-width($sprite) {
+  width: nth($sprite, 5);
+}
+
+@mixin sprite-height($sprite) {
+  height: nth($sprite, 6);
+}
+
+@mixin sprite-position($sprite) {
+  $sprite-offset-x: nth($sprite, 3);
+  $sprite-offset-y: nth($sprite, 4);
+  background-position: $sprite-offset-x  $sprite-offset-y;
+}
+
+@mixin sprite-image($sprite) {
+  $sprite-image: nth($sprite, 9);
+  background-image: url(#{$sprite-image});
+}
+
+@mixin sprite($sprite) {
+  @include sprite-image($sprite);
+  @include sprite-position($sprite);
+  @include sprite-width($sprite);
+  @include sprite-height($sprite);
+}
+
+
+@mixin sprites($sprites) {
+  @each $sprite in $sprites {
+    $sprite-name: nth($sprite, 10);
+    .#{$sprite-name} {
+      @include sprite($sprite);
+    }
+  }
+}

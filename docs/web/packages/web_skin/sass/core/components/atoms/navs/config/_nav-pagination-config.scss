@@ -1,0 +1,197 @@
+// ********************************************************
+
+////
+/// Pagination nav component configuration
+/// ---
+/// @group core.components.navs
+/// @link http://bit.ly/webskin-navs-pagination Pagination navigation spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/config/nav-pagination-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   PAGINATION
+//
+// ********************************************************
+    ///
+    /// Collection of size properties for `.pagination` components at their base size.
+    /// ---
+    /// @since 1.0.0
+    /// @type Map
+    /// ---
+    /// @requires {function} get
+    /// @requires {variable} $line-height-base-px
+    /// @requires {variable} $line-height-base
+    /// @requires {variable} $font-size-base
+    /// @requires {variable} $global-component-bd-width
+    /// @requires {variable} $nav-pills-pill-config
+    /// ---
+    /// @prop {Number} margin-vertical [20px]       - Vertical margin above and below `.pagination` components
+    /// @prop {Number} font-size       [14px]       - Font size of each item
+    /// @prop {Number} line-height     [1.42857]    - Line height of each item
+    /// @prop {Number} item-padding    [1px 10px]   - Padding for each item
+    /// @prop {Number} item-bd-radius  [4px]        - Border radius of the first and last items
+    /// @prop {Number} item-spacing    [1px]        - Horizontal spacing between adjacent items
+    ///
+    $pagination-base-size-config: (
+        'margin-vertical': $line-height-base-px,
+        'font-size': $font-size-base,
+        'line-height': $line-height-base,
+        'item-padding': get($nav-pills-pill-config, 'padding'),
+        'item-bd-radius': get($nav-pills-pill-config, 'bd-radius'),
+        'item-spacing': $global-component-bd-width
+    ) !default;
+
+    ///
+    /// Collection of size properties for `.pagination` components at their large size variation.
+    /// ---
+    /// @since 1.0.0
+    /// @type Map
+    /// ---
+    /// @requires {variable} $line-height-base-px
+    /// @requires {variable} $line-height-base
+    /// @requires {variable} $font-size-lg
+    /// @requires {variable} $border-radius-lg
+    /// @requires {variable} $padding-lg
+    /// @requires {variable} $global-component-bd-width
+    /// ---
+    /// @prop {Number} margin-vertical [20px]       - Vertical margin above and below `.pagination-lg` components
+    /// @prop {Number} font-size       [18px]       - Font size of each item
+    /// @prop {Number} line-height     [1.42857]    - Line height of each item
+    /// @prop {Number} item-padding    [10px 16px]  - Padding for each item
+    /// @prop {Number} item-bd-radius  [6px]        - Border radius of the first and last items
+    /// @prop {Number} item-spacing    [2px]        - Horizontal spacing between adjacent items
+    ///
+    $pagination-lg-size-config: (
+        'margin-vertical': $line-height-base-px,
+        'font-size': $font-size-lg,
+        'line-height': $line-height-base,
+        'item-padding': $padding-lg,
+        'item-bd-radius': $border-radius-lg,
+        'item-spacing': $global-component-bd-width + 1
+    ) !default;
+
+    ///
+    /// Collection of size properties for `.pagination` components at their small size variation.
+    /// ---
+    /// @since 1.0.0
+    /// @type Map
+    /// ---
+    /// @requires {variable} $line-height-base-px
+    /// @requires {variable} $line-height-base
+    /// @requires {variable} $font-size-sm
+    /// @requires {variable} $border-radius-sm
+    /// @requires {variable} $padding-sm
+    /// @requires {variable} $global-component-bd-width
+    /// ---
+    /// @prop {Number} margin-vertical [16px]       - Vertical margin above and below `.pagination-sm` components
+    /// @prop {Number} font-size       [12px]       - Font size of each item
+    /// @prop {Number} line-height     [1.42857]    - Line height of each item
+    /// @prop {Number} item-padding    [5px 10px]   - Padding for each item
+    /// @prop {Number} item-bd-radius  [3px]        - Border radius of the first and last items
+    /// @prop {Number} item-spacing    [1px]        - Horizontal spacing between adjacent items
+    ///
+    $pagination-sm-size-config: (
+        'margin-vertical': $line-height-base-px - 4,
+        'font-size': $font-size-sm,
+        'line-height': $line-height-base,
+        'item-padding': $padding-sm,
+        'item-bd-radius': $border-radius-sm,
+        'item-spacing': $global-component-bd-width
+    ) !default;
+
+    ///
+    /// Collection of size properties for `.pagination` components at their extra small size variation.
+    /// ---
+    /// @since 1.0.0
+    /// @type Map
+    /// ---
+    /// @requires {variable} $line-height-base-px
+    /// @requires {variable} $line-height-base
+    /// @requires {variable} $font-size-xs
+    /// @requires {variable} $border-radius-xs
+    /// @requires {variable} $padding-xs
+    /// @requires {variable} $global-component-bd-width
+    /// ---
+    /// @prop {Number} margin-vertical [16px]       - Vertical margin above and below `.pagination-xs` components
+    /// @prop {Number} font-size       [12px]       - Font size of each item
+    /// @prop {Number} line-height     [17px]       - Line height of each item
+    /// @prop {Number} item-padding    [4px 8px]    - Padding for each item
+    /// @prop {Number} item-bd-radius  [3px]        - Border radius of the first and last items
+    /// @prop {Number} item-spacing    [1px]        - Horizontal spacing between adjacent items
+    ///
+    $pagination-xs-size-config: (
+        'margin-vertical': $line-height-base-px - 4,
+        'font-size': $font-size-sm,
+        'line-height': 17px,
+        'item-padding': $padding-xs,
+        'item-bd-radius': $border-radius-sm,
+        'item-spacing': $global-component-bd-width
+    ) !default;
+
+    ///
+    /// Convenience collection of size configuation value maps for `.pagination` components in all size variations.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {variable} $pagination-base-size-config
+    /// @requires {variable} $pagination-lg-size-config
+    /// @requires {variable} $pagination-sm-size-config
+    /// @requires {variable} $pagination-xs-size-config
+    /// ---
+    /// @prop {Map} base - Size configuration map for `base` pagination size variation
+    /// @prop {Map} lg   - Size configuration map for `lg` pagination size variation
+    /// @prop {Map} sm   - Size configuration map for `sm` pagination size variation
+    /// @prop {Map} xs   - Size configuration map for `xs` pagination size variation
+    ///
+    $pagination-size-config: (
+        'base': $pagination-base-size-config,
+        'lg': $pagination-lg-size-config,
+        'sm': $pagination-sm-size-config,
+        'xs': $pagination-xs-size-config
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   PAGE INDICATORS
+//
+// ********************************************************
+    ///
+    /// Configuration for `.page-indicators` components.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @group core.components.navs
+    /// @link http://bit.ly/webskin-navs-page-indicators Page indicators navigation spec
+    /// ---
+    /// @requires {variable} $zc-gray-90
+    /// @requires {variable} $zc-gray-60
+    /// ---
+    /// @prop {Number} diameter     [8px]       - Diameter of each `<li>`
+    /// @prop {Color}  bg           [#707070]   - Default background color of each `<li>`, with an opacity of `alpha` or `alpha-active`, depending on the state
+    /// @prop {Color}  bg-inverse   [#ffffff]   - Background color of each `<li>` within `.page-indicators-inverse` variation, with an opacity of `alpha` or `alpha-active`, depending on the state
+    /// @prop {Number} alpha        [.4]        - Opacity of each `<li>`
+    /// @prop {Number} alpha-active [1]         - Opacity of each `<li class="active">`
+    ///
+    $page-indicator-config: (
+        'diameter': 8px,
+        'bg': $zc-gray-90,
+        'bg-inverse': $white,
+        'alpha': .4,
+        'alpha-active': 1
+    ) !default;

@@ -1,0 +1,519 @@
+// ********************************************************
+
+////
+/// Table component helpers
+/// ---
+/// @since 1.0.0
+/// @access public
+/// @group core.components.tables
+/// @link http://bit.ly/webskin-tables Table component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/tables/tables-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+@import './tables-base-elem-helpers';
+
+
+
+// ********************************************************
+//
+//   TABLE ELEMENT / ELEMENT GROUP STYLE GENERATION
+//
+//   -> Generate all selectors / styles for table children
+//
+//   -> Mixins in this group are what should be used to
+//      generate table child styles in any context, e.g.
+//      virtualized tables or collapsible panels
+//      masquerading as table rows.
+//
+// ********************************************************
+    ///
+    /// Generate selectors and styles for all types of table cells.
+    /// ---
+    /// @access private
+    /// @group core.internals.components.tables
+    ///
+    @mixin _generate-table-cells {
+        #{$_td},
+        #{$_th} {
+            @include table-cell();
+        }
+
+        // ----- HEADING CELLS IN `<thead>` and `<tbody>` ----- //
+        #{$_th} {
+            @include table-header-cell();
+        }
+
+        // ----- HEADING CELLS IN `<thead>` ONLY ----- //
+        #{$_thead} #{$_th} {
+            @include table-thead-header-cell();
+        }
+
+        // ----- GRID SIZING FOR TABLE CELLS ----- //
+        #{$_col}[class*="col-"] {
+            @include table-child-grid-sizing(column);
+        }
+
+        #{$_td}[class*="col-"],
+        #{$_th}[class*="col-"] {
+            @include table-child-grid-sizing(cell);
+        }
+    }
+
+    ///
+    /// Generate selectors and styles for all types of table cells.
+    /// ---
+    /// @since 1.3.0
+    ///
+    @mixin generate-table-cells {
+        $use-parent-selector: $table-selector-prefix == '';
+        //
+        // If we're using virtualized CSS class selectors,
+        // we don't need to wrap these styles in `.table`
+        //
+        @if $use-parent-selector {
+            .table {
+                @include _generate-table-cells();
+            }
+        } @else {
+            @include _generate-table-cells();
+        }
+    }
+
+    ///
+    /// Generate selectors and styles for all types of "small" / "condensed" table cells.
+    /// ---
+    /// @since 1.3.0
+    ///
+    @mixin generate-table-sm-cells {
+        .table-condensed {
+            #{$_td},
+            #{$_th} {
+                @include table-sm-cell();
+            }
+
+            #{$_thead} #{$_th} {
+                @include table-sm-thead-header-cell();
+            }
+        }
+    }
+
+    ///
+    /// Generate selectors and styles for hoverable table body rows.
+    /// ---
+    /// @since 1.3.0
+    ///
+    @mixin generate-table-hoverable-rows {
+        .table-hover #{$_tbody} {
+            > #{$_tr}#{$hover-inline} {
+                > #{$_td},
+                > #{$_th} {
+                    @include table-cell-hover();
+                }
+            }
+        }
+    }
+
+    ///
+    /// Generate selectors and styles for selectable / selected table rows.
+    /// ---
+    /// @since 1.3.0
+    ///
+    @mixin generate-table-selectable-rows {
+        $selectable-table-row: '.table-selectable #{$_tbody} > #{$_tr}';
+        $selectable-row-in-any-table: '.table #{$_tbody} > .row-selectable';
+
+        //
+        // SELECTABLE ROWS
+        //
+        #{$selectable-table-row},
+        #{$selectable-row-in-any-table} {
+            @include table-row-selectable-skin();
+        }
+
+        //
+        // SELECTED ROW
+        //
+        .table #{$_tbody} > .row-selected {
+            @include table-row-selected();
+        }
+    }
+
+    ///
+    /// Generate selectors and styles for sortable table rows and their column header cells.
+    /// ---
+    /// @since 1.3.0
+    ///
+    @mixin generate-table-sortable-rows {
+        .table-sortable {
+            #{$_thead} #{$_th} {
+                @include table-sortable-thead-header-cell();
+            }
+
+            &.table-condensed {
+                #{$_thead} #{$_th} {
+                    .caret {
+                        @include table-sm-sortable-thead-header-cell-caret();
+                    }
+                }
+            }
+
+            &.table-bordered {
+                #{$_thead} #{$_th} {
+                    .caret {
+                        @include table-bordered-sortable-thead-header-cell-caret();
+                    }
+                }
+            }
+        }
+    }
+
+    ///
+    /// Generate selectors and styles for table row skin variations.
+    /// ---
+    /// @since 1.3.0
+    ///
+    @mixin generate-table-row-skin-variations {
+        //
+        // Specificity of surrounding `.table` selector is required
+        // to override `.table-striped` / `.is-clickable` / `.row-selected`
+        //
+        .table {
+            @each $state-name, $table-row-state-colors in $table-row-states {
+                .row-#{$state-name} {
+                    > #{$_td},
+                    > #{$_th} {
+                        @include table-row-state-skin($state-name);
+                    }
+                }
+
+                // add hover effect for state background if its a hover-able or selectable table
+                &.table-hover .row-#{$state-name}#{$hover-inline},
+                &.table-selectable .row-#{$state-name}#{$hover-inline},
+                .row-selectable.row-#{$state-name}#{$hover-inline} {
+                    > #{$_td},
+                    > #{$_th} {
+                        @include table-row-hover-state-skin($state-name);
+                    }
+
+                    // override state hover styles if the row is actively selected
+                    &.row-selected {
+                        > #{$_td},
+                        > #{$_th} {
+                            @include table-cell-hover-skin();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    ///
+    /// Generate selectors and styles for a bordered table variation.
+    /// ---
+    /// @since 1.3.0
+    ///
+    @mixin generate-table-bordered {
+        $table-bd-width-rem: to-rem($table-bd-width);
+
+        .table-bordered {
+            //
+            // Don't need to re-generate .table-bordered base styles
+            // if virtualized table styles are being built.
+            //
+            @if $table-selector-prefix == '' {
+                border: $table-bd-width-rem solid $table-bd-color;
+                border-left-width: 0;
+            }
+
+            #{$_td},
+            #{$_th} {
+                border-left: $table-bd-width-rem solid $table-bd-color;
+
+                &.table-cell-empty {
+                    border-left-color: transparent;
+                }
+            }
+
+            // no horizontal row borders on the inner rows
+            &.table-bordered-vertical {
+                #{$_tbody} {
+                    #{$_td},
+                    #{$_th} {
+                        border-top: 0 none;
+                    }
+                }
+            }
+
+            // no vertical row borders on the inner rows
+            &.table-bordered-horizontal {
+                #{$_td},
+                #{$_th} {
+                    border-left-width: 0;
+
+                    &:first-child {
+                        border-left-width: $table-bd-width-rem;
+                    }
+                }
+            }
+
+            //
+            // if a <caption> element is shown to the user
+            // make sure it looks the part in the context
+            // of a bordered table
+            //
+            #{$_caption} {
+                background-color: $table-caption-bg;
+                border: $table-bd-width-rem solid $table-caption-bd;
+                border-bottom: 0 none;
+            }
+        }
+    }
+
+
+    ///
+    /// Generate selectors and styles for a striped table variation.
+    /// ---
+    /// @since 1.3.0
+    ///
+    @mixin generate-table-striped-rows {
+        .table-striped {
+            #{$_tbody} {
+                > #{$_tr} {
+                    &:nth-child(odd) {
+                        #{$_td},
+                        #{$_th} {
+                            background-color: $table-cell-bg-accent;
+                        }
+                    }
+                    #{$_td},
+                    #{$_th} {
+                        border-top-width: to-rem(get($table-config, 'striped-row-bd-width'));
+                    }
+                }
+            }
+        }
+    }
+
+    ///
+    /// Generate selectors and styles with for table captions.
+    /// ---
+    /// @since 1.3.0
+    ///
+    @mixin generate-table-captions {
+        #{$_caption} {
+            @include table-caption();
+        }
+    }
+
+    ///
+    /// Generate selectors and styles for "small" / "condensed" table captions.
+    /// ---
+    /// @since 1.3.0
+    ///
+    @mixin generate-table-sm-captions {
+        .table-condensed #{$_caption} {
+            @include table-sm-caption();
+        }
+    }
+
+
+
+// ********************************************************
+//
+//   MISC UTILITY / ADVANCED TABLE STYLE GENERATION
+//
+// ********************************************************
+///
+/// Base styles for the `.table-responsive` wrapper that goes around the Table component.
+/// ---
+/// @param {String} $selector ['.table-responsive'] - Specify a selector on which you want to apply this styling.
+/// ---
+/// @output `.table-responsive` elem styles - which are wrapped around a `.table` to ensure that tables with many columns can be horizontally scrolled on smaller viewports
+///
+@mixin table-responsive($selector: '.table-responsive') {
+    #{$selector} {
+        @include scroll-inertia();
+        overflow-y: hidden;
+        overflow-x: scroll;
+        width: 100%;
+        margin-bottom: to-rem($table-margin-bottom);
+        border: to-rem(get($table-config, 'bd-width')) solid get($table-config, 'bd-color');
+
+        // Tighten up spacing and give a background color
+        > .table {
+            margin-bottom: 0;
+            background-color: $body-bg;
+            table-layout: auto;
+
+            // Ensure the content doesn't wrap
+            #{$_td},
+            #{$_th} {
+                @include truncate-text();
+            }
+        }
+
+        // Special overrides for the bordered tables
+        > .table-bordered {
+            border: 0;
+
+            // Nuke the appropriate borders so that the parent can handle them
+            > #{$_thead},
+            > #{$_tbody},
+            > #{$_tfoot} {
+                > #{$_tr} {
+                    > #{$_td}:first-child,
+                    > #{$_th}:first-child {
+                        border-left: 0;
+                    }
+
+                    > #{$_td}:last-child,
+                    > #{$_th}:last-child {
+                        border-right: 0;
+                    }
+                }
+            }
+
+            > #{$_tbody} {
+                > #{$_tr}:last-child {
+                    > #{$_td},
+                    > #{$_th} {
+                        border-bottom: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
+//
+// @todo this is a non-core mixin, should be moved into its own module and only imported on-demand
+// NOTE: this can only be used in-combination with .table-bordered variation.
+//
+@mixin table-rounded-corners($radius: get($table-config, 'rounded-bd-radius')) {
+    $radius: to-rem($radius);
+    $inner-radius: $radius - to-rem(get($table-config, 'bd-width'));
+
+    border-collapse: separate;
+    border-left: 0;
+    border-radius: $radius;
+    // For first th/td in the first row in the first thead or tbody
+    #{$_thead}:first-of-type #{$_tr}:first-child > #{$_th}:first-child,
+    #{$_tbody}:first-of-type #{$_tr}:first-child > #{$_td}:first-child,
+    #{$_tbody}:first-of-type #{$_tr}:first-child > #{$_th}:first-child {
+        @include border-top-left-radius($inner-radius);
+    }
+    // For last th/td in the first row in the first thead or tbody
+    #{$_thead}:first-of-type #{$_tr}:first-child > #{$_th}:last-child,
+    #{$_tbody}:first-of-type #{$_tr}:first-child > #{$_td}:last-child,
+    #{$_tbody}:first-of-type #{$_tr}:first-child > #{$_th}:last-child {
+        @include border-top-right-radius($inner-radius);
+    }
+    // For first th/td (can be either) in the last row in the last thead, tbody, and tfoot
+    #{$_thead}:last-of-type #{$_tr}:last-child > #{$_th}:first-child,
+    #{$_tbody}:last-of-type #{$_tr}:last-child > #{$_td}:first-child,
+    #{$_tbody}:last-of-type #{$_tr}:last-child > #{$_th}:first-child,
+    #{$_tfoot}:last-of-type #{$_tr}:last-child > #{$_td}:first-child,
+    #{$_tfoot}:last-of-type #{$_tr}:last-child > #{$_th}:first-child {
+        @include border-bottom-left-radius($inner-radius);
+    }
+    // For last th/td (can be either) in the last row in the last thead, tbody, and tfoot
+    #{$_thead}:last-of-type #{$_tr}:last-child > #{$_th}:last-child,
+    #{$_tbody}:last-of-type #{$_tr}:last-child > #{$_td}:last-child,
+    #{$_tbody}:last-of-type #{$_tr}:last-child > #{$_th}:last-child,
+    #{$_tfoot}:last-of-type #{$_tr}:last-child > #{$_td}:last-child,
+    #{$_tfoot}:last-of-type #{$_tr}:last-child > #{$_th}:last-child {
+        @include border-bottom-right-radius($inner-radius);
+    }
+
+    // Clear border-radius for the last th in the last row in the only thead
+    #{$_thead}:only-of-type #{$_tr}:last-child > #{$_th}:last-child {
+        @include border-bottom-right-radius(0);
+    }
+
+    // Clear border-radius for the first th in the last row in the only thead
+    #{$_thead}:only-of-type #{$_tr}:last-child > #{$_th}:first-child {
+        @include border-bottom-left-radius(0);
+    }
+
+    // Clear border-radius for first td in the first row in a tbody immediately after a thead
+    #{$_thead}:last-of-type + #{$_tbody} #{$_tr}:first-child > #{$_td}:first-child,
+    #{$_thead}:last-of-type + #{$_tbody} #{$_tr}:first-child > #{$_th}:first-child {
+        @include border-top-left-radius(0);
+    }
+
+    // Clear border-radius for first and last td in the last row in the last tbody for table with tfoot
+    #{$_tfoot} + #{$_tbody}:last-of-type #{$_tr}:last-child #{$_td}:first-child,
+    #{$_tfoot} + #{$_tbody}:last-of-type #{$_tr}:last-child #{$_th}:first-child {
+        @include border-bottom-left-radius(0);
+    }
+
+    #{$_tfoot} + #{$_tbody}:last-of-type #{$_tr}:last-child #{$_td}:last-child,
+    #{$_tfoot} + #{$_tbody}:last-of-type #{$_tr}:last-child #{$_th}:last-child {
+        @include border-bottom-right-radius(0);
+    }
+
+    // Special fixes to round the left border on the first td/th
+    #{$_caption} + #{$_thead} #{$_tr}:first-child #{$_th}:first-child,
+    #{$_caption} + #{$_tbody} #{$_tr}:first-child #{$_td}:first-child,
+    #{$_caption} + #{$_tbody} #{$_tr}:first-child #{$_th}:first-child,
+    #{$_colgroup} + #{$_thead} #{$_tr}:first-child #{$_th}:first-child,
+    #{$_colgroup} + #{$_tbody} #{$_tr}:first-child #{$_td}:first-child,
+    #{$_colgroup} + #{$_tbody} #{$_tr}:first-child #{$_th}:first-child {
+        border-top: 0;
+        @include border-top-left-radius($inner-radius);
+    }
+
+    #{$_caption} + #{$_thead} #{$_tr}:first-child #{$_th}:last-child,
+    #{$_caption} + #{$_tbody} #{$_tr}:first-child #{$_td}:last-child,
+    #{$_caption} + #{$_tbody} #{$_tr}:first-child #{$_th}:last-child,
+    #{$_colgroup} + #{$_thead} #{$_tr}:first-child #{$_th}:last-child,
+    #{$_colgroup} + #{$_tbody} #{$_tr}:first-child #{$_td}:last-child,
+    #{$_colgroup} + #{$_tbody} #{$_tr}:first-child #{$_th}:last-child {
+        border-top: 0;
+        @include border-top-right-radius($inner-radius);
+    }
+}
+
+
+
+// ********************************************************
+//
+//   DEPRECATED
+//   TODO: Remove no later than `2.0.0` release
+//
+// ********************************************************
+    ///
+    /// Reusable styles for a hovered table cell within a Table component.
+    /// @deprecated - Use `table-cell-hover-skin()` instead.
+    ///
+    @mixin table-cell-hover {
+        @include table-cell-hover-skin();
+    }
+
+    ///
+    /// Reusable base styles for a selectable table row within a Table component.
+    /// @deprecated - Use `table-row-selectable-skin()` instead.
+    ///
+    @mixin table-row-selectable {
+        @include table-row-selectable-skin();
+    }
+
+    ///
+    /// Styles for an actively selected row state within a Table component.
+    /// @deprecated - Use `table-row-selected-skin()` instead.
+    ///
+    @mixin table-row-selected {
+        @include table-row-selected-skin();
+    }

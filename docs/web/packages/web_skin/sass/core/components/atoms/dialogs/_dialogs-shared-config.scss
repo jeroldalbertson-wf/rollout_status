@@ -1,0 +1,143 @@
+// ********************************************************
+
+////
+/// Shared dialog component configuration
+/// ---
+/// @access public
+/// @group core.components.shared
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/dialogs-shared-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function component-padding-horizontal);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   INDIVIDAL DIALOG SIZE CONFIGS
+//
+// ********************************************************
+    @import 'config/dialog-size-config';
+
+
+
+// ********************************************************
+//
+//   GLOBAL DIALOG CONFIG(S)
+//
+// ********************************************************
+    ///
+    /// What value does the `lightness()` fn need to return for the background color of the surface beneath a dialog in order for a box-shadow to be used?
+    /// ---
+    /// @type Number
+    /// @since 0.4.9-2
+    /// @access private
+    /// @group core.internals.components.shared
+    ///
+    $dialog-shadow-threshold: 96%;
+
+    ///
+    /// Global collection of configurations for shared dialog properties and the elems nested within them.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {variable} $font-size-md
+    /// @requires {variable} $global-component-bd-width
+    /// @requires {variable} $border-radius-base
+    /// @requires {variable} $body-bg
+    /// @requires {variable} $text-color
+    /// @requires {variable} $zc-gray
+    /// @requires {variable} $zc-gray-70
+    /// @requires {variable} $zc-gray-40
+    /// @requires {variable} $box-shadow-default
+    /// @requires {variable} $default-fade-speed
+    /// ---
+    /// @prop {Number} font-size        [13px]  - Default dialog font size
+    /// @prop {Number} bd-radius        [4px]   - Default dialog border radius
+    /// @prop {Number} bd-width         [1px]   - Default dialog border width
+    /// @prop {Number} title-bd-width   [0]     - Default dialog title border width
+    /// @prop {Number} padding          [0]     - Default dialog padding used to accomodate `background-clip: padding-box;` with `border-radius`
+    ///
+    /// @prop {Color}  text-color       [#595959]   - Default dialog text color
+    /// @prop {Color}  bg               [#ffffff]   - Default dialog background color
+    /// @prop {Color}  bd-color         [#b2b2b2]   - Default dialog border color
+    /// @prop {Color}  title-bd-color   [#e3e3e3]   - Default dialog title border color
+    /// @prop {List}   shadow                       - Default dialog drop shadow
+    /// @prop {Number} backdrop-alpha   [.4]        - Default alpha for dialog backdrops
+    /// @prop {Color}  backdrop-bg      [#595959]   - Default background color for dialog backdrops
+    /// @prop {Number} fade-speed       [.15s]      - Default dialog fade transition speed
+    ///
+    /// @prop {Map} base [$dialog-size-lg-config]   - Size configuration map for base dialog sizes _- e.g. Modals_
+    /// @prop {Map} sm   [$dialog-size-sm-config]   - Size configuration map for small dialog sizes _- e.g. Alerts, Popovers and Panels_
+    ///
+    $dialog-config: (
+        // sizes that do not vary
+        'font-size': $font-size-md,
+        'bd-radius': $border-radius-base,
+        'bd-width': $global-component-bd-width,
+        'title-bd-width': 0,
+        'padding': 0,
+        // default colors
+        'text-color': $text-color,
+        'bg': $body-bg,
+        'bd-color': $zc-gray-70,
+        'title-bd-color': $zc-gray-40,
+        'shadow': $box-shadow-default,
+        //
+        'backdrop-alpha': .4,
+        'backdrop-bg': $zc-gray,
+        //
+        'fade-speed': $default-fade-speed,
+        // ----- SIZE VARIATIONS ----- //
+        'base': $dialog-size-lg-config,
+        'sm': $dialog-size-sm-config
+    ) !default;
+
+    ///
+    /// Rgba alpha value for the background color of `.alert-toast` skins and `.tooltip` / `.has-hint` element variations.
+    /// @type Number
+    /// @group core.components.alerts
+    /// @since 1.5.0
+    ///
+    $alert-toast-bg-alpha: .85;
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED CONFIG ALIAS / SHORTHAND
+//
+//   -> DO NOT MODIFY THESE (modify the map config)
+//
+// ********************************************************
+    $dialog-bd-radius: get($dialog-config, 'bd-radius');
+    $dialog-bd-width: get($dialog-config, 'bd-width');
+    $dialog-bd-color: get($dialog-config, 'bd-color');
+    $dialog-backdrop-alpha: get($dialog-config, 'backdrop-alpha');
+    $dialog-backdrop-bg: get($dialog-config, 'backdrop-bg');
+
+    $dialog-content-padding: get-deep($dialog-config, 'base.content-padding');
+    $dialog-sm-content-padding: get-deep($dialog-config, 'sm.content-padding');
+
+
+
+// ********************************************************
+//
+//   GRAY DIALOG VARIATION
+//
+//   -> Most commonly used in annotations
+//
+// ********************************************************
+    $dialog-gray-bg:          $zc-gray-20;
+    $dialog-gray-bd-color:    $zc-gray-60;

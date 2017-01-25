@@ -1,0 +1,472 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/comments/comments-panels';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.panel-comment {
+    position: relative;
+
+    //
+    // PANEL COMMENT BODY
+    //
+        .panel-body {
+            position: relative;
+        }
+
+        .comment-body {
+            max-height: to-rem($panel-comment-body-max-height);
+            min-height: to-rem($panel-comment-body-min-height);
+            // keep scrollbar all the way to the right in "saved" comment state
+            margin-right: to-rem($panel-comment-body-margin-right) * -1;
+        }
+
+        textarea[readonly] {
+            min-height: to-rem($panel-comment-body-min-height + (get($form-control-config, 'bd-width') * 2));
+            padding: 0 to-rem($panel-comment-textarea-padding-right) 0 0;
+        }
+
+        .comment-footer {
+            // only show this when comment is being edited
+            display: none;
+        }
+
+
+    //
+    // PANEL COMMENT HEADER
+    //
+        .comment-header.navbar {
+            @include comment-header-navbar();
+            padding: to-rem($panel-thread-heading-padding);
+            //
+            // Part 1 of Header line-height hack [1]
+            // For some reason having a line-height of 1 here causes the overall height of the box-model
+            // to compute as follows: 10px + 16px = 31px (vertical-padding + title min-height)
+            //
+            line-height: .1rem;
+
+            // when comment thread is collapsed
+            &.collapsed {
+                border-bottom-color: transparent;
+                @include border-bottom-radius(to-rem(get($panel-config, 'bd-radius')));
+            }
+
+            .comment-title {
+                @include comment-title();
+                max-width: 60%;
+
+                // show the thread status icon
+                .icon {
+                    @include comment-title-icon();
+                    // don't show until thread is closed
+                    display: none;
+                    position: absolute;
+                    top: to-rem(round(($panel-thread-heading-height - $icon-size-base) / 2));
+                    left: to-rem(get-deep($panel-config, 'sm.body-padding'));
+                    z-index: z('dropdown'); // keep above thread-closed overlay
+                }
+            }
+
+            // only shown if its the first comment in a thread
+            .thread-collapse-control {
+                //
+                // empty div that simply controls the collapsing of the thread
+                // we cannot place the data-toggle="collapse" on the comment-header
+                // itself because of click propagation conflicts that come from
+                // data-toggle="modal" buttons within the .thread-actions dd menu
+                //
+                position: absolute;
+                top: 0;
+                right: to-rem($panel-thread-actions-offset-right + $panel-thread-actions-btn-width); // adjacent to .thread-actions
+                left: 0;
+                z-index: z('dropdown'); // keep above thread-closed overlay
+                height: to-rem($panel-thread-heading-height);
+                cursor: pointer;
+                outline: 0; // tabindex added by collapse plugin will enable the outline
+
+                //
+                // in order for MSIE to be able to be bound to a click event,
+                // the element has to have either a bg color, or a bg image.
+                //
+                // https://github.com/WebFilings/web-skin/issues/645
+                //
+                background: image-url("invisible.gif") repeat;
+            }
+
+            // only shown if its the first comment in a thread
+            .thread-actions {
+                position: absolute;
+                top: 0;
+                right: to-rem($panel-thread-actions-offset-right);
+                float: none; // override .navbar .nav
+                border-bottom-color: get($panel-colors-default, 'bd-color');
+                height: to-rem($panel-thread-heading-height);
+
+                > .nav-item {
+                    @include panel-comment-thread-action-nav-item();
+                    padding: 0;
+
+                    > .hitarea {
+                        @include panel-comment-thread-action-nav-item();
+                        // make it a square
+                        padding: 0 to-rem($panel-thread-actions-btn-padding-horizontal);
+
+                        > .icon::before,
+                        > .icon::after {
+                            top: 0; // override .nav-item .icon::before/::after default
+                        }
+                    }
+
+                    > .dropdown-menu {
+                        // make the border of the menu match the border of the panel
+                        border-color: get($panel-colors-default, 'bd-color') !important;
+                    }
+                }
+            }
+
+            .comment-meta {
+                @include comment-meta();
+                position: absolute;
+                top: to-rem($panel-thread-meta-offset-top);
+                right: to-rem($panel-thread-actions-offset-right + $panel-thread-actions-btn-width + 5px);
+                left: 0;
+                width: auto; // TODO: this should somehow not intersect with .comment-title
+                min-height: to-rem($panel-thread-title-min-height);
+                line-height: 1; // Part 2 of header line-height hack [1]
+            }
+
+            // override default panel accordion style for adjacent panel-body elems
+            + .panel-collapse .panel-body {
+                border-top: 0 none !important;
+            }
+        }
+
+        //
+        // don't show child comment headers if the thread is "collapsed"
+        // NOTE: triggering the collapse of each comment reply must be handled via $(firstPanel).on('hide/show.wdesk.collapse') (see application.js)
+        //
+        + .panel-comment {
+            .comment-header.navbar.collapsed {
+                display: none;
+            }
+        }
+
+
+    //
+    // NEW COMMENT IS BEING CREATED
+    //
+        &.comment-new {
+            .comment-header.navbar {
+                .comment-meta,
+                .thread-actions {
+                    display: none;
+                }
+            }
+        }
+
+
+    //
+    // COMMENT IS BEING EDITED
+    //
+        &.comment-editing {
+            .comment-body {
+                margin-right: 0;
+            }
+            .comment-footer {
+                display: block;
+            }
+        }
+
+
+    //
+    // COMMENT REPLY
+    //
+    // When a user clicks reply, a new .panel-comment should
+    // be injected into the DOM with the .comment-editing
+    // CSS class in place
+    //
+        &.comment-reply {
+            // an adjacent panel-comment in .comment-editing
+            // state means its a reply to an existing comment
+            &.comment-editing {
+                .comment-header {
+                    &,
+                    &:after {
+                        display: none;
+                    }
+                }
+                .comment-body {
+                    min-height: to-rem($panel-comment-reply-body-min-height);
+                }
+            }
+        }
+
+
+} // END .panel-comment
+
+
+//
+// COMMENT THREADS
+//
+    .panel-comments-thread {
+        //
+        // Use borders/shadows on the thread, not the individual panels
+        // so that the .panel-hover and .panel-focus patterns
+        // can be used around the entire thread per UX spec
+        //
+        border: to-rem(get($panel-config, 'bd-width')) solid get($panel-colors-default, 'bd-color');
+        border-radius: to-rem(get($panel-config, 'bd-radius'));
+        position: relative;
+        z-index: 1;
+
+        //
+        // Ensure that when two threads are directly adjacent to one another
+        // in a vertically stacked column arrangement, that the layering
+        // doesn't cause menus from the first thread to be obstructed
+        // by elements in the next thread
+        //
+        // @see https://github.com/WebFilings/web-skin/issues/670
+        // @see https://github.com/WebFilings/web-skin/issues/729
+        //
+        // Requires some custom JS:
+        // ```js
+        // $('.thread-actions > .dropdown')
+        //     .on('show.wdesk.dropdown', function () {
+        //         $(this).closest('.panel-comments-thread').addClass('has-open-menu');
+        //     })
+        //     .on('hide.wdesk.dropdown', function () {
+        //         $(this).closest('.panel-comments-thread').removeClass('has-open-menu');
+        //     });
+        // ```
+        //
+        &.has-open-menu {
+            z-index: 2;
+        }
+
+        // give 'em some room to breathe when they are on-top of each other
+        + .panel-comments-thread {
+            margin-top: to-rem(floor($panel-thread-heading-height / 2));
+        }
+
+        > .panel {
+            border: 0 none;
+
+            //
+            // if it has a panel that precedes it,
+            // then naturally it's not the first one
+            //
+            + .panel {
+                margin-top: 0;
+
+                .panel-body {
+                    padding-top: 0;
+                }
+
+                .comment-header.navbar {
+                    padding: to-rem($panel-thread-reply-heading-padding);
+                    background-color: transparent;
+                    border: 0 none;
+
+                    // line up the meta given the extra spacing the header gets
+                    .comment-meta {
+                        top: to-rem($panel-thread-reply-meta-offset-top);
+                    }
+
+                    // put in a top "border" that is inset the amount of the panelPadding
+                    &:after {
+                        position: absolute;
+                        top: 0;
+                        right: to-rem(get-deep($panel-config, 'sm.body-padding'));
+                        left: to-rem(get-deep($panel-config, 'sm.body-padding'));
+                        display: block;
+                        height: to-rem(get($panel-config, 'bd-width'));
+                        border-top: to-rem(get($panel-config, 'bd-width')) solid get($panel-colors-default, 'bd-color');
+                        content: "";
+                    }
+                }
+
+                //
+                // REPLY / EDIT HOVER EFFECT ADJUSTMENTS
+                //
+                .comment-reply-edit-overlay {
+                    // no thread menu to worry about
+                    top: 0;
+                }
+            }
+        }
+    }
+
+
+//
+// REPLY / EDIT HOVER EFFECTS
+//
+    .panel-comment {
+        .comment-reply-edit-overlay {
+            position: absolute;
+            top: to-rem($panel-thread-heading-height); // don't block thread actions menu stuff
+            z-index: z('dropdown') - 1; // keep the thread actions menu clickable
+            display: none;
+            cursor: default; // only make this a pointer cursor if its the last .panel-comment
+            background-color: transparent;
+
+            .edit-comment-btn {
+                position: absolute;
+                top: to-rem(get-deep($panel-config, 'sm.body-padding'));
+                right: to-rem(get-deep($panel-config, 'sm.body-padding'));
+
+                #{$hover} {
+                    color: $zc-blue;
+                }
+            }
+
+            .icon-reply {
+                position: absolute;
+                top: auto;
+                right: to-rem(get-deep($panel-config, 'sm.body-padding'));
+                bottom: to-rem(get-deep($panel-config, 'sm.body-padding'));
+                left: auto;
+                display: none; // only show if its the last .panel-comment
+                color: $zc-blue;
+            }
+        }
+
+        #{$hover} {
+            .comment-reply-edit-overlay {
+                display: block;
+            }
+        }
+    }
+
+    //
+    // do not show reply/edit overlay if
+    // a) any comment in the thread is currently being edited
+    // b) the thread is resolved/closed
+    // c) the thread is in the process of being closed
+    //
+    .panel-comment.comment-editing,
+    .panel-comments-thread.comment-editing,
+    .panel-thread-closed .panel-comment,
+    .collapsing .panel-comment {
+        #{$hover} {
+            .comment-reply-edit-overlay {
+                display: none;
+            }
+        }
+    }
+
+    .panel-comments-thread > .panel-comment.comment-last {
+        .comment-reply-edit-overlay {
+            cursor: pointer;
+
+            .icon-reply {
+                display: block;
+            }
+        }
+    }
+
+
+//
+// COMMENT THREAD OVERLAYS
+//
+    .panel-comments-thread {
+        .thread-overlay {
+            // cover up the panel-comments-thread borders
+            top: to-rem(get($panel-config, 'bd-width')) * -1;
+            right: to-rem(get($panel-config, 'bd-width')) * -1;
+            bottom: to-rem(get($panel-config, 'bd-width')) * -1;
+            left: to-rem(get($panel-config, 'bd-width')) * -1;
+
+            background-color: $panel-comment-thread-overlay-bg;
+            @include opacity($panel-comment-thread-overlay-alpha);
+            z-index: z('dropdown') - 1; // keep the thread actions menu clickable
+        }
+
+        // THREAD IS COLLAPSED
+        &.panel-thread-collapsed {
+            > .panel {
+                overflow: visible; // ensure the thread actions menu dropdown can show up
+            }
+        }
+
+        // THREAD IS CLOSED
+        &.panel-thread-closed {
+            // show the overlay
+            .thread-overlay {
+                display: block;
+            }
+
+            .comment-initial .comment-header.navbar .comment-title {
+                // make room for the icon
+                text-indent: to-rem($icon-size-base + get-deep($panel-config, 'sm.body-padding'));
+                // show the thread status icon (initial/"first" comment in a thread only)
+                .icon {
+                    display: inline-block;
+                    text-indent: 0;
+                }
+            }
+
+            // lighten the thread actions button
+            .thread-actions .dropdown-toggle {
+                color: mix($panel-comment-thread-overlay-bg, get($navbar-link-config, 'text-color'), ($panel-comment-thread-overlay-alpha * 100%));
+            }
+
+            // override .panel-hover / .panel-focus bd color
+            &.panel-focus,
+            &.panel-hover {
+                border-color: get($panel-colors-default, 'bd-color') !important;
+            }
+
+            .comment-editing {
+                display: none !important; // override possible .show class
+            }
+        }
+
+        // THREAD MODAL CONFIRMATION IS OPEN
+        &.modal-open {
+            // show the overlay
+            .thread-overlay {
+                display: block;
+            }
+        }
+    }
+
+
+//
+// MODAL CONFIRMATION POSITIONING
+//
+    .panel-comments-thread {
+        @include comment-modal-confirmations($bd-radius: get($panel-config, 'bd-radius'), $content-pad: 0, $header-height: 0, $inner-elem: ".comment", $inner-pad: get-deep($panel-config, 'sm.body-padding'));
+
+        //
+        // override .panel-hover / .panel-focus bd color
+        // when modal confirmation is open
+        //
+        // use .overlaid class instead of .modal-open
+        // because .modal-open class is added on `show.wdesk.modal`
+        // and we don't want the bd color to change until
+        // modal is completely visible (`shown.wdesk.modal`)
+        //
+        &.panel-focus.overlaid,
+        &.panel-hover.overlaid {
+            // lighter color because only a single comment within thread is covered with modal backdrop
+            border-color: get($panel-colors-default, 'bd-color') !important;
+        }
+        &.panel-focus.modal-container.overlaid,
+        &.panel-hover.modal-container.overlaid {
+            // dark color because entire thread is covered with modal backdrop
+            border-color: $dialog-backdrop-bg !important;
+        }
+
+        //
+        // when an individual comment modal overlay is opened
+        // make sure there is enough height to display the message
+        // this is necessary because of how small the .comment-reply blocks can be
+        //
+        .panel-comment.modal-open .panel-collapse {
+            min-height: to-rem($panel-comment-body-max-height);
+        }
+    }

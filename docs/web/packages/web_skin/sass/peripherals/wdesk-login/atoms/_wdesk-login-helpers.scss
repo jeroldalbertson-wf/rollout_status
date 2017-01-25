@@ -1,0 +1,18 @@
+// ********************************************************
+//
+//   Wdesk Login Page Helpers
+//
+    $module: 'peripherals/wdesk-login/atoms/wdesk-login-helpers';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+@mixin emphasize-form-group-callout {
+    margin-bottom: $login-md-form-group-callout-margin-bottom;
+    padding: $login-sso-primary-padding-vertical 0;
+    border-color: get-deep($form-control-config, 'colors.bd-fallback'); // fallback for browsers that don't support rgba
+    border-color: rgba(get-deep($form-control-config, 'colors.bd-rgba-color'), get-deep($form-control-config, 'colors.bd-rgba-alpha'));
+    border-width: 1px 0;
+    border-style: solid none;
+}

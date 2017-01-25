@@ -1,0 +1,104 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/api/helpers/scss-var-content-color';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Misc
+// ----------------------------------------------------
+%ws-select-bg-hover    { background-color: color('selection.bg-hover');    color: contrast-color(color('selection.bg-hover')); }
+%ws-select-bg-press    { background-color: color('selection.bg-press');    color: contrast-color(color('selection.bg-press')); }
+%ws-select-bg-active   { background-color: color('selection.bg-active');   color: contrast-color(color('selection.bg-active')); }
+%ws-select-text-hover  { background-color: color('selection.text-hover');  color: contrast-color(color('selection.text-hover')); }
+%ws-select-text-press  { background-color: color('selection.text-press');  color: contrast-color(color('selection.text-press')); }
+%ws-select-text-active { background-color: color('selection.text-active'); color: contrast-color(color('selection.text-active')); }
+
+%ws-yellow-highlight   { background-color: color('highlight.yellow');      color: contrast-color(color('highlight.yellow')); }
+
+
+// ----------------------------------------------------
+//   WF Grays ("Secondary")
+// ----------------------------------------------------
+%zc-gray-120  { background-color: $zc-gray-120; color: contrast-color($zc-gray-120); }
+%zc-gray      { background-color: $zc-gray;     color: contrast-color($zc-gray); }
+%zc-gray-90   { background-color: $zc-gray-90;  color: contrast-color($zc-gray-90); }
+%zc-gray-80   { background-color: $zc-gray-80;  color: contrast-color($zc-gray-80); }
+%zc-gray-70   { background-color: $zc-gray-70;  color: contrast-color($zc-gray-70); }
+%zc-gray-60   { background-color: $zc-gray-60;  color: contrast-color($zc-gray-60); }
+%zc-gray-50   { background-color: $zc-gray-50;  color: contrast-color($zc-gray-50); }
+%zc-gray-40   { background-color: $zc-gray-40;  color: contrast-color($zc-gray-40); }
+%zc-gray-30   { background-color: $zc-gray-30;  color: contrast-color($zc-gray-30); }
+%zc-gray-20   { background-color: $zc-gray-20;  color: contrast-color($zc-gray-20); }
+
+
+// ----------------------------------------------------
+//   WF Greens ("Primary")
+//
+//   These all read from left to right
+//   when looking at the color palette
+//   matrix in the docs.
+// ----------------------------------------------------
+%zc-green-c       { background-color: $zc-green-c;      color: contrast-color($zc-green-c); }
+%zc-green-b       { background-color: $zc-green-b;      color: contrast-color($zc-green-b); }
+%zc-green         { background-color: $zc-green;        color: contrast-color($zc-green); }
+// ----- Darker ----- //
+%zc-green-c-120   { background-color: $zc-green-c-120;  color: contrast-color($zc-green-c-120); }
+%zc-green-b-120   { background-color: $zc-green-b-120;  color: contrast-color($zc-green-b-120); }
+%zc-green-120     { background-color: $zc-green-120;    color: contrast-color($zc-green-120); }
+// ----- Lighter ----- //
+%zc-green-c-80    { background-color: $zc-green-c-80;   color: contrast-color($zc-green-c-80); }
+%zc-green-b-80    { background-color: $zc-green-b-80;   color: contrast-color($zc-green-b-80); }
+%zc-green-80      { background-color: $zc-green-80;     color: contrast-color($zc-green-80); }
+// ----- Pastel 1 ----- //
+%zc-green-c-60    { background-color: $zc-green-c-60;   color: contrast-color($zc-green-c-60); }
+%zc-green-b-60    { background-color: $zc-green-b-60;   color: contrast-color($zc-green-b-60); }
+%zc-green-60      { background-color: $zc-green-60;     color: contrast-color($zc-green-60); }
+// ----- Pastel 2 ----- //
+%zc-green-c-40    { background-color: $zc-green-c-40;   color: contrast-color($zc-green-c-40); }
+%zc-green-b-40    { background-color: $zc-green-b-40;   color: contrast-color($zc-green-b-40); }
+%zc-green-40      { background-color: $zc-green-40;     color: contrast-color($zc-green-40); }
+
+
+// ----------------------------------------------------
+//   WF Blues ("Alternate")
+// ----------------------------------------------------
+%zc-blue-120   { background-color: $zc-blue-120;    color: contrast-color($zc-blue-120); }
+%zc-blue       { background-color: $zc-blue;        color: contrast-color($zc-blue); }
+%zc-blue-80    { background-color: $zc-blue-80;     color: contrast-color($zc-blue-80); }
+%zc-blue-60    { background-color: $zc-blue-60;     color: contrast-color($zc-blue-60); }
+%zc-blue-40    { background-color: $zc-blue-40;     color: contrast-color($zc-blue-40); }
+
+
+// ----------------------------------------------------
+//   WF Orange ("Warning")
+// ----------------------------------------------------
+%zc-orange-120 { background-color: $zc-orange-120;  color: contrast-color($zc-orange-120); }
+%zc-orange     { background-color: $zc-orange;      color: contrast-color($zc-orange); }
+%zc-orange-80  { background-color: $zc-orange-80;   color: contrast-color($zc-orange-80); }
+%zc-orange-60  { background-color: $zc-orange-60;   color: contrast-color($zc-orange-60); }
+%zc-orange-40  { background-color: $zc-orange-40;   color: contrast-color($zc-orange-40); }
+
+
+// ----------------------------------------------------
+//   WF Purple ("University/Help")
+// ----------------------------------------------------
+%zc-purple-120 { background-color: $zc-purple-120;  color: contrast-color($zc-purple-120); }
+%zc-purple     { background-color: $zc-purple;      color: contrast-color($zc-purple); }
+%zc-purple-80  { background-color: $zc-purple-80;   color: contrast-color($zc-purple-80); }
+%zc-purple-60  { background-color: $zc-purple-60;   color: contrast-color($zc-purple-60); }
+%zc-purple-40  { background-color: $zc-purple-40;   color: contrast-color($zc-purple-40); }
+
+
+// ----------------------------------------------------
+//   WF Red ("Danger/Error")
+// ----------------------------------------------------
+%zc-red-120    { background-color: $zc-red-120; color: contrast-color($zc-red-120); }
+%zc-red        { background-color: $zc-red;     color: contrast-color($zc-red); }
+%zc-red-80     { background-color: $zc-red-80;  color: contrast-color($zc-red-80); }
+%zc-red-60     { background-color: $zc-red-60;  color: contrast-color($zc-red-60); }
+%zc-red-40     { background-color: $zc-red-40;  color: contrast-color($zc-red-40); }

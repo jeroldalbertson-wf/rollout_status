@@ -1,0 +1,56 @@
+// ********************************************************
+
+////
+/// Default color contrast configs
+/// ---
+/// @type Number
+/// @group core.color.base
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/contrast';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// Default threshold that must be reached for two colors to be considered distinguishable for accessibility.
+/// ---
+/// @since 1.0.0
+///
+$global-contrast-delta: 5 !default;
+
+///
+/// Default amount of `$bg` mixed with `$color` in the `mute()` function
+/// ---
+/// @todo Add test asserting that this converts `$zc-gray` into `$zc-gray-70`
+///
+$muted-pct: 54%;
+
+///
+/// Default dark color returned by `contrast-color()`
+/// ---
+/// @type Color
+/// @color #000000
+/// ---
+/// @requires {variable} $black
+///
+$contrasted-dark-default:  $black !default;
+
+///
+/// Default light color returned by `contrast-color()`
+/// ---
+/// @type Color
+/// @color #ffffff
+/// ---
+/// @requires {variable} $white
+///
+$contrasted-light-default: $white !default;
+
+///
+/// Default value used by `contrast-color()` to determine when the lightness of a given `$color` changes from 'dark' to 'light'
+///
+$contrasted-lightness-threshold: 70% !default;

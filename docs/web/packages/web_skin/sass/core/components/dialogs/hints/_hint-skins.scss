@@ -1,0 +1,11 @@
+// ********************************************************
+//
+//  HINT SKIN VARIATIONS
+//
+// ********************************************************
+
+@each $skin in (success, warning, danger) {
+    .hint--#{$skin} {
+        @include hint-skin(get($hint-config, 'bg-#{$skin}'));
+    }
+}

@@ -1,0 +1,33 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for Toggle Switches
+ * ---
+ * MSIE Support: 10+
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ *   web-skin v{{ws_css_version}} Core Plugin JS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import '../core/api';
+
+
+// ----------------------------------------------------
+//   Toggle Switch Atoms
+// ----------------------------------------------------
+    @import 'form-toggle-switches/atoms/form-toggle-switches-config';
+    @import 'form-toggle-switches/atoms/form-toggle-switches-helpers';
+
+
+// ----------------------------------------------------
+//   Toggle Switch Components
+// ----------------------------------------------------
+    @import 'form-toggle-switches/form-toggle-switches-base';

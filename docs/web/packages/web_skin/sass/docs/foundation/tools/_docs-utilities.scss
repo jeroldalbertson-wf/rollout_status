@@ -1,0 +1,48 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/foundation/tools/docs-utilities';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.relative {
+    position: relative;
+}
+
+.clear {
+    clear: both;
+}
+
+.table-rounded {
+    @include table-rounded-corners($border-radius-base);
+}
+
+.color-swatch {
+    display: inline-block;
+    padding: .2rem .4rem;
+    margin: 0 to-rem($spacing-base);
+    width: to-rem($icon-size-base);
+    height: to-rem($icon-size-base);
+    border-radius: .3rem;
+    text-shadow: none;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+// hiding for now since ALL of the snippets are out-of-date, and I don't think anyone actually uses them.
+.ide-snippet-callout {
+    display: none !important;
+}
+
+[data-rotate] {
+    display: inline-block; // enable rotation
+}
+
+@each $degree in 45, 90, 135, 180 {
+    [data-rotate="#{$degree}"] {
+        @include rotate(#{$degree}deg);
+    }
+}

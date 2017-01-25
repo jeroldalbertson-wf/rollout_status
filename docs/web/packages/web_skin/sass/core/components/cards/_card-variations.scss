@@ -1,0 +1,137 @@
+// ********************************************************
+//
+//   CARD COMPONENT VARIATIONS / PERMUTATIONS
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/cards/card-variations';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $cards-module-config:  'core/components/atoms/cards/cards-config';
+    $cards-module-helpers: 'core/components/atoms/cards/cards-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $cards-module-config,
+                                          $cards-module-helpers);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Card with "footnote" variation
+//
+//   -> This variation (see: tasking) has a "footnote"
+//      that is displayed:
+//
+//      - In the `.card__cap--right` elem within
+//        `.card__header` when card is collapsed.
+//
+//      - In the `.card__cap--right` of the
+//        `.card__footer` when card is expanded.
+// ----------------------------------------------------
+    .card--has-footnote {
+        .card__header {
+            .card__footnote {
+                display: none;
+            }
+
+            .card__header__actions {
+                display: inherit;
+            }
+        }
+
+        &.card--collapsed .card__header {
+            .card__footnote {
+                display: inherit;
+            }
+
+            .card__header__actions {
+                display: none;
+            }
+        }
+
+        .card__footer {
+            .card__cap--right,
+            .card__cap--left {
+                padding: 0;
+            }
+        }
+    }
+
+    .card__footnote {
+        font-size: to-rem($font-size-sm);
+        color: get($card-shared-config, 'footnote-color');
+    }
+
+
+// ----------------------------------------------------
+//   Bordered Variation
+// ----------------------------------------------------
+    .card--bordered {
+        border: to-rem(get($card-shared-config, 'bd-width')) solid transparent;
+
+        #{$card-selected-platform-elem-selector} {
+            // The platform border should overlap the outer border of the card
+            $_overlap-amount: to-rem(get($card-shared-config, 'bd-width')) * -1;
+
+            top: $_overlap-amount;
+            bottom: $_overlap-amount;
+            left: $_overlap-amount;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Rounded Corner Variation
+// ----------------------------------------------------
+    .card--rounded {
+        border-radius: get($card-size-base-config, 'bd-radius');
+
+        .card__img {
+            border-radius: get($card-size-base-config, 'bd-radius-inner');
+        }
+
+        .card__header:first-child,
+        .card__img--top {
+            @include border-top-radius(get($card-size-base-config, 'bd-radius-inner'));
+        }
+
+        .card__footer:last-child,
+        .card__img--bottom {
+            @include border-bottom-radius(get($card-size-base-config, 'bd-radius-inner'));
+        }
+
+        #{$card-selected-platform-elem-selector} {
+            @include border-left-radius(get($card-size-base-config, 'bd-radius'));
+        }
+
+        &.card--panel .card__body {
+            border-radius: get($card-size-base-config, 'bd-radius-inner');
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Size Variations
+// ----------------------------------------------------
+    // ----- BASE ----- //
+    .card {
+        @include card-size();
+    }
+
+    // ----- SMALL ----- //
+    .card--sm {
+        @include card-size($size: 'sm');
+    }
+
+    .card--bordered {
+        // ----- BASE (BORDERED) ----- //
+        @include card-size($bordered: true);
+
+        // ----- SMALL (BORDERED) ----- //
+        &.card--sm {
+            @include card-size($size: 'sm', $bordered: true);
+        }
+    }

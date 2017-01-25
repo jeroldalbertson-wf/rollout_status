@@ -1,0 +1,250 @@
+// ********************************************************
+
+////
+/// Helper mixins pertaining to [experimental CSS3 multi-column layout](http://www.w3.org/TR/css3-multicol/)
+/// ---
+/// @since 1.1.0
+/// @access public
+/// @group core.utils.css3
+/// @link http://www.w3.org/TR/css3-multicol/ CSS3 Multi-Column Layout Spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/css3/columns';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, mixin experimental,
+                                                mixin experimental-property-and-value-only-for,
+                                                function is);
+//
+// ********************************************************
+
+
+///
+/// Specify the shorthand `columns` property
+/// ---
+/// @param {List} $width-and-count
+/// ---
+/// @example scss
+///   @include columns(20em 2);
+///
+@mixin columns($width-and-count) {
+    @include experimental(columns, $width-and-count);
+}
+
+///
+/// Specify the number of columns
+/// @param {Number} $count
+///
+@mixin column-count($count) {
+    @include experimental(column-count, $count);
+}
+
+///
+/// Specify the gap between columns e.g. `20px`
+/// @param {Number} $width
+///
+@mixin column-gap($width) {
+    @include experimental(column-gap, $width);
+}
+
+///
+/// Specify the width of columns e.g. `100px`
+/// @param {Number} $width
+///
+@mixin column-width($width) {
+    @include experimental(column-width, $width);
+}
+
+///
+/// Specify the width of the rule between columns e.g. `1px`
+/// @param {Number} $width
+///
+@mixin column-rule-width($width) {
+    @include experimental(column-rule-width, $width);
+}
+
+///
+/// Specify the style of the rule between columns e.g. `dotted`.
+/// This works like `border-style`.
+/// ---
+/// @param {String} $style
+///
+@mixin column-rule-style($style) {
+    @include experimental(column-rule-style, unquote($style));
+}
+
+///
+/// Specify the color of the rule between columns e.g. `blue`.
+/// This works like `border-color`.
+/// ---
+/// @param {Color} $color
+///
+@mixin column-rule-color($color) {
+    @include experimental(column-rule-color, $color);
+}
+
+///
+/// Mixin encompassing all column rule properties
+/// ---
+/// @example scss - Comma Separated Example
+///   @include column-rule(1px, solid, #c00)
+///
+/// @example scss - Space Separated Example
+///   @include column-rule(1px solid #c00)
+/// ---
+/// @param {$number}        $width
+/// @param {String|Boolean} $style [false]
+/// @param {Color|Boolean}  $color [false]
+///
+@mixin column-rule($width, $style: false, $color: false) {
+    $full: compact($width, $style, $color);
+    @include experimental(column-rule, $full);
+}
+
+///
+/// Mixin for setting the `column-break-before` property
+/// ---
+///  @example scss
+///    h2.before {
+///      @include column-break-before(always);
+///    }
+///
+///  @example css - Generates
+///
+///  h2.before {
+///    -webkit-column-break-before: always;
+///            column-break-before: always;
+///  }
+/// ---
+/// @param {String} $value [auto] - Legal values are `auto`, `always`, `avoid`, `left`, `right`, `page`, `column`, `avoid-page`, `avoid-column`
+///
+@mixin column-break-before($value: auto) {
+    $legal-values: auto, always, avoid, left, right, page, column, avoid-page, avoid-column;
+
+    @if not is($value, $legal-values) {
+        @error "`column-break-before` mixin expecting `$value` param value to be found within list of `$legal-values`. Was #{$value}";
+    } @else {
+        @include experimental(column-break-before, $value);
+    }
+}
+
+///
+/// Mixin for setting the `column-break-after` property
+/// ---
+///  @example scss
+///    h2.after {
+///      @include column-break-after(always);
+///    }
+///
+///  @example css - Generates
+///
+///  h2.after {
+///    -webkit-column-break-after: always;
+///            column-break-after: always;
+///  }
+/// ---
+/// @param {String} $value [auto] - Legal values are `auto`, `always`, `avoid`, `left`, `right`, `page`, `column`, `avoid-page`, `avoid-column`
+///
+@mixin column-break-after($value: auto) {
+    $legal-values: auto, always, avoid, left, right, page, column, avoid-page, avoid-column;
+
+    @if not is($value, $legal-values) {
+        @error "`column-break-after` mixin expecting `$value` param value to be found within list of `$legal-values`. Was #{$value}";
+    } @else {
+        @include experimental(column-break-after, $value);
+    }
+}
+
+///
+/// Mixin for setting the `column-break-inside` property
+/// ---
+///  @example scss
+///    h2.inside {
+///      @include column-break-inside(always);
+///    }
+///
+///  @example css - Generates
+///
+///  h2.inside {
+///    -webkit-column-break-inside: always;
+///            column-break-inside: always;
+///  }
+/// ---
+/// @param {String} $value [auto] - Legal values are `auto`, `avoid`, `avoid-page`, `avoid-column`
+///
+@mixin column-break-inside($value: auto) {
+    $legal-values: auto, avoid, avoid-page, avoid-column;
+
+    @if not is($value, $legal-values) {
+        @error "`column-break-inside` mixin expecting `$value` param value to be found within list of `$legal-values`. Was #{$value}";
+    } @else {
+        @include experimental(column-break-inside, $value);
+    }
+}
+
+///
+/// All-purpose mixin for setting column breaks
+/// ---
+/// @requires {mixin} column-break-before
+/// @requires {mixin} column-break-after
+/// @requires {mixin} column-break-inside
+/// ---
+/// @param {String} $type [before] - Legal values are `before`, `after`, `inside`
+///
+@mixin column-break($type: before, $value: auto) {
+    $legal-types: before, after, inside;
+
+    @if not is($type, $legal-types) {
+        @error "`column-break` mixin expecting `$type` param value to be found within list of `$legal-types`. Was #{$type}";
+    } @else {
+        @include experimental(unquote('column-break-#{$type}'), $value);
+    }
+}
+
+///
+/// Generate CSS classes to build "masonry"-like column layouts above the specified `$breakpoint`
+/// ---
+/// @since 1.4.0
+/// ---
+/// @param {String} $breakpoint [null]   - One of: 'sm', 'md', 'lg', 'xl'
+/// @param {Number} $columns    [6]      - The maxiumum number of horizontal columns to allow
+/// @param {Number} $gap        [1.5rem] - The amount of negative space to render between adjacent `.column`s
+///
+@mixin generate-breakpoint-column-layout-classes(
+    $breakpoint: null,
+    $columns: get($grid-config, 'columns'),
+    $gap: to-rem(get($grid-config, 'gutter-width') / 2))
+{
+    $valid-breakpoints: get($grid-config, 'breakpoints-v2');
+
+    @if not is($breakpoint, $valid-breakpoints) {
+        @error "`generate-column-layout-classes` mixin expecting `$breakpoint` param value to be found within list of #{$valid-breakpoints}. Was #{$breakpoint}";
+    }
+
+    @include _breakpoint-respond-to($breakpoint) {
+        $breakpoint-suffix: if($breakpoint != null, '-#{$breakpoint}', '');
+
+        .columns#{$breakpoint-suffix} {
+            @include column-gap($gap);
+
+            > .column {
+                display: inline-block;
+                width: 100%;
+                margin-bottom: $gap;
+            }
+        }
+
+        @for $i from 1 through $columns {
+            $size-suffix: if($breakpoint != null, '#{$breakpoint-suffix}-#{$i}', '-#{$i}');
+
+            .columns-up#{$size-suffix} {
+                @include columns($i);
+            }
+        }
+    }
+}

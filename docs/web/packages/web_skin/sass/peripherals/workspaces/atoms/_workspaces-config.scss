@@ -1,0 +1,385 @@
+// ********************************************************
+
+////
+/// Workspaces component configs
+/// ---
+/// @since 1.3.0
+/// @access public
+/// @group peripherals.components.workspaces
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/atoms/workspaces-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend,
+                                                function to-rem,
+                                                function to-px,
+                                                function component-height,
+                                                function shade-of);
+//
+// ********************************************************
+
+
+///
+/// Configuration for the `.w-box` element that sits in the top left corner of the
+/// Wdesk app shell (even on global error pages).
+/// ---
+/// @type Map
+/// @since 1.5.0
+/// ---
+/// @requires {variable} $zc-green
+/// ---
+/// @prop {Color}  bg               [#66cc00]   - Background color of the box
+/// @prop {Number} radius           [.5rem]     - Bottom right corner radius of the box
+/// @prop {Number} height           [2.8rem]    - Height of the box
+/// @prop {Number} width            [4rem]      - Width of the box
+/// @prop {Number} symbol-size      [2rem]      - Height / width of the "W" SVG symbol within the box
+///
+$w-box-config: (
+    'bg': $zc-green,
+    'radius': .5rem,
+    'height': 2.8rem,
+    'width': 4rem,
+    'symbol-size': 2rem
+);
+
+
+///
+/// Configuration for the `.wksp-main` element that wraps around the entire workspaces module.
+/// ---
+/// @type Map
+/// ---
+/// @prop {Color} bg [#f3f3f3]
+///
+$wksp-main-config: (
+    'bg': $zc-gray-20
+);
+
+
+///
+/// Configuration for `.hitarea` elements within a workspaces sidebar.
+/// ---
+/// @type Map
+/// ---
+/// @requires {function} get
+/// @requires {function} get-deep
+/// @requires {function} extend
+/// @requires {function} component-height
+/// @requires {function} to-rem
+/// @requires {function} to-px
+/// @requires {variable} $global-component-padding-config
+/// @requires {variable} $global-component-bd-width
+/// ---
+/// @prop {Number} height               [30px]
+/// @prop {Number} height-text          [24px]
+/// @prop {Number} min-width            [30px]
+/// @prop {Number} padding-horizontal   [.5rem]
+/// @prop {Number} padding-vertical     [.2rem]
+///
+$wksp-sidebar-hitarea-config: (
+    'height': component-height('sm'),
+    'height-text': null, // calculated value added via @extend
+    'min-width': component-height('sm'),
+    // Override default hitarea / btn padding to match comps
+    'padding-horizontal': to-rem(get-deep($global-component-padding-config, 'sm.vertical')),
+    'padding-vertical': to-rem(get-deep($global-component-padding-config, 'sm.vertical') - ($global-component-bd-width * 2) - 1)
+);
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $wksp-sidebar-hitarea-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $wksp-sidebar-hitarea-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+    $wksp-sidebar-hitarea-config: extend($wksp-sidebar-hitarea-config,
+        (
+            'height-text': get($wksp-sidebar-hitarea-config, 'height') - to-px(get($wksp-sidebar-hitarea-config, 'padding-vertical') * 2) - ($global-component-bd-width * 2)
+        )
+    );
+
+
+///
+/// Configuration for `.wksp-sidebar` elements, and some of their child elements.
+/// ---
+/// @type Map
+/// ---
+/// @requires {function} get
+/// @requires {function} get-deep
+/// @requires {function} extend
+/// @requires {function} to-rem
+/// @requires {variable} $white
+/// @requires {variable} $zc-gray-50
+/// @requires {variable} $zc-gray-30
+/// @requires {variable} $global-component-padding-config
+/// ---
+/// @prop {Color} bg            [#ffffff] ///
+/// @prop {Color}  bd-color     [#d8d8d8]   - Color of vertical borders that visually separate `.wksp-sidebar` from the main content area
+/// @prop {Number} bd-width     [1px]       - Width of vertical borders that visually separate `.wksp-sidebar` from the main content area
+///
+/// @prop {Color}  divider-color    [#eaeaea]   - Color of divider between vertically stacked areas within a `.wksp-sidebar` element
+/// @prop {Number} divider-height   [1px]       - Height of divider between vertically stacked areas within a `.wksp-sidebar` element
+///
+/// @prop {Number} min-width [36px]  - Width of `.wksp-sidebar` elements when collapsed
+/// @prop {Number} max-width [170px] - Width of `.wksp-sidebar` elements when expanded
+///
+/// @prop {Number} padding                      [16px] - Amount of padding within `.wksp-sidebar` elements
+/// @prop {Number} minimized-padding-horizontal [5px]  - Amount of horizontal padding within `.wksp-sidebar` elements in a collapsed state, to allow `.hitarea` elements to be their `min-width` without forcing the sidebar to be wider than its prescribed `min-width`
+///
+/// @prop {Number} content-padding-horizontal   [.8rem]  - Amount of horizontal padding within `.wksp-sidebar-content-block` elements
+/// @prop {Number} content-padding-vertical     [1.6rem] - Amount of vertical padding within `.wksp-sidebar-content-block` elements
+///
+/// @prop {Number} stacked-nav-item-spacing-vertical    [.7rem]  - Amount of space between `.nav-items` within a `.nav-stacked` within a `.wksp-sidebar` element
+///
+/// @prop {Number} masthead-brand-padding               [.8rem 0 .5rem .6rem] - Amount of padding within `.wksp-sidebar-masthead-brand`
+/// @prop {Number} masthead-brand-img-height            [2.4rem]              - Height of the Wdesk logo within `.wksp-sidebar-masthead-brand`
+/// @prop {Number} masthead-create-block-padding-top    [1.3rem]              - Amount of top padding within `.wksp-sidebar-masthead-create`
+///
+$wksp-sidebar-config: (
+    'bg': $white,
+    //
+    'bd-color': $zc-gray-50,
+    'bd-width': 1px,
+    //
+    'divider-color': $zc-gray-30,
+    'divider-height': 1px,
+    //
+    'min-width': 36px,
+    'max-width': 170px,
+    'padding': get-deep($global-component-padding-config, 'lg.horizontal'),
+    'minimized-padding-horizontal': null, // calculated value added via @extend
+    //
+    'content-padding-horizontal': null, // calculated value added via @extend
+    'content-padding-vertical': null, // calculated value added via @extend
+    //
+    'stacked-nav-item-spacing-vertical': to-rem(7px),
+    //
+    'masthead-brand-padding': to-rem(8px) 0 to-rem(5px) to-rem(6px),
+    'masthead-brand-img-height': to-rem(24px),
+    'masthead-create-block-padding-top': to-rem(13px)
+);
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $wksp-sidebar-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $wksp-sidebar-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+    $wksp-sidebar-config: extend($wksp-sidebar-config,
+        (
+            'minimized-padding-horizontal': round((get($wksp-sidebar-config, 'min-width') - get($wksp-sidebar-hitarea-config, 'min-width')) / 2),
+            'content-padding-horizontal': to-rem(get($wksp-sidebar-config, 'padding') / 2),
+            'content-padding-vertical': to-rem(get($wksp-sidebar-config, 'padding')),
+        )
+    );
+
+
+///
+/// Configuration for `.nav-item .hitarea` elements within `.wksp-pill-panel` elements.
+/// ---
+/// @type Map
+/// ---
+/// @requires {function} get
+/// @requires {function} shade-of
+/// @requires {variable} $nav-pills-pill-link-skin-colors
+/// @requires {variable} $zc-gray-70
+/// ---
+/// @prop {Map} full-color
+/// @prop {Color} full-color.text-active    [#ffffff]
+/// @prop {Color} full-color.bg-active      [#0085e6]
+/// @prop {Color} full-color.bd-active      [#0085e6]
+///
+/// @prop {Map} grayscale
+/// @prop {Color} grayscale.text-active    [#ffffff]
+/// @prop {Color} grayscale.bg-active      [#c5c5c5]
+/// @prop {Color} grayscale.bd-active      [#c5c5c5]
+///
+$wksp-sidebar-pill-skin-config: (
+    'full-color': (
+        'text-active': get($nav-pills-pill-link-skin-colors, 'text-active'),
+        'bg-active': get($nav-pills-pill-link-skin-colors, 'bg-active'),
+        'bd-active': get($nav-pills-pill-link-skin-colors, 'bg-active')
+    ),
+    'grayscale': (
+        'text-active': get($nav-pills-pill-link-skin-colors, 'text-active'),
+        'bg-active': shade-of($zc-gray-70, 75%), // #c5c5c5
+        'bd-active': shade-of($zc-gray-70, 75%)
+    )
+);
+
+
+///
+/// Configuration for `.wksp-pill-panel` elements, and some of their children.
+/// ---
+/// @type Map
+/// ---
+/// @requires {function} get-deep
+/// @requires {variable} $wksp-sidebar-pill-skin-config
+/// ---
+/// @prop {Number} bd-width                             [0]
+/// @prop {Color}  body-bg                              [#f3f3f3] - Background color of `.panel-body` within `.wksp-pill-panel`
+/// @prop {Color}  collapsible-heading-bg-active        [#c5c5c5] - Background color of an active `.panel-heading` within `.wksp-pill-panel-is-collapsible`
+/// @prop {Color}  collapsible-heading-bg-active-hover  [#c5c5c5] - Background color of an active `.panel-heading` within `.wksp-pill-panel-is-collapsible`
+///
+$wksp-sidebar-pill-panel-config: (
+    'bd-width': 0,
+    'body-bg': $zc-gray-20,
+    'collapsible-heading-bg-active': get-deep($wksp-sidebar-pill-skin-config, 'grayscale.bg-active'), // #c5c5c5
+    'collapsible-heading-bg-active-hover': get-deep($wksp-sidebar-pill-skin-config, 'grayscale.bg-active'),
+);
+
+
+///
+/// Configuration for `.wksp-pill-panel` elements when a `.wksp-sidebar-hoverable` container is hovered.
+/// ---
+/// @type Map
+/// ---
+/// @requires {function} get
+/// @requires {function} extend
+/// @requires {function} shade-of
+/// @requires {variable} $zc-gray-20
+/// @requires {variable} $nav-pills-pill-link-skin-colors
+/// @requires {variable} $shadow-default-config
+/// ---
+/// @prop {Color} body-bg                               [#f3f3f3] - Background color of `.panel-body` within `.wksp-pill-panel`
+/// @prop {Color} collapsible-heading-bg-active         [#40afff] - Background color of an active `.panel-heading` within `.wksp-pill-panel-is-collapsible`
+/// @prop {Color} collapsible-heading-bg-active-hover   [#0085e6] - Background color of a hovered, active `.panel-heading` within `.wksp-pill-panel-is-collapsible`
+///
+/// @prop {Map}     content-shadow-config                         - Extends all the values within `$shadow-default-config`, overriding those listed below
+/// @prop {Number}  content-shadow-config.offset-y      [-3px]
+///
+$wksp-sidebar-hovered-pill-panel-config: (
+    'body-bg': $zc-gray-20,
+    'collapsible-heading-bg-active': shade-of(get($nav-pills-pill-link-skin-colors, 'text-hover'), 75%),
+    'collapsible-heading-bg-active-hover': get($nav-pills-pill-link-skin-colors, 'bg-active'),
+    'content-shadow-config': extend($shadow-default-config,
+        (
+            'offset-y': -3px,
+        )
+    )
+);
+
+
+
+
+// ********************************************************
+//
+//   TRANSITION CONFIGS
+//
+// ********************************************************
+
+///
+/// At what point before or after a primary transition should we start the secondary transition?
+/// ---
+/// @type Number
+///
+$wksp-sidebar-secondary-transitions-timing-buffer: .075s;
+
+
+///
+/// Configuration for workspaces sidebar / sidebar element "primary" transitions.
+///
+///   + "Primary" transitions refer to the longer durations like width.
+/// ---
+/// @type Map
+/// ---
+/// @prop {String | List} properties            [width]                 - `transition-property` value for sidebar "primary" transitions
+/// @prop {String | List} hitarea-properties    [padding line-height]   - `transition-property` value for hitarea "primary" transitions
+///
+/// @prop {Map} duration
+/// @prop {Number} duration.default [.3s]
+/// @prop {Number} duration.max-to-min [.3s]
+/// @prop {Number} duration.min-to-max [.3s]
+///
+/// @prop {Map} delay
+/// @prop {Number} delay.default [0s]
+/// @prop {Number} delay.max-to-min [0s]
+/// @prop {Number} delay.min-to-max [0s]
+///
+$wksp-sidebar-primary-transitions: (
+    'properties': width,
+    'hitarea-properties': padding line-height,
+    'duration': (
+        'default': .3s,
+        'max-to-min': .3s,
+        'min-to-max': .3s
+    ),
+    'delay': (
+        'default': 0s,
+        'max-to-min': 0s,
+        'min-to-max': 0s
+    )
+);
+
+
+///
+/// Configuration for workspaces sidebar / sidebar element "secondary" transitions.
+///
+///   + "Secondary" transitions refer to the macro transitions that occur before / after the primary transitions.
+/// ---
+/// @type Map
+/// ---
+/// @requires {function} get-deep
+/// @requires {variable} $wksp-sidebar-primary-transitions
+/// @requires {variable} $wksp-sidebar-secondary-transitions-timing-buffer
+/// ---
+/// @prop {Map} duration
+/// @prop {Number} duration.max-to-min [.1s]
+/// @prop {Number} duration.min-to-max [.1s]
+///
+/// @prop {Map} delay
+/// @prop {Number} delay.max-to-min [.225s]
+/// @prop {Number} delay.min-to-max [0s]
+///
+$wksp-sidebar-secondary-transitions: (
+    'duration': (
+        'max-to-min': .1s,
+        'min-to-max': .1s
+    ),
+    'delay': (
+        'max-to-min': get-deep($wksp-sidebar-primary-transitions, 'duration.max-to-min') - $wksp-sidebar-secondary-transitions-timing-buffer,
+        'min-to-max': 0s
+    )
+);
+
+
+///
+/// Configuration for the `.wksp-sidebar-min-max-control-wrapper` element that expands / collapses the `.wksp-sidebar` element when clicked.
+/// ---
+/// @type Map
+/// ---
+/// @requires {function} get-deep
+/// @requires {function} to-rem
+/// @requires {variable} $wksp-sidebar-primary-transitions
+/// ---
+/// @prop {Number} width  [4.4rem]
+/// @prop {Number} height [4.4rem]
+///
+/// @prop {Map} flip
+/// @prop {Number} flip.duration [.3s]
+/// @prop {Number} flip.delay    [.125]
+///
+$wksp-sidebar-min-max-control-config: (
+    'width': to-rem($touch-uihitarea),
+    'height': to-rem($touch-uihitarea),
+    'flip': (
+        'duration': get-deep($wksp-sidebar-primary-transitions, 'duration.default'),
+        'delay': get-deep($wksp-sidebar-primary-transitions, 'duration.default') - .175s
+    )
+);

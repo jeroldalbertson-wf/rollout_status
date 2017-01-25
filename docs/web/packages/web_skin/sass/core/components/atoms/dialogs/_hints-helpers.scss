@@ -1,0 +1,328 @@
+// ********************************************************
+
+////
+/// Hint tooltip component helpers
+/// ---
+/// @since 1.6.0
+/// @access public
+/// @group core.components.hints
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/hints-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function to-rem,
+                                                function rem-floor);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//  PUBLIC HELPERS
+//
+// ********************************************************
+
+    ///
+    /// Adds the styling necessary to change the color of the pseudo-elements of a `.has-hint` element that displays the hint content, and the arrow.
+    /// ---
+    /// @param {Color} $bg-color
+    /// @param {Color} $text-color [#ffffff]
+    /// ---
+    /// @example scss
+    ///   .custom-hint-skin-class {
+    ///       @include hint-skin($some-custom-bg-color);
+    ///   }
+    ///
+    /// @example html
+    ///   <div class="has-hint custom-hint-skin-class"
+    ///        aria-label="...">
+    ///       ...
+    ///   </div>
+    ///
+    @mixin hint-skin($bg-color, $text-color: get($hint-config, 'text-color')) {
+        #{get($hint-config, 'body-selector')} {
+            background-color: $bg-color;
+            border-color: $bg-color;
+            color: $text-color;
+        }
+
+        // Change arrow color for every possible direction
+        @each $hint-direction-key, $hint-direction-cfg in $hint-position-configs {
+            &.hint--#{$hint-direction-key} {
+                #{get($hint-config, 'arrow-selector')} {
+                    border-#{get($hint-direction-cfg, 'bd-side')}-color: $bg-color;
+                }
+            }
+        }
+    }
+
+
+    ///
+    /// Adds the styling necessary to render the pseudo-element of a `.has-hint` element that displays the hint content.
+    /// ---
+    /// @see {variable} $hint-width-config
+    /// ---
+    /// @param {Number} $width
+    /// ---
+    /// @example scss
+    ///   .custom-hint-width-class {
+    ///       @include hint-width($some-custom-width);
+    ///   }
+    ///
+    /// @example html
+    ///   <div class="has-hint custom-hint-width-class"
+    ///        aria-label="...">
+    ///       ...
+    ///   </div>
+    ///
+    @mixin hint-width($width) {
+        #{get($hint-config, 'body-selector')} {
+            white-space: normal;
+            width: $width;
+        }
+    }
+
+
+// ********************************************************
+//
+//  PRIVATE HELPERS
+//
+// ********************************************************
+
+    ///
+    /// Reusable styles shared by both the `:before` (arrow) and `:after` (body / content) pseudo-elements
+    /// ---
+    /// @access private
+    /// @group core.internals.components.hints
+    ///
+    @mixin _hint-pseudo-element-base() {
+        // Must enable gpu to ensure transform(s) work on hidden elements
+        @include activate-gpu();
+        @include transition(get($hint-config, 'fade-transition'), get($hint-config, 'slide-transition'));
+
+        position: absolute;
+        z-index: get($hint-config, 'z-index');
+        opacity: 0;
+        // Must set visibility because MSIE does not yet support the `pointer-events` property
+        visibility: hidden;
+        // Turn pointer events off, otherwise hovering the hint will make it appear
+        pointer-events: none;
+    }
+
+
+    ///
+    /// Sets the value of the CSS `transform` property on the hint content / arrow pseudo-element necessary to make them appear in the correct position when they transition between a visible / invisible state.
+    /// ---
+    /// @access private
+    /// @group core.internals.components.hints
+    /// ---
+    /// @see {variable} $hint-position-configs
+    /// ---
+    /// @param {String} $direction                  - Corresponds to a key in the `$hint-position-configs` map
+    /// @param {Map}    $cfg            [null]      - An optional configuration map for the `$direction` you want the hint to go. Defaults to the map value of the key in `$hint-position-config` that matches the provided `$direction`
+    /// @param {Number} $is-persistent  [false]     - When `false`, the CSS `transform` values that reveal the hint (via `_reveal-hint()`) will be present within `:hover` and `:focus` selectors.  When `true`, those values will be present regardless of the pseudo-class (e.g. on `.hint--show` elements)
+    /// @param {Bool}   $global         [false]     - When `true`, the color and transform values will be set for the pseudo-element that displays the arrow, and the CSS `transform` values will be set for both pseudo-elements in their "invisible" state.  _Should only be set to true once_
+    ///
+    @mixin _hint-direction($direction, $cfg: null, $is-persistent: false, $global: false) {
+        $cfg: if($cfg, $cfg, get($hint-position-configs, $direction));
+
+        @if is($direction, left right) {
+            @include _hint-direction-horizontal(
+                get($cfg, 'margin-direction'),
+                get($cfg, 'transition-direction'),
+                $is-persistent: $is-persistent,
+                $global: $global
+            );
+        } @else {
+            @include _hint-direction-vertical(
+                get($cfg, 'margin-direction'),
+                get($cfg, 'transition-direction'),
+                get($cfg, 'transition-direction-op-axis'),
+                $is-persistent: $is-persistent,
+                $global: $global
+            );
+        }
+
+        @if $global {
+            #{get($hint-config, 'arrow-selector')} {
+                border-#{get($cfg, 'bd-side')}-color: get($hint-config, 'arrow-color');
+            }
+        }
+    }
+
+
+    ///
+    /// Sets the value of the CSS `transform` property on the hint content / arrow pseudo-element necessary to make them appear above or below the "host" `.has-hint` element in the correct position when they transition between a visible / invisible state.
+    /// ---
+    /// @access private
+    /// @group core.internals.components.hints
+    /// ---
+    /// @see {variable} $hint-position-configs
+    /// @see {mixin} _hint-direction-horizontal
+    /// ---
+    /// @param {String} $vertical-offset-prop           - The CSS property used to adjust the vertical offset of the hint arrow and content pseudo-elements.  Corresponds to a `margin-direction` key value in the `$hint-position-configs` map
+    /// @param {Map}    $transition-direction           - Must be `1` or `-1`
+    /// @param {Number} $x-axis-direction       [0]     - The direction along the axis that is perpendicular to the direction of the tooltip _(e.g. the horizontal axis if the hint is positioned top or bottom)_
+    /// @param {Number} $is-persistent          [false] - When `false`, the CSS `transform` values that reveal the hint (via `_reveal-hint()`) will be present within `:hover` and `:focus` selectors.  When `true`, those values will be present regardless of the pseudo-class (e.g. on `.hint--show` elements)
+    /// @param {Bool}   $global                 [false] - When `true`, the CSS `transform` values will be set for the pseudo-element that displays the arrow, and the CSS `transform` values will be set for both pseudo-elements in their "invisible" state.  _Should only be set to true once_
+    ///
+    @mixin _hint-direction-vertical(
+        $vertical-offset-prop,
+        $transition-direction,
+        $x-axis-direction: 0,
+        $is-persistent: false,
+        $global: false
+    ) {
+        $translate-x: -50%;
+        @if $x-axis-direction == -1 {
+            $translate-x: -100%;
+        }
+
+        @if $x-axis-direction == 1 {
+            $translate-x: 0;
+        }
+
+        @if $global {
+            // Start position of the arrow
+            #{get($hint-config, 'arrow-selector')} {
+                #{$vertical-offset-prop}: 100%;
+                left: calc(50% - #{get($hint-config, 'arrow-bd-width')}); // Horizontally center the arrow
+                margin-#{$vertical-offset-prop}: (get($hint-config, 'arrow-base') - get($hint-config, 'bd-width')) * -1;
+            }
+
+            // Start position of the content
+            #{get($hint-config, 'body-selector')} {
+                @include translateX($translate-x);
+
+                #{$vertical-offset-prop}: 100%;
+                left: 50%;
+
+                @if $x-axis-direction != 0 {
+                    // Don't allow the arrow to be all the way on one end of the axis
+                    margin-left: ($x-axis-direction * -1) * get($hint-config, 'arrow-base');
+                }
+            }
+        }
+
+        @if not $is-persistent {
+            // If the hint is not displayed "persistently" using the `hint--show` CSS class,
+            // then the hint positioning should not be set where it will appear until the "host"
+            // element is hovered / focused.
+            #{$link-hover-focus} {
+                @include _reveal-hint(y, $transition-direction, $translate-x);
+            }
+        } @else {
+            // If the hint is displayed "persistently" using the `hint--show` CSS class,
+            // then the hint positioning should be set where it will appear when the
+            // opacity / visibility is set to make the hint appear.
+            @include _reveal-hint(y, $transition-direction, $translate-x);
+        }
+    }
+
+
+    ///
+    /// Sets the value of the CSS `transform` property on the hint content / arrow pseudo-element necessary to make them appear to the left or right of the "host" `.has-hint` element in the correct position when they transition between a visible / invisible state.
+    /// ---
+    /// @access private
+    /// @group core.internals.components.hints
+    /// ---
+    /// @see {variable} $hint-position-configs
+    /// @see {mixin} _hint-direction-vertical
+    /// ---
+    /// @param {String} $vertical-offset-prop           - The CSS property used to adjust the vertical offset of the hint arrow and content pseudo-elements.  Corresponds to a `margin-direction` key value in the `$hint-position-configs` map
+    /// @param {Map}    $transition-direction           - Must be `1` or `-1`
+    /// @param {Number} $x-axis-direction       [0]     - The direction along the axis that is perpendicular to the direction of the tooltip _(e.g. the horizontal axis if the hint is positioned top or bottom)_
+    /// @param {Number} $is-persistent          [false] - When `false`, the CSS `transform` values that reveal the hint (via `_reveal-hint()`) will be present within `:hover` and `:focus` selectors.  When `true`, those values will be present regardless of the pseudo-class (e.g. on `.hint--show` elements)
+    /// @param {Bool}   $global                 [false] - When `true`, the CSS `transform` values will be set for the pseudo-element that displays the arrow, and the CSS `transform` values will be set for both pseudo-elements in their "invisible" state.  _Should only be set to true once_
+    ///
+    @mixin _hint-direction-horizontal(
+        $horizontal-offset-prop,
+        $transition-direction,
+        $is-persistent: false,
+        $global: false
+    ) {
+        @if $global {
+            // Start position of the arrow
+            #{get($hint-config, 'arrow-selector')} {
+                #{$horizontal-offset-prop}: 100%;
+                bottom: 50%;
+                margin-#{$horizontal-offset-prop}: (get($hint-config, 'arrow-base') - get($hint-config, 'bd-width')) * -1;
+                // Center arrow vertically
+                margin-bottom: get($hint-config, 'arrow-bd-width') * -1;
+            }
+
+            // Start position of the content
+            #{get($hint-config, 'body-selector')} {
+                #{$horizontal-offset-prop}: 100%;
+                bottom: 50%;
+                // Attempt to center vertically on the "host" element.
+                // NOTE: Will only work on a single-line tips.
+                margin-bottom: rem-floor(get($hint-config, 'min-height') / -2);
+            }
+        }
+
+        @if not $is-persistent {
+            // If the hint is not displayed "persistently" using the `hint--show` CSS class,
+            // then the hint positioning should not be set where it will appear until the "host"
+            // element is hovered / focused.
+            #{$link-hover-focus} {
+                @include _reveal-hint(x, $transition-direction);
+            }
+        } @else {
+            // If the hint is displayed "persistently" using the `hint--show` CSS class,
+            // then the hint positioning should be set where it will appear when the
+            // opacity / visibility is set to make the hint appear.
+            @include _reveal-hint(x, $transition-direction);
+        }
+    }
+
+
+    ///
+    /// Sets the value of the CSS `transform` property on the hint content / arrow pseudo-element necessary to make them appear in the correct position when they become visible.
+    /// ---
+    /// @access private
+    /// @group core.internals.components.hints
+    /// ---
+    /// @see {variable} $hint-position-configs
+    /// ---
+    /// @param {String} $translate-axis             - Must be "x" or "y"
+    /// @param {Number} $transition-direction       - Must be `1` or `-1`
+    /// @param {Number} $translate-x            [0] - The direction along the axis that is perpendicular to the direction of the tooltip _(e.g. the horizontal axis if the hint is positioned top or bottom)_. This must be `0` if `$translate-axis` is "x".
+    ///
+    @mixin _reveal-hint($translate-axis, $transition-direction, $translate-x: 0) {
+        // ----- ERROR CHECKING ----- //
+        @if not is($translate-axis, x y) {
+            @error "The `$translate-axis` param value must be `x` or `y`. Was #{$translate-axis}.";
+        }
+        @if not is($transition-direction, 1 -1) {
+            @error "The `$transition-direction` param value must be `1` or `-1`. Was #{$transition-direction}.";
+        }
+        @if $translate-axis == x and $translate-x != 0 {
+            @error "The `$transition-x` param value must be `0` when the `$translate-axis` is `x`.";
+        }
+        // ----- END ERROR CHECKING ----- //
+
+        $translate-fn: if($translate-axis == x, translateX, translateY);
+        $primary-axis-transform-value: unquote("#{$translate-fn}(#{get($hint-config, 'gutter') * $transition-direction})");
+
+        #{get($hint-config, 'arrow-selector')} {
+            @include transform($primary-axis-transform-value);
+        }
+
+        #{get($hint-config, 'body-selector')} {
+            @if $translate-x != 0 {
+                // For vertical hints, we need to animate in y-direction while still retaining the x-transform.
+                @include transform(translateX($translate-x) $primary-axis-transform-value);
+            } @else {
+                @include transform($primary-axis-transform-value);
+            }
+        }
+    }

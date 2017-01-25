@@ -1,0 +1,73 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-buttons';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.ws-example {
+    // ----------------------------------------------------
+    //   Add default spacing to .btn-group
+    //   and space out adjacent toolbars
+    // ----------------------------------------------------
+    > .btn-group {
+        margin-top: to-rem($docs-spacing-sm);
+        margin-bottom: to-rem($docs-spacing-sm);
+    }
+
+    > .btn-toolbar + .btn-toolbar {
+        margin-top: to-rem($docs-spacing-md);
+    }
+}
+
+.ws-example-buttons-inline {
+    > .btn {
+        margin: .2rem .2rem .2rem 0;
+    }
+
+    .btn-wrapper {
+        // to provide an area for a background color
+        // if one is necessary for a specific
+        // button variation example
+        display: inline-block;
+        margin: .2rem;
+        border-radius: to-rem($border-radius-base);
+    }
+}
+.btn-color-variation-example-table {
+    tr > td,
+    tr > th {
+        &:first-child {
+            padding-left: to-rem($table-cell-padding * 2);
+            padding-right: to-rem($table-cell-padding * 2);
+            width: 18%;
+        }
+    }
+}
+
+.ws-example-custom-outline-buttons {
+    .outline-example-container {
+        box-shadow: none;
+        border-color: transparent;
+    }
+
+    $container-bgs: (
+        'blue':   $zc-blue-120,
+        'green':  $zc-green-120,
+        'orange': $zc-orange-120,
+        'red':    $zc-red-120
+    );
+
+    @each $color-name, $color in $container-bgs {
+        .#{$color-name}-container {
+            background-color: $color;
+
+            .btn-outline {
+                @include btn-outline-skin($parent-bg: $color);
+            }
+        }
+    }
+}

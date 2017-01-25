@@ -1,0 +1,25 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for "Tour" Popovers
+ * ---
+ * MSIE Support: 10+
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import '../core/api';
+
+
+// ----------------------------------------------------
+//   Popover Tour Styles
+// ----------------------------------------------------
+    @import 'popover-tour/popover-tour-base';

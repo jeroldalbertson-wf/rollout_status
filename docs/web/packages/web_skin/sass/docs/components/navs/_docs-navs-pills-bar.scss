@@ -1,0 +1,181 @@
+// ********************************************************
+//
+//   Wrap .nav-pills.nav-justified in a .nav-pills-bar to
+//   create an elem that can contain multiple nested .nav-pill and .nav-block elements
+//
+//   @todo This will eventually become part of the Web Skin core nav styles, but for now its just a prototype we're using in the docs.
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/navs/navs-pills-bar';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+@mixin nav-pills-bar-justified($li-bg: false, $justified-breakpoint: default) {
+    $nav-pills-bar-padding-horizontal: to-rem(round(get($nav-pills-pill-config, 'padding-horizontal') / 2));
+
+    .nav-pills-bar-group {
+        padding: 0 $nav-pills-bar-padding-horizontal;
+
+        &:first-child {
+            padding-left: 0;
+        }
+        &:last-child {
+            padding-right: 0;
+        }
+    }
+
+    .nav-pills-bar-text {
+        padding: 0 $nav-pills-bar-padding-horizontal;
+    }
+
+    .nav-pills-bar-form {
+        min-height: to-rem($nav-pills-pill-height);
+        white-space: nowrap;
+
+        .form-group {
+            position: relative;
+            vertical-align: middle;
+
+            + .form-group {
+                margin-left: to-rem(get($nav-pills-pill-config, 'spacing'));
+            }
+        }
+    }
+
+    //
+    // ensure that if the bar contains more than one nav / other nested component
+    // that the left/right edge of the .nav-pills has a border
+    //
+    > .nav-pills-bar-group:not(:first-child) .nav-pills,
+    > .nav-pills:not(:first-child) {
+        > .nav-item:first-child {
+            border-left: to-rem(get($nav-pills-pill-config, 'spacing')) solid transparent;
+            border-radius: 0;
+
+            > .hitarea {
+                border-radius: 0;
+            }
+        }
+    }
+    > .nav-pills-bar-group:not(:last-child) .nav-pills,
+    > .nav-pills:not(:last-child) {
+        > .nav-item:last-child {
+            border-right: to-rem(get($nav-pills-pill-config, 'spacing')) solid transparent;
+            border-radius: 0;
+
+            > .hitarea {
+                border-radius: 0;
+            }
+        }
+    }
+}
+
+
+.nav-pills-bar {
+    position: relative;
+    height: to-rem($nav-pills-pill-height);
+    color: get($nav-link-config, 'text-color');
+    background-color: get($nav-pills-pill-config, 'bg');
+    border-radius: to-rem(get($nav-pills-pill-config, 'bd-radius'));
+
+    .nav-pills-bar-form {
+        position: relative;
+        // act like a .form-inline
+        .form-group {
+            display: inline-block;
+            margin-bottom: 0;
+            vertical-align: middle;
+        }
+    }
+
+    .nav-pills-bar-text {
+        line-height: to-rem($nav-pills-pill-height); // ensure that all text nested within is vertically centered
+        @include truncate-text();
+    }
+
+    .nav-pills > .nav-item {
+        > .hitarea {
+            border-radius: 0;
+            font-size: 1.2rem;
+            min-height: to-rem(component-height(base));
+            line-height: to-rem(component-height(base)) - .2rem;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-left: .4rem;
+
+            .icon {
+                margin-right: 0;
+            }
+        }
+
+        + .nav-item > .hitarea {
+            margin-left: .2rem;
+        }
+
+        $bd-radius-rem: to-rem(get($nav-pills-pill-config, 'bd-radius'));
+
+        // round the left and right edge of the series of pills only
+        &:first-child {
+            @include border-left-radius($bd-radius-rem);
+
+            > .hitarea {
+                @include border-left-radius($bd-radius-rem);
+            }
+        }
+
+        &:last-child {
+            @include border-right-radius($bd-radius-rem);
+
+            > .hitarea {
+                @include border-right-radius($bd-radius-rem);
+            }
+        }
+    }
+
+    .nav-blocks {
+        display: inline-block;
+        vertical-align: top;
+
+        > .nav-item {
+            $block-link-inset-rem: to-rem(get($nav-pills-pill-config, 'bar-block-link-inset'));
+
+            padding: $block-link-inset-rem;
+
+            > .hitarea {
+                background-color: get($nav-pills-pill-config, 'bg');
+                height: to-rem($nav-pills-pill-height) - ($block-link-inset-rem * 2); // leave enough room to inset these by 1px
+                width: to-rem($nav-pills-pill-height) - ($block-link-inset-rem * 2);
+                border-radius: to-rem(get($nav-pills-pill-config, 'bd-radius')) - $block-link-inset-rem;
+
+                // HOVER STATE
+                #{$link-hover-focus} {
+                    color: get($nav-link-config, 'text-color-hover');
+                    background-color: get($nav-pills-pill-config, 'bg-hover');
+                }
+
+                // PRESSED STATE
+                #{$link-pressed} {
+                    color: get($nav-link-config, 'text-color-press');
+                    background-color: get($nav-pills-pill-config, 'bg-press');
+                }
+            }
+
+            // ACTIVE STATE
+            &.active {
+                > .hitarea {
+                    background-color: $white;
+                }
+            }
+        }
+    }
+
+    //
+    // Justified nav styling (tablets and up)
+    //
+    @include respond-to('screen-sm and up') {
+        @include nav-pills-bar-justified($li-bg: $body-bg);
+    } // END min-width: $screen-sm-min
+}

@@ -1,0 +1,223 @@
+// ********************************************************
+
+////
+/// Component state colors
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// @group core.color.state
+////
+
+//
+//   DEPENDENCIES:
+//
+    @import 'state-colors-calc';
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/states/state-colors';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function state-variation-text,
+                                                function state-variation-bg,
+                                                function state-variation-bd,
+                                                function get);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   INDIVIDUAL STATE CONFIGS
+//
+// ********************************************************
+    ///
+    /// Color configuration map for components in the _'default'_ state.
+    /// ---
+    /// @todo Write unit test(s) asserting these hex color values
+    /// ---
+    /// @requires {variable} $colors-global-states
+    /// @requires {function} state-variation-text
+    /// @requires {function} state-variation-bg
+    /// @requires {function} state-variation-bd
+    /// ---
+    /// @prop {Color} base   [#b2b2b2]
+    /// @prop {Color} text   [#7f7f7f]
+    /// @prop {Color} bg     [#fafafa]
+    /// @prop {Color} bd     [#d4d4d4]
+    ///
+    $colors-state-default: (
+        'base': get($colors-global-states, 'default'),
+        'text': state-variation-text(default),
+        'bg':   state-variation-bg(default),
+        'bd':   state-variation-bd(default, state-variation-bg(default))
+    );
+
+    ///
+    /// Color configuration map for components in the _'success'_ state variation.
+    /// ---
+    /// @requires {variable} $colors-global-states
+    /// @requires {function} state-variation-text
+    /// @requires {function} state-variation-bg
+    /// @requires {function} state-variation-bd
+    /// ---
+    /// @prop {Color} base   [#66cc00]
+    /// @prop {Color} text   [#4d9108]
+    /// @prop {Color} bg     [#fafef5]
+    /// @prop {Color} bd     [#94e90c]
+    ///
+    $colors-state-success: (
+        'base': get($colors-global-states, 'success'),
+        'text': state-variation-text(success),
+        'bg':   state-variation-bg(success),
+        'bd':   state-variation-bd(success, state-variation-bg(success))
+    );
+        ///
+        /// @alias colors-state-success
+        ///
+        $colors-state-primary: $colors-state-success;
+
+    ///
+    /// Color configuration map for components in the _'alternate'_ / _'secondary'_ state variation.
+    /// ---
+    /// @requires {variable} $colors-global-states
+    /// @requires {function} state-variation-text
+    /// @requires {function} state-variation-bg
+    /// @requires {function} state-variation-bd
+    /// ---
+    /// @prop {Color} base   [#0094ff]
+    /// @prop {Color} text   [#0b83da]
+    /// @prop {Color} bg     [#f5fbff]
+    /// @prop {Color} bd     [#92d8fc]
+    ///
+    $colors-state-alt: (
+        'base': get($colors-global-states, 'alt'),
+        'text': state-variation-text(alt),
+        'bg':   state-variation-bg(alt),
+        'bd':   state-variation-bd(alt, state-variation-bg(alt))
+    );
+
+    ///
+    /// Color configuration map for components in the _'warning'_ state variation.
+    /// ---
+    /// @requires {variable} $colors-global-states
+    /// @requires {function} state-variation-text
+    /// @requires {function} state-variation-bg
+    /// @requires {function} state-variation-bd
+    /// ---
+    /// @prop {Color} base   [#fbad17]
+    /// @prop {Color} text   [#d08e0f]
+    /// @prop {Color} bg     [#fffbf5]
+    /// @prop {Color} bd     [#facf94]
+    ///
+    $colors-state-warning: (
+        'base': get($colors-global-states, 'warning'),
+        'text': state-variation-text(warning),
+        'bg':   state-variation-bg(warning),
+        'bd':   state-variation-bd(warning, state-variation-bg(warning))
+    );
+
+    ///
+    /// Color configuration map for components in the _'danger'_ state variation.
+    /// ---
+    /// @requires {variable} $colors-global-states
+    /// @requires {function} state-variation-text
+    /// @requires {function} state-variation-bg
+    /// @requires {function} state-variation-bd
+    /// ---
+    /// @prop {Color} base   [#ee2724]
+    /// @prop {Color} text   [#c41e1b]
+    /// @prop {Color} bg     [#fef6f6]
+    /// @prop {Color} bd     [#f7b1b5]
+    ///
+    $colors-state-danger: (
+        'base': get($colors-global-states, 'danger'),
+        'text': state-variation-text(danger),
+        'bg':   state-variation-bg(danger),
+        'bd':   state-variation-bd(danger, state-variation-bg(danger))
+    );
+
+
+
+// ********************************************************
+//
+//   STATE CONFIG COLLECTIONS
+//
+// ********************************************************
+    ///
+    /// Convenience collection that combines all the various state color config maps.
+    /// ---
+    /// @access private
+    /// @group core.internals.color.state
+    /// @see {variable} state-names
+    /// ---
+    /// @requires {variable} $colors-state-default
+    /// @requires {variable} $colors-state-primary
+    /// @requires {variable} $colors-state-alt
+    /// @requires {variable} $colors-state-success
+    /// @requires {variable} $colors-state-warning
+    /// @requires {variable} $colors-state-danger
+    /// ---
+    /// @prop {Map} default - `$colors-state-default` map
+    /// @prop {Map} primary - `$colors-state-primary` map
+    /// @prop {Map} alt     - `$colors-state-alt` map
+    /// @prop {Map} success - `$colors-state-success` map
+    /// @prop {Map} warning - `$colors-state-warning` map
+    /// @prop {Map} danger  - `$colors-state-danger` map
+    ///
+    $default-states: (
+        'default':  $colors-state-default,
+        'primary':  $colors-state-primary,
+        'alt':      $colors-state-alt,
+        'success':  $colors-state-success,
+        'warning':  $colors-state-warning,
+        'danger':   $colors-state-danger
+    );
+
+    ///
+    /// Convenience collection that combines a sub-set the various state color config maps.
+    /// ---
+    /// @access private
+    /// @group core.internals.color.state
+    /// @see {variable} state-names-min
+    /// ---
+    /// @requires {variable} $default-states
+    /// ---
+    /// @prop {Map} alt     - `$colors-state-alt` map
+    /// @prop {Map} success - `$colors-state-success` map
+    /// @prop {Map} warning - `$colors-state-warning` map
+    /// @prop {Map} danger  - `$colors-state-danger` map
+    ///
+    $default-states-min: map-remove($default-states, 'default', 'primary');
+
+
+
+// ********************************************************
+//
+//   ELEM STATE COLOR VARIATION ALIASES
+//
+// ********************************************************
+    ///
+    /// How much darker a component like an Alert's background color is compared to the default state color.
+    /// ---
+    /// @type Number
+    /// @requires {variable} $component-state-variation-config
+    ///
+    $component-state-bg-darken-amount: get($component-state-variation-config, 'bg-darken-amount');
+
+    ///
+    /// How much of a component like an Alert's state text color will be mixed with the background color to produce the border color.
+    /// ---
+    /// @type Number
+    /// @requires {variable} $component-state-variation-config
+    ///
+    $component-state-bd-mix-amount:    get($component-state-variation-config, 'bd-mix-amount');
+
+    @import 'aliases/state-default';
+    @import 'aliases/state-success';
+    @import 'aliases/state-primary';
+    @import 'aliases/state-alt';
+    @import 'aliases/state-warning';
+    @import 'aliases/state-danger';

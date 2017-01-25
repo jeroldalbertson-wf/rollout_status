@@ -1,0 +1,117 @@
+// ********************************************************
+
+////
+/// Global functions to help with type conversions
+/// ---
+/// @access public
+/// @since 1.0.0
+/// @group core.utils.convert
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/functions/utilities/type-conversion';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function is-string,
+                                                function is-number,
+                                                function str-length,
+                                                function str-slice,
+                                                function index);
+//
+// ********************************************************
+
+
+///
+/// Converts any string value to a number.
+/// ---
+/// @param {String} $string
+/// @returns {Number}
+///
+@function to-number($string) {
+    @if not is-string($string) {
+        @if is-number($string) {
+            // its already a number... get outta here
+            @return $string;
+        } @else {
+            @error "Function `to-number` expecting a `string` or `number` for `$string` parameter. Received `#{type-of($string)}`.";
+            @return false;
+        }
+    }
+
+    // Matrices
+    $strings: '0' '1' '2' '3' '4' '5' '6' '7' '8' '9';
+    $numbers:  0   1   2   3   4   5   6   7   8   9;
+
+    // Result
+    $result: 0;
+    $divider: 0;
+    $minus: false;
+
+    // Looping through all characters
+    @for $i from 1 through str-length($string) {
+        $character: str-slice($string, $i, $i);
+        $index: index($strings, $character);
+
+
+        @if $character == '-' {
+            $minus: true;
+        } @else if $character == '.' {
+            $divider: 1;
+        } @else {
+            // If we come to find a character that is
+            // neither `-`, nor `.` nor a number,
+            // move on to the unit
+            @if not $index {
+                $result: if($minus, $result * -1, $result);
+                @return num_length($result, str-slice($string, $i));
+            }
+
+            $number: nth($numbers, $index);
+
+            @if $divider == 0 {
+                $result: $result * 10;
+            } @else {
+                // Move the decimal dot to the left
+                $divider: $divider * 10;
+                $number: $number / $divider;
+            }
+
+            $result: $result + $number;
+        }
+    }
+
+    @return if($minus, $result * -1, $result);
+}
+    ///
+    /// Helper function used only by `to-number()` fn.
+    /// ---
+    /// @access private
+    /// @group core.internals.utils.convert
+    ///
+    @function num_length($number, $unit) {
+        $strings: 'px' 'cm' 'mm' '%' 'ch' 'pica' 'in' 'em' 'rem' 'pt' 'pc' 'ex' 'vw' 'vh' 'vmin' 'vmax' 's' 'ms';
+        $units:   1px  1cm  1mm  1%  1ch  1pica  1in  1em  1rem  1pt  1pc  1ex  1vw  1vh  1vmin  1vmax  1s  1ms;
+        $index:   index($strings, $unit);
+
+        @if not $index {
+            @warn "Function `num_length`: Unknown unit `#{$unit}` for number `#{$number}` passed to `$unit` parameter. Will return false.";
+            @return false;
+        }
+
+        @return $number * nth($units, $index);
+    }
+
+///
+/// Converts any value to a string.
+/// (used mostly to safely interpolate Sass values within `@debug` or `@warn` messages)
+/// ---
+/// @param {*} $value
+/// @returns {String}
+///
+@function to-string($value) {
+    @return inspect($value);
+}

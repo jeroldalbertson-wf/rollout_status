@@ -1,0 +1,67 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/comments/atoms/comments-panel-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+$panel-comment-bg:  $body-bg;
+
+
+// ----------------------------------------------------
+//   HEADING
+// ----------------------------------------------------
+    // ----- First comment in a thread ----- //
+    $panel-thread-heading-height:                   get-deep($panel-config, 'sm.header-height');
+    $panel-thread-title-min-height:                 $font-size-base + 2px; // because of the overflow: hidden, we ned this to ensure that drop-case chars are not clipped
+    $panel-thread-heading-padding:                  get-deep($panel-config, 'sm.header-padding');
+
+    $panel-thread-meta-offset-top:                  round((get-deep($panel-config, 'sm.header-height') - $font-size-sm) / 2);
+    $panel-thread-actions-offset-right:             get($panel-config, 'bd-width') * 2; // just enough to keep the border effect on active from running-into the panel border
+    $panel-thread-actions-btn-icon-width:           $icon-size-md;
+    $panel-thread-actions-btn-padding-horizontal:   round((get-deep($panel-config, 'sm.header-height') - $panel-thread-actions-btn-icon-width) / 2);
+    //
+    // Need 1 extra pixel of height here so that the dropdown menu
+    // top border is flush with the bottom border of the panel header
+    //
+    $panel-thread-actions-btn-height:               $panel-thread-heading-height + get($panel-config, 'bd-width');
+    //
+    // Must divide equally by two in order to
+    // get a perfect horizontal centering for the
+    // action btn icon (which is 24px wide)
+    //
+    $panel-thread-actions-btn-width:                if(mod($panel-thread-actions-btn-height, 2), $panel-thread-actions-btn-height, $panel-thread-actions-btn-height + 1);
+
+    // ----- Adjustments for comments within thread other than the first one ----- //
+    $panel-thread-reply-heading-padding-top:        round(get-deep($panel-config, 'sm.body-padding') * 1.5); // space out comments a little more
+    $panel-thread-reply-heading-padding-bottom:     nth($panel-thread-heading-padding, 1);
+    $panel-thread-reply-heading-padding:            $panel-thread-reply-heading-padding-top nth(get-deep($panel-config, 'sm.header-padding'), 2) $panel-thread-reply-heading-padding-bottom;
+    $panel-thread-reply-heading-height:             get-deep($panel-config, 'sm.header-height') - nth($panel-thread-heading-padding, 1) + $panel-thread-reply-heading-padding-top;
+    $panel-thread-reply-meta-offset-top:            round(($panel-thread-reply-heading-height - $font-size-sm) / 2) + 3; // don't know why this is off by 3px
+
+
+// ----------------------------------------------------
+//   BODY
+// ----------------------------------------------------
+    $panel-comment-body-max-height:                 120px;
+    $panel-comment-body-min-height:                 round($panel-comment-body-max-height / 2);
+
+    $panel-comment-reply-body-min-height:           get-deep($form-control-config, 'height.base');
+
+    // keep scrollbar all the way to the right in "saved" comment state
+    $panel-comment-body-margin-right:               get-deep($panel-config, 'sm.body-padding') * -1;
+
+    // pad on the right side to match width of actions btn
+    // reduce by the width of the scrollbar so text
+    // doesn't jump to the next line without just cause.
+    $panel-comment-textarea-padding-right:          get-deep($panel-config, 'sm.header-height') + $panel-thread-actions-offset-right;
+
+
+// ----------------------------------------------------
+//   OVERLAYS
+// ----------------------------------------------------
+    $panel-comment-thread-overlay-bg:               $panel-comment-bg;
+    $panel-comment-thread-overlay-alpha:            .5;

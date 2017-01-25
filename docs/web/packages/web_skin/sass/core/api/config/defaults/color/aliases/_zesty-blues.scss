@@ -1,0 +1,52 @@
+// ********************************************************
+
+////
+/// Zesty Crayon Blue Color Aliases
+/// ---
+/// @access public
+/// @type Color
+/// @group core.color.zesty
+/// ---
+/// @requires {variable} $zc-blues
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/aliases/zesty-blues';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+/// Zesty Crayon Blue
+/// @color #0094ff
+$zc-blue: get($zc-blues, '100');
+
+/// @alias zc-blue
+/// @since 1.6.0
+$zc-blue-100: $zc-blue;
+
+/// Zesty Crayon Blue 120
+/// @since 1.6.0
+/// @color #026dce
+$zc-blue-120: get($zc-blues, '120');
+
+/// Zesty Crayon Blue 80
+/// @since 1.6.0
+/// @color #33a9ff
+$zc-blue-80: get($zc-blues, '80');
+
+/// Zesty Crayon Blue 60
+/// @since 1.6.0
+/// @color #66bfff
+$zc-blue-60: get($zc-blues, '60');
+
+/// Zesty Crayon Blue 40
+/// @since 1.6.0
+/// @color #99d4ff
+$zc-blue-40: get($zc-blues, '40');

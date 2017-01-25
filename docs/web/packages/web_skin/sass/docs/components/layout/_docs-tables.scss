@@ -1,0 +1,245 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/layout/tables';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   Tables used for our documentation purposes
+//
+// ********************************************************
+.ws-table {
+    font-size: to-rem($font-size-base);
+    line-height: $line-height-base;
+
+    // make sure our documentation tables don't
+    // cause horizontal scroll in the body
+    &.table-wordy {
+        table-layout: fixed;
+
+        thead th {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+
+    // bordered tables used in the docs
+    // on our gray body bg need a white bg
+    &.table-bordered {
+        background-color: $white;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Tables containing `.highlight` code blocks
+//
+//   Without this, the code block could
+//   make the table width exceed the width
+//   of it's parent, forcing horizontal
+//   scroll in the docs
+// ----------------------------------------------------
+.table-has-code-block {
+    table-layout: fixed;
+    overflow: hidden;
+}
+
+
+// ----------------------------------------------------
+//   Table column "block" labels
+// ----------------------------------------------------
+.table .label-block {
+    display: block;
+    margin: to-rem(round($table-cell-padding / 2) 12px 12px) !important;
+
+    &.pull-left {
+        margin-left: 0 !important;
+    }
+
+    &.pull-right {
+        margin-right: 0 !important;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Table rows with nothing but code examples
+// ----------------------------------------------------
+.table-row-markup-example-only {
+    td {
+        padding: 0;
+        border-bottom: to-rem(get($table-config, 'bd-width') * 2) solid get($table-config, 'bd-color');
+
+        .highlight {
+            border: 0 none;
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   Global scss-output styles
+// ----------------------------------------------------
+$swatch-cell-padding: 30px;
+.scss-output {
+    > .icon {
+        @include transition(opacity .3s ease);
+
+        float: right;
+        position: relative;
+        left: .2rem;
+        top: to-rem($table-cell-padding);
+        margin-bottom: to-rem($swatch-cell-padding) * -1; // so the icon doesn't add height to the cell
+        cursor: pointer; // because of onclick stuff we've got wired up in application.js
+        opacity: 0;
+
+        // show at 100% opacity when hovered,
+        // and when the popover it controls is open
+        #{$link-hover-focus},
+        &[aria-describedby] {
+            opacity: 1 !important;
+        }
+    }
+
+    #{$link-hover-focus} {
+        > .icon {
+            opacity: .4;
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   Color palette table
+// ----------------------------------------------------
+.table-color-palette {
+    dl {
+        margin-bottom: 0;
+
+        > dd {
+            margin-bottom: .4rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    th {
+        font-family: $font-family-base !important;
+        font-weight: bold !important;
+        font-size: to-rem($font-size-md) !important;
+    }
+}
+
+.table-color-palette {
+    .grid-vertical {
+        min-height: 75rem;
+    }
+
+    .scss-output {
+        text-align: center;
+        font-family: $font-family-monospace;
+        font-size: to-rem($font-size-sm);
+    }
+}
+
+
+// ----------------------------------------------------
+//   Color palette "meanings" table
+// ----------------------------------------------------
+.table-color-palette-meanings {
+    thead th {
+        padding-left: .8rem;
+        padding-right: .8rem;
+    }
+
+    td + td {
+        padding-top: .4rem;
+        padding-bottom: .4rem;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Javascript plugin opts/methods/events tables
+// ----------------------------------------------------
+.page-javascript .table {
+    // js namespace abbr title stuff
+    th .text-muted {
+        border-bottom: 0 none !important;
+        font-weight: normal;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Label / badge color example table
+// ----------------------------------------------------
+.label-badge-variant-table {
+    // ----- th.toggle ----- //
+    .toggle {
+        width: 13rem;
+        line-height: 1;
+        font-size: 1.1rem;
+        font-weight: normal;
+        font-family: $font-family-sans-serif;
+
+        > span {
+            display: inline-block;
+            margin-top: .8rem;
+            margin-right: .4rem;
+            vertical-align: top;
+        }
+    }
+
+    // ----- Switch within th.toggle ----- //
+    .checkbox-switch {
+        display: inline-block;
+    }
+
+    .doctype-group-list {
+        td {
+            border-top: 0 none;
+            border-bottom: to-rem(get($table-config, 'bd-width') * 2) solid get($table-config, 'bd-color'); // creates a double border for extra separation when details are showing
+            background-color: $zc-gray-20;
+        }
+
+        &:last-of-type td {
+            border-bottom: 0 none;
+        }
+
+        .label {
+            margin-bottom: .35725em;
+        }
+    }
+
+    //
+    // Make sure the font size of the cell that contains the component example
+    // is base Web Skin platform font size, not Web Skin docs table font size.
+    //
+    // Otherwise, the examples of the components will be larger than the typical implementation.
+    //
+    tbody > tr > th {
+        font-size: to-rem($font-size-base) !important;
+    }
+}
+
+// ----------------------------------------------------
+//   Icon size variation example table
+// ----------------------------------------------------
+.wdesk-icon-sizes {
+    tr > td:first-child {
+        text-align: center;
+
+        .icon {
+            width: 100%;
+        }
+    }
+}

@@ -1,0 +1,387 @@
+// ********************************************************
+
+////
+/// Iconography configuration
+/// ---
+/// @group core.iconography
+/// @link http://bit.ly/webskin-icon-sizes2 Icon size variation spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/icons/atoms/icons-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function list-has,
+                                                function get,
+                                                function get-deep,
+                                                function extend,
+                                                variable symbol-base16-multipliers,
+                                                variable symbol-base24-multipliers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   MISC GLOBAL ICON CONFIGS
+//
+// ********************************************************
+    ///
+    /// Class name used to enable default colors for pre-defined [single-color icon glyphs](../css/#icons-glyphs).
+    /// ---
+    /// @access private
+    /// @group core.internals.iconography
+    /// @type String
+    /// @since 0.1.0
+    /// ---
+    /// @example scss
+    ///   .#{$icon-color} {
+    ///       &.icon-filter:before {
+    ///           color: color('doctypes.wfml-doc.blue.base');
+    ///       }
+    ///   }
+    ///
+    $icon-class-one-color: 'icon-color';
+
+    ///
+    /// Class name used to enable default colors for pre-defined [two-color icon glyphs](../?iconset=color#icons-glyphs).
+    /// ---
+    /// @access private
+    /// @group core.internals.iconography
+    /// @type String
+    /// @since 0.1.0
+    /// ---
+    /// @example scss
+    ///   .#{$icon-two-color} {
+    ///       &.icon-file-copy:after {
+    ///           color: $zc-green;
+    ///       }
+    ///   }
+    ///
+    $icon-class-two-color: 'icon-two-color';
+
+    ///
+    /// Amount of padding to apply to icon to prevent [#1059](https://github.com/Workiva/web-skin/issues/1059)
+    /// ---
+    /// @since 1.2.1
+    ///
+    $icon-edge-clipping-padding: 1px;
+
+    ///
+    /// Unescaped Icon PUA codes used to produce glyphs that are shared amongst more than just the default `.icon-{glyph-name}` CSS class.
+    ///
+    /// To escape them for use in the CSS `content` property, use the `to-unicode` fn as shown in the example below.
+    /// ---
+    /// @type Map
+    /// @since 1.5.0
+    /// @see {function} to-unicode
+    /// ---
+    /// @example scss Usage in the content property
+    ///   .foo {
+    ///     content: to-unicode(get-deep($icon-shared-pua-codes, 'main.checkmark'));
+    ///   }
+    /// ---
+    /// @prop {Map} main - PUA codes that produce glyphs stored within the `Wdesk_Icons.ttf` icon font
+    /// @prop {String} main.checkmark               ['e600'] - Unescaped PUA code used for `.icon-checkmark` CSS selector
+    /// @prop {String} main.minus                   ['e606'] - Unescaped PUA code used for `.icon-minus` CSS selector
+    /// @prop {String} main.chevron-double-left     ['e6c6'] - Unescaped PUA code used for `.icon-chevron-double-left` CSS selector
+    /// @prop {String} main.chevron-double-right    ['e6c7'] - Unescaped PUA code used for `.icon-chevron-double-right` CSS selector
+    /// @prop {String} main.gripper-rule            ['e6c8'] - Unescaped PUA code used for `.icon-gripper-rule` CSS selector
+    /// @prop {String} main.gripper                 ['e625'] - Unescaped PUA code used for `.icon-gripper` CSS selector
+    /// @prop {String} main.bookmark                ['e683'] - Unescaped PUA code used for `.icon-bookmark` CSS selector
+    /// @prop {String} main.comment                 ['e687'] - Unescaped PUA code used for `.icon-comment` CSS selector
+    /// @prop {String} main.table-insert-column     ['e693'] - Unescaped PUA code used for `.icon-table-insert-column` CSS selector
+    /// @prop {String} main.table-insert-row        ['e694'] - Unescaped PUA code used for `.icon-table-insert-column` CSS selector
+    ///
+    $icon-shared-pua-codes: (
+        // _glyphs-main.scss (Wdesk_Icons.ttf)
+        'main': (
+            'checkmark':            'e600',
+            'minus':                'e606',
+            'chevron-double-left':  'e6c6',
+            'chevron-double-right': 'e6c7',
+            'gripper-rule':         'e6c8',
+            'gripper':              'e625',
+            'bookmark':             'e683',
+            'comment':              'e687',
+            'table-insert-column':  'e693',
+            'table-insert-row':     'e694'
+        )
+    );
+
+
+
+// ********************************************************
+//
+//   ICON SIZE CONFIGS
+//
+// ********************************************************
+    ///
+    /// Differential used to calculate how much larger an `xxl` icon size variation is compared to the `font-size` value used for the same variant. It is still unclear why this difference occurs at the larger font sizes.
+    /// ---
+    /// @access private
+    /// @group core.internals.iconography
+    /// @type Number
+    /// @since 0.4.2-2
+    ///
+    $icon-size-xxl-diff: 1.2;
+
+    ///
+    /// Global constant used to ensure that icon glyphs are aligned vertically with the base line height of the platform.
+    /// ---
+    /// @access private
+    /// @group core.internals.iconography
+    /// @type Number
+    ///
+    $icon-pseudo-shift-vertical: 0;
+
+    ///
+    /// Icon size variation values for glyphs that are designed using a `16px` grid.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $symbol-base16-multipliers
+    /// @requires {variable} $icon-size-xxl-diff
+    /// ---
+    /// @prop {Number} base  [16px]  Width / height of `.icon` elements that use no size variation class.
+    /// @prop {Number} xxl   [115px] Width / height of `.icon.icon-xxl` elements. _Added via `@extend`_
+    /// @prop {Number} xl    [48px]  Width / height of `.icon.icon-xl` elements. _Added via `@extend`_
+    /// @prop {Number} lg    [32px]  Width / height of `.icon.icon-lg` elements. _Added via `@extend`_
+    /// @prop {Number} md    [24px]  Width / height of `.icon.icon-md` elements. _Added via `@extend`_
+    /// @prop {Number} sm    [8px]   Width / height of `.icon.icon-sm` elements. _Added via `@extend`_
+    ///
+    $icon-base16-size-config: (
+        'base': icon-size-base-16(),
+        'xxl':  null, // actual calculated value inserted via @extend
+        'xl':   null, // actual calculated value inserted via @extend
+        'lg':   null, // actual calculated value inserted via @extend
+        'md':   null, // actual calculated value inserted via @extend
+        'sm':   null  // actual calculated value inserted via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $icon-base16-size-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $icon-base16-size-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $icon-size-base: get($icon-base16-size-config, 'base');
+        $icon-size-xxl:  round($icon-size-base * get($symbol-base16-multipliers, 'xxl') * $icon-size-xxl-diff);
+        $icon-size-xl:   $icon-size-base * get($symbol-base16-multipliers, 'xl');
+        $icon-size-lg:   $icon-size-base * get($symbol-base16-multipliers, 'lg');
+        $icon-size-md:   $icon-size-base * get($symbol-base16-multipliers, 'md');
+        $icon-size-sm:   $icon-size-base * get($symbol-base16-multipliers, 'sm');
+
+        // ----- EXTEND base16 icon config with calc'd values ----- //
+        $icon-base16-size-config: extend($icon-base16-size-config,
+            (
+                'xxl': $icon-size-xxl,
+                'xl': $icon-size-xl,
+                'lg': $icon-size-lg,
+                'md': $icon-size-md,
+                'sm': $icon-size-sm
+            )
+        );
+
+        // for some reason - xxl icon width/height does not match the font-size
+        $icon-height-xxl: $icon-size-xxl;
+        $icon-width-xxl: $icon-size-xxl;
+        $icon-font-size-xxl: round($icon-size-xxl / $icon-size-xxl-diff);
+
+
+
+
+    ///
+    /// Icon size variation values for glyphs that are designed using a `24px` grid. Used by glyph classes that start with `.icon-twfr`.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $symbol-base24-multipliers
+    /// ---
+    /// @prop {Number} base  [24px]  Width / height of `.icon.icon-twfr` elements that use no size variation class.
+    /// @prop {Number} xxl   [144px] Width / height of `.icon.icon-twfr.icon-xxl` elements. _Added via `@extend`_
+    /// @prop {Number} xl    [72px]  Width / height of `.icon.icon-twfr.icon-xl` elements. _Added via `@extend`_
+    /// @prop {Number} lg    [48px]  Width / height of `.icon.icon-twfr.icon-lg` elements. _Added via `@extend`_
+    /// @prop {Number} md    [24px]  Width / height of `.icon.icon-twfr.icon-md` elements. _Added via `@extend`_
+    /// @prop {Number} sm    [12px]  Width / height of `.icon.icon-twfr.icon-sm` elements. _Added via `@extend`_
+    ///
+    $icon-base24-size-config: (
+        'base': 24px,
+        'xxl':  null, // actual calculated value inserted via @extend
+        'xl':   null, // actual calculated value inserted via @extend
+        'lg':   null, // actual calculated value inserted via @extend
+        'md':   null, // actual calculated value inserted via @extend
+        'sm':   null  // actual calculated value inserted via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $icon-base24-size-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $icon-base24-size-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $icon-size-base-24:     get($icon-base24-size-config, 'base');
+        $icon-size-xxl-base-24: $icon-size-base-24 * get($symbol-base24-multipliers, 'xxl');
+        $icon-size-xl-base-24:  $icon-size-base-24 * get($symbol-base24-multipliers, 'xl');
+        $icon-size-lg-base-24:  $icon-size-base-24 * get($symbol-base24-multipliers, 'lg');
+        $icon-size-md-base-24:  $icon-size-base-24 * get($symbol-base24-multipliers, 'md');
+        $icon-size-sm-base-24:  $icon-size-base-24 * get($symbol-base24-multipliers, 'sm');
+
+        // ----- EXTEND base24 icon config with calc'd values ----- //
+        $icon-base24-size-config: extend($icon-base24-size-config,
+            (
+                'xxl': $icon-size-xxl-base-24,
+                'xl': $icon-size-xl-base-24,
+                'lg': $icon-size-lg-base-24,
+                'md': $icon-size-md-base-24,
+                'sm': $icon-size-sm-base-24
+            )
+        );
+
+
+    ///
+    /// Convenience collection that stores both the base16 and base24 icon size config maps.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {variable} $icon-base16-size-config
+    /// @requires {variable} $icon-base24-size-config
+    /// ---
+    /// @prop {Map} base16 - `$icon-base16-size-config` map
+    /// @prop {Map} base24 - `$icon-base24-size-config` map
+    ///
+    $icon-size-config: (
+        'base16': $icon-base16-size-config,
+        'base24': $icon-base24-size-config
+    );
+
+
+
+// ********************************************************
+//
+//   ICON FONT FILE / NAME CONFIG
+//
+// ********************************************************
+    ///
+    /// Icon font properties configuration.
+    /// ---
+    /// @access private
+    /// @group core.internals.iconography
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {function} extend
+    /// ---
+    /// @prop {String} path ['icons/'] - Path where icon fonts live relative to projects font directory declared in `config.rb`
+    /// @prop {Map} main - Configuration for the font used to create the 'main' icon set
+    /// @prop {String} main.name ['Wdesk_Icons']
+    /// @prop {String} main.url  ['icons/Wdesk_Icons'] - Path to 'main' icon font files - to be used within the `font-url()` function. _Added via `@extend`_
+    ///
+    /// @prop {Map} doctype - Configuration for the font used to create the 'doctype' icon set
+    /// @prop {String} doctype.name ['Wdesk_Doctype-Icons']
+    /// @prop {String} doctype.url  ['icons/Wdesk_Doctype-Icons'] - Path to 'doctype' icon font files - to be used within the `font-url()` function. _Added via `@extend`_
+    ///
+    /// @prop {Map} xbrl - Configuration for the font used to create the 'xbrl' icon set. _Since `1.4.1`_
+    /// @prop {String} xbrl.name ['Wdesk_Icons_Xbrl']       - _Since `1.4.1`_
+    /// @prop {String} xbrl.url  ['icons/Wdesk_Icons_Xbrl'] - Path to 'xbrl' icon font files - to be used within the `font-url()` function. _Added via `@extend` - Since `1.4.1`_
+    ///
+    /// @prop {Map} two-color - Configuration for the font used to create the 'two color' icon set
+    /// @prop {String} two-color.name ['Wdesk_Icons_Color']
+    /// @prop {String} two-color.url  ['icons/Wdesk_Icons_Color'] - Path to 'two color' icon font files - to be used within the `font-url()` function. _Added via `@extend`_
+    ///
+    $icon-font-config: (
+        'path': 'icons/',
+        'main': (
+            'name': 'Wdesk_Icons',
+            'url': null, // actual calculated value inserted via @extend
+        ),
+        'doctype': (
+            'name': 'Wdesk_Doctype-Icons',
+            'url': null, // actual calculated value inserted via @extend
+        ),
+        'xbrl': (
+            'name': 'Wdesk_Icons_Xbrl',
+            'url': null, // actual calculated value inserted via @extend
+        ),
+        'two-color': (
+            'name': 'Wdesk_Icons_Color',
+            'url': null, // actual calculated value inserted via @extend
+        )
+    );
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $icon-font-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $icon-font-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $icon-font-path: get($icon-font-config, 'path');
+        $icon-font-name-main: get-deep($icon-font-config, 'main.name');
+        $icon-font-path-main: '#{$icon-font-path}#{$icon-font-name-main}';
+        $icon-font-name-doctype: get-deep($icon-font-config, 'doctype.name');
+        $icon-font-path-doctype: '#{$icon-font-path}#{$icon-font-name-doctype}';
+        $icon-font-name-xbrl: get-deep($icon-font-config, 'xbrl.name');
+        $icon-font-path-xbrl: '#{$icon-font-path}#{$icon-font-name-xbrl}';
+        $icon-font-name-color: get-deep($icon-font-config, 'two-color.name');
+        $icon-font-path-color: '#{$icon-font-path}#{$icon-font-name-color}';
+
+        // ----- EXTEND icon-font config with calc'd values ----- //
+        $icon-font-config: extend($icon-font-config,
+            (
+                'main': (
+                    'url': $icon-font-path-main
+                ),
+                'doctype': (
+                    'url': $icon-font-path-doctype
+                ),
+                'xbrl': (
+                    'url': $icon-font-path-xbrl
+                ),
+                'two-color': (
+                    'url': $icon-font-path-color
+                )
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED ICON CONFIGS
+//
+// ********************************************************
+    $two-color-sec-doctype-icons: false;

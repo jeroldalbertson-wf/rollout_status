@@ -1,0 +1,81 @@
+// ********************************************************
+//
+//   LABEL COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-labels
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/labels';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $labels-module-config: 'core/components/atoms/labels/labels-config';
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $labels-module-config);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE STYLES
+//
+// ********************************************************
+.label {
+    display: inline-block;
+    padding: get($label-config, 'padding');
+    cursor: default;
+    text-align: center;
+    vertical-align: inherit;
+    white-space: nowrap;
+    text-transform: uppercase;
+    color: get($label-config, 'text-color');
+    background-color: get($label-config, 'bg-color');
+    font-family: $font-family-base;
+    font-size: get($label-config, 'font-size');
+    font-weight: bold;
+    line-height: get($label-config, 'line-height');
+    border: to-rem(get($label-config, 'bd-width')) solid get($label-config, 'bd-color');
+    border-radius: get($label-config, 'bd-radius');
+    // label ui text is not selectable
+    @include disable-user-select();
+
+    // Empty label collapse
+    &:empty { display: none; }
+}
+
+
+// ********************************************************
+//
+//   CLICKABLE LABELS
+//
+// ********************************************************
+.hitarea .label {
+    cursor: pointer;
+}
+
+// Hover / focus states, but only for labels that are hitareas
+.label.hitarea {
+    #{$link-hover-focus} {
+        cursor: pointer;
+        text-decoration: none;
+        color: get-deep($label-config, 'text-color-hover');
+        background-color: darken(get($label-config, 'bg-color'), $elem-hover-bg-darken-amount-default);
+    }
+}
+
+
+// ********************************************************
+//
+//   STATUS VARIATIONS
+//   -> Uses a non-reversed text color, has a different bd
+//      color than the bg color, and is not all-caps
+//
+// ********************************************************
+.label-status {
+    text-transform: none;
+    color: get($label-status-colors, 'text');
+    background-color: get($label-status-colors, 'bg');
+    border-color: get($label-status-colors, 'bd');
+}

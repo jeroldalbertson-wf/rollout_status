@@ -1,0 +1,544 @@
+// ********************************************************
+//
+//   BUTTON GROUP COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-button-group
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/buttons/button-groups';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $button-groups-module-config:  'core/components/atoms/buttons/buttons-config';
+    $button-groups-module-helpers: 'core/components/atoms/buttons/buttons-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $button-groups-module-config,
+                                          $button-groups-module-helpers);
+//
+//   PRIVATE VARS:
+//
+    $prevent-double-border-selectors: btn-group-prevent-double-border-selectors(get($btn-config, 'group-prevent-double-bd-selectors'));
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE STYLES
+//   -> Make the `div` behave like a button
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   GROUP CONTAINERS
+    // ----------------------------------------------------
+    .btn-group,
+    .btn-group-vertical {
+        position: relative;
+        display: inline-block;
+        vertical-align: middle; // match .btn alignment
+        font-size: 0;
+    }
+
+    // ----------------------------------------------------
+    //   BUTTONS WITHIN THE GROUP
+    //
+    //   [1] Override some <label> styles in-case they are
+    //       used as a `.btn`.
+    //
+    //   [2] Layer hovered buttons above any adjacent
+    //       inactive buttons within the group.
+    //
+    //       Necessary because of the negative margin used
+    //       to prevent double-borders.
+    //
+    //   [3] Layer focused / active buttons above any
+    //       adjacent inactive and / or hovered buttons
+    //       within the group.
+    //
+    //       Necessary because of the negative margin used
+    //       to prevent double-borders.
+    //
+    //   [4] If the active button is to the right of an
+    //       adjacent focused button, ensure that the
+    //       border of the focused button is layered
+    //       above the active one.
+    //
+    // ----------------------------------------------------
+    .btn-group,
+    .btn-group-vertical {
+        > .btn {
+            position: relative;
+            margin-bottom: 0; // [1]
+            max-width: none;  // [1]
+
+            // ----- [2] ----- //
+            #{$hover} {
+                z-index: 2;
+            }
+
+            // ----- [3] ----- //
+            #{$focus},
+            &#{$focus-class},
+            &.active {
+                z-index: 3;
+            }
+
+            // ----- [4] ----- //
+            #{$focus},
+            &#{$focus-class} {
+                + .active {
+                    z-index: 2;
+                }
+            }
+        }
+    }
+
+
+// ********************************************************
+//
+//   PREVENT DOUBLE BORDERS
+//
+// ********************************************************
+.btn-group {
+    #{$prevent-double-border-selectors} {
+        margin-left: to-rem(get($btn-config, 'bd-width')) * -1;
+    }
+}
+
+
+// ********************************************************
+//
+//   HANDLE LINK BUTTON SPACING WITHIN GROUPS
+//
+//   -> Adjacent `.btn-link` elems should not be flush,
+//      they should have spacing between them.
+//
+//   -> See: https://github.com/Workiva/web-skin/issues/881
+//
+// ********************************************************
+.btn-group {
+    > .btn-link + .btn-link {
+        margin-left: to-rem($spacing-base);
+    }
+
+    &.btn-group-vertical > .btn-link + .btn-link {
+        margin-left: 0;
+        margin-top: to-rem($spacing-base);
+    }
+}
+
+
+// ********************************************************
+//
+//  SPLIT BUTTON "NO TEXT" TOGGLES SHOULD NOT BE SQUARES
+//
+//  -> Since these always contain a `.caret`, not an icon,
+//     and are "attached" to a larger button group, there
+//     is no need for the fixed width that we apply to
+//     standalone "no text" buttons.
+//
+// ********************************************************
+.btn-group-split .dropdown-toggle.no-text {
+    width: auto;
+}
+
+
+// ********************************************************
+//
+//   BUTTON TOOLBAR
+//   -> Group multiple button groups into a toolbar
+//
+// ********************************************************
+.btn-toolbar {
+    // Without the clearfix, children of the toolbar that float (e.g. `.pull-right`)
+    // will not display properly / clear fully in many cases.
+    @include clearfix();
+
+    overflow: visible; // otherwise dropdown menus won't appear
+
+    // Add space between adjacent groups
+    @include btn-toolbar-adjacent-child-spacing($is-global: true);
+}
+
+
+// ********************************************************
+//
+//   ADJACENT BUTTON CORNER ROUNDING
+//
+// ********************************************************
+.btn-group:not(.btn-group-vertical) {
+    > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle):not(.btn-link) {
+        border-radius: 0;
+    }
+
+    // Set corners individual because sometimes a single button
+    // can be in a .btn-group and we need :first-child and :last-child to both match
+    > .btn:first-child {
+        margin-left: 0;
+
+        &:not(:last-child):not(.dropdown-toggle):not(.btn-link) {
+            @include border-right-radius(0);
+        }
+    }
+
+    // Need .dropdown-toggle since :last-child doesn't apply
+    // given a .dropdown-menu immediately after it
+    > .btn:last-child:not(:first-child),
+    > .dropdown-toggle:not(:first-child) {
+        &:not(.btn-link) {
+            @include border-left-radius(0);
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   NESTED BUTTON GROUPS
+//   -> Useful for using dropdown btns within a btn-group
+//
+// ********************************************************
+.btn-group:not(.btn-group-vertical) {
+    > .btn-group:not(.btn-group-vertical):not(:first-child):not(:last-child) > .btn:not(.btn-link) {
+        border-radius: 0;
+    }
+
+    > .btn-group:not(.btn-group-vertical):first-child {
+        > .btn:last-child,
+        > .dropdown-toggle {
+            &:not(.btn-link) {
+                @include border-right-radius(0);
+            }
+        }
+    }
+
+    > .btn-group:not(.btn-group-vertical):last-child > .btn:first-child:not(.btn-link) {
+        @include border-left-radius(0);
+    }
+}
+
+
+// ********************************************************
+//
+//   SIZE VARIATIONS
+//   -> Extend the button size variation classes into new
+//      ones for easier manipulation of multiple buttons
+//      in a single group
+//
+// ********************************************************
+    .btn-group-lg > .btn {
+        @extend .btn-lg;
+    }
+
+    .btn-group-sm > .btn {
+        @extend .btn-sm;
+    }
+
+    .btn-group-xs > .btn {
+        @extend .btn-xs;
+    }
+
+    @include remove-btn-punch-offset-from-xs-dd-toggle(xs);
+
+
+// ********************************************************
+//
+//   SPLIT BUTTON DROPDOWNS
+//   -> Reduce the amount of horizontal padding in a
+//      default dropdown-toggle implementation since it
+//      contains only a `.caret`
+//
+//   [1] Dart SplitButton component selector adaptation
+//       (SplitButtonComponent > DropdownButtonComponent > Button)
+//
+//   [2] Dart SplitButton component size-variation selector adaptation
+//       (SplitButtonComponent > DropdownButtonComponent > Button)
+//       Size variation CSS class will always be placed on child
+//       `.btn` elems in this use-case, never as a btn-group-{size}
+//
+//   [3] Dart SplitButton component menu placement fix
+//       In order to ensure that the dd menu is placed relative to
+//       the SplitButton component's btn-group, not the nested
+//       DropdownButton component's btn-group.
+//
+$dart-split-button-component-class: '.btn-group-split';
+//
+// ********************************************************
+    .btn-group,
+    .input-group-btn {
+        > .btn + .dropdown-toggle {
+            @include btn-group-dd-toggle-horizontal-spacing();
+        }
+    }
+
+    // [1]
+    #{$dart-split-button-component-class} > .dropdown > .btn {
+        @include btn-group-dd-toggle-horizontal-spacing();
+    }
+
+    // [3]
+    #{$dart-split-button-component-class} > .dropdown:not(.dropdown-overlay) {
+        position: static;
+    }
+
+    // ----------------------------------------------------
+    //   LARGE SIZE VARIATION SPLIT BUTTON SPACING
+    // ----------------------------------------------------
+    .btn-group > .btn-lg,
+    .btn-group-lg > .btn,
+    .input-group-btn > .btn-lg {
+        + .dropdown-toggle {
+            @include btn-group-dd-toggle-horizontal-spacing(lg);
+        }
+    }
+
+    // [2]
+    #{$dart-split-button-component-class} > .dropdown > .btn-lg {
+        @include btn-group-dd-toggle-horizontal-spacing(lg);
+    }
+
+    // ----------------------------------------------------
+    //   EXTRA SMALL SIZE VARIATION SPLIT BUTTON SPACING
+    // ----------------------------------------------------
+    .btn-group > .btn-xs,
+    .btn-group-xs > .btn,
+    .input-group-btn > .btn-xs {
+        + .dropdown-toggle {
+            @include btn-group-dd-toggle-horizontal-spacing(xs);
+        }
+    }
+
+    // [2]
+    #{$dart-split-button-component-class} > .dropdown > .btn-xs {
+        @include btn-group-dd-toggle-horizontal-spacing(xs);
+    }
+
+
+// ********************************************************
+//
+//   VERTICAL BUTTON GROUP VARIATION
+//
+// ********************************************************
+.btn-group-vertical {
+    > .btn-group {
+        @include btn-group-vertical-child-base();
+    }
+
+    > .btn,
+    > .btn-group > .btn {
+        @include btn-group-vertical-child-base();
+        // Remove punch shadow since they stack vertically
+        box-shadow: none !important;
+
+        #{$focus},
+        &#{$focus-class} {
+            &:not(.btn-toggle):not(:active) { // @see #1422 / UIP-1240
+                // Re-instate the `.btn` focus styles that use box-shadow
+                @include focus-shadow($global: false, $important: true);
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    //   REMOVE PUNCH TOP POSITIONING FROM VERTICAL VARIATION
+    //
+    //   -> Needs separate selector structure
+    //      instead of just using the standard
+    //      `remove-btn-punch-effect()` helper since the
+    //      placement of the `.open` class in these cases
+    //      is typically applied to the `.btn-group` itself
+    //
+    //   -> @see {mixin} remove-btn-punch-effect
+    // ----------------------------------------------------
+        > .btn#{$link-pressed-inline},
+        > .btn.active,
+        > .btn-group > .btn#{$link-pressed-inline},
+        > .btn-group > .btn.active,
+        > .open > .dropdown-toggle,
+        &.open > .dropdown-toggle {
+            top: 0;
+        }
+
+    // ----------------------------------------------------
+    //   PREVENT DOUBLE BORDERS
+    //   -> Remove the negative margin set by horizontal
+    //   defautls, and add correct negative margin to
+    //   prevent double borders when buttons are adjacent
+    //   to one another
+    // ----------------------------------------------------
+    #{$prevent-double-border-selectors} {
+        margin-top: to-rem(get($btn-config, 'bd-width')) * -1;
+        margin-left: 0;
+    }
+
+    // ----------------------------------------------------
+    //   ADJACENT BUTTON CORNER ROUNDING (DROPDOWN)
+    // ----------------------------------------------------
+    &:not(.dropup) {
+        > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle),
+        > .btn-group:not(:first-child):not(:last-child) > .btn {
+            &:not(.btn-link) {
+                border-radius: 0;
+            }
+        }
+
+        > .btn:first-child:not(:last-child):not(.dropdown-toggle),
+        > .btn-group:first-child:not(:last-child) > .btn:last-child,
+        > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+            &:not(.btn-link) {
+                @include border-bottom-radius(0);
+            }
+        }
+
+        > .btn:last-child:not(:first-child),
+        > .btn-group:last-child:not(:first-child) > .btn:first-child,
+        > .dropdown-toggle {
+            &:not(.btn-link) {
+                @include border-top-radius(0);
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    //   ADJACENT BUTTON CORNER ROUNDING (DROPUP)
+    //   -> Only works when there are only two buttons
+    //      on the group (e.g. vertical split button dropup)
+    // ----------------------------------------------------
+    &.dropup {
+        > .btn:first-child:not(:last-child),
+        > .btn-group:first-child:not(:last-child) > .btn:last-child {
+            &:not(.btn-link) {
+                @include border-bottom-radius(0);
+            }
+        }
+
+        > .btn:last-child:not(:first-child),
+        > .btn-group:last-child:not(:first-child) > .btn:first-child,
+        > .dropdown-toggle + .btn {
+            &:not(.btn-link) {
+                @include border-top-radius(0);
+            }
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   VERTICAL SPLIT BUTTON DROPDOWNS
+//   -> Designed for nesting two `.btn-vertical` elems
+//      inside to make a "split" dropdown possible in the
+//      context of a ribbon-nav vertical button (tab toolbar)
+//
+//   -> The `.btn-group-split` selector specificity is
+//      necessary in the markup so that non-split
+//      `.btn-group-vertical` `.dropdown-toggle` elems
+//      are not affected
+//
+// ********************************************************
+    .btn-group-split.btn-group-vertical {
+        //
+        // Do not use the `+` adjacent sibling selector in order
+        // to allow a dropup variation of the vertical split-button
+        // pattern, which requires the dropdown-toggle to appear
+        // BEFORE the other btn in the group
+        //
+        .dropdown-toggle {
+            height: auto; // override fixed height applied to `.ribbon-nav .btn-vertical`
+
+            //
+            // `only-text` is a CSS class added by Dart SplitButton component when
+            // the dropdown-toggle has no caret, but rather text to prompt the user
+            // about an available dd menu. We only want to moify the padding / line-height
+            // when the content defaults are present within the toggle button (a `.caret` elem)
+            //
+            &:not(.only-text) {
+                padding-top: to-rem(get($btn-config, 'dd-toggle-vertical-padding-top'));
+                padding-bottom: to-rem(get($btn-config, 'dd-toggle-vertical-padding-bottom'));
+                line-height: to-rem(get($btn-config, 'dd-toggle-vertical-line-height'));
+                min-height: 0; // Override default `.btn` min-height
+            }
+
+            .caret {
+                //
+                // Center horizontally, and cancel-out any
+                // relative / absolute positioning added by
+                // rules pertaining to the context of a vertical
+                // split-button group within a tabbed toolbar (`.ribbon-nav`)
+                //
+                position: static;
+                margin: 0 auto !important;
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    //   LARGE SIZE VARIATION VERTICAL SPLIT BUTTON SPACING
+    // ----------------------------------------------------
+    .btn-group-split.btn-group-vertical.btn-group-lg .dropdown-toggle,
+    .btn-group-split.btn-group-vertical .dropdown-toggle.btn-lg {
+        padding-top: to-rem(get($btn-config, 'dd-toggle-vertical-padding-lg-top'));
+        padding-bottom: to-rem(get($btn-config, 'dd-toggle-vertical-padding-lg-top'));
+    }
+
+    // ----------------------------------------------------
+    //   XSMALL SIZE VARIATION VERTICAL SPLIT BUTTON SPACING
+    // ----------------------------------------------------
+    .btn-group-split.btn-group-vertical.btn-group-xs .dropdown-toggle,
+    .btn-group-split.btn-group-vertical .dropdown-toggle.btn-xs {
+        padding-top: to-rem(get($btn-config, 'dd-toggle-vertical-padding-xs-top'));
+        padding-bottom: to-rem(get($btn-config, 'dd-toggle-vertical-padding-xs-top'));
+        line-height: to-rem(get($btn-config, 'dd-toggle-vertical-line-height-xs'));
+    }
+
+
+// ********************************************************
+//
+//   JUSTIFIED BUTTON GROUP VARIATION
+//
+// ********************************************************
+.btn-group-justified {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+
+    > .btn,
+    > .btn-group {
+        display: table-cell;
+        width: 1%;
+    }
+
+    > .btn-group > .btn {
+        width: 100%;
+        border-right-width: 0; // prevent double borders
+    }
+
+    > .btn-group .dropdown-menu {
+        left: auto;
+    }
+
+    // ----------------------------------------------------
+    //   PREVENT DOUBLE BORDERS
+    // ----------------------------------------------------
+    > .btn {
+        border-right-width: 0;
+    }
+
+    > .btn:only-child,
+    > .btn:last-of-type,
+    > .btn-group:last-of-type > .btn:last-of-type {
+        border-right-width: to-rem(get($btn-config, 'bd-width'));
+    }
+
+    //
+    // Overcome .btn:last-of-type's lack of right border
+    // when a btn-group is adjacent because in this
+    // context, the .btn and .btn-group elems share a "type"
+    //
+    > .btn + .btn-group > .btn:first-child {
+        border-left-width: 0;
+    }
+}

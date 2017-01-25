@@ -1,0 +1,124 @@
+// ********************************************************
+
+////
+/// Alert dialog component helpers
+/// ---
+/// @access public
+/// @group core.components.alerts
+/// @link http://bit.ly/webskin-alerts Alert dialog component spec
+/// @link http://bit.ly/webskin-alert-color-variations Alert dialog component color variation spec
+/// @link http://bit.ly/webskin-alerts-toast Alert dialog "toast" variation spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/alerts-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function extend,
+                                                function box-model-height,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+@mixin alert-size($size, $size-config: $alert-config) {
+    .alert-#{$size} {
+        min-height: to-rem(get($size-config, 'min-height-#{$size}'));
+        padding: to-rem(get($size-config, 'padding-#{$size}'));
+        @if map-has-key($size-config, 'line-height-#{$size}') {
+            line-height: to-rem(get($size-config, 'line-height-#{$size}'));
+        }
+        @if map-has-key($size-config, 'font-size-#{$size}') {
+            font-size: to-rem(get($size-config, 'font-size-#{$size}'));
+        }
+
+        &.alert-toast {
+            padding: to-rem(get($size-config, 'padding-#{$size}-toast'))
+        }
+
+        &.alert-dismissible {
+            $close-btn-width-rem: to-rem(get($size-config, 'close-btn-width-#{$size}'));
+            $close-btn-height-rem: to-rem(get($size-config, 'close-btn-height-#{$size}'));
+            $alert-padding-vertical-rem: to-rem(get($size-config, 'padding-vertical-#{$size}'));
+
+            padding-right: $close-btn-width-rem;
+
+            .close {
+                top: $alert-padding-vertical-rem * -1;
+                right: $close-btn-width-rem * -1;
+                width: $close-btn-width-rem;
+                height: $close-btn-height-rem;
+                // If the alert is positioned absolute or fixed, a
+                // negative bottom margin must be added to prevent
+                // the alert from doubling its height.
+                margin-bottom: $close-btn-height-rem * -1;
+            }
+        }
+    }
+}
+
+
+// Inline alerts (.alert)
+@mixin alert-skin($skin-name, $skin-colors) {
+    $skin-bg: get($skin-colors, 'bg');
+    $skin-bd: get($skin-colors, 'bd-color');
+
+    .alert-#{$skin-name} {
+        background-color: $skin-bg;
+        border-left-color: $skin-bd;
+
+        @if map-has-key($skin-colors, 'text-color') {
+            color: get($skin-colors, 'text-color');
+
+            .close,
+            .alert-heading {
+                color: get($skin-colors, 'text-color');
+            }
+
+            a:not(.btn),
+            .text-link {
+                color: get($skin-colors, 'text-color');
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+@mixin alert-skins($skin-color-config: $alert-colors) {
+    @each $skin-name, $skin-colors in $skin-color-config {
+        @include alert-skin($skin-name, $skin-colors);
+    }
+}
+
+
+// Floating alerts (.alert-toast)
+@mixin alert-toast-skin($skin-name, $skin-colors) {
+    $skin-bg: get($skin-colors, 'bg');
+    $skin-bd: get($skin-colors, 'bd-color');
+
+    // TODO: Remove compound selector in 2.0.0 in favor of `alert-toast--{{skin}}` class
+    .alert-toast.alert-#{$skin-name} {
+        background-color: $skin-bg;
+
+        @if map-has-key($skin-colors, 'text-color') {
+            color: get($skin-colors, 'text-color');
+
+            .close,
+            .alert-heading {
+                color: get($skin-colors, 'text-color');
+                text-shadow: none;
+            }
+        }
+    }
+}
+
+@mixin alert-toast-skins($skin-color-config: $alert-toast-colors) {
+    @each $skin-name, $skin-colors in $skin-color-config {
+        @include alert-toast-skin($skin-name, $skin-colors);
+    }
+}

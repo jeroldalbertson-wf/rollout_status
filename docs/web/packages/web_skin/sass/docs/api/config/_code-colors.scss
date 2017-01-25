@@ -1,0 +1,64 @@
+// ********************************************************
+//
+//   Vars used by pygments
+//   for code example color highlighting
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/api/config/code-colors';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+$code-ex-default:           #333;
+$code-operator:             $code-ex-default;
+$code-whitespace:           #bbb;
+$code-highlight-line:       $ws-highlight-bg-yellow;
+
+$code-error-text:           #a61717;
+$code-error-bg:             #e3d2d2;
+
+$code-comment:              #999988;
+
+$code-gen-del-bg:           #ffdddd;
+$code-gen-ins-bg:           #ddffdd;
+$code-gen-err:              #aa0000;
+$code-gen-heading:          #999;
+$code-gen-subheading:       #aaa;
+$code-gen-output:           #888;
+$code-gen-prompt:           #555;
+$code-gen-traceback:        $code-gen-err;
+
+$code-punctuation:          lighten($code-ex-default, 28);
+
+$code-keyword:              $code-ex-default;
+$code-keyword-type:         #445588;
+
+$code-name-constant:        #336600;
+$code-name-builtin:         #006698;
+$code-name-builtin-ps:      #999999;
+$code-name-tag:             #2f6f9f;
+$code-name-attr:            #4f9fcf;
+$code-name-class:           #445588;
+$code-name-decorator:       #3c5d5d;
+$code-name-entity:          #800080;
+$code-name-function:        #990000;
+$code-name-exception:       $code-name-function;
+$code-name-label:           $code-name-function;
+$code-name-namespace:       $code-gen-prompt;
+$code-name-variable:        $code-name-attr;
+
+$code-name-variable-sass:   #af4d07;
+$code-name-variable-sass-declaration: #ad2f09;
+$code-name-class-css:       #389147;
+
+$code-literal-num:          #009999;
+$code-literal-str:          #d01040;
+$code-literal-str-esc:      $code-punctuation;
+$code-literal-str-interp:   $code-name-function;
+$code-literal-str-sym:      #990073;
+$code-literal-str-rgx:      #009926;
+
+$code-css-number:           $code-literal-num;
+$code-css-unit:             darken($code-css-number, 5);

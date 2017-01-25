@@ -1,0 +1,44 @@
+// ********************************************************
+
+////
+/// Global mixins pertaining to fading animations
+/// ---
+/// @access public
+/// @group core.animation
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/animations/fade';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// Reusable timing styles for `.fade` elems
+/// ---
+/// @param {Number}          $duration-out        - how long it takes for an elem to fade out
+/// @param {Number}          $delay-out [0s]      - how long to wait before fading out an element
+/// @param {Number | Bool}   $duration-in [false] - how long it takes for an elem to fade in. Defaults to match `$duration-out`
+/// @param {Number | Bool}   $delay-in [false]    - how long to wait before fading in an element. Defaults to match `$delay-out`
+///
+@mixin fade-timer($duration-out, $delay-out: 0s, $duration-in: false, $delay-in: false) {
+
+    // If $duration-in not defined, default to $duration-out
+    $duration-in: if($duration-in != false, $duration-in, $duration-out);
+    $delay-in: if($delay-in != false, $delay-in, $delay-out);
+
+    // when fading out, transition all properties (including visibility) with equal timings
+    @include transition(opacity $duration-out linear $delay-out);
+    @include activate-gpu();
+
+    // @todo: what is .mid used for?
+    &.mid,
+    &.in {
+        // when fading in, transition only opacity so that
+        // visibility: visible; is enforced immediately with no delay / "fade"
+        @include transition(opacity $duration-in linear $delay-in);
+    }
+}

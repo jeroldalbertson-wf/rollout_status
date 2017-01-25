@@ -1,0 +1,508 @@
+// ********************************************************
+
+////
+/// Card skin color configs
+/// ---
+/// @since 1.4.0
+/// @type Map
+/// @access public
+/// @group core.components.cards
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/cards/config/card-color-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   DEFAULT CONTRAST (DARK TEXT, LIGHT BG)
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.card` component's `.card--default` color variation.
+    /// ---
+    /// @requires {function} shade-of
+    /// @requires {variable} $zc-gray-20
+    /// @requires {variable} $link-color-hover
+    /// @requires {variable} $nav-secondary-config
+    /// @requires {variable} $card-shared-config
+    /// ---
+    /// @prop {Color} bg                   [#f3f3f3] - Default background color
+    /// @prop {Color} bg-collapsed         [#f9f9f9] - Default background color of a collapsed card
+    /// @prop {Color} bg-collapsed-hover   [#f3f3f3] - Default background color of a collapsed card when hovered
+    ///
+    /// @prop {Color} selected-platform-bg [#0094ff] - Left-edge "platform" background color of a `.card--selected.card--default` component
+    ///
+    /// @prop {Color} bd-color                  [#cbcbcb] - Default border color of a `.card--bordered` variation
+    ///
+    /// @prop {Color} body-text-color               [#595959] - Default text color of `.card` elements unless otherwise specified.
+    /// @prop {Color} header-title-color            [#444444] - Default text color of a `.card__header__title` element.
+    /// @prop {Color} header-title-color-collapsed  [#595959] - Text color of a `.card__header__title` element within a `.card--collapsible` element that is collapsed.
+    /// @prop {Color} footnote-color                [#b2b2b2] - Default text color of a `.card__footnote` elem.
+    ///
+    $card-colors-default: (
+        'bg': $zc-gray-20,
+        'bg-collapsed': shade-of($zc-gray-20, 50%),
+        'bg-collapsed-hover': $zc-gray-20,
+        'selected-platform-bg': $link-color-hover,
+        'bd-color': get($nav-secondary-config, 'bd-color'),
+        // text colors
+        'body-text-color': get($card-shared-config, 'body-text-color'),
+        'header-title-color': get($card-shared-config, 'header-title-color'),
+        'header-title-color-collapsed': get($card-shared-config, 'header-title-color-collapsed'),
+        'footnote-color': get($card-shared-config, 'footnote-color')
+    ) !default;
+
+
+    ///
+    /// Colors used by the `.card` component's `.card--white` color variation.
+    /// ---
+    /// @requires {variable} $white
+    /// @requires {variable} $card-colors-default
+    /// ---
+    /// @prop {Color} bg                   [#ffffff] - Background color of `.card--white`
+    /// @prop {Color} bg-collapsed         [#ffffff] - Background color of a collapsed `.card--white`
+    /// @prop {Color} bg-collapsed-hover   [#f9f9f9] - Background color of a collapsed `.card--white` when hovered
+    ///
+    /// @prop {Color} selected-platform-bg [#0094ff] - Left-edge "platform" background color of a `.card--selected.card--white` component
+    ///
+    /// @prop {Color} bd-color             [#cbcbcb] - Border color of a `.card--bordered.card--white` variation
+    ///
+    /// @prop {Color} body-text-color               [#595959] - Default text color of `.card` elements unless otherwise specified.
+    /// @prop {Color} header-title-color            [#444444] - Default text color of a `.card__header__title` element.
+    /// @prop {Color} header-title-color-collapsed  [#595959] - Text color of a `.card__header__title` element within a `.card--collapsible` element that is collapsed.
+    /// @prop {Color} footnote-color                [#b2b2b2] - Default text color of a `.card__footnote` elem.
+    ///
+    $card-colors-white: (
+        'bg': $white,
+        'bg-collapsed': $white,
+        'bg-collapsed-hover': get($card-colors-default, 'bg-collapsed'),
+        'selected-platform-bg': get($card-colors-default, 'selected-platform-bg'),
+        'bd-color': get($card-colors-default, 'bd-color'),
+        // text colors
+        'body-text-color': get($card-colors-default, 'body-text-color'),
+        'header-title-color': get($card-colors-default, 'header-title-color'),
+        'header-title-color-collapsed': get($card-colors-default, 'header-title-color-collapsed'),
+        'footnote-color': get($card-colors-default, 'footnote-color')
+    ) !default;
+
+
+    ///
+    /// Colors used by the `.card` component's `.card--invisible` color variation.
+    ///
+    /// The skin uses all the colors from `$card-colors-default` when expanded, but is transparent when collapsed.
+    ///
+    /// To be used only when a long list of collapsible cards is displayed in a Wdesk shell side panel. _(e.g. a list of comments)_
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $card-colors-default
+    /// @requires {variable} $ws-selection-bg-hover
+    /// ---
+    /// @prop {Color} bg-collapsed         [transparent] - Background color of `.card--invisible` when collapsed
+    /// @prop {Color} bg-collapsed-hover   [#ebf6ff]     - Background color of `.card--invisible` when collapsed and hovered
+    ///
+    $card-colors-invisible: extend($card-colors-default, (
+        'bg-collapsed': transparent,
+        'bg-collapsed-hover': $ws-selection-bg-hover
+    )) !default;
+
+
+    ///
+    /// Colors used by the `.card` component's `.card--alt` color variation.
+    /// ---
+    /// @requires {function} shade-of
+    /// @requires {variable} $component-state-alt-bg
+    /// @requires {variable} $component-state-alt-bd
+    /// @requires {variable} $card-shared-config
+    /// ---
+    /// @prop {Color} bg                   [#ebf7ff] - Background color of `.card--alt`
+    /// @prop {Color} bg-collapsed         [#f5fbff] - Background color of a collapsed `.card--alt`
+    /// @prop {Color} bg-collapsed-hover   [#ebf7ff] - Background color of a collapsed `.card--alt` when hovered
+    ///
+    /// @prop {Color} selected-platform-bg [#0085e6] - Left-edge "platform" background color of a `.card--selected.card--alt` component
+    ///
+    /// @prop {Color} bd-color             [#0085e6] - Border color of a `.card--bordered.card--alt` variation
+    ///
+    /// @prop {Color} body-text-color               [#595959] - Default text color of `.card` elements unless otherwise specified.
+    /// @prop {Color} header-title-color            [#444444] - Default text color of a `.card__header__title` element.
+    /// @prop {Color} header-title-color-collapsed  [#595959] - Text color of a `.card__header__title` element within a `.card--collapsible` element that is collapsed.
+    /// @prop {Color} footnote-color                [#b2b2b2] - Default text color of a `.card__footnote` elem.
+    ///
+    $card-colors-alt: (
+        'bg': $component-state-alt-bg,
+        'bg-collapsed': shade-of($component-state-alt-bg, 50%),
+        'bg-collapsed-hover': $component-state-alt-bg,
+        'selected-platform-bg': $component-state-alt-bd,
+        'bd-color': $component-state-alt-bd,
+        // text colors
+        'body-text-color': get($card-shared-config, 'body-text-color'),
+        'header-title-color': get($card-shared-config, 'header-title-color'),
+        'header-title-color-collapsed': get($card-shared-config, 'header-title-color-collapsed'),
+        'footnote-color': get($card-shared-config, 'footnote-color')
+    ) !default;
+
+
+    ///
+    /// Colors used by the `.card` component's `.card--success` color variation.
+    /// ---
+    /// @requires {function} shade-of
+    /// @requires {variable} $component-state-success-bg
+    /// @requires {variable} $component-state-success-bd
+    /// @requires {variable} $card-shared-config
+    /// ---
+    /// @prop {Color} bg                   [#f6fcf0] - Background color of `.card--success`
+    /// @prop {Color} bg-collapsed         [#fafff6] - Background color of a collapsed `.card--success`
+    /// @prop {Color} bg-collapsed-hover   [#f6fcf0] - Background color of a collapsed `.card--success` when hovered
+    ///
+    /// @prop {Color} selected-platform-bg [#70b84d] - Left-edge "platform" background color of a `.card--selected.card--success` component
+    ///
+    /// @prop {Color} bd-color             [#70b84d] - Border color of a `.card--bordered.card--success` variation
+    ///
+    /// @prop {Color} body-text-color               [#595959] - Default text color of `.card` elements unless otherwise specified.
+    /// @prop {Color} header-title-color            [#444444] - Default text color of a `.card__header__title` element.
+    /// @prop {Color} header-title-color-collapsed  [#595959] - Text color of a `.card__header__title` element within a `.card--collapsible` element that is collapsed.
+    /// @prop {Color} footnote-color                [#b2b2b2] - Default text color of a `.card__footnote` elem.
+    ///
+    $card-colors-success: (
+        'bg': $component-state-success-bg,
+        'bg-collapsed': shade-of($component-state-success-bg, 50%),
+        'bg-collapsed-hover': $component-state-success-bg,
+        'selected-platform-bg': $component-state-success-bd,
+        'bd-color': $component-state-success-bd,
+        // text colors
+        'body-text-color': get($card-shared-config, 'body-text-color'),
+        'header-title-color': get($card-shared-config, 'header-title-color'),
+        'header-title-color-collapsed': get($card-shared-config, 'header-title-color-collapsed'),
+        'footnote-color': get($card-shared-config, 'footnote-color')
+    ) !default;
+
+
+    ///
+    /// Colors used by the `.card` component's `.card--warning` color variation.
+    /// ---
+    /// @requires {function} shade-of
+    /// @requires {variable} $component-state-warning-bg
+    /// @requires {variable} $component-state-warning-bd
+    /// @requires {variable} $card-shared-config
+    /// ---
+    /// @prop {Color} bg                   [#fffaf1] - Background color of `.card--warning`
+    /// @prop {Color} bg-collapsed         [#fffcf5] - Background color of a collapsed `.card--warning`
+    /// @prop {Color} bg-collapsed-hover   [#fffaf1] - Background color of a collapsed `.card--warning` when hovered
+    ///
+    /// @prop {Color} selected-platform-bg [#f69864] - Left-edge "platform" background color of a `.card--selected.card--warning` component
+    ///
+    /// @prop {Color} bd-color             [#f69864] - Border color of a `.card--bordered.card--warning` variation
+    ///
+    /// @prop {Color} body-text-color               [#595959] - Default text color of `.card` elements unless otherwise specified.
+    /// @prop {Color} header-title-color            [#444444] - Default text color of a `.card__header__title` element.
+    /// @prop {Color} header-title-color-collapsed  [#595959] - Text color of a `.card__header__title` element within a `.card--collapsible` element that is collapsed.
+    /// @prop {Color} footnote-color                [#b2b2b2] - Default text color of a `.card__footnote` elem.
+    ///
+    $card-colors-warning: (
+        'bg': $component-state-warning-bg,
+        'bg-collapsed': shade-of($component-state-warning-bg, 50%),
+        'bg-collapsed-hover': $component-state-warning-bg,
+        'selected-platform-bg': $component-state-warning-bd,
+        'bd-color': $component-state-warning-bd,
+        // text colors
+        'body-text-color': get($card-shared-config, 'body-text-color'),
+        'header-title-color': get($card-shared-config, 'header-title-color'),
+        'header-title-color-collapsed': get($card-shared-config, 'header-title-color-collapsed'),
+        'footnote-color': get($card-shared-config, 'footnote-color')
+    ) !default;
+
+
+    ///
+    /// Colors used by the `.card` component's `.card--danger` color variation.
+    /// ---
+    /// @requires {function} shade-of
+    /// @requires {variable} $component-state-danger-bg
+    /// @requires {variable} $component-state-danger-bd
+    /// @requires {variable} $card-shared-config
+    /// ---
+    /// @prop {Color} bg                   [#fef2f2] - Background color of `.card--danger`
+    /// @prop {Color} bg-collapsed         [#fef6f6] - Background color of a collapsed `.card--danger`
+    /// @prop {Color} bg-collapsed-hover   [#fef2f2] - Background color of a collapsed `.card--danger` when hovered
+    ///
+    /// @prop {Color} selected-platform-bg [#c15f5e] - Left-edge "platform" background color of a `.card--selected.card--danger` component
+    ///
+    /// @prop {Color} bd-color             [#c15f5e] - Border color of a `.card--bordered.card--danger` variation
+    ///
+    /// @prop {Color} body-text-color               [#595959] - Default text color of `.card` elements unless otherwise specified.
+    /// @prop {Color} header-title-color            [#444444] - Default text color of a `.card__header__title` element.
+    /// @prop {Color} header-title-color-collapsed  [#595959] - Text color of a `.card__header__title` element within a `.card--collapsible` element that is collapsed.
+    /// @prop {Color} footnote-color                [#b2b2b2] - Default text color of a `.card__footnote` elem.
+    ///
+    $card-colors-danger: (
+        'bg': $component-state-danger-bg,
+        'bg-collapsed': shade-of($component-state-danger-bg, 50%),
+        'bg-collapsed-hover': $component-state-danger-bg,
+        'selected-platform-bg': $component-state-danger-bd,
+        'bd-color': $component-state-danger-bd,
+        // text colors
+        'body-text-color': get($card-shared-config, 'body-text-color'),
+        'header-title-color': get($card-shared-config, 'header-title-color'),
+        'header-title-color-collapsed': get($card-shared-config, 'header-title-color-collapsed'),
+        'footnote-color': get($card-shared-config, 'footnote-color')
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   INVERSE CONTRAST (WHITE TEXT, DARK BG)
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.card` component's `.card--default.card--inverse` color variation.
+    /// ---
+    /// @requires {function} shade-of
+    /// @requires {variable} $zc-gray-90
+    /// @requires {variable} $zc-gray
+    /// @requires {variable} $card-shared-config
+    /// ---
+    /// @prop {Color} bg                   [#707070] - Inverse background color
+    /// @prop {Color} bg-collapsed         [#b8b8b8] - Inverse background color of a collapsed card
+    /// @prop {Color} bg-collapsed-hover   [#707070] - Inverse background color of a collapsed card when hovered
+    ///
+    /// @prop {Color} selected-platform-bg [#595959] - Left-edge "platform" background color of a `.card--selected.card--default.card--inverse` component
+    ///
+    /// @prop {Color} bd-color             [#595959] - Inverse border color of a `.card--bordered` variation
+    ///
+    /// @prop {Color} body-text-color               [rgba($white, .8)]  - Inverse text color of `.card` elements unless otherwise specified.
+    /// @prop {Color} header-title-color            [#ffffff]           - Inverse text color of a `.card__header__title` element.
+    /// @prop {Color} header-title-color-collapsed  [#ffffff]           - Inverse text color of a `.card__header__title` element within a `.card--collapsible` element that is collapsed.
+    /// @prop {Color} footnote-color                [rgba($white, .8)]  - Inverse text color of a `.card__footnote` elem.
+    ///
+    $card-colors-default-inverse: (
+        'bg': $zc-gray-90,
+        'bg-collapsed': shade-of($zc-gray-90, 50%),
+        'bg-collapsed-hover': $zc-gray-90,
+        'selected-platform-bg': $zc-gray,
+        'bd-color': $zc-gray,
+        // text colors
+        'body-text-color': get($card-shared-config, 'body-text-color-inverse'),
+        'header-title-color': get($card-shared-config, 'header-title-color-inverse'),
+        'header-title-color-collapsed': get($card-shared-config, 'header-title-color-collapsed-inverse'),
+        'footnote-color': get($card-shared-config, 'footnote-color-inverse')
+    ) !default;
+
+
+    ///
+    /// Colors used by the `.card` component's `.card--alt.card--inverse` color variation.
+    /// ---
+    /// @requires {function} shade-of
+    /// @requires {variable} $state-alt
+    /// @requires {variable} $btn-colors-alt
+    /// @requires {variable} $card-shared-config
+    /// ---
+    /// @prop {Color} bg                   [#0094ff] - Background color of `.card--alt.card--inverse`
+    /// @prop {Color} bg-collapsed         [#80caff] - Background color of a collapsed `.card--alt.card--inverse`
+    /// @prop {Color} bg-collapsed-hover   [#0094ff] - Background color of a collapsed `.card--alt.card--inverse` when hovered
+    ///
+    /// @prop {Color} selected-platform-bg [#167fca] - Left-edge "platform" background color of a `.card--selected.card--alt.card--inverse` component
+    ///
+    /// @prop {Color} bd-color             [#167fca] - Border color of a `.card--bordered.card--alt.card--inverse` variation
+    ///
+    /// @prop {Color} body-text-color               [rgba($white, .8)]  - Inverse text color of `.card` elements unless otherwise specified.
+    /// @prop {Color} header-title-color            [#ffffff]           - Inverse text color of a `.card__header__title` element.
+    /// @prop {Color} header-title-color-collapsed  [#ffffff]           - Inverse text color of a `.card__header__title` element within a `.card--collapsible` element that is collapsed.
+    /// @prop {Color} footnote-color                [rgba($white, .8)]  - Inverse text color of a `.card__footnote` elem.
+    ///
+    $card-colors-alt-inverse: (
+        'bg': $state-alt,
+        'bg-collapsed': shade-of($state-alt, 50%),
+        'bg-collapsed-hover': $state-alt,
+        'selected-platform-bg': get($btn-colors-alt, 'shadow-base'),
+        'bd-color': get($btn-colors-alt, 'shadow-base'),
+        // text colors
+        'body-text-color': get($card-shared-config, 'body-text-color-inverse'),
+        'header-title-color': get($card-shared-config, 'header-title-color-inverse'),
+        'header-title-color-collapsed': get($card-shared-config, 'header-title-color-collapsed-inverse'),
+        'footnote-color': get($card-shared-config, 'footnote-color-inverse')
+    ) !default;
+
+
+    ///
+    /// Colors used by the `.card` component's `.card--success.card--inverse` color variation.
+    /// ---
+    /// @requires {function} shade-of
+    /// @requires {variable} $state-success
+    /// @requires {variable} $btn-colors-success
+    /// @requires {variable} $card-shared-config
+    /// ---
+    /// @prop {Color} bg                   [#66cc00] - Background color of `.card--success.card--inverse`
+    /// @prop {Color} bg-collapsed         [#b3e680] - Background color of a collapsed `.card--success.card--inverse`
+    /// @prop {Color} bg-collapsed-hover   [#66cc00] - Background color of a collapsed `.card--success.card--inverse` when hovered
+    ///
+    /// @prop {Color} selected-platform-bg [#61ae13] - Left-edge "platform" background color of a `.card--selected.card--success.card--inverse` component
+    ///
+    /// @prop {Color} bd-color             [#61ae13] - Border color of a `.card--bordered.card--success.card--inverse` variation
+    ///
+    /// @prop {Color} body-text-color               [rgba($white, .8)]  - Inverse text color of `.card` elements unless otherwise specified.
+    /// @prop {Color} header-title-color            [#ffffff]           - Inverse text color of a `.card__header__title` element.
+    /// @prop {Color} header-title-color-collapsed  [#ffffff]           - Inverse text color of a `.card__header__title` element within a `.card--collapsible` element that is collapsed.
+    /// @prop {Color} footnote-color                [rgba($white, .8)]  - Inverse text color of a `.card__footnote` elem.
+    ///
+    $card-colors-success-inverse: (
+        'bg': $state-success,
+        'bg-collapsed': shade-of($state-success, 50%),
+        'bg-collapsed-hover': $state-success,
+        'selected-platform-bg': get($btn-colors-success, 'shadow-base'),
+        'bd-color': get($btn-colors-success, 'shadow-base'),
+        // text colors
+        'body-text-color': get($card-shared-config, 'body-text-color-inverse'),
+        'header-title-color': get($card-shared-config, 'header-title-color-inverse'),
+        'header-title-color-collapsed': get($card-shared-config, 'header-title-color-collapsed-inverse'),
+        'footnote-color': get($card-shared-config, 'footnote-color-inverse')
+    ) !default;
+
+
+    ///
+    /// Colors used by the `.card` component's `.card--warning.card--inverse` color variation.
+    /// ---
+    /// @requires {function} shade-of
+    /// @requires {variable} $state-warning
+    /// @requires {variable} $btn-colors-warning
+    /// @requires {variable} $card-shared-config
+    /// ---
+    /// @prop {Color} bg                   [#fbad17] - Background color of `.card--warning.card--inverse`
+    /// @prop {Color} bg-collapsed         [#fdd68b] - Background color of a collapsed `.card--warning.card--inverse`
+    /// @prop {Color} bg-collapsed-hover   [#fbad17] - Background color of a collapsed `.card--warning.card--inverse` when hovered
+    ///
+    /// @prop {Color} selected-platform-bg [#db9a1d] - Left-edge "platform" background color of a `.card--selected.card--warning.card--inverse` component
+    ///
+    /// @prop {Color} bd-color             [#db9a1d] - Border color of a `.card--bordered.card--warning.card--inverse` variation
+    ///
+    /// @prop {Color} body-text-color               [rgba($white, .8)]  - Inverse text color of `.card` elements unless otherwise specified.
+    /// @prop {Color} header-title-color            [#ffffff]           - Inverse text color of a `.card__header__title` element.
+    /// @prop {Color} header-title-color-collapsed  [#ffffff]           - Inverse text color of a `.card__header__title` element within a `.card--collapsible` element that is collapsed.
+    /// @prop {Color} footnote-color                [rgba($white, .8)]  - Inverse text color of a `.card__footnote` elem.
+    ///
+    $card-colors-warning-inverse: (
+        'bg': $state-warning,
+        'bg-collapsed': shade-of($state-warning, 50%),
+        'bg-collapsed-hover': $state-warning,
+        'selected-platform-bg': get($btn-colors-warning, 'shadow-base'),
+        'bd-color': get($btn-colors-warning, 'shadow-base'),
+        // text colors
+        'body-text-color': get($card-shared-config, 'body-text-color-inverse'),
+        'header-title-color': get($card-shared-config, 'header-title-color-inverse'),
+        'header-title-color-collapsed': get($card-shared-config, 'header-title-color-collapsed-inverse'),
+        'footnote-color': get($card-shared-config, 'footnote-color-inverse')
+    ) !default;
+
+
+    ///
+    /// Colors used by the `.card` component's `.card--danger.card--inverse` color variation.
+    /// ---
+    /// @requires {function} shade-of
+    /// @requires {variable} $state-danger
+    /// @requires {variable} $btn-colors-danger
+    /// @requires {variable} $card-shared-config
+    /// ---
+    /// @prop {Color} bg                   [#ee2724] - Background color of `.card--danger.card--inverse`
+    /// @prop {Color} bg-collapsed         [#f79392] - Background color of a collapsed `.card--danger.card--inverse`
+    /// @prop {Color} bg-collapsed-hover   [#ee2724] - Background color of a collapsed `.card--danger.card--inverse` when hovered
+    ///
+    /// @prop {Color} selected-platform-bg [#ce2d2b] - Left-edge "platform" background color of a `.card--selected.card--danger.card--inverse` component
+    ///
+    /// @prop {Color} bd-color             [#ce2d2b] - Border color of a `.card--bordered.card--danger.card--inverse` variation
+    ///
+    /// @prop {Color} body-text-color               [rgba($white, .8)]  - Inverse text color of `.card` elements unless otherwise specified.
+    /// @prop {Color} header-title-color            [#ffffff]           - Inverse text color of a `.card__header__title` element.
+    /// @prop {Color} header-title-color-collapsed  [#ffffff]           - Inverse text color of a `.card__header__title` element within a `.card--collapsible` element that is collapsed.
+    /// @prop {Color} footnote-color                [rgba($white, .8)]  - Inverse text color of a `.card__footnote` elem.
+    ///
+    $card-colors-danger-inverse: (
+        'bg': $state-danger,
+        'bg-collapsed': shade-of($state-danger, 50%),
+        'bg-collapsed-hover': $state-danger,
+        'selected-platform-bg': get($btn-colors-danger, 'shadow-base'),
+        'bd-color': get($btn-colors-danger, 'shadow-base'),
+        // text colors
+        'body-text-color': get($card-shared-config, 'body-text-color-inverse'),
+        'header-title-color': get($card-shared-config, 'header-title-color-inverse'),
+        'header-title-color-collapsed': get($card-shared-config, 'header-title-color-collapsed-inverse'),
+        'footnote-color': get($card-shared-config, 'footnote-color-inverse')
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   ALL DEFAULT CONTRAST COLOR VARIATIONS COMBINED
+//
+// ********************************************************
+    ///
+    /// Convenience collection of card colors for each `.card` color variation's various default contrast states.
+    /// Great for building dynamic values within loops, etc...
+    /// ---
+    /// @requires {variable} $card-colors-default
+    /// @requires {variable} $card-colors-white
+    /// @requires {variable} $card-colors-invisible
+    /// @requires {variable} $card-colors-alt
+    /// @requires {variable} $card-colors-success
+    /// @requires {variable} $card-colors-warning
+    /// @requires {variable} $card-colors-danger
+    /// ---
+    /// @prop {Map} default   - Color config map for `.card--default` components
+    /// @prop {Map} white     - Color config map for `.card--white` components
+    /// @prop {Map} invisible - Color config map for `.card--invisible` components
+    /// @prop {Map} alt       - Color config map for `.card--alt` components
+    /// @prop {Map} success   - Color config map for `.card--success` components
+    /// @prop {Map} warning   - Color config map for `.card--warning` components
+    /// @prop {Map} danger    - Color config map for `.card--danger` components
+    ///
+    $card-colors: (
+        'default':   $card-colors-default,
+        'white':     $card-colors-white,
+        'invisible': $card-colors-invisible,
+        'alt':       $card-colors-alt,
+        'success':   $card-colors-success,
+        'warning':   $card-colors-warning,
+        'danger':    $card-colors-danger
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   ALL INVERSE CONTRAST COLOR VARIATIONS COMBINED
+//
+// ********************************************************
+    ///
+    /// Convenience collection of card colors for each `.card` color variation's various iverse contrast states.
+    /// Great for building dynamic values within loops, etc...
+    /// ---
+    /// @requires {variable} $card-colors-default-inverse
+    /// @requires {variable} $card-colors-alt-inverse
+    /// @requires {variable} $card-colors-success-inverse
+    /// @requires {variable} $card-colors-warning-inverse
+    /// @requires {variable} $card-colors-danger-inverse
+    /// ---
+    /// @prop {Map} default  - Color config map for `.card--inverse.card--default` components
+    /// @prop {Map} alt      - Color config map for `.card--inverse.card--alt` components
+    /// @prop {Map} success  - Color config map for `.card--inverse.card--success` components
+    /// @prop {Map} warning  - Color config map for `.card--inverse.card--warning` components
+    /// @prop {Map} danger   - Color config map for `.card--inverse.card--danger` components
+    ///
+    $card-colors-inverse: (
+        'default':  $card-colors-default-inverse,
+        'alt':      $card-colors-alt-inverse,
+        'success':  $card-colors-success-inverse,
+        'warning':  $card-colors-warning-inverse,
+        'danger':   $card-colors-danger-inverse
+    ) !default;

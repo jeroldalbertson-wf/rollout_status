@@ -1,0 +1,250 @@
+// ********************************************************
+
+////
+/// Breadcrumb navigation component configuration
+/// ---
+/// @group core.components.navs
+/// @link http://bit.ly/webskin-breadcrumbs Breadcrumb nav components spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/breadcrumbs/breadcrumbs-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend,
+                                                function unitless-zero);
+//
+// ********************************************************
+
+
+///
+/// Configuration for base `.breadcrumb` components.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {function} extend
+/// @requires {variable} $spacing-base
+/// @requires {variable} $padding-base-vertical
+/// @requires {variable} $base-elem-margin-vertical
+/// @requires {variable} $font-size-xs
+/// @requires {variable} $nav-secondary-config
+/// @requires {variable} $nav-link-config
+/// @requires {variable} $zc-gray
+/// @requires {variable} $zc-gray-80
+/// ---
+/// @prop {Number} padding-vertical     [6px]   - Default vertical padding for `.breadcrumb`
+/// @prop {Number} padding-horizontal   [0]     - Default horizontal padding for `.breadcrumb`
+/// @prop {List}   padding              [6px 0] - Combination of vertical and horizontal padding for `.breadcrumb`
+/// @prop {Number} margin-bottom        [20px]  - Amount of negative space to preserve below each `.breadcrumb`
+/// @prop {Number} font-size            [11px]  - Default font size of text within a `.breadcrumb`
+///
+/// @prop {Number} crumb-spacing-horizontal     [10px]  - Amount of horizontal space between each "crumb" `<li>` elem
+/// @prop {Number} crumb-divider-angle-adjust   [2px]   - Constant used to account for the angle of the default `/` character used as a divider
+/// @prop {Number} crumb-padding-right          [3px]   - Calculated left padding value for each "crumb" `<li>` elem. _Added via `@extend`_
+/// @prop {Number} crumb-padding-left           [5px]   - Calculated right padding value for each "crumb" `<li>` elem. _Added via `@extend`_
+/// @prop {Number} crumb-margin-right           [3px]   - Calculated left margin value for each "crumb" `<li>` elem. _Added via `@extend`_
+/// @prop {Number} crumb-margin-left            [5px]   - Calculated right margin value for each "crumb" `<li>` elem. _Added via `@extend`_
+///
+/// @prop {Color} bg                        [#ffffff] - Default background color for `.breadcrumb`
+/// @prop {Color} crumb-text-color          [#8a8a8a] - Default text color of each "crumb" `<li>` elem
+/// @prop {Color} crumb-text-color-hover    [#66cc00] - Text color of a hovered "crumb" `<li>` elem
+/// @prop {Color} crumb-text-color-press    [#339900] - Text color of a pressed "crumb" `<li>` elem
+/// @prop {Color} crumb-text-color-active   [#595959] - Text color of an active "crumb" `<li>` elem
+/// @prop {color} crumb-divider-color       [#cbcbcb] - Color of the `/` divider between each "crumb" `<li>` elem
+///
+$breadcrumb-config: (
+    // size / structure
+    'padding-vertical': $padding-base-vertical,
+    'padding-horizontal': 0,
+    'padding': null, // actual calculated value inserted via @extend
+    'margin-bottom': $base-elem-margin-vertical * 2,
+    'font-size': $font-size-xs,
+    //
+    'crumb-spacing-horizontal': $spacing-base * 2,
+    'crumb-divider-angle-adjust': 2px,
+    'crumb-padding-right': null, // actual calculated value inserted via @extend
+    'crumb-padding-left': null, // actual calculated value inserted via @extend
+    'crumb-margin-right': null, // actual calculated value inserted via @extend
+    'crumb-margin-left': null, // actual calculated value inserted via @extend
+    // skin / colors
+    'bg': get($nav-secondary-config, 'bg'),
+    'crumb-text-color': $zc-gray-80,
+    'crumb-text-color-hover': get($nav-link-config, 'text-color-hover'),
+    'crumb-text-color-press': get($nav-link-config, 'text-color-press'),
+    'crumb-text-color-active': $zc-gray,
+    'crumb-divider-color': get($nav-secondary-config, 'bd-color'),
+) !default;
+
+
+// ----------------------------------------------------
+//   CALCULATED VALUES
+//   -> based on $breadcrumb-config
+//
+//   -> cannot be included in initial map declaration
+//      because the calculations depend on values
+//      within the map, and Sass has no ability to
+//      reference a key in a map from within that map.
+//
+//   -> documented as props of $breadcrumb-config
+//      because they are added via extend() below.
+// ----------------------------------------------------
+    $breadcrumb-padding: get($breadcrumb-config, 'padding-vertical') get($breadcrumb-config, 'padding-horizontal');
+    $breadcrumb-crumb-spacing-horizontal: get($breadcrumb-config, 'crumb-spacing-horizontal');
+    $breadcrumb-crumb-divider-angle-adjust: get($breadcrumb-config, 'crumb-divider-angle-adjust');
+    $breadcrumb-crumb-padding-left: $breadcrumb-crumb-spacing-horizontal / 2;
+    $breadcrumb-crumb-padding-right: $breadcrumb-crumb-padding-left - $breadcrumb-crumb-divider-angle-adjust;
+    $breadcrumb-crumb-margin-left: $breadcrumb-crumb-padding-left;
+    $breadcrumb-crumb-margin-right: $breadcrumb-crumb-padding-right;
+
+    // ----- EXTEND breadcrumb config with calc'd values ----- //
+    $breadcrumb-config: extend($breadcrumb-config,
+        (
+            'padding': $breadcrumb-padding,
+            'crumb-padding-right': $breadcrumb-crumb-padding-right,
+            'crumb-padding-left': $breadcrumb-crumb-padding-left,
+            'crumb-margin-right': $breadcrumb-crumb-margin-right,
+            'crumb-margin-left': $breadcrumb-crumb-margin-left
+        )
+    );
+
+
+///
+/// Configuration for `.breadcrumb-header` component variation.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {function} get-deep
+/// @requires {function} extend
+/// @requires {function} unitless-zero
+/// @requires {variable} $breadcrumb-config
+/// @requires {variable} $global-component-size-config
+/// @requires {variable} $headings-config
+/// @requires {variable} $spacing-lg
+/// ---
+/// @prop {Number} max-height       [34px]          - Maximum height of a `.breadcrumb-header`
+/// @prop {Number} font-size        [24px]          - Default font size of text within a `.breadcrumb-header`
+/// @prop {Number} line-height      [1.428571429]   - Default line-height of text within a `.breadcrumb-header`
+/// @prop {Number} text-height      [34px]          - Calculated height of the text within a `.breadcrumb-header`. _Added via `@extend`_
+/// @prop {Number} padding-top      [0]             - Calculated top padding of a `.breadcrumb-header`. _Added via `@extend`_
+/// @prop {Number} padding-bottom   [0]             - Calculated bottom padding of a `.breadcrumb-header`. _Added via `@extend`_
+///
+/// @prop {Number} crumb-spacing-horizontal     [14px]  - Amount of horizontal space between each "crumb" `<li>` elem
+/// @prop {Number} crumb-divider-angle-adjust   [2px]   - Constant used to account for the angle of the default `/` character used as a divider
+/// @prop {Number} crumb-padding-right          [5px]   - Calculated left padding value for each "crumb" `<li>` elem. _Added via `@extend`_
+/// @prop {Number} crumb-padding-left           [7px]   - Calculated right padding value for each "crumb" `<li>` elem. _Added via `@extend`_
+/// @prop {Number} crumb-margin-right           [5px]   - Calculated left margin value for each "crumb" `<li>` elem. _Added via `@extend`_
+/// @prop {Number} crumb-margin-left            [7px]   - Calculated right margin value for each "crumb" `<li>` elem. _Added via `@extend`_
+///
+$breadcrumb-header-config: (
+    // size / structure
+    'max-height': get-deep($global-component-size-config, 'height.base'),
+    'font-size': get-deep($headings-config, 'h3.font-size'),
+    'line-height': $line-height-base,
+    'text-height': null, // actual calculated value inserted via @extend
+    'padding-top': null, // actual calculated value inserted via @extend
+    'padding-bottom': null, // actual calculated value inserted via @extend
+    //
+    'crumb-spacing-horizontal': $spacing-lg * 2,
+    'crumb-divider-angle-adjust': get($breadcrumb-config, 'crumb-divider-angle-adjust'),
+    'crumb-padding-right': null, // actual calculated value inserted via @extend
+    'crumb-padding-left': null, // actual calculated value inserted via @extend
+    'crumb-margin-right': null, // actual calculated value inserted via @extend
+    'crumb-margin-left': null // actual calculated value inserted via @extend
+) !default;
+
+
+// ----------------------------------------------------
+//   CALCULATED VALUES
+//   -> based on $breadcrumb-header-config
+//
+//   -> cannot be included in initial map declaration
+//      because the calculations depend on values
+//      within the map, and Sass has no ability to
+//      reference a key in a map from within that map.
+//
+//   -> documented as props of $breadcrumb-header-config
+//      because they are added via extend() below.
+// ----------------------------------------------------
+    $breadcrumb-header-max-height: get($breadcrumb-header-config, 'max-height');
+    $breadcrumb-header-font-size: get($breadcrumb-header-config, 'font-size');
+    $breadcrumb-header-line-height: get($breadcrumb-header-config, 'line-height');
+    $breadcrumb-header-text-height: round($breadcrumb-header-font-size * $breadcrumb-header-line-height);
+    $breadcrumb-header-padding-top: if($breadcrumb-header-text-height >= $breadcrumb-header-max-height, 0, 2px);
+    $breadcrumb-header-padding-bottom: unitless-zero($breadcrumb-header-max-height - $breadcrumb-header-text-height - $breadcrumb-header-padding-top);
+
+    $breadcrumb-header-crumb-spacing-horizontal: get($breadcrumb-header-config, 'crumb-spacing-horizontal');
+    $breadcrumb-header-crumb-divider-angle-adjust: get($breadcrumb-header-config, 'crumb-divider-angle-adjust');
+    $breadcrumb-header-crumb-padding-left: $breadcrumb-header-crumb-spacing-horizontal / 2;
+    $breadcrumb-header-crumb-padding-right: $breadcrumb-header-crumb-padding-left - $breadcrumb-header-crumb-divider-angle-adjust;
+    $breadcrumb-header-crumb-margin-left: $breadcrumb-header-crumb-padding-left;
+    $breadcrumb-header-crumb-margin-right: $breadcrumb-header-crumb-padding-right;
+
+    // ----- EXTEND breadcrumb header config with calc'd values ----- //
+    $breadcrumb-header-config: extend($breadcrumb-header-config,
+        (
+            'text-height': $breadcrumb-header-text-height,
+            'padding-top': $breadcrumb-header-padding-top,
+            'padding-bottom': $breadcrumb-header-padding-bottom,
+            'crumb-padding-right': $breadcrumb-header-crumb-padding-right,
+            'crumb-padding-left': $breadcrumb-header-crumb-padding-left,
+            'crumb-margin-right': $breadcrumb-header-crumb-margin-right,
+            'crumb-margin-left': $breadcrumb-header-crumb-margin-left
+        )
+    );
+
+
+///
+/// Configuration for `.breadcrumb-bordered` component variation.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {variable} $nav-secondary-config
+/// @requires {variable} $padding-base
+/// ---
+/// @prop {List}   padding  [6px 12px]  - Combination of vertical and horizontal padding for `.breadcrumb-bordered`
+/// @prop {Number} bd-width [1px]       - Default border width for `.breadcrumb-bordered`
+/// @prop {Color}  bd-color [#cbcbcb]   - Default border color for `.breadcrumb-bordered`
+///
+$breadcrumb-bordered-config: (
+    'padding': $padding-base,
+    'bd-width': get($nav-secondary-config, 'bd-width'),
+    'bd-color': get($nav-secondary-config, 'bd-color')
+) !default;
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED CONFIG ALIAS / SHORTHAND
+//
+//   -> DO NOT MODIFY THESE (modify the map config)
+//
+// ********************************************************
+    $breadcrumb-font-size: get($breadcrumb-config, 'font-size');
+    $breadcrumb-crumb-spacing-horizontal: get($breadcrumb-config, 'crumb-spacing-horizontal');
+    $breadcrumb-crumb-divider-angle-adjust: get($breadcrumb-config, 'crumb-divider-angle-adjust');
+    $breadcrumb-bg: get($breadcrumb-config, 'bg');
+    $breadcrumb-crumb-text-color: get($breadcrumb-config, 'crumb-text-color');
+    $breadcrumb-crumb-text-color-hover: get($breadcrumb-config, 'crumb-text-color-hover');
+    $breadcrumb-crumb-text-color-press: get($breadcrumb-config, 'crumb-text-color-press');
+    $breadcrumb-crumb-text-color-active: get($breadcrumb-config, 'crumb-text-color-active');
+    $breadcrumb-crumb-divider-color: get($breadcrumb-config, 'crumb-divider-color');
+
+    $breadcrumb-bordered-padding: get($breadcrumb-bordered-config, 'padding');
+    $breadcrumb-bordered-bd-width: get($breadcrumb-bordered-config, 'bd-width');
+    $breadcrumb-bordered-bd-color: get($breadcrumb-bordered-config, 'bd-color');
+
+    $breadcrumb-header-crumb-spacing-horizontal: get($breadcrumb-header-config, 'crumb-spacing-horizontal');
+    $breadcrumb-header-crumb-divider-angle-adjust: get($breadcrumb-header-config, 'crumb-divider-angle-adjust');

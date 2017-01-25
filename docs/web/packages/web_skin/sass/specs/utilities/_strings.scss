@@ -1,0 +1,187 @@
+@function mock-arglist($args...) {
+    @return $args;
+}
+
+@include describe('[explode]') {
+    @include describe('when value is an unquoted string') {
+        @include it('should create a list with the correct length') {
+            $actual: explode(abc);
+
+            @include should(expect( $actual ), to(have-type-of( 'list' )));
+            @include should(expect( $actual ), to(have-length-of( 3 )));
+        }
+    }
+
+    @include describe('when value is a quoted string') {
+        @include it('should create a list with the correct length') {
+            $actual: explode('abc');
+
+            @include should(expect( $actual ), to(have-type-of( 'list' )));
+            @include should(expect( $actual ), to(have-length-of( 3 )));
+        }
+
+        @include it('should not include leading or trailing quotes in the generated list') {
+            $actual: explode('abc');
+
+            @include should(expect( nth($actual, 1) ), to(equal( 'a' )));
+            @include should(expect( nth($actual, 3) ), to(equal( 'c' )));
+        }
+
+        @include describe('and delimiter is a single space') {
+            @include it('should not include leading or trailing quotes in the generated list') {
+                $actual: explode('a b c', ' ');
+
+                @include should(expect( nth($actual, 1) ), to(equal( 'a' )));
+                @include should(expect( nth($actual, 3) ), to(equal( 'c' )));
+            }
+
+            @include describe('and values within the string are of mixed types') {
+                $actual: explode('0s ease .1s', ' ', comma);
+
+                @include it('should create the list correctly') {
+                    @include should(expect( nth($actual, 1) ), to(equal( '0s' )));
+                    @include should(expect( nth($actual, 2) ), to(equal( 'ease' )));
+                    @include should(expect( nth($actual, 3) ), to(equal( '.1s' )));
+                }
+            }
+        }
+    }
+
+    @include describe('when value is an arglist') {
+        @include it('should create a list with the correct length') {
+            $mock-arglist: mock-arglist(padding 0.3s ease 0s, height 0.1s ease 0s);
+
+            // Sanity-check
+            @include should(expect( is-arglist($mock-arglist) ), to(be( true )));
+
+            $actual: explode($mock-arglist);
+
+            @include should(expect( $actual ), to(have-type-of( 'list' )));
+            @include should(expect( $actual ), to(have-length-of( 8 )));
+        }
+    }
+}
+
+@include describe('[str-replace]') {
+    @include it('should return string with the value of the [search] arg replaced by the value of the [replace] arg') {
+        $actual: str-replace('abc', 'b', 'd');
+
+        @include should(expect( $actual ), to(equal( 'adc' )));
+    }
+
+    @include describe('when the [string], [search] and [replace] args are identical') {
+        @include it('should return [string]') {
+            $actual: str-replace('a', 'a', 'a');
+
+            @include should(expect( $actual ), to(equal( 'a' )));
+        }
+    }
+
+    @include describe('when the [string] and [search] args are identical') {
+        @include it('should return [replace]') {
+            $actual: str-replace('a', 'a', 'ba');
+
+            @include should(expect( $actual ), to(equal( 'ba' )));
+        }
+    }
+
+    @include describe('when the [replace] arg is identical to the first character in the [string] arg') {
+        @include it('should return string with the value of the [search] arg replaced by the value of the [replace] arg') {
+            $actual: str-replace('abcde', 'bc', 'a');
+
+            @include should(expect( $actual ), to(equal( 'aade' )));
+        }
+    }
+
+    @include describe('when the [replace] arg matches the first and last character of the [search] arg') {
+        @include it('should return string with the value of the [search] arg replaced by the value of the [replace] arg') {
+            $actual: str-replace('abcde', 'bcd', 'bd');
+
+            @include should(expect( $actual ), to(equal( 'abde' )));
+        }
+    }
+}
+
+@include describe('[url-encode]') {
+    @include describe('when string contains a single') {
+        @include describe('[space]') {
+            @include it('should return a URL-encoded string') {
+                $actual: url-encode('hello foobar');
+
+                @include should(expect( $actual ), to(equal( 'hello%20foobar' )));
+            }
+        }
+
+        @include describe('[exclamation]') {
+            @include it('should return a URL-encoded string') {
+                $actual: url-encode('!important');
+
+                @include should(expect( $actual ), to(equal( '%21important' )));
+            }
+        }
+
+        @include describe('[pound-symbol]') {
+            @include it('should return a URL-encoded string') {
+                $actual: url-encode('#id');
+
+                @include should(expect( $actual ), to(equal( '%23id' )));
+            }
+        }
+
+        @include describe('[percent-symbol]') {
+            @include it('should return a URL-encoded string') {
+                $actual: url-encode('%reference-class');
+
+                @include should(expect( $actual ), to(equal( '%25reference-class' )));
+            }
+        }
+
+        @include describe('[ampersand]') {
+            @include it('should return a URL-encoded string') {
+                $actual: url-encode('&.classname');
+
+                @include should(expect( $actual ), to(equal( '%26.classname' )));
+            }
+        }
+
+        @include describe('[plus]') {
+            @include it('should return a URL-encoded string') {
+                $actual: url-encode('+foo');
+
+                @include should(expect( $actual ), to(equal( '%2Bfoo' )));
+            }
+        }
+
+        @include describe('[forward-slash]') {
+            @include it('should return a URL-encoded string') {
+                $actual: url-encode('/foo');
+
+                @include should(expect( $actual ), to(equal( '%2Ffoo' )));
+            }
+        }
+
+        @include describe('[question-mark]') {
+            @include it('should return a URL-encoded string') {
+                $actual: url-encode('?foo');
+
+                @include should(expect( $actual ), to(equal( '%3Ffoo' )));
+            }
+        }
+    }
+
+    @include describe('when string contains more than one character that needs to be escaped') {
+        @include it('should return a URL-encoded string that does not escape the [percent-symbol] twice') {
+            $actual: url-encode('&.classname &.another-classname');
+
+            @include should(expect( $actual ), to(equal( '%26.classname%20%26.another-classname' )));
+        }
+
+        @include describe('and one of them is a [percent-symbol]') {
+            @include it('should return a URL-encoded string that escapes the [percent-symbol] present in the unescaped string, but does not escape the [percent-symbol] created as part of the escape value again') {
+                $actual: url-encode('&.classname, %reference-class');
+
+                @include should(expect( $actual ), to(equal( '%26.classname,%20%25reference-class' )));
+            }
+        }
+    }
+}

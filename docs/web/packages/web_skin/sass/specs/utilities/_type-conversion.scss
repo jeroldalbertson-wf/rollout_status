@@ -1,0 +1,110 @@
+@include describe('[to-string]') {
+    @include describe('when provided [value] is a') {
+        @include describe('number') {
+            @include it('should return a string') {
+                $actual: to-string(200);
+
+                @include should(expect( $actual ), have-type-of('string'));
+                @include should(expect( $actual ), to(be( '200' )));
+            }
+        }
+
+        @include describe('list') {
+            @include it('should return a string') {
+                $actual: to-string((a, b, c));
+
+                @include should(expect( $actual ), have-type-of('string'));
+                @include should(expect( $actual ), to(be( 'a, b, c' )));
+            }
+        }
+
+        @include describe('map') {
+            @include it('should return a string') {
+                $actual: to-string((a: b, c: d));
+
+                @include should(expect( $actual ), have-type-of('string'));
+                @include should(expect( $actual ), to(be( '(a: b, c: d)' )));
+            }
+        }
+    }
+}
+
+@include describe('[to-number]') {
+    @include describe('when a string is provided that represents a') {
+        @include describe('unitless') {
+            @include describe('positive integer') {
+                @include it('should return a positive, unitless integer') {
+                    $actual: to-number('200');
+
+                    @include should(expect( $actual ), have-type-of('number'));
+                    @include should(expect( $actual ), to(be( 200 )));
+                }
+            }
+
+            @include describe('negative integer') {
+                @include it('should return a negative, unitless integer') {
+                    $actual: to-number('-200');
+
+                    @include should(expect( $actual ), have-type-of('number'));
+                    @include should(expect( $actual ), to(be( -200 )));
+                }
+            }
+
+            @include describe('positive float') {
+                @include it('should return a positive, unitless float') {
+                    $actual: to-number('200.3578');
+
+                    @include should(expect( $actual ), have-type-of('number'));
+                    @include should(expect( inspect($actual) ), to(equal( inspect(200.3578) )));
+                }
+            }
+
+            @include describe('negative float') {
+                @include it('should return a negative, unitless float') {
+                    $actual: to-number('-200.3578');
+
+                    @include should(expect( $actual ), have-type-of('number'));
+                    @include should(expect( inspect($actual) ), to(equal( inspect(-200.3578) )));
+                }
+            }
+        }
+
+        @include describe('unit appended') {
+            @include describe('positive integer') {
+                @include it('should return a positive, integer with unit') {
+                    $actual: to-number('200px');
+
+                    @include should(expect( $actual ), have-type-of('number'));
+                    @include should(expect( $actual ), to(be( 200px )));
+                }
+            }
+
+            @include describe('negative integer') {
+                @include it('should return a negative, integer with unit') {
+                    $actual: to-number('-200px');
+
+                    @include should(expect( $actual ), have-type-of('number'));
+                    @include should(expect( $actual ), to(be( -200px )));
+                }
+            }
+
+            @include describe('positive float') {
+                @include it('should return a positive, float with unit') {
+                    $actual: to-number('200.3578px');
+
+                    @include should(expect( $actual ), have-type-of('number'));
+                    @include should(expect( inspect($actual) ), to(equal( inspect(200.3578px) )));
+                }
+            }
+
+            @include describe('negative float') {
+                @include it('should return a negative, float with unit') {
+                    $actual: to-number('-200.3578px');
+
+                    @include should(expect( $actual ), have-type-of('number'));
+                    @include should(expect( inspect($actual) ), to(equal( inspect(-200.3578px) )));
+                }
+            }
+        }
+    }
+}

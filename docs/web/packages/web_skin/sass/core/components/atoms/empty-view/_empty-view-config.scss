@@ -1,0 +1,59 @@
+// ********************************************************
+
+////
+/// EmptyView component configuration
+/// ---
+/// @since 1.5.0
+/// @group core.components.empty-view
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/empty-view/empty-view-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+///
+/// Configuration for `.empty-view` messaging components.
+/// ---
+/// @type Map
+/// ---
+/// @requires {function} to-rem
+/// @requires {variable} $zc-gray-60
+/// @requires {variable} $zc-gray-80
+/// @requires {variable} $grid-config
+/// @requires {variable} $line-height-base-px
+/// @requires {variable} $headings-config
+/// ---
+/// @prop {Number} margin-top                       [10%]       - Amount of margin above the `.empty-view` element
+/// @prop {Number} padding                          [1.5rem]    - Padding surrounding the contents of the `.empty-view` container
+/// @prop {Number} message-heading-margin-bottom    [1.6rem]    - Margin between the message heading and the message body
+/// @prop {Number} message-heading-font-size        [1.8rem]    - Font size of the message heading
+/// @prop {Number} message-heading-font-weight      [normal]    - Font weight of the message heading
+/// @prop {Color}  message-color                    [#8a8a8a]   - Text color for the message within the empty view
+/// @prop {Color}  icon-color                       [#cbcbcb]   - Color for the optional icon above the empty view message
+/// @prop {Number} icon-size-base16                 [12.8rem]   - Height / width of the optional icon if it's a "base16" glyph
+/// @prop {Number} icon-size-base24                 [12rem]     - Height / width of the optional icon if it's a "base24" glyph
+/// @prop {Number} icon-margin-bottom               [2rem]      - Margin between the optional icon and the message heading
+///
+$empty-view-config: (
+    'margin-top': 10%,
+    'padding': to-rem(get($grid-config, 'gutter-width') / 2),
+    'message-color': $zc-gray-80,
+    'message-heading-margin-bottom': to-rem($line-height-base-px - 4),
+    'message-heading-font-size': to-rem(get-deep($headings-config, 'h4.font-size')),
+    'message-heading-font-weight': get-deep($headings-config, 'h4.font-weight'),
+    'icon-color': $zc-gray-60,
+    'icon-size-base16': 12.8rem,
+    'icon-size-base24': 12rem,
+    'icon-margin-bottom': to-rem($line-height-base-px)
+) !default;

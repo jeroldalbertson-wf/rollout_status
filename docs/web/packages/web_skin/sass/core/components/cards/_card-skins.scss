@@ -1,0 +1,102 @@
+// ********************************************************
+//
+//   CARD SKINS
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/cards/card-skins';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $cards-module-config:  'core/components/atoms/cards/cards-config';
+    $cards-module-helpers: 'core/components/atoms/cards/cards-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $cards-module-config,
+                                          $cards-module-helpers);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Card "Panel" Skin Variation
+//
+//   Mimics the old `.panel` component by turning the
+//   background color of the body white.
+//
+//   Exists so that we can deprecate and eventually
+//   remove markup support for `.panel` - and can
+//   migrate e'one over to using `.card`.
+// ----------------------------------------------------
+    .card--panel {
+        .card__body {
+            background-color: $white;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Card "Thumbnail" Skin Variation
+//
+//   Mimics the old `.thumbnail` component by turning the
+//   background color of the body white.
+//
+//   Exists so that we can deprecate and eventually
+//   remove markup support for `.thumbnail` - and can
+//   migrate e'one over to using `.card`.
+// ----------------------------------------------------
+    .card--thumbnail {
+        border: .1rem solid transparent;
+
+        .card__body {
+            background-color: $white;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Skin Color Variations
+// ----------------------------------------------------
+    @include generate-card-skin-styles($skin-colors: $card-colors);
+
+    // ----- INVERSE TEXT CONTRAST ----- //
+    .card--inverse {
+        @include generate-card-skin-styles($skin-colors: $card-colors-inverse);
+        @include card-inverse-skin-text-colors();
+    }
+
+
+// ----------------------------------------------------
+//   "Focus" Border Skinning
+//
+//   `card--focused` and `card--focused-on-hover` selectors
+//   are compounded with `card--focusable` to ensure that
+//   the border color implementation only occurs when an
+//   existing border width is in place to prevent
+//   unintentional "shifting"
+//
+//   [1] Adds blue border when class is present
+//
+//   [2] Adds blue border when class is present, and hovered
+//
+//   [3] Override global `*:focus` outline (UIP-1139)
+// ----------------------------------------------------
+    .card--focusable {
+        border: .1rem solid transparent;
+
+        // ----- [1] ----- //
+        #{$focus},
+        &#{$focus-class},
+        &.card--focused {
+            border-color: get($card-shared-config, 'bd-color-focus');
+            outline: 0; // [3]
+        }
+
+        // ----- [2] ----- //
+        &.card--focused-on-hover {
+            #{$hover} {
+                border-color: get($card-shared-config, 'bd-color-focus');
+            }
+        }
+    }

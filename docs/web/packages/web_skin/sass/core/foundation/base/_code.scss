@@ -1,0 +1,64 @@
+// ********************************************************
+//
+//   Base code element styles for the
+//   Web Skin core module
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/base/code';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+samp {
+    @include code-pre-base();
+}
+
+// Inline code
+code {
+    @include code-pre-base();
+    @include code-inline-skin();
+
+    a:hover &,
+    a:focus & {
+        text-decoration: underline;
+        color: darken($code-color, $link-color-hover-darken-amount);
+    }
+}
+
+// User input typically entered via keyboard
+kbd {
+    font-family: $font-family-monospace;
+    font-weight: normal;
+    color: $kbd-color;
+    padding: 0 get($label-config, 'padding-horizontal');
+    vertical-align: inherit;
+    line-height: 1.8rem;
+    white-space: nowrap;
+    text-transform: uppercase;
+    background-color: $kbd-bg;
+    border-radius: to-rem($border-radius-xs);
+}
+
+// Blocks of code
+pre {
+    @include code-pre-base();
+    @include code-block-base();
+
+    // Account for some code outputs that place code tags in pre tags
+    code {
+        padding: 0;
+        font-size: 100%;
+        color: inherit;
+        white-space: pre-wrap;
+        background-color: transparent;
+        border: 0 none;
+    }
+}
+
+// Enable scrollable blocks of code
+.pre-scrollable {
+    max-height: to-rem($pre-scrollable-max-height);
+    overflow-y: scroll;
+}

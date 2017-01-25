@@ -1,0 +1,588 @@
+// ********************************************************
+//
+//   Doctype Icon Glyph Declarations that are included
+//   in `core/foundation/icons`
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/icons/atoms/glyphs/glyphs-doctypes';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $icon-glyph-doctypes-module-config:  'core/foundation/icons/atoms/icons-config';
+    $icon-glyph-doctypes-module-helpers: 'core/foundation/icons/atoms/icons-helpers';
+    $icon-glyph-second-color-function-module: 'core/foundation/icons/atoms/glyphs/glyphs-two-color';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $icon-glyph-doctypes-module-config,
+                                          $icon-glyph-doctypes-module-helpers,
+                                          $icon-glyph-second-color-function-module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   16px "Doctype" Icons
+//
+// ********************************************************
+@mixin ws-icon-glyphs-doctype-16($include-anomalies: true) {
+    @include ws-icon-glyph("e939",  $selector: '.icon-file-book-copy-g2',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e93a",  $selector: '.icon-file-book-properties-g2',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e93b",  $selector: '.icon-file-image-add-g2',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e902",  $selector: '.icon-file-g2',
+                                    $first-color: color('doctypes.doc'));
+
+    @include ws-icon-glyph("e93f",  $selector: '.icon-file-txt-rtf-g2');
+
+    @include ws-icon-glyph("e940",  $selector: '.icon-file-dragndrop-g2');
+
+    @include ws-icon-glyph("e941",  $selector: '.icon-file-open-downloaded-g2',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e916",  $selector: '.icon-file-draft-g2',
+                                    $first-color: color('doctypes.doc'),
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e917",  $selector: '.icon-file-generic-g2');
+
+    @include ws-icon-glyph("e918",  $selector: '.icon-file-presentation-g2',
+                                    $first-color: color('doctypes.wfml-doc.orange.base'));
+
+    @include ws-icon-glyph("e91b",  $selector: '.icon-file-presentation-draft-g2',
+                                    $first-color: color('doctypes.wfml-doc.orange.base'),
+                                    $second-color: $zc-gray,
+                                    $second-color-fn: 'icon-file-draft-g2-after');
+
+    @include ws-icon-glyph("e91c",  $selector: '.icon-file-sheet-g2',
+                                    $first-color: color('doctypes.wfml-wb.base'));
+
+    @include ws-icon-glyph("e942",  $selector: '.icon-file-sheet-view-g2',
+                                    $second-color: color('doctypes.wfml-wb.base'));
+
+    @include ws-icon-glyph("e943",  $selector: '.icon-file-csv-g2');
+
+    @include ws-icon-glyph("e91d",  $selector: '.icon-file-sheet-draft-g2',
+                                    $first-color: color('doctypes.wfml-wb.base'),
+                                    $second-color: $zc-gray,
+                                    $second-color-fn: 'icon-file-draft-g2-after');
+
+    @include ws-icon-glyph("e91e",  $selector: '.icon-file-certification-g2',
+                                    $second-color: color('doctypes.wfml-doc.red.base'));
+
+    @include ws-icon-glyph("e91f",  $selector: '.icon-file-certification-fill-g2');
+
+    @include ws-icon-glyph("e920",  $selector: '.icon-file-book-g2');
+
+    @include ws-icon-glyph("e921",  $selector: '.icon-file-image-g2',
+                                    $second-color: color('doctypes.wfml-doc.gray.base'));
+
+    @include ws-icon-glyph("e922",  $selector: '.icon-file-excel-g2',
+                                    $second-color: color('doctypes.xls'));
+
+    @include ws-icon-glyph("e923",  $selector: '.icon-file-mspowerpoint-g2',
+                                    $second-color: color('doctypes.ppt'));
+
+    @include ws-icon-glyph("e924",  $selector: '.icon-file-msword-g2',
+                                    $second-color: color('doctypes.doc'));
+
+    @include ws-icon-glyph("e925",  $selector: '.icon-file-pdf-g2',
+                                    $second-color: color('doctypes.pdf'));
+
+    @include ws-icon-glyph("e926",  $selector: '.icon-file-project-g2');
+
+    @include ws-icon-glyph("e919",  $selector: '.icon-file-open-downloaded',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e911",  $selector: '.icon-file-url',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e907",  $selector: '.icon-file-project-add',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e908",  $selector: '.icon-file-project-export',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e909",  $selector: '.icon-file-project-properties',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e90a",  $selector: '.icon-file-project-validate',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e90b",  $selector: '.icon-file-generic-add',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e609",  $selector: '.icon-file-sox-report',
+                                    $second-color: $zc-blue-120);
+
+    @include ws-icon-glyph("e912",  $selector: '.icon-file-sox-report-egocentric',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6d4",  $selector: '.icon-file-generic',
+                                    $left: .1rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e906",  $selector: '.icon-file-generic-remove',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e6d5",  $selector: '.icon-file-image',
+                                    $second-color: color('doctypes.wfml-doc.gray.base'));
+
+    @include ws-icon-glyph("e6d7",  $selector: '.icon-file-save');
+
+    @include ws-icon-glyph("e6d8",  $selector: '.icon-file-save-as');
+
+    @include ws-icon-glyph("e6d9",  $selector: '.icon-file-import',
+                                    $second-color: $zc-blue,
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e6da",  $selector: '.icon-file-export',
+                                    $second-color: $zc-blue,
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e6db",  $selector: '.icon-file-control',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6de",  $selector: '.icon-file-paginate',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6df",  $selector: '.icon-file-workbook',
+                                    $first-color: color('doctypes.wfml-wb.base'),
+                                    $left: .05rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e900",  $selector: '.icon-file-workbook-draft',
+                                    $first-color: color('doctypes.wfml-wb.base'),
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e6e0",  $selector: '.icon-file-presentation',
+                                    $first-color: color('doctypes.wfml-doc.orange.base'));
+
+    @include ws-icon-glyph("e901",  $selector: '.icon-file-presentation-draft',
+                                    $first-color: color('doctypes.wfml-doc.orange.base'),
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e6e1",  $selector: '.icon-file-datacollections',
+                                    $first-color: color('doctypes.wfml-wb.darker'));
+
+    @include ws-icon-glyph("e903",  $selector: '.icon-file-datacollections-draft',
+                                    $first-color: color('doctypes.wfml-wb.darker'),
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e6e2",  $selector: '.icon-file-certification',
+                                    $first-color: color('doctypes.wfml-doc.red.base'));
+
+    @include ws-icon-glyph("e6e3",  $selector: '.icon-file-copy',
+                                    $second-color: $zc-green,
+                                    $left: -.05rem,
+                                    $halign-needs-selector: true);
+
+    // Temporary hack to ensure that at 16px size, this uses the glyph defined in IcoMoon as `.icon-file-book-sm`
+    // ---
+    // @todo address 16px/24px consistency issues with style-guide team (already discussed with @rachelmcclung-wf)
+    @include ws-icon-glyph("e6e4",  $selector: '.icon-file-book');
+    @include ws-icon-glyph("e0d3",  $selector: '.icon-file-book.icon-md, .icon-file-book.icon-lg, .icon-file-book.icon-xl, .icon-file-book.icon-xxl');
+
+    @include ws-icon-glyph("e0c3",  $selector: '.icon-file-book-properties');
+
+    @include ws-icon-glyph("e6e5",  $selector: '.icon-file-book-copy',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e06c",  $selector: '.icon-file-validate',
+                                    $second-color: $zc-green,
+                                    $left: .1rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e06d",  $selector: '.icon-file-new',
+                                    $second-color: $zc-green,
+                                    $left: .05rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e086",  $selector: '.icon-file-project');
+
+    @include ws-icon-glyph("e026",  $selector: '.icon-file',
+                                    $first-color: color('doctypes.doc'),
+                                    $left: .1rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e904",  $selector: '.icon-file-draft',
+                                    $first-color: color('doctypes.doc'),
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("\e905", $selector: '.icon-file-generic-frozen',
+                                    $first-color: $zc-gray,
+                                    $second-color: color('doctypes.doc'));
+
+    @include ws-icon-glyph("e027",  $selector: '.icon-file-dragndrop',
+                                    $left: .1rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e028",  $selector: '.icon-file-dragndrop-new',
+                                    $left: .05rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e029",  $selector: '.icon-file-msexcel',
+                                    $second-color: color('doctypes.xls'),
+                                    $left: .1rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e02a",  $selector: '.icon-file-mspowerpoint',
+                                    $second-color: color('doctypes.ppt'));
+
+    @include ws-icon-glyph("e02b",  $selector: '.icon-file-msword',
+                                    $second-color: color('doctypes.doc'),
+                                    $left: .1rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e02c",  $selector: '.icon-file-pdf',
+                                    $second-color: color('doctypes.pdf'),
+                                    $left: .05rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e05e",  $selector: '.icon-file-link',
+                                    $second-color: $zc-blue,
+                                    $left: .05rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e065",  $selector: '.icon-file-trash',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e069",  $selector: '.icon-file-properties');
+
+    @include ws-icon-glyph("e06a",  $selector: '.icon-file-preview',
+                                    $second-color: $zc-blue,
+                                    $left: .1rem,
+                                    $halign-needs-selector: true);
+
+
+
+    // ------------------------------------------------
+    //   SPECIAL CASES / EXTENSIONS
+    // ------------------------------------------------
+    @if $include-anomalies {
+        // --------------------------------------------
+        //  DEPRECATIONS
+        //
+        //  TODO: Remove in the 2.0.0 release
+        // --------------------------------------------
+        .icon-file-square {
+            @extend .icon-file-g2;
+        }
+
+        .icon-file-presentation-square {
+            @extend .icon-file-presentation-g2;
+        }
+
+        .icon-file-workbook-square,
+        .icon-file-dt-beta {
+            @extend .icon-file-sheet-g2;
+        }
+
+        .icon-file-dt-draft-beta {
+            @extend .icon-file-sheet-draft-g2;
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   24px "Doctype" Icons
+//
+// ********************************************************
+@mixin ws-icon-glyphs-doctype-24($include-anomalies: true) {
+    @include ws-icon-glyph("e93c",  $selector: '.icon-twfr-file-book-copy-g2',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e93d",  $selector: '.icon-twfr-file-book-properties-g2',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e93e",  $selector: '.icon-twfr-file-image-add-g2',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e927",  $selector: '.icon-twfr-file-g2',
+                                    $first-color: color('doctypes.doc'));
+
+    @include ws-icon-glyph("e928",  $selector: '.icon-twfr-file-draft-g2',
+                                    $first-color: color('doctypes.doc'),
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e929",  $selector: '.icon-twfr-file-frozen-g2',
+                                    $first-color: color('doctypes.doc'),
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e92a",  $selector: '.icon-twfr-file-generic-g2');
+
+    @include ws-icon-glyph("e92b",  $selector: '.icon-twfr-file-presentation-g2',
+                                    $first-color: color('doctypes.wfml-doc.orange.base'));
+
+    @include ws-icon-glyph("e92c",  $selector: '.icon-twfr-file-presentation-draft-g2',
+                                    $first-color: color('doctypes.wfml-doc.orange.base'),
+                                    $second-color: $zc-gray,
+                                    $second-color-fn: 'icon-twfr-file-draft-g2-after');
+
+    @include ws-icon-glyph("e92d",  $selector: '.icon-twfr-file-presentation-frozen-g2',
+                                    $first-color: color('doctypes.wfml-doc.orange.base'),
+                                    $second-color: $zc-gray,
+                                    $second-color-fn: 'icon-twfr-file-frozen-g2-after');
+
+    @include ws-icon-glyph("e92e",  $selector: '.icon-twfr-file-sheet-g2',
+                                    $first-color: color('doctypes.wfml-wb.base'));
+
+    @include ws-icon-glyph("e92f",  $selector: '.icon-twfr-file-sheet-draft-g2',
+                                    $first-color: color('doctypes.wfml-wb.base'),
+                                    $second-color: $zc-gray,
+                                    $second-color-fn: 'icon-twfr-file-draft-g2-after');
+
+    @include ws-icon-glyph("e930",  $selector: '.icon-twfr-file-sheet-frozen-g2',
+                                    $first-color: color('doctypes.wfml-wb.base'),
+                                    $second-color: $zc-gray,
+                                    $second-color-fn: 'icon-twfr-file-frozen-g2-after');
+
+    @include ws-icon-glyph("e931",  $selector: '.icon-twfr-file-certification-g2',
+                                    $second-color: color('doctypes.wfml-doc.red.base'));
+
+    @include ws-icon-glyph("e932",  $selector: '.icon-twfr-file-book-g2');
+
+    @include ws-icon-glyph("e933",  $selector: '.icon-twfr-file-image-g2',
+                                    $second-color: color('doctypes.wfml-doc.gray.base'));
+
+    @include ws-icon-glyph("e934",  $selector: '.icon-twfr-file-excel-g2',
+                                    $second-color: color('doctypes.xls'));
+
+    @include ws-icon-glyph("e935",  $selector: '.icon-twfr-file-mspowerpoint-g2',
+                                    $second-color: color('doctypes.ppt'));
+
+    @include ws-icon-glyph("e936",  $selector: '.icon-twfr-file-msword-g2',
+                                    $second-color: color('doctypes.doc'));
+
+    @include ws-icon-glyph("e937",  $selector: '.icon-twfr-file-pdf-g2',
+                                    $second-color: color('doctypes.pdf'));
+
+    @include ws-icon-glyph("e938",  $selector: '.icon-twfr-file-project-g2');
+
+    @include ws-icon-glyph("e91a",  $selector: '.icon-twfr-file-open-downloaded',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e90c",  $selector: '.icon-twfr-file-duplicate',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e90d",  $selector: '.icon-twfr-file-image-add',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e90e",  $selector: '.icon-twfr-file-presentation-format',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e90f",  $selector: '.icon-twfr-file-save-as');
+
+    @include ws-icon-glyph("e910",  $selector: '.icon-twfr-file-save');
+
+    @include ws-icon-glyph("e60a",  $selector: '.icon-twfr-file-sox-report',
+                                    $second-color: $zc-blue-120);
+
+    @include ws-icon-glyph("e913",  $selector: '.icon-twfr-file-sox-report-egocentric',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e608",  $selector: '.icon-twfr-file-attachment',
+                                    $second-color: $zc-green,
+                                    $left: .05rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e600",  $selector: '.icon-twfr-file-url',
+                                    $second-color: $zc-blue,
+                                    $top: .1rem);
+
+    @include ws-icon-glyph("e601",  $selector: '.icon-twfr-file-link',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e699",  $selector: '.icon-twfr-file-control',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e60b",  $selector: '.icon-twfr-file-paginate',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e60c",  $selector: '.icon-twfr-file-validate',
+                                    $second-color: $zc-green,
+                                    $top: .1rem,
+                                    $left: .05rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e60d",  $selector: '.icon-twfr-file-format',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e69a",  $selector: '.icon-twfr-file-add',
+                                    $second-color: $zc-green,
+                                    $left: .05rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e69b",  $selector: '.icon-twfr-file-preview',
+                                    $second-color: $zc-blue,
+                                    $left: .05rem,
+                                    $top: .1rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e69e",  $selector: '.icon-twfr-file-generic-add',
+                                    $second-color: $zc-green,
+                                    $left: .2rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e69f",  $selector: '.icon-twfr-file-generic',
+                                    $left: .25rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e6a2",  $selector: '.icon-twfr-file-image',
+                                    $second-color: color('doctypes.wfml-doc.gray.base'),
+                                    $left: .05rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e6a5",  $selector: '.icon-twfr-file-msexcel',
+                                    $second-color: color('doctypes.xls'),
+                                    $left: .25rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e6ae",  $selector: '.icon-twfr-file-mspowerpoint',
+                                    $second-color: color('doctypes.ppt'),
+                                    $left: .05rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e6af",  $selector: '.icon-twfr-file-msword',
+                                    $second-color: color('doctypes.doc'),
+                                    $left: .15rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e6b3",  $selector: '.icon-twfr-file-pdf',
+                                    $second-color: color('doctypes.pdf'),
+                                    $left: .2rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e6b5",  $selector: '.icon-twfr-file-datacollections',
+                                    $first-color: color('doctypes.wfml-wb.darker'));
+
+    @include ws-icon-glyph("e6b6",  $selector: '.icon-twfr-file-datacollections-frozen',
+                                    $first-color: color('doctypes.wfml-wb.darker'),
+                                    $second-color: $zc-gray,
+                                    $second-color-fn: 'icon-twfr-file-frozen-after');
+
+    @include ws-icon-glyph("e6b7",  $selector: '.icon-twfr-file-datacollections-draft',
+                                    $first-color: color('doctypes.wfml-wb.darker'),
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e6bf",  $selector: '.icon-twfr-file-certification',
+                                    $first-color: color('doctypes.wfml-doc.red.base'),
+                                    $left: .05rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e6c0",  $selector: '.icon-twfr-file-book',
+                                    $left: .2rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e6c1",  $selector: '.icon-twfr-file-book-properties');
+
+    @include ws-icon-glyph("e6c2",  $selector: '.icon-twfr-file-book-copy',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e6c3",  $selector: '.icon-twfr-file',
+                                    $first-color: color('doctypes.doc'),
+                                    $left: .25rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e914",  $selector: '.icon-twfr-file-properties',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6c9",  $selector: '.icon-twfr-file-frozen',
+                                    $first-color: color('doctypes.doc'),
+                                    $second-color: $zc-gray,
+                                    $second-color-fn: 'icon-twfr-file-frozen-after');
+
+    @include ws-icon-glyph("e915",  $selector: '.icon-twfr-file-links-draft',
+                                    $first-color: $zc-gray,
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6ca",  $selector: '.icon-twfr-file-draft',
+                                    $first-color: color('doctypes.doc'),
+                                    $second-color: $zc-gray,
+                                    $left: .2rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e6cb",  $selector: '.icon-twfr-file-project',
+                                    $left: .05rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e6cc",  $selector: '.icon-twfr-file-presentation',
+                                    $first-color: color('doctypes.wfml-doc.orange.base'),
+                                    $left: .05rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e6cd",  $selector: '.icon-twfr-file-presentation-frozen',
+                                    $first-color: color('doctypes.wfml-doc.orange.base'),
+                                    $second-color: $zc-gray,
+                                    $second-color-fn: 'icon-twfr-file-frozen-after');
+
+    @include ws-icon-glyph("e6ce",  $selector: '.icon-twfr-file-presentation-draft',
+                                    $first-color: color('doctypes.wfml-doc.orange.base'),
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e6cf",  $selector: '.icon-twfr-file-workbook',
+                                    $first-color: color('doctypes.wfml-wb.base'),
+                                    $left: .15rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e6d0",  $selector: '.icon-twfr-file-workbook-frozen',
+                                    $first-color: color('doctypes.wfml-wb.base'),
+                                    $second-color: $zc-gray,
+                                    $second-color-fn: 'icon-twfr-file-frozen-after');
+
+    @include ws-icon-glyph("e6d1",  $selector: '.icon-twfr-file-workbook-draft',
+                                    $first-color: color('doctypes.wfml-wb.base'),
+                                    $second-color: $zc-gray,
+                                    $left: .1rem,
+                                    $halign-needs-selector: true);
+
+    @include ws-icon-glyph("e6d2",  $selector: '.icon-twfr-file-import',
+                                    $second-color: $zc-blue,
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e6d3",  $selector: '.icon-twfr-file-export',
+                                    $second-color: $zc-blue,
+                                    $left: .05rem);
+
+
+
+    // ------------------------------------------------
+    //   SPECIAL CASES / EXTENSIONS
+    // ------------------------------------------------
+    @if $include-anomalies {
+        // --------------------------------------------
+        //  DEPRECATIONS
+        //
+        //  TODO: Remove in the 2.0.0 release
+        // --------------------------------------------
+        .icon-twfr-file-dt-beta {
+            @extend .icon-twfr-file-sheet-g2;
+        }
+
+        .icon-twfr-file-dt-beta-draft {
+            @extend .icon-twfr-file-sheet-draft-g2;
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   All "Doctype" Icons
+//
+// ********************************************************
+@mixin ws-icon-glyphs-doctype($include-anomalies: true) {
+    @include ws-icon-glyphs-doctype-16($include-anomalies);
+    @include ws-icon-glyphs-doctype-24($include-anomalies);
+}

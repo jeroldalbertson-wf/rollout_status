@@ -1,0 +1,272 @@
+// ********************************************************
+
+////
+/// Global functions to help with unit conversions
+/// ---
+/// @access public
+/// @since 1.0.0
+/// @group core.utils.convert
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/functions/utilities/unit-conversion';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function is-number,
+                                                function is-pixels,
+                                                function is-percentage,
+                                                function is-em,
+                                                function is-rem,
+                                                function remove-unit);
+//
+// ********************************************************
+
+
+///
+/// Returns whether or not the stylesheet being compiled must support browsers without `rem` support.
+/// ---
+/// @param {Bool} $rem-units - manually dictate whether or not `rem` units are possible regardless of browser support levels
+/// @returns {Bool} - `true` if browser support levels are below the threshold for `rem` support
+///
+@function need-rem-px-fallback($rem-units) {
+    $need-rem-px-fallback: false;
+
+    @if    $min-ie-supported < 9
+        or $min-firefox-supported < 3.6
+        or $min-opera-supported < 11.6
+        or $min-safari-supported < 5
+        or $min-chrome-supported < 6
+        or not $rem-units
+    {
+        $need-rem-px-fallback: true;
+    }
+
+    @return $need-rem-px-fallback;
+}
+
+///
+/// Convert number, or a list of numbers in `px` units to `rem` units.
+/// ---
+/// @param {Number|List} $px
+/// @param {Number} $html-font-size [10px] - `font-size` of the `<html>` element
+/// ---
+/// @returns {Number|List}
+///
+@function to-rem($px, $html-font-size: $html-font-size-px) {
+    @if is-list($px) {
+        $rem-list: ();
+        $list-separator: list-separator($px);
+        @each $value in $px {
+            $rem-list: append($rem-list, to-rem($value), $list-separator);
+        }
+
+        @return $rem-list;
+    }
+
+    $unit: if(unitless($px), 'none', unit($px));
+    $unitless-value: remove-unit($px);
+
+    // Short circuit if unitless value is 0
+    @if $unitless-value == 0 {
+        // return 0, not 0rem
+        @return 0;
+    }
+
+    // Short circuit if unit is already rem, or has no unit
+    @if is($unit, rem none) {
+        @return $px;
+    }
+
+    @if not is-pixels($px) {
+        @error "`to-rem` function expecting a number in pixels; #{$unit} given for a value of #{$px}.";
+    }
+    @if not is-number($html-font-size) {
+        @error "`to-rem` function expecting a number; #{type-of($parent-font-size)} given.";
+    }
+
+    // Do conversion
+    $px-ratio: $unitless-value / remove-unit($html-font-size);
+
+    @return $px-ratio + 0rem;
+}
+
+///
+/// Convert number, or a list of numbers in `px` units to `em` units.
+/// ---
+/// @param {Number|List} $px
+/// @param {Number} $parent-font-size [14px] - `font-size` of the parent element
+/// ---
+/// @returns {Number|List}
+///
+@function to-em($px, $parent-font-size: $font-size-base) {
+    @if is-list($px) {
+        $em-list: ();
+        $list-separator: list-separator($px);
+        @each $value in $px {
+            $em-list: append($em-list, to-em($value), $list-separator);
+        }
+
+        @return $em-list;
+    }
+
+    $unit: if(unitless($px), 'none', unit($px));
+    $unitless-value: remove-unit($px);
+
+    // Short circuit if unitless value is 0
+    @if $unitless-value == 0 {
+        // return 0, not 0rem
+        @return 0;
+    }
+
+    // Short circuit if unit is already em, or has no unit
+    @if is($unit, em none) {
+        @return $px;
+    }
+
+    // Convert rems to pixels first
+    @if is-rem($px) {
+        $px: to-px($px);
+        $unitless-value: remove-unit($px);
+    }
+
+    @if is-rem($parent-font-size) {
+        $parent-font-size: to-px($parent-font-size);
+    }
+
+    @if not is-pixels($px) {
+        @error "`to-em` function expecting a number in pixels; #{$unit} given for a value of #{$px}.";
+    }
+    @if not is-number($parent-font-size) {
+        @error "`to-em` function expecting a number; #{type-of($parent-font-size)} given.";
+    }
+
+    // Do conversion
+    $px-ratio: $unitless-value / remove-unit($parent-font-size);
+
+    @return $px-ratio + 0em;
+}
+
+///
+/// Convert a percentage to its decimal equivalent.
+/// (inverse of Sass' built-in `percentage` function)
+/// ---
+/// @param {Number} $percentage
+/// @returns {Number}
+///
+@function to-decimal($percentage) {
+    $dependencies-met: dependencies-met(for to-decimal, is-percentage);
+    @if not is-percentage($percentage) {
+        @error "`is` function expecting a percentage; #{unit($percentage)} given.";
+    }
+
+    @return $percentage / 100%;
+}
+
+///
+/// Convert a number to `px` units.
+/// ---
+/// @param {Number} $number
+/// @param {Number} $parent-font-size [14px] - `font-size` of the parent element
+/// ---
+/// @returns {Number}
+///
+@function to-px($number, $parent-font-size: $font-size-base) {
+    // Short circuit if unit is already px
+    @if unit($number) == 'px' {
+        @return $number;
+    }
+
+    @if not is-number($number) {
+        @error "`to-px` function expecting a number; #{type-of($number)} given.";
+    }
+    @if not is-number($parent-font-size) {
+        @error "`to-px` function expecting a number; #{type-of($parent-font-size)} given.";
+    }
+
+    $px-value: 0px;
+
+    // Convert rems to pixels first
+    @if is-rem($parent-font-size) {
+        $parent-font-size: to-px($parent-font-size);
+    }
+
+    @if unitless($number) {
+        $px-value: $number;
+    } @else {
+        $px-value: remove-unit($number);
+
+        @if is-percentage($number) {
+            $px-value: to-decimal($number) * $parent-font-size;
+        } @else if is-em($number) {
+            $px-value: $px-value * $parent-font-size;
+        } @else if is-rem($number) {
+            $px-value: $px-value * $html-font-size-px;
+        } @else {
+            @error "`to-px` expected a unit of `%`, `rem` or `em`; #{unit($number)} given.";
+        }
+    }
+
+    @return round($px-value) + 0px;
+}
+
+///
+/// Convert a `dpi` value into `dppx`.
+/// ---
+/// @param {Number} $dpi
+/// @returns {Number}
+///
+@function to-dppx($dpi) {
+    @if unit($dpi) != 'dpi' {
+        @error "Function `to-dppx` expecting a unit of `dpi`. Recieved `#{unit($dpi)}`.";
+    }
+
+    @return (remove-unit($dpi) / $css-in-to-px-ratio) + 0dppx;
+}
+
+///
+/// Convert a `dppx` value into `dpi`.
+/// ---
+/// @param {Number} $dppx
+/// @returns {Number}
+///
+@function to-dpi($dppx) {
+    @if unit($dppx) != 'dppx' {
+        @error "Function `to-dpi` expecting a unit of `dppx`. Recieved `#{unit($dppx)}`.";
+    }
+
+    @return (remove-unit($dppx) / $css-in-to-px-ratio) + 0dpi;
+}
+
+///
+/// Converts a `dpr` value into a fraction for Opera `device-pixel-ratio` media queries.
+/// ---
+/// @param {Number} $dpr
+/// @returns {String} - fractional equivalent of `$dpr` with a denominator of `2`
+///
+@function dpr-to-opera-fraction($dpr) {
+    // $opera-denominator: 2;
+    // $opera-numerator:   $dpr * $opera-denominator;
+    // $opera-dpr:         #{$opera-numerator}/#{$opera-denominator};
+    // FIXME: Libsass doesn't like the literal `/` used here, tries to use it as a math operator
+    @return $dpr;
+}
+
+///
+/// Converts a `0px` value into `0`.
+/// ---
+/// @param {Number} $value
+/// @returns {Number} - If value is `0px`, returns `0`, otherwise simply returns `$value`
+///
+@function unitless-zero($value) {
+    $unitless-value: remove-unit($value);
+
+    @if $unitless-value == 0 {
+        @return $unitless-value;
+    } @else {
+        @return $value;
+    }
+}

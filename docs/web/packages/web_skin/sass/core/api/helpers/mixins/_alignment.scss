@@ -1,0 +1,200 @@
+// ********************************************************
+
+////
+/// Helper mixins pertaining to global component alignment
+/// ---
+/// @since 1.1.2
+/// @access public
+/// @group core.utils.alignment
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/alignment';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// Reusable styles for horizontally centering a block element
+/// ---
+/// @since 0.3.1
+///
+@mixin block-center() {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+///
+/// Horizontally and vertically center children using flexbox.
+/// @since 1.13.0
+///
+@mixin flex-center-children() {
+    @include display-flex();
+    @include justify-content(center);
+    @include align-items(center);
+
+    line-height: normal;
+
+    // Override base `.icon` selector alignment
+    .icon {
+        top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+}
+
+///
+/// Reusable styles to mimic the alignment of "non-text" symbols nested within components that use the `no-text` CSS utility class
+///
+@mixin component-symbol-centered() {
+    text-align: center !important;
+
+    .icon {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+    .caret {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+
+///
+/// Reusable CSS utility classes to align "non-text" symbols nested within components, e.g. icons, carets, progress-spinners
+/// ---
+/// @access private
+/// @group core.internals.utils.alignment
+/// ---
+/// @param {String} $size [base] - Size variation CSS class suffix
+///
+@mixin component-symbol-alignment($size: base) {
+    //
+    //  NOTES
+    //
+    //  [1] Icons that sit to the right of the component label
+    //      text by way of placing it after the label text in the DOM
+    //      -> `align-right` CSS class can be applied to
+    //          the parent component or to the `icon` directly
+    //
+    //  [2] Icons that sit to the right of the component label
+    //      text by way of using a float to remove it from
+    //      the box-model so that the DOM order does not matter
+    //      -> `pull-right` CSS class can only be
+    //          applied to the the `icon` directly
+    //
+    //  [3] Carets that sit to the left of the component label
+    //      text by way of placing it before the label text in the DOM
+    //      -> `align-left` CSS class can be applied to
+    //          the parent component or to the `caret` directly
+    //
+    //  [4] Carets that sit to the left of the component label
+    //      text by way of using a float to remove it from
+    //      the box-model so that the DOM order does not matter
+    //      -> `pull-left` CSS class can only be
+    //          applied to the the `caret` directly
+    //
+    //  [5] No `&` used if the $size param is base since the
+    //      implementation of base (non-size-variation) utility
+    //      classes is included outside of any parent selector
+    //
+    //  [6] Only required if not being applied to a btn / component
+    //      size variation since the result of no alignment modifier
+    //      in that context is identical to adding this alignment modifier class
+    //
+
+    $icon-margin-horizontal: to-rem(get-deep($btn-config, 'icon.#{$size}.margin-horizontal'));
+    $caret-margin-horizontal: to-rem(get-deep($btn-config, 'caret-horizontal-offset.#{$size}'));
+    $float-whitespace-differential: .2rem;
+    $floated-icon-margin-horizontal: $icon-margin-horizontal + $float-whitespace-differential;
+    $floated-caret-margin-horizontal: $caret-margin-horizontal + $float-whitespace-differential;
+
+    // ----- [5] ----- //
+    $is-base-implementation: unquote($size) == base;
+    $align-right-component-class: if($is-base-implementation, '.align-right', '&.align-right');
+    $align-left-component-class:  if($is-base-implementation, '.align-left',  '&.align-left');
+
+
+    // ------------------------------------------------
+    //   ICONS
+    // ------------------------------------------------
+
+    // ----- [1] ----- //
+    #{$align-right-component-class} .icon,
+    .icon.align-right {
+        margin-right: 0; // override default alignment
+        margin-left: $icon-margin-horizontal;
+    }
+
+    // ----- [2] ----- //
+    .icon.pull-right {
+        margin-right: 0; // override default alignment
+        margin-left: $floated-icon-margin-horizontal;
+    }
+
+    // ----- [6] ----- //
+    @if $is-base-implementation {
+        .align-left .icon,
+        .icon.align-left {
+            margin-right: $icon-margin-horizontal;
+        }
+    }
+
+
+    // ------------------------------------------------
+    //   CARETS
+    // ------------------------------------------------
+
+    // ----- [3] ----- //
+    #{$align-left-component-class} .caret,
+    .caret.align-left {
+        margin-left: 0;
+        margin-right: $caret-margin-horizontal;
+    }
+
+    // ----- [4] ----- //
+    .caret.pull-left {
+        margin-left: 0;
+        margin-right: $floated-caret-margin-horizontal;
+    }
+
+    // ----- [6] ----- //
+    @if $is-base-implementation {
+        .align-right .caret,
+        .caret.align-right {
+            margin-left: $caret-margin-horizontal;
+        }
+    }
+
+
+    // ------------------------------------------------
+    //   OVERRIDE LEFT / RIGHT ALIGNMENTS
+    // ------------------------------------------------
+    @if $is-base-implementation {
+        .no-text {
+            @include component-symbol-centered();
+        }
+    }
+}
+
+///
+/// Reusable CSS utility classes to float components left or right
+/// @access private
+/// @group core.internals.utils.alignment
+///
+@mixin component-floats() {
+    .clearfix {
+        @include clearfix();
+    }
+
+    .pull-right {
+        float: right !important;
+    }
+
+    .pull-left {
+        float: left !important;
+    }
+}

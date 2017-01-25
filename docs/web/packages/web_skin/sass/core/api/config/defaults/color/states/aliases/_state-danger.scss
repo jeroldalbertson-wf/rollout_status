@@ -1,0 +1,81 @@
+// ********************************************************
+
+////
+/// Danger Elem State Color Aliases
+/// ---
+/// @access private
+/// @type Color
+/// @group core.internals.color.state
+/// ---
+/// @requires {variable} $colors-state-danger
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/states/aliases/state-danger';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+/// Danger Elem State Color Alias
+/// @color #ee2724
+$state-danger: get($colors-state-danger, 'base');
+
+/// Danger Elem State Text Color Alias
+/// @color #c41e1b
+$state-danger-text: get($colors-state-danger, 'text');
+
+/// Danger Elem State Background Color Alias
+/// @color #fef6f6
+$state-danger-bg: get($colors-state-danger, 'bg');
+
+/// Danger Elem State Border Color Alias
+/// @color #f7b1b5
+$state-danger-bd: get($colors-state-danger, 'bd');
+
+
+// ----------------------------------------------------
+//   SHARED COMPONENT STATE VARIATION COLORS
+// ----------------------------------------------------
+    ///
+    /// Danger Elem State background variation used by "inline" alerts. Cards, panels, list-group items and table rows use this color when hovered.
+    /// ---
+    /// @color #fde5e5
+    /// @requires {function} shade-of
+    /// @requires {variable} $zc-red
+    ///
+    $component-state-danger-bg-hover: shade-of($zc-red, 12%);
+
+    ///
+    /// Danger Elem State background variation used by cards, panels, list-group items and table rows.
+    /// ---
+    /// @color #fef2f2
+    /// @requires {function} shade-of
+    /// @requires {variable} $component-state-danger-bg-hover
+    ///
+    $component-state-danger-bg: shade-of($component-state-danger-bg-hover, 50%);
+
+    ///
+    /// Danger Elem State background variation used by cards, panels, list-group items and table rows when pressed.
+    /// ---
+    /// @since 1.4.0
+    /// @color #fbcdcd
+    /// @requires {variable} $component-state-danger-bg-hover
+    /// @requires {variable} $elem-pressed-text-darken-amount-default
+    ///
+    $component-state-danger-bg-press: darken($component-state-danger-bg-hover, $elem-pressed-text-darken-amount-default);
+
+    ///
+    /// Danger Elem State border variation used by alerts, cards, panels, list-group items and table rows.
+    /// ---
+    /// @color #c15f5e
+    /// @requires {function} shade-of
+    /// @requires {variable} $zc-red-120
+    ///
+    $component-state-danger-bd: shade-of($zc-red-120, 70%);

@@ -1,0 +1,353 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/comments/comments-popovers';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+//
+// TEXT SELECTION CONTROL
+//
+    .popover-comment {
+        width: to-rem($popover-comment-width);
+        // prevent ios "magnifying glass" bug: http://bit.ly/1eQuSNj
+        @include disable-user-select();
+        * {
+            @include disable-user-select();
+        }
+        // obviously, we want the user to be able to select text in here.
+        textarea {
+            @include enable-user-select();
+        }
+    }
+
+
+//
+// BASE POPOVER ELEM RESETS
+//
+    .popover-comment {
+        .inner,
+        .comments,
+        .cblock {
+            position: relative;
+            float: left;
+            width: 100%;
+        }
+
+        .comment {
+            position: relative;
+            float: left;
+            width: 100%;
+            //
+            // stay hidden until modal confirmation is open:
+            // otherwise, the collapse behavior used to reveal
+            // actions for replies shows outside of the thread boundaries
+            //
+            overflow: hidden;
+
+            &.modal-container {
+                //
+                // needed to prevent confirmation modals
+                // getting "clipped" by the .inner padding
+                //
+                overflow: visible;
+            }
+        }
+
+        .inner {
+            min-width: 0;
+            max-width: none;
+            padding: to-rem($popover-comment-content-padding);
+        }
+    } // END BASE POPOVER ELEM RESETS
+
+
+//
+// POPOVER COMMENT HEADER
+//
+    .popover-comment {
+        $popover-comment-dd-toggle-width: get($caret-only-btn-widths, 'xs');
+
+        .navbar {
+            @include comment-header-navbar();
+            position: relative;
+            height: auto;
+            padding: 0;
+            margin-top: to-rem($popover-comment-thread-header-margin-top);
+            margin-bottom: 0;
+            line-height: 1;
+            background: transparent;
+            border: 0 none;
+            border-radius: 0;
+            @include border-top-radius(to-rem($popover-bd-radius - $popover-bd-width));
+
+            // what is typically the actual .title elem
+            // when in a navbar - its just any other <h3>
+            h3 {
+                display: inline-block;
+                margin: 0;
+                padding: 0;
+                font-size: to-rem(get($popover-config, 'title-font-size'));
+                line-height: 1;
+            }
+
+            // dropdown toggles within popover navbars (e.g. comment thread options dd)
+            .dropdown-toggle {
+                position: absolute; // need this so we can keep it above .dropdown-menu z-index
+                top: to-rem($popover-navbar-elem-offset-top) !important;
+                right: 0;
+                z-index: z('dropdown') + 1;
+                // since there is only a .caret elem in here... its not very wide.
+                height: to-rem($popover-navbar-btn-height - 1); // 1px less to ensure the dd menu lines up
+                line-height: to-rem($popover-navbar-btn-height - 1);
+
+                #{$link-hover-focus} {
+                    background-color: darken($dialog-gray-bg, ($elem-hover-bg-darken-amount-default * 2)) !important;
+                }
+            }
+            .dropdown {
+                // subtract btn bd width to ensure the button
+                // overlaps the top border of the menu to make it look "connected"
+                height: to-rem($popover-navbar-height - get($btn-config, 'bd-width'));
+
+                &.open {
+                    .dropdown-toggle {
+                        border-color: get($dropdown-menu-color-config, 'bd-color') !important;
+                        border-bottom-color: get($nav-secondary-link-config, 'bg') !important;
+                        @include border-bottom-radius(0);
+                        &,
+                        #{$link-hover-focus} {
+                            background-color: get($nav-secondary-link-config, 'bg') !important;
+                        }
+                    }
+                    .dropdown-menu {
+                        @include border-top-right-radius(0);
+                        // want the menu to sit flush with our dropdown toggle
+                        margin-top: 0;
+                    }
+                }
+            }
+        }
+
+        //
+        // LEFT SIDE (TITLE)
+        //
+        .comment-title {
+            @include comment-title();
+            // make sure the author name doesn't overlap the comment-type toggle in the header
+            width: to-rem($popover-comment-title-width-existing);
+            margin-top: to-rem($popover-navbar-elem-offset-top - 2) !important;
+            font-family: $font-family-base; // too small for Lato
+            font-size: to-rem($popover-comment-title-font-size) !important;
+            font-weight: bold;
+            line-height: to-rem($popover-comment-title-line-height) !important;
+
+            .icon {
+                @include comment-title-icon();
+            }
+
+            .icon-note {
+                // adjust to account for the artboard alignment difference of the
+                // private comment (icon-note) glyph vs. all the other comment
+                // icons that have the "tail" extending below the "bubble"
+                top: -.2rem;
+            }
+        }
+        // make sure the author name doesn't overlap the timestamp in the header
+        &.new-comment {
+            .comment-title {
+                width: to-rem($popover-comment-title-width-new);
+            }
+        }
+
+        //
+        // RIGHT SIDE (META / TOGGLE)
+        //
+        .comment-header .dropdown-toggle {
+            .caret {
+                margin-top: to-rem($caret-margin-top-xs + 1) !important;
+            }
+        }
+        .comment-type-toggle {
+            position: absolute;
+            top: to-rem($popover-navbar-elem-offset-top + 2);
+            right: 0;
+            padding: 0;
+            margin: 0;
+        }
+    } // END POPOVER COMMENT HEADER
+
+
+//
+// POPOVER COMMENT BODY
+//
+    .popover-comment {
+        .comment {
+            // first cblock within the first comment when a comment is being created
+            &:first-child > .cblock:first-child {
+                margin-top: to-rem($popover-comment-content-padding);
+
+                // when a comment has been saved - we don't need the extra space below the thread heading.
+                textarea[readonly] {
+                    margin-top: to-rem($popover-comment-content-padding) * -1;
+                }
+            }
+        }
+
+        .comment-meta {
+            @include comment-meta();
+            // make sure the author name doesn't overlap the timestamp on replies
+            .comment-author {
+                width: to-rem($popover-comment-reply-name-width);
+            }
+
+            .comment-timestamp {
+                width: to-rem($popover-comment-timestamp-max-width);
+            }
+        }
+
+        .comment-body {
+            min-height: to-rem($default-comment-textarea-height);
+        }
+
+        // COMMENT / REPLY ACTIONS
+        .comment-actions {
+            margin-top: to-rem($popover-comment-content-padding);
+
+            .nav-pills > .nav-item > .hitarea {
+                &[disabled],
+                &.disabled {
+                    // don't make the disabled mouse cursor be so jarring when we're disabling buttons as
+                    // confirmation modals open and close (prevents flicker)
+                    cursor: pointer !important;
+                }
+            }
+        }
+    }
+
+
+//
+// COMMENT THREAD POPOVERS
+//
+    .popover-thread {
+        @include transition(height $default-collapse-speed ease-in-out);
+
+        .navbar {
+            .comment-meta .comment-timestamp {
+                top: to-rem($popover-navbar-elem-offset-top - 1);
+                right: to-rem($popover-comment-thread-actions-offset-right); // leave room for thread actions dropdown button
+                line-height: to-rem($popover-comment-title-line-height); // baseline align with title text
+            }
+        }
+
+        // wraps around each comment within a thread
+        .comment {
+            + .comment {
+                .comment-meta {
+                    // space out adjacent comments
+                    padding-top: to-rem($popover-comment-content-padding);
+                }
+            }
+
+            .comment-reply {
+                &,
+                .form-control {
+                    min-height: to-rem(get-deep($form-control-config, 'height.base'));
+                }
+            }
+        }
+
+        //
+        // A comment is being edited / written
+        //
+        .comment.comment-editing {
+            .comment-meta {
+                margin-bottom: to-rem($popover-comment-content-padding);
+            }
+        }
+    } // END .popover-thread
+
+
+//
+// COMMENT THREAD OVERLAYS
+//
+    .popover-thread {
+        &.modal-open,
+        &.popover-thread-closed {
+            .thread-overlay {
+                display: block;
+            }
+        }
+
+        // A COMMENT WITHIN THE THREAD HAS A CONFIRMATION MODAL VISIBLE
+        &.modal-open {
+            .thread-overlay {
+                // light bg color
+                background-color: $dialog-gray-bg;
+                @include opacity($popover-comment-thread-overlay-alpha);
+                z-index: z('modal-backdrop') - 1; // make sure the modal confirmation is above this overlay
+            }
+            //
+            // Ensure that if the last comment in a thread has an empty reply
+            // and the user discards it, that the modal confirmation will
+            // have enough height to display the contents of the dialog
+            //
+            .comment-editing.comment-last.modal-open {
+                min-height: 12rem;
+            }
+        }
+
+        // THREAD IS CLOSED
+        &.popover-thread-closed {
+            .thread-overlay {
+                top: to-rem(get($dialog-config, 'padding')) * -1;
+                right: to-rem(get($dialog-config, 'padding')) * -1;
+                bottom: to-rem(get($dialog-config, 'padding')) * -1;
+                left: to-rem(get($dialog-config, 'padding')) * -1;
+                // dark bg color
+                background-color: $popover-comment-thread-overlay-bg;
+                @include opacity($popover-comment-thread-closed-overlay-alpha);
+                z-index: z('dropdown') - 1; // keep the thread actions menu clickable
+            }
+            .comment-reply-empty,
+            .comment.comment-editing {
+                display: none;
+            }
+        }
+    }
+
+
+//
+// MODAL CONFIRMATION POSITIONING
+//
+    .popover-comment {
+        @include comment-modal-confirmations($bd-radius: $dialog-bd-radius, $content-pad: $popover-comment-content-padding, $header-height: $comment-thead-header-height, $is-outer-elem: true);
+    }
+
+
+//
+// ADJUST ARROW COLORS
+// Needs to match the appearance of .dialog-gray
+//
+    .popover-comment {
+        &.popover-thread-closed {
+            $computed-arrow-color: mix($popover-comment-thread-overlay-bg, $dialog-gray-bg, percentage($popover-comment-thread-closed-overlay-alpha));
+
+            @include popover-tooltip-skin($bg-color: $computed-arrow-color,
+                                          $bd-color: $computed-arrow-color,
+                                          $force-arrow-bg: true,
+                                          $arrow-only: true);
+        }
+
+        &.overlaid {
+            $computed-arrow-color: mix($dialog-backdrop-bg, $dialog-gray-bg, percentage(get($modal-config, 'contained-backdrop-alpha')));
+
+            @include popover-tooltip-skin($bg-color: $computed-arrow-color,
+                                          $bd-color: $computed-arrow-color,
+                                          $force-arrow-bg: true,
+                                          $arrow-only: true);
+        }
+    }

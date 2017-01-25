@@ -1,0 +1,122 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/navs/tabs/tabbed-content';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Basic
+//   -> Add a border around the tab content to
+//      provide some visual separation amongst a lot
+//      of content
+// ----------------------------------------------------
+    .tabbable.ws-tabbable-section {
+        .nav-tabs {
+            margin: 0;
+            font-family: $font-family-sans-serif;
+            font-size: 1.5rem;
+            line-height: $line-height-base;
+            border-bottom-color: $docs-example-bd-color;
+            border-bottom-width: $docs-example-bd-width;
+
+            > .nav-item {
+                margin-bottom: -#{$docs-example-bd-width};
+            }
+        }
+
+        .tab-content {
+            padding: $docs-example-padding;
+            background-color: $docs-example-bg;
+            border: $docs-example-bd-width solid $docs-example-bd-color;
+            border-top-width: 0;
+            border-radius: $docs-example-bd-radius;
+            @include border-top-left-radius(0);
+
+            .tab-pane > .ws-heading:first-of-type {
+                margin-top: 0; // prevent double spacing
+            }
+
+            @include respond-to('screen-sm and up') {
+                padding: $docs-example-padding-sm;
+            }
+
+            .highlight {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Vertical
+//   -> Multiple .highlight code
+//      examples in one tabbable
+//      container with tabs vertically
+//      lined up on the right side
+//
+//   @requires docs/components/navigation/tabs/docs-tabs-vertical
+// ----------------------------------------------------
+    .ws-example + .tabbed-markup {
+        margin: ($docs-example-margin-bottom * -1) -.1rem $docs-example-margin-bottom 0;
+
+        .highlight {
+            @include border-top-radius(0);
+            border-top-width: 0;
+            margin-bottom: 0;
+        }
+    }
+    .tabbable.tabbed-markup {
+
+        // mobile first defaults
+        margin-left:  to-rem($docs-spacing-base) * -1;
+        margin-right: to-rem($docs-spacing-base) * -1;
+
+        @include respond-to('screen-sm and up') {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        > .nav-tabs {
+            font-family: $font-family-sans-serif;
+            border-color: $docs-code-bd;
+
+            > .nav-item {
+                > .hitarea {
+                    code {
+                        background-color: transparent;
+                        font-size: 100%;
+                        font-weight: inherit;
+                    }
+                }
+            }
+        }
+
+        .tab-content {
+            @include flex(1 1 0%);
+            padding: 0;
+            border-color: $docs-code-bd;
+            @include border-bottom-right-radius(to-rem($border-radius-base));
+        }
+
+        &.tabs-right .highlight {
+            border-right-width: 0;
+        }
+        &.tabs-left .highlight {
+            border-left-width: 0;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   DOCS COLLAPSIBLE PANEL CONTENT
+// ----------------------------------------------------
+    .ws-docs-collapsible-panel-container {
+        .panel-title {
+            font-family: $webfont-sans-serif !important;
+        }
+    }
+

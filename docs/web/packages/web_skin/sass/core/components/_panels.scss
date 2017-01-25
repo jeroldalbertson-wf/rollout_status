@@ -1,0 +1,425 @@
+// ********************************************************
+//
+//   PANEL COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-panels
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/panels';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $panels-module-config:  'core/components/atoms/panels/panels-config';
+    $panels-module-helpers: 'core/components/atoms/panels/panels-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $panels-module-config);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE PANEL CLASS
+//
+// ********************************************************
+.panel {
+    margin-bottom: to-rem(get($panel-config, 'margin-bottom'));
+    background-color: get($panel-colors-default, 'bg');
+    border: to-rem(get($panel-config, 'bd-width')) solid transparent;
+}
+
+
+// ********************************************************
+//
+//   PANEL ELEMENTS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   PANEL CONTENT (required)
+    // ----------------------------------------------------
+    .panel-body {
+        padding: to-rem(get-deep($panel-config, 'base.body-padding'));
+        @include clearfix();
+    }
+
+    // ----------------------------------------------------
+    //   PANEL HEADING (optional)
+    // ----------------------------------------------------
+    .panel-heading {
+        position: relative;
+        padding: to-rem(get-deep($panel-config, 'base.header-padding-top') get-deep($panel-config, 'base.header-padding-horizontal') get-deep($panel-config, 'base.header-padding-bottom'));
+        border-bottom: to-rem(get($panel-config, 'bd-width')) solid transparent;
+        line-height: get-deep($panel-config, 'base.header-line-height');
+    }
+
+    // ----------------------------------------------------
+    //   PANEL HEADING > TITLE (optional)
+    //   -> Child of `.panel-heading`
+    //   -> Strips any `h*` tag of it's default margins
+    // ----------------------------------------------------
+    .panel-title {
+        margin-top: 0;
+        margin-bottom: 0;
+        font-size: to-rem(get-deep($panel-config, 'base.title-font-size'));
+        font-weight: get-deep($panel-config, 'base.title-font-weight');
+        font-family: $font-family-base;
+        @include remove-focus-outline(); // in clickable / collapsible panel headers... don't allow this to appear focused
+
+        > .hitarea {
+            color: inherit;
+        }
+    }
+
+    // ----------------------------------------------------
+    //   PANEL FOOTER (optional)
+    // ----------------------------------------------------
+    .panel-footer {
+        padding: to-rem(get-deep($panel-config, 'base.footer-padding-vertical') get-deep($panel-config, 'base.body-padding'));
+        line-height: to-rem(get-deep($panel-config, 'base.header-line-height')); // make sure height of footer matches height of header
+        border-top: to-rem(get($panel-config, 'bd-width')) solid transparent;
+    }
+
+
+// ********************************************************
+//
+//   CUSTOM PANEL CONTENT
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   LIST GROUPS IN PANELS
+    //   -> By default, space out list group content from
+    //      panel headings to account for any other kind
+    //      of custom content between the two.
+    // ----------------------------------------------------
+        .panel > .list-group {
+            margin-bottom: 0;
+            border-top: to-rem(get($list-group-base-config, 'bd-width')) solid get($list-group-base-config, 'bd-color');
+
+            .list-group-item {
+                border-width: to-rem(get($list-group-base-config, 'bd-width')) 0;
+
+                &:last-child {
+                    border-bottom: 0;
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        //
+        // Collapse space between when
+        // there's no additional content.
+        //
+        .panel-heading + .list-group {
+            .list-group-item:first-child {
+                border-top-width: 0;
+            }
+        }
+
+    // ----------------------------------------------------
+    //   TABLES IN PANELS
+    //   -> Place an un-bordered `.table` within a panel
+    //      and watch it go full-width!
+    // ----------------------------------------------------
+        .panel {
+            > .table,
+            > .table-responsive > .table,
+            > .panel-collapse > .table {
+                margin-bottom: 0;
+
+                caption {
+                    border: 0;
+                }
+            }
+
+            //
+            // Place a border between a table and any
+            // adjacent custom content within the panel
+            //
+            > .panel-body + .table,
+            > .panel-body + .table-responsive,
+            > .table + .panel-body,
+            > .table-responsive + .panel-body {
+                border-top: to-rem(get($table-config, 'bd-width')) solid get($table-config, 'bd-color');
+            }
+
+            //
+            // Remove the borders from a .table-bordered
+            // if it is unknowingly used by a client app
+            // since the panel already gives us the
+            // borders we want.
+            //
+            > .table-bordered,
+            > .table-responsive > .table-bordered {
+                border: 0 !important;
+            }
+
+            //
+            // Remove the left / right borders from a
+            // .table-responsive element since the panel
+            // already gives us the borders we want.
+            //
+            > .table-responsive {
+                border-left-width: 0;
+                border-right-width: 0;
+            }
+        }
+
+
+// ********************************************************
+//
+//   COLLAPSIBLE PANELS (a.k.a "accordion")
+//   -> Wrap a series of panels in `.panel-group` to turn
+//      them into an accordion with the help of our
+//      Collapse JS plugin.
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   NESTED PANELS
+    //   -> Allow `.panel` to be nested as `.panel-collapse`
+    //      for simpler adjacent selector overrides.
+    // ----------------------------------------------------
+    .panel .panel {
+        margin-bottom: 0;
+        background-color: transparent;
+        border: 0 none;
+    }
+
+    // ----------------------------------------------------
+    //   PANEL GROUP CONTAINER
+    //   -> Wraps around multiple collapsible panels
+    // ----------------------------------------------------
+    .panel-group {
+        // ------------------------------------------------
+        //   ADJACENT PANELS
+        //   -> Only add margin between sibling panels
+        // ------------------------------------------------
+        .panel {
+            margin-bottom: 0; // Reset .panel default
+
+            // Add space between siblings
+            + .panel {
+                margin-top: to-rem($spacing-base);
+            }
+        }
+
+        // ------------------------------------------------
+        //   ACCORDION PANEL HEADING
+        // ------------------------------------------------
+        .panel-heading {
+            &[data-toggle] {
+                // Prevent double-border when collapsed
+                border-bottom-width: 0;
+                padding-bottom: to-rem(get($panel-size-base-config, 'header-padding-bottom') + get($panel-config, 'bd-width'));
+            }
+
+            // Place border on element that is hidden when collapsed
+            + .panel-collapse .panel-body,
+            + .panel-collapse .table-responsive {
+                border-top: to-rem(get($panel-config, 'bd-width')) solid transparent;
+            }
+        }
+
+        // ------------------------------------------------
+        //   CLICKABLE ACCORDION TOGGLE
+        //   -> Typically placed on the `.panel-heading`
+        // ------------------------------------------------
+        [data-toggle] {
+            @include disable-user-select();
+
+            cursor: pointer;
+
+            // ----- COLLAPSE INDICATOR PLACEMENT / DEFAULT COLOR ----- //
+            $panel-caret-color-default: get($panel-colors-default, 'header-text-color');
+            .caret {
+                position: absolute;
+                top: to-rem(round((get($panel-size-base-config, 'header-height') - $caret-height) / 2) + 1);
+                right: to-rem(get($panel-size-base-config, 'body-padding'));
+                // Add default color here so that they appear even in an unskinned / "vanilla" context
+                border-top-color: $panel-caret-color-default;
+            }
+
+            #{$link-hover-focus} {
+                .caret {
+                    opacity: 1;
+                }
+            }
+
+            // Expanded state
+            &.open {
+                .caret {
+                    border-bottom-color: $panel-caret-color-default;
+                }
+            }
+        }
+
+        // ------------------------------------------------
+        //   ACCORDION PANEL FOOTER (optional)
+        // ------------------------------------------------
+        .panel-footer {
+            // Prevent double-border when collapsed
+            border-top-width: 0;
+
+            // Place border on element that is hidden when collapsed
+            + .panel-collapse .panel-body {
+                border-bottom: to-rem(get($panel-config, 'bd-width')) solid transparent;
+            }
+        }
+    }
+
+
+// ********************************************************
+//
+//   SIZE VARIATIONS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   CONDENSED (sm) VARIATION
+    // ----------------------------------------------------
+    .panel-condensed {
+        .panel-body,
+        .list-group-item {
+            padding: to-rem(get-deep($panel-config, 'sm.body-padding'));
+        }
+
+        .panel-title {
+            font-family: $font-family-base; // too small for Lato
+            font-size: to-rem(get-deep($panel-config, 'sm.title-font-size'));
+            font-weight: get-deep($panel-config, 'sm.title-font-weight');
+            // reset margin since Lato is not being used
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .panel-heading,
+        .panel-footer {
+            padding: to-rem(get-deep($panel-config, 'sm.header-padding'));
+            line-height: to-rem(get-deep($panel-config, 'sm.header-line-height'));
+        }
+
+        // Adjust caret position for condensed accordion
+        [data-toggle] {
+            .caret {
+                top: to-rem($caret-margin-top + nth(get-deep($panel-config, 'sm.header-padding'), 1) - 2);
+                right: to-rem(get-deep($panel-config, 'sm.body-padding'));
+            }
+        }
+    }
+
+
+// ********************************************************
+//
+//   SKIN VARIATIONS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   "HOVER" / "FOCUS" VARIATIONS
+    //   -> Make an entire panel resemble a focused
+    //      form / button element
+    //   -> Can be placed on `.panel` or `.panel-group`
+    // ----------------------------------------------------
+        @include panel-hover-focus-border(get($panel-colors-default, 'bd-color-focus'));
+
+    // ----------------------------------------------------
+    //   SKIN COLOR / STATE VARIATIONS
+    // ----------------------------------------------------
+        // ----- DEFAULT CONTRAST ----- //
+        @each $skin-name, $skin-colors in $panel-colors {
+            @include panel-skin($skin-name, $skin-colors)
+        };
+
+        // ----- INVERSE CONTRAST ----- //
+        @each $skin-name, $skin-colors in $panel-colors-inverse {
+            @include panel-skin($skin-name, $skin-colors, $is-inverse: true)
+        };
+
+    // ----------------------------------------------------
+    //   UNSKINNED ("VANILLA") VARIATION
+    //   -> Used mainly for "empty result" messaging
+    //
+    //   TODO: In `2.0.0` release, panel should be unskinned
+    //         when a skin class is excluded, no need for the
+    //         vanilla class.
+    // ----------------------------------------------------
+        // ----- ENTIRE PANEL IS VANILLA ----- //
+        .panel-vanilla {
+            background-color: transparent;
+            border: 0 none;
+
+            .panel-heading {
+                @include unskinned-panel-heading();
+            }
+
+            .panel-body {
+                padding-top: to-rem($dialog-sm-content-padding);
+                padding-bottom: to-rem($dialog-sm-content-padding);
+            }
+
+            .panel-footer {
+                @include unskinned-panel-footer();
+            }
+        }
+
+        // ----- ONLY HEADING IS VANILLA ----- //
+        .panel .panel-heading-vanilla {
+            @include unskinned-panel-heading();
+        }
+
+        // ----- ONLY FOOTER IS VANILLA ----- //
+        .panel .panel-footer-vanilla {
+            @include unskinned-panel-footer();
+        }
+
+
+// ********************************************************
+//
+//   USE-CASE STYLES
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   EMPTY RESULTS PANEL
+    //   -> Pattern used to display a message to the user
+    //      when a search comes up with nada
+    //
+    //   -> DEPRECATED IN 1.5.0
+    //      (use `.empty-view` component instead)
+    //
+    //      TODO: REMOVE IN 2.0.0
+    // ----------------------------------------------------
+    .panel-empty-results {
+        text-align: center;
+        padding: get($empty-view-config, 'padding');
+        margin: 0;
+        margin-top: get($empty-view-config, 'margin-top');
+        color: get($empty-view-config, 'message-color');
+
+        .panel-heading,
+        .panel-body {
+            padding: 0;
+            color: inherit;
+        }
+
+        .panel-title {
+            padding: 0;
+            margin-top: 0;
+            margin-bottom: get($empty-view-config, 'message-heading-margin-bottom');
+            font-size: get($empty-view-config, 'message-heading-font-size');
+            font-weight: get($empty-view-config, 'message-heading-font-weight');
+            color: inherit !important;
+        }
+    }
+
+    // ----------------------------------------------------
+    //   RIGHT-ALIGNED CHILDREN IN HEADER / FOOTER
+    //   -> Since the footer / heading are not floated,
+    //      align nested elements right using text-align
+    //      to prevent height collapse of parents.
+    // ----------------------------------------------------
+    .panel-heading,
+    .panel-footer {
+        > .pull-right {
+            float: none !important;
+            text-align: right;
+        }
+    }

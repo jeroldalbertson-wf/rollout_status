@@ -1,0 +1,229 @@
+// ********************************************************
+//
+//   CAROUSEL COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-js-carousel
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/carousels';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $carousels-module-config:  'core/components/atoms/carousels/carousels-config';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $carousels-module-config);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   PRIVATE CAROUSEL HELPERS
+//
+// ********************************************************
+    @mixin carousel-next-prev-base {
+        position: absolute;
+        top: 0; // WCAG Compliant Show
+        display: block;
+        width: 100%;
+    }
+
+
+// ********************************************************
+//
+//   BASE CAROUSEL CLASS
+//   -> Wrapper for the slide container and indicators
+//
+// ********************************************************
+.carousel {
+    box-sizing: content-box; // so the padding is additive, and the width is determined by the size of the images within it
+
+    position: relative;
+    width: auto;
+    padding: to-rem($carousel-padding);
+}
+
+
+// ********************************************************
+//
+//   INNER CAROUSEL CONTAINER
+//   -> Contains the images / content as they appear
+//   -> Requires Modernizr.js
+//
+// ********************************************************
+.carousel-inner {
+    position: relative;
+    width: auto;
+    overflow: hidden;
+    // make room for caption/page control BELOW image - not over the top of it
+    padding-bottom: to-rem($carousel-inner-padding-bottom);
+
+    > .item {
+        display: none;
+        top: 0;
+        outline: 0;
+        @include slide(left, $speed: $default-carousel-speed, $ease: ease-in-out, $delay: 0s, $positioning: relative, $finish-selector: '.active');
+
+        // Account for jankitude on images
+        > img,
+        > a > img {
+            @include img-responsive();
+            line-height: 1;
+        }
+    }
+
+    > .active {
+        display: block;
+        left: 0;
+    }
+
+    > .next {
+        @include carousel-next-prev-base();
+        .csstransforms3d & {
+            @include translate3d(100%, 0, 0);
+        }
+        .no-csstransforms3d & {
+            left: 100%;
+        }
+
+        &.left {
+            .csstransforms3d & {
+                @include translate3d(0, 0, 0);
+            }
+            .no-csstransforms3d & {
+                left: 0;
+            }
+        }
+    }
+
+    > .prev {
+        @include carousel-next-prev-base();
+        .csstransforms3d & {
+            @include translate3d(-100%, 0, 0);
+        }
+        .no-csstransforms3d & {
+            left: -100%;
+        }
+        &.right {
+            .csstransforms3d & {
+                @include translate3d(0, 0, 0);
+            }
+            .no-csstransforms3d & {
+                left: 0;
+            }
+        }
+    }
+
+    > .active.left {
+        .csstransforms3d & {
+            @include translate3d(-100%, 0, 0);
+        }
+        .no-csstransforms3d & {
+            left: -100%;
+        }
+    }
+
+    > .active.right {
+        .csstransforms3d & {
+            @include translate3d(100%, 0, 0);
+        }
+        .no-csstransforms3d & {
+            left: 100%;
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   CAROUSEL LEFT/RIGHT NAVIGATION CONTROLS
+//
+// ********************************************************
+.carousel-control {
+    position: absolute;
+    top: 0;
+    bottom: to-rem($carousel-inner-padding-bottom); // center vertically on the image - not the image / caption
+    left: 0;
+    width: to-rem($carousel-control-width);
+    color: $carousel-control-color;
+    text-align: center;
+    // We can't have a CSS transition here because WebKit cancels the carousel
+    // animation if you trip this while in the middle of another animation.
+
+    &.right {
+        left: auto;
+        right: 0;
+    }
+
+    // ----- HOVER / FOCUS STATES ----- //
+    #{$link-hover-focus} {
+        color: $carousel-control-color-hover;
+        text-decoration: none;
+        @include remove-focus-outline();
+    }
+
+    // ----------------------------------------------------
+    //   ACTUAL TOGGLE BUTTONS
+    // ----------------------------------------------------
+    .icon-carousel-prev,
+    .icon-carousel-next {
+        position: absolute;
+        top: 50%;
+        left: to-rem($carousel-control-padding);
+        z-index: 5;
+        display: block;
+        margin-top: to-rem(round($carousel-control-icon-size / -2));
+    }
+
+    // Disabled states when non-wrapping carousel is at the edge
+    .at-left-edge &[data-slide="prev"],
+    .at-right-edge &[data-slide="next"] {
+        @include disabled-cursor();
+        color: $carousel-control-color;
+    }
+}
+
+
+// ********************************************************
+//
+//   OPTIONAL PAGE-INDICATOR CONTROLS
+//   -> Add a .page-indicators component with a list
+//      item for each slide the carousel contains
+//
+// ********************************************************
+.carousel .page-indicators {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    z-index: 15;
+    width: 100%;
+    margin-left: -50%;
+}
+
+
+// ********************************************************
+//
+//   OPTIONAL CAPTIONS
+//
+// ********************************************************
+.carousel-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 100%; // place BELOW the image - not on-top of it.
+    z-index: 10;
+    padding-top: to-rem(round($carousel-control-padding / 2));
+    color: $carousel-caption-text-color;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: normal;
+
+    .lead {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: normal;
+    }
+}

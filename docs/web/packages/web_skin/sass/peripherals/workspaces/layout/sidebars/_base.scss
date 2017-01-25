@@ -1,0 +1,94 @@
+// ********************************************************
+//
+//   WORKSPACES SIDEBAR BASE STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/layout/sidebars/base';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $wksp-module-config:  'peripherals/workspaces/atoms/workspaces-config';
+    $wksp-module-helpers: 'peripherals/workspaces/atoms/workspaces-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $wksp-module-config,
+                                          $wksp-module-helpers);
+//
+// ********************************************************
+
+
+.wksp-sidebar {
+    @include wksp-sidebar-skin-default();
+    @include wksp-min-to-max-sidebar-transitions();
+    @include grid-block($orientation: false, $align: false, $order: false);
+
+    // Default width (maximized)
+    @include wksp-sidebar-width(get($wksp-sidebar-config, 'max-width'));
+
+
+    // ----- MINIMIZED SIDEBAR ----- //
+    @at-root .wksp-sidebar-minimized {
+        @include wksp-max-to-min-sidebar-transitions();
+        @include wksp-sidebar-width(get($wksp-sidebar-config, 'min-width'));
+    }
+}
+
+.wksp-sidebar-left {
+    border-right-width: to-rem(get($wksp-sidebar-config, 'bd-width'));
+}
+
+.wksp-sidebar-right {
+    border-left-width: to-rem(get($wksp-sidebar-config, 'bd-width'));
+}
+
+
+// ----------------------------------------------------
+//   SIDEBAR CONTENT CONTAINERS
+//   -> Wrap around any content within the sidebars
+//      for consistent padding / spacing in both
+//      minimized and expanded sidebar states.
+//
+//  [1] Vertical padding is cut in half to prevent
+//      adjacent content-blocks from displaying
+//      "double" padding, especially obvious in
+//      minimized state. The exception is the first /
+//      last sidebar... in which their top / bottom
+//      padding values are the full amount,
+//      respectively. (See [2] and [3])
+//
+//  [4] Re-instate `.grid-shrink` for content blocks
+//      so that consumers can easily use our grid v2
+//      CSS class api to make blocks within sidebars
+//      shrink to fit content.
+// ----------------------------------------------------
+.wksp-sidebar-content-block {
+    @include wksp-sidebar-content-block-transitions('min-to-max');
+    @include grid-block($orientation: false, $align: false, $order: false);
+    @include grid-content($size: false);
+
+    padding: get($wksp-sidebar-config, 'content-padding-vertical') get($wksp-sidebar-config, 'content-padding-horizontal'); // [1]
+
+    &.wksp-sidebar-masthead {
+        padding-top: to-rem(get($wksp-sidebar-config, 'padding')); // [2]
+    }
+
+    &.wksp-sidebar-footer {
+        padding-bottom: to-rem(get($wksp-sidebar-config, 'padding')); // [3]
+    }
+
+    // [4]
+    &.grid-shrink {
+        @include grid-size(shrink);
+    }
+
+
+    // ----- MINIMIZED SIDEBAR ----- //
+    .wksp-sidebar-minimized & {
+        @include wksp-sidebar-content-block-transitions('max-to-min');
+
+        padding-right: to-rem(get($wksp-sidebar-config, 'minimized-padding-horizontal'));
+        padding-left: to-rem(get($wksp-sidebar-config, 'minimized-padding-horizontal'));
+    }
+}

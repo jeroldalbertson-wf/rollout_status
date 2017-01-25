@@ -1,0 +1,267 @@
+// ********************************************************
+
+////
+/// Base typography styles
+/// ---
+/// @access private
+/// @type Number
+/// @group core.internals.typography
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/base/type';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get-deep,
+                                                function to-em);
+//
+// ********************************************************
+
+
+
+// ********************************************************
+//
+//   PARAGRAPHS
+//
+// ********************************************************
+    ///
+    /// Default amount of `em` spacing below a `<p>` element.
+    /// ---
+    /// @since 1.0.0
+    /// @requires {variable} $base-elem-margin-vertical
+    /// @requires {function} to-em
+    ///
+    $paragraph-margin-bottom: to-em($base-elem-margin-vertical, $font-size-base);
+
+
+
+// ********************************************************
+//
+//   BLOCKQUOTES
+//
+// ********************************************************
+    ///
+    /// Default amount of vertical padding within a `<blockquote>` element.
+    /// ---
+    /// @since 1.0.0
+    /// @requires {variable} $paragraph-margin-bottom
+    ///
+    $blockquote-padding-vertical: $paragraph-margin-bottom;
+
+    ///
+    /// Default amount of horizontal padding within a `<blockquote>` element.
+    /// ---
+    /// @since 1.0.0
+    /// @requires {variable} $blockquote-padding-vertical
+    ///
+    $blockquote-padding-horizontal: $paragraph-margin-bottom * 2;
+
+    ///
+    /// Default border width for a `<blockquote>` element.
+    /// ---
+    /// @since 1.0.0
+    ///
+    $blockquote-bd-width: 5px;
+
+
+
+// ********************************************************
+//
+//   LISTS
+//
+// ********************************************************
+    ///
+    /// Default amount of left indentation for a `<li>` element.
+    /// ---
+    /// @since 1.0.0
+    /// @requires {variable} $spacing-base
+    ///
+    $list-margin-left-base: $spacing-base * 5;
+
+    ///
+    /// Default width of for a `<dt>` element.
+    /// ---
+    /// @since 0.2.0
+    ///
+    $definition-list-term-width: 160px;
+
+
+
+// ********************************************************
+//
+//   HEADINGS
+//
+// ********************************************************
+    ///
+    /// Default font-face for headings (`<h1>` through `<h4>`).
+    /// ---
+    /// @type List
+    /// @requires {variable} $webfont-sans-serif
+    ///
+    $headings-font-family: $webfont-sans-serif;
+
+    ///
+    /// Default color for headings (`<h1>` through `<h6>`).
+    /// ---
+    /// @type Color
+    /// @color #444444
+    /// @requires {variable} $zc-gray-120
+    ///
+    $headings-color: $zc-gray-120;
+
+    ///
+    /// Default line-height for headings.
+    ///
+    $headings-line-height: 1.1;
+
+    ///
+    /// Default kerning (`letter-spacing`) for headings (`<h1>` through `<h6>`).
+    /// ---
+    ///
+    $headings-kerning: 0;
+
+    ///
+    /// Default amount of `em` spacing below headings (`<h1>` through `<h6>`).
+    ///
+    $headings-margin-bottom: .275em;
+
+    ///
+    /// Default amount of `em` spacing above headings (`<h1>` through `<h6>`).
+    ///
+    $headings-margin-top: .56em;
+
+    ///
+    /// Default amount of space around headings in all directions (`<h1>` through `<h6>`).
+    /// ---
+    /// @type List
+    /// ---
+    /// @requires {variable} $headings-margin-bottom
+    /// @requires {variable} $headings-margin-top
+    ///
+    $headings-margins: $headings-margin-top 0 $headings-margin-bottom;
+
+    ///
+    /// Default border width to be used below a heading when necessary.
+    ///
+    $headings-bd-width: 1px;
+
+    ///
+    /// Default border color to be used below a heading when necessary.
+    /// ---
+    /// @type Color
+    /// @color #e3e3e3
+    /// @requires {variable} $zc-gray-40
+    ///
+    $headings-bd-color: $zc-gray-40;
+
+
+    ///
+    /// Global heading configuration
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @access public
+    /// @group core.typography
+    /// ---
+    /// @requires {variable} $headings-font-family
+    /// @requires {variable} $font-family-base
+    /// @requires {variable} $headings-line-height
+    /// ---
+    /// @prop {Map} h1
+    /// @prop {String} h1.font-weight [normal]
+    /// @prop {List}   h1.font-family ["Lato", "Helvetica Neue", Helvetica, Arial, sans-serif]
+    /// @prop {Number} h1.font-size   [36px]
+    /// @prop {Number} h1.line-height [1.1]
+    ///
+    /// @prop {Map} h2
+    /// @prop {String} h2.font-weight [normal]
+    /// @prop {List}   h2.font-family ["Lato", "Helvetica Neue", Helvetica, Arial, sans-serif]
+    /// @prop {Number} h2.font-size   [28px]
+    /// @prop {Number} h2.line-height [1.1]
+    ///
+    /// @prop {Map} h3
+    /// @prop {String} h3.font-weight [normal]
+    /// @prop {List}   h3.font-family ["Lato", "Helvetica Neue", Helvetica, Arial, sans-serif]
+    /// @prop {Number} h3.font-size   [24px]
+    /// @prop {Number} h3.line-height [1.1]
+    ///
+    /// @prop {Map} h4
+    /// @prop {String} h4.font-weight [normal]
+    /// @prop {List}   h4.font-family ["Lato", "Helvetica Neue", Helvetica, Arial, sans-serif]
+    /// @prop {Number} h4.font-size   [18px]
+    /// @prop {Number} h4.line-height [1.1]
+    ///
+    /// @prop {Map} h5
+    /// @prop {String} h5.font-weight [bold]
+    /// @prop {List}   h5.font-family ["Helvetica Neue", Helvetica, Arial, sans-serif]
+    /// @prop {Number} h5.font-size   [16px]
+    /// @prop {Number} h5.line-height [1.1]
+    ///
+    /// @prop {Map} h6
+    /// @prop {String} h6.font-weight [bold]
+    /// @prop {List}   h6.font-family ["Helvetica Neue", Helvetica, Arial, sans-serif]
+    /// @prop {Number} h6.font-size   [14px]
+    /// @prop {Number} h6.line-height [1.1]
+    ///
+    $headings-config: (
+        'h1': (
+            'font-weight': normal,
+            'font-family': $headings-font-family,
+            'font-size':   36px,
+            'line-height': $headings-line-height
+        ),
+        'h2': (
+            'font-weight': normal,
+            'font-family': $headings-font-family,
+            'font-size':   28px,
+            'line-height': $headings-line-height
+        ),
+        'h3': (
+            'font-weight': normal,
+            'font-family': $headings-font-family,
+            'font-size':   24px,
+            'line-height': $headings-line-height
+        ),
+        'h4': (
+            'font-weight': normal,
+            'font-family': $headings-font-family,
+            'font-size':   18px,
+            'line-height': $headings-line-height
+        ),
+        'h5': (
+            'font-weight': bold,
+            'font-family': $font-family-base,
+            'font-size':   16px,
+            'line-height': $headings-line-height
+        ),
+        'h6': (
+            'font-weight': bold,
+            'font-family': $font-family-base,
+            'font-size':   14px,
+            'line-height': $headings-line-height
+        )
+    );
+
+
+
+// ********************************************************
+//
+//   HEADING MAP ALIASES (UNDOCUMENTED)
+//
+// ********************************************************
+    $h1-font-size:   get-deep($headings-config, 'h1.font-size');
+    $h1-line-height: get-deep($headings-config, 'h1.line-height');
+    $h2-font-size:   get-deep($headings-config, 'h2.font-size');
+    $h2-line-height: get-deep($headings-config, 'h2.line-height');
+    $h3-font-size:   get-deep($headings-config, 'h3.font-size');
+    $h3-line-height: get-deep($headings-config, 'h3.line-height');
+    $h4-font-size:   get-deep($headings-config, 'h4.font-size');
+    $h4-line-height: get-deep($headings-config, 'h4.line-height');
+    $h5-font-size:   get-deep($headings-config, 'h5.font-size');
+    $h5-line-height: get-deep($headings-config, 'h5.line-height');
+    $h6-font-size:   get-deep($headings-config, 'h6.font-size');
+    $h6-line-height: get-deep($headings-config, 'h6.line-height');

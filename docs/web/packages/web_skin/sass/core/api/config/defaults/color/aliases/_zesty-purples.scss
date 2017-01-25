@@ -1,0 +1,52 @@
+// ********************************************************
+
+////
+/// Zesty Crayon Purple Color Aliases
+/// ---
+/// @access public
+/// @type Color
+/// @group core.color.zesty
+/// ---
+/// @requires {variable} $zc-purples
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/aliases/zesty-purples';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+/// Zesty Crayon Purple
+/// @color #813296
+$zc-purple: get($zc-purples, '100');
+
+/// @alias zc-purple
+/// @since 1.6.0
+$zc-purple-100: $zc-purple;
+
+/// Zesty Crayon Purple 120
+/// @since 1.6.0
+/// @color #491f60
+$zc-purple-120: get($zc-purples, '120');
+
+/// Zesty Crayon Purple 80
+/// @since 1.6.0
+/// @color #9a5bab
+$zc-purple-80: get($zc-purples, '80');
+
+/// Zesty Crayon Purple 60
+/// @since 1.6.0
+/// @color #b384c0
+$zc-purple-60: get($zc-purples, '60');
+
+/// Zesty Crayon Purple 40
+/// @since 1.6.0
+/// @color #cdadd5
+$zc-purple-40: get($zc-purples, '40');

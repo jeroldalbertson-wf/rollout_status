@@ -1,0 +1,46 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/dialogs/dialogs-shared-utilities';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $dialogs-shared-utils-module-config:  'core/components/atoms/dialogs/dialogs-shared-config';
+    $dialogs-shared-utils-module-helpers: 'core/components/atoms/dialogs/dialogs-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $dialogs-shared-utils-module-config,
+                                          $dialogs-shared-utils-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   GRAY DIALOG SKIN VARIATION
+//   -> Can be used by Tooltips or Popovers
+//
+// ********************************************************
+.dialog-gray {
+    @include popover-tooltip-skin($bg-color: $dialog-gray-bg,
+                                  $bd-color: $dialog-gray-bd-color,
+                                  $darken-arrow-border: true);
+
+    .nav-pills > .nav-item > .hitarea {
+        // match color of dialog-gray bg by default
+        background-color: $dialog-gray-bg;
+        border-color: $dialog-gray-bg;
+
+        // match default pill appearance on hover
+        #{$link-hover-focus} {
+            @include nav-pills-pill-hover();
+        }
+
+        // match default pill appearance on press
+        #{$link-pressed} {
+            @include nav-pills-pill-press();
+        }
+    }
+}

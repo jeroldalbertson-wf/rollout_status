@@ -1,0 +1,68 @@
+// ********************************************************
+
+////
+/// Primary Elem State Color Aliases
+/// ---
+/// @access private
+/// @type Color
+/// @group core.internals.color.state
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/states/aliases/state-primary';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+/// Primary Elem State Color Alias
+/// @alias state-success
+$state-primary: $state-success;
+
+/// Primary Elem State Text Color Alias
+/// @alias state-success-text
+$state-primary-text: $state-success-text;
+
+/// Primary Elem State Background Color Alias
+/// @alias state-success-bg
+$state-primary-bg: $state-success-bg;
+
+/// Primary Elem State Border Color Alias
+/// @alias state-success-bd
+$state-primary-bd: $state-success-bd;
+
+
+// ----------------------------------------------------
+//   SHARED COMPONENT STATE VARIATION COLORS
+// ----------------------------------------------------
+    ///
+    /// Primary Elem State background variation used by cards, panels, list-group items and table rows.
+    /// @alias component-state-success-bg
+    ///
+    $component-state-primary-bg: $component-state-success-bg;
+
+    ///
+    /// Primary Elem State background variation used by "inline" alerts. Cards, panels, list-group items and table rows use this color when hovered.
+    /// @alias component-state-success-bg-hover
+    ///
+    $component-state-primary-bg-hover: $component-state-success-bg-hover;
+
+    ///
+    /// Primary Elem State background variation used by cards, panels, list-group items and table rows when pressed.
+    /// ---
+    /// @since 1.4.0
+    /// @alias component-state-success-bg-press
+    ///
+    $component-state-primary-bg-press: $component-state-success-bg-press;
+
+    ///
+    /// Primary Elem State border variation used by alerts, cards, panels, list-group items and table rows.
+    /// @alias component-state-success-bd
+    ///
+    $component-state-primary-bd: $component-state-success-bd;

@@ -1,0 +1,148 @@
+// ********************************************************
+//
+//   Adjust Web Skin Core `.form-group` elems for
+//   compatibility when used in a v2 grid in the context
+//   of a `.form-horizontal` display variation.
+//
+//   [1] Reset v1 grid-row behavior applied to form groups
+//       in horizontal forms at all viewport widths.
+//
+//   [2] Make form groups behave like a grid block only
+//       above the breakpoint that causes control labels
+//       to sit side-by-side with form controls
+//       (`$grid-float-breakpoint`) so that the labels
+//       behave as stacked "blocks" below that breakpoint.
+//
+//       This will only work if the consumer does not
+//       manually apply the base `grid-block` CSS class
+//       to the `.form-group` elment.
+//
+//   [3] Simulates the presence of `grid-block-sm` CSS class,
+//       unless a `grid-block-*` CSS class has been added inline.
+//       Note that without the `:not()` specificity, the dart
+//       `AbstractFormGroup.width` prop won't work when the
+//       `isHorizontal` prop is also set.
+//
+//   [4] Simulate the "row" behavior of `.form-group` elements
+//       that use the old v1 grid classes.
+//
+//   [5] Labels must be content blocks in order for
+//       `text-align` and text truncation to work properly.
+//
+//   [6] Add the same amount of horizontal spacing that
+//       exists between the label and form control element
+//       when using the old v1 grid classes which had
+//       padding baked in.
+//
+// ********************************************************
+.form-horizontal--flexbox {
+    .form-group {
+        margin-right: 0; // [1]
+        margin-left: 0; // [1]
+
+        [class*="grid-block"] {
+            @include force-overflow(visible);
+        }
+    }
+
+    // ----- [2] ----- //
+    @include respond-to('screen-#{$grid-float-breakpoint} and up') {
+        @include grid-block(
+            $wrap: true, // [4]
+            $allow-nested-vblocks: false
+        );
+        @include force-overflow(visible);
+
+        .form-group {
+            &:not([class*="grid-block"]) {
+                // ----- [3] ----- //
+                @include grid-block(
+                    $size: 100%, // [4]
+                    $allow-nested-vblocks: false
+                );
+                @include force-overflow(visible);
+            }
+            @include force-overflow(visible);
+
+            .control-label {
+                @include truncate-text();
+
+                display: block; // [5]
+                padding-right: to-rem(get($grid-config, 'gutter-width')); // [6]
+            }
+        }
+
+        // Override right offset used for v1 grids as a result of
+        // the negative margin placed on the `.form-group` element
+        .form-control-feedback {
+            right: 0;
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   Adjust Web Skin Core `.form-group` elems for
+//   compatibility when used in a v2 grid for changing
+//   the width of a control grouping by adding the
+//   `form--flexbox` CSS class to the form that surrounds
+//   the entire layout.
+//
+//   This provides some sensible defaults so a crazy
+//   number of CSS classes are not necessary to build
+//   a content block that acts like the old v1 grid
+//   columns did.
+//
+// ********************************************************
+@each $breakpoint in get($grid-config, 'breakpoints-v2') {
+    @include  _breakpoint-respond-to($breakpoint) {
+        $breakpoint-suffix: if($breakpoint != null, '-#{$breakpoint}', '');
+
+        .form--flexbox#{$breakpoint-suffix} {
+            @include grid-block(
+                $wrap: true,
+                $allow-nested-vblocks: false
+            );
+            @include force-overflow(visible);
+
+            .form-group {
+                // Should expand / shrink to fit within the row
+                // Don't use shortand though - because that will
+                // set `flex-basis` with more specificity than the
+                // `grid-block-sm-*` CSS classes we want consumers
+                // to use to specify the width of a group.
+                @include flex-grow(1);
+                @include flex-shrink(1);
+                // Make it a content block by default
+                // with no vertical padding to mimic
+                // the v1 grid .col-sm-* CSS classes
+                display: block;
+                padding-left: $flex-grid-gutter-width / 2;
+                @include force-overflow(visible);
+
+                &:first-of-type {
+                    padding-left: 0;
+                }
+
+                + .form-group {
+                    padding-left: $flex-grid-gutter-width;
+                }
+            }
+
+            &.form-inline,
+            .form-inline {
+                .form-group {
+                    @include display-flex(inline-flex);
+                    @include grid-size(shrink);
+
+                    &:not([class*="grid-gutter"]) {
+                        padding-left: 0;
+                        padding-right: 0;
+                    }
+                }
+            }
+        }
+    }
+}

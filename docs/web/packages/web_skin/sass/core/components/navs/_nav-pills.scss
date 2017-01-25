@@ -1,0 +1,105 @@
+// ********************************************************
+//
+//   PILL NAV COMPONENTS STYLE MODULE
+//   http://bit.ly/webskin-nav-pills
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/navs/nav-pills';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $nav-pills-module-config:  'core/components/atoms/navs/config/nav-pill-config';
+    $nav-pills-module-helpers: 'core/components/atoms/navs/navs-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $nav-pills-module-config,
+                                          $nav-pills-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE PILL NAV (`<ul>`)
+//
+// ********************************************************
+.nav-pills {
+    @include nav-pills-base();
+}
+
+
+// ********************************************************
+//
+//   PILL NAV DROPDOWN ITEMS
+//
+// ********************************************************
+.nav-pills {
+    // ----------------------------------------------------
+    //   DROPDOWN MENU BASE
+    // ----------------------------------------------------
+    .dropdown > .dropdown-menu {
+        left: to-rem(get($nav-pills-pill-config, 'spacing') * 2);
+    }
+
+
+    // ----------------------------------------------------
+    //   DROPDOWN MENU ALIGNMENT
+    // ----------------------------------------------------
+    &.pull-right .dropdown > .dropdown-menu,
+    .dropdown.pull-right > .dropdown-menu,
+    .dropdown > .dropdown-menu-right {
+        right: 0;
+        left: auto;
+    }
+}
+
+
+// ********************************************************
+//
+//   PILL TAB CONTENT AREAS
+//
+// ********************************************************
+.pill-content > .pill-pane {
+    @include nav-tab-content-visibility-control();
+}
+
+
+// ********************************************************
+//
+//   VERTICALLY STACKED VARIATION
+//
+// ********************************************************
+.nav-stacked {
+    > .nav-item {
+        float: none;
+
+        // Add space between adjacent items
+        + .nav-item > .hitarea {
+            text-align: left; // only left align when stacked
+            margin-top: to-rem(get($nav-pills-pill-config, 'stacked-spacing'));
+            margin-left: 0;
+        }
+
+        // Required props to support a `<button>`
+        // elem for the hitarea
+        > .hitarea {
+            width: 100%;
+            text-align: left;
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   PILL SKIN VARIATIONS
+//
+// ********************************************************
+.nav-pills > .nav-item {
+    @each $state in append(map-keys($default-states-min), 'link') {
+        @include pill-skin($state);
+    }
+}

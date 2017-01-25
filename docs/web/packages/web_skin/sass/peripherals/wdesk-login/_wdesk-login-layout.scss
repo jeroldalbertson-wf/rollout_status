@@ -1,0 +1,296 @@
+// ********************************************************
+//
+//   Wdesk Login Page Layout Styles
+//
+    $module: 'peripherals/wdesk-login/wdesk-login-layout';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE LAYOUT
+//
+// ********************************************************
+
+// ----------------------------------------------------
+//   MOBILE FIRST DEFAULTS
+// ----------------------------------------------------
+    .login-floor {
+        position: relative;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .container-login {
+        padding-top: $login-container-padding-top;
+    }
+
+    .row-login-header {
+        padding-bottom: $login-header-padding-bottom;
+    }
+
+    .row-login-footer {
+        margin-top: $login-footer-margin-top;
+
+        p {
+            margin-bottom: 0;
+        }
+    }
+
+    .login-form-rug {
+        min-height: $login-form-row-min-height;
+        background-color: $login-form-rug-bg;
+
+        fieldset {
+            margin: $login-form-fieldset-margin-vertical auto;
+            // max-width when hero image is not side-by-side with form
+            max-width: $login-form-fieldset-width;
+        }
+
+        legend {
+            display: none; // hidden on screens less than `$login-sm-breakpoint-min`
+            margin-bottom: $login-legend-margin-bottom;
+            border: 0 none;
+            font-size: $login-legend-font-size;
+            font-family: $login-legend-font-family;
+            font-weight: $login-legend-font-weight;
+            color: $login-legend-color;
+            text-align: center;
+            line-height: 1;
+            letter-spacing: .05ex;
+        }
+
+        .form-group {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .form-group-callout {
+            // center the button within it
+            text-align: center;
+
+            p {
+                // font-size and line-height set specifically to ensure
+                // that the height of it's parent .form-group matches
+                // the height it was on the main login page.
+                font-size: $font-size-md;
+                line-height: 1.35;
+            }
+
+            > p:last-of-type {
+                margin: 0;
+            }
+
+            // container that holds the "Use Single Sign On Button"
+            // hidden on screens less than `$login-md-breakpoint-min`
+            &.form-group-sso-primary {
+                display: none;
+            }
+        }
+    }
+
+    .login-mktg-hero-wrapper {
+        display: none; // not shown until tablets+
+
+        // remove grid column padding
+        // so that the image sits flush left / right
+        // with edge of viewport
+        padding: 0;
+    }
+
+    .login-form-actions {
+        float: left;
+        width: 100%;
+
+        // If there is only one set of buttons
+        // center them instead of floating left.
+        &.login-form-actions-single {
+            float: none;
+        }
+
+        .btn + .btn {
+            margin-left: $spacing-base;
+        }
+    }
+
+    // valign with login-form-actions-primary
+    // since the button in the primary div
+    // is a .btn, and the secondary btns are .btn-sm
+    .login-form-actions-secondary {
+        position: relative;
+        top: $login-form-actions-secondary-offset-top;
+
+        .btn-link {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+
+    // divider between secondary buttons
+    .login-form-actions-secondary-divider {
+        padding: 0 $login-form-actions-divider-padding-horizontal;
+        font-size: $login-form-actions-secondary-font-size;
+        vertical-align: middle;
+    }
+
+
+// ----------------------------------------------------
+//   BELOW TABLET, LANDSCAPE
+//   -> At this size, we're dealing
+//      with severe viewport height
+//      limitations, adjust accordingly.
+// ----------------------------------------------------
+    @include respond-to('below screen-sm, landscape') {
+        // Reduce overall height of header
+        // so that the entire login form fits
+        // comfortably above the fold
+        .container-login {
+            padding-top: $login-xs-container-padding-top;
+        }
+
+        .row-login-header {
+            padding-bottom: $login-xs-header-padding-bottom;
+        }
+
+        .row-login-footer {
+            margin-top: $login-xs-footer-margin-top;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   BELOW TABLET, PORTRAIT
+//   -> At this size, we're dealing
+//      with a surplus of viewport height
+//      adjust accordingly.
+// ----------------------------------------------------
+    @include respond-to('below screen-sm, portrait') {
+        .login-form-rug {
+            // show the welcome message since we have a ton
+            // of extra vertical height to work with
+            legend {
+                display: block;
+            }
+        }
+    }
+
+
+// ----------------------------------------------------
+//   TABLET+
+// ----------------------------------------------------
+    @include respond-to('screen-sm and up') {
+        .container-login {
+            padding-top: $login-sm-container-padding-top;
+        }
+
+        .row-login-main {
+            background-color: $login-form-rug-bg;
+            min-height: $login-sm-form-row-min-height;
+        }
+
+        .login-form-rug {
+            padding-top: $login-sm-form-rug-padding-top;  // center vertically
+            padding-right: $login-sm-grid-col-padding-horizontal;
+            padding-left: $login-sm-grid-col-padding-horizontal;
+
+            fieldset {
+                // remove max-width when hero image side-by-side with form
+                max-width: 100%;
+                padding-right: $login-sm-form-fieldset-padding-horizontal;
+                padding-left: $login-sm-form-fieldset-padding-horizontal;
+                // let the height of the mktg image determine height of wrapper
+                margin-bottom: 0;
+                // going to center it using padding on the form-rug
+                margin-top: 0;
+            }
+
+            legend {
+                display: block;
+            }
+        }
+
+        .login-mktg-hero-wrapper {
+            display: block;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   DESKTOP+
+// ----------------------------------------------------
+    @include respond-to('screen-md and up') {
+        .login-floor {
+            max-width: $login-md-grid-container-width;
+        }
+
+        // override default grid container max-widths
+        .container-login {
+            max-width: 100%;
+        }
+
+        .row-login-main {
+            min-height: $login-md-form-row-min-height;
+        }
+
+        .login-form-rug {
+            padding-top: $login-md-form-rug-padding-top;  // center vertically
+
+            legend {
+                font-size: $login-md-legend-font-size;
+                margin-bottom: $login-md-legend-margin-bottom;
+            }
+
+            // max-width: $login-md-form-rug-max-width;
+            .form-group-callout {
+                // beef up the appearance of the callout now that
+                // we have the vertical height to play with
+                @include emphasize-form-group-callout();
+
+                &.form-group-sso-primary {
+                    display: block;
+                }
+            }
+        }
+
+        .login-form-actions {
+            // use padding instead of margin to prevent collapsing margins
+            // between adjacent .form-group elems
+            padding-top: $login-md-form-group-callout-margin-bottom - $default-form-group-margin-bottom;
+        }
+    }
+
+
+
+// ********************************************************
+//
+//   LAYOUT WITH NO HERO IMAGE
+//   -> Determined by value of
+//      `{{ background_digest }}`
+//
+// ********************************************************
+    .row-login-main[data-has-hero-img="false"] {
+        .login-mktg-hero-wrapper {
+            display: none;
+        }
+
+        // center the login form within all
+        // available space since there is no
+        // marketing hero image
+        .login-form-rug {
+            left: 0;
+            right: 0;
+            width: 100%;
+
+            fieldset {
+                // max-width when there is no hero
+                // image is not side-by-side with form
+                max-width: $login-form-fieldset-width;
+                margin-right: auto;
+                margin-left: auto;
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+    }

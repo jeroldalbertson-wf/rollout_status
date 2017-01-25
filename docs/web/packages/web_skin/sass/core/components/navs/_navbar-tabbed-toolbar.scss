@@ -1,0 +1,531 @@
+// ********************************************************
+//
+//   NAVBAR "TABBED TOOLBAR" COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-navbars-ribbon
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/navs/navbar-tabbed-toolbar';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $navs-navbar-tabbed-toolbar-module-config:  'core/components/atoms/navs/navbars-config';
+    $navs-navbar-tabbed-toolbar-module-helpers: 'core/components/atoms/navs/navbars-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $navs-navbar-tabbed-toolbar-module-config,
+                                          $navs-navbar-tabbed-toolbar-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   TABBED TOOLBAR CONTAINERS
+//
+//   [1] Keep the primary menu "above" the collapsing
+//       secondary menu so that the bottom border of
+//       an active nav item doesn't appear clipped as
+//       it expands / collapses.
+//
+//       See: http://g.recordit.co/V8SvM3igCr.gif
+//
+// ********************************************************
+@include collapsed-navbar-mq() {
+    .ribbon-menu-tabs { // "Primary" Nav
+        position: relative;
+        z-index: 2; // [1]
+    }
+
+    .navbar-collapse { // "Secondary" Nav
+        position: relative;
+        z-index: 1; // [1]
+    }
+}
+
+
+
+// ********************************************************
+//
+//   TABBED TOOLBAR TAB LINKS
+//
+//   -> .navbar-nav links that activate tab containers
+//
+// ********************************************************
+.ribbon-menu-tabs .navbar-nav {
+    > .nav-item {
+        > .hitarea {
+            :not(.shell-toolbar-container) > .navbar & {
+                $height: to-rem($navbar-height-inner-fixed) + $navbar-bd-width-rem;
+                // Use a calculated line-height to normalize vertical alignment of text
+                // in both <button> elements, and <div>s.
+                $line-height: $height - (get($nav-tabs-sm-tab-config, 'padding-top') + get($nav-tabs-sm-tab-config, 'padding-bottom'));
+
+                // For "Gen 1 / Gen 1.5" Navbars Only.
+                //
+                // TODO: Remove once the notion of a "navbar" only applies to Gen 2 usage
+                height: $height;
+                line-height: $line-height;
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   navbar-fixed-bottom variation
+    // ----------------------------------------------------
+    .navbar-fixed-bottom & {
+        @include nav-tabs-below();
+
+        margin-top: 0;
+    }
+
+
+    // ----------------------------------------------------
+    //   Tabbed toolbar tabs in a collapsed navbar
+    //
+    //   -> Since these are always displayed even in
+    //      mobile-first scenarios outside of the
+    //      `.navbar-collapse` elem we need to ensure that
+    //      they will float side-by-side with the
+    //      `.navbar-brand` portion of `.navbar-header`
+    // ----------------------------------------------------
+    @include collapsed-navbar-mq {
+        float: left;
+        margin-top: 0;
+        margin-bottom: to-rem($navbar-bd-width) * -1;
+
+        .navbar-header + & {
+            margin-top: to-rem($navbar-height-inner) * -1;
+            margin-right: 0;
+            margin-bottom: to-rem($navbar-height-inner) * -1;
+            margin-left: to-rem(image-width($wdesk-logo-url) + get($navbar-brand-config, 'link-padding-right'));
+
+            > .nav-item {
+                float: left;
+            }
+
+            &.navbar-right {
+                float: right;
+            }
+        }
+
+        .navbar-header--no-brand + & {
+            margin-left: 0;
+        }
+
+        // Adjust vertical margin for fixed variation
+        .navbar-fixed-top .navbar-header + &,
+        .navbar-fixed-bottom .navbar-header + & {
+            margin-top: to-rem($navbar-height-inner-fixed) * -1;
+            margin-bottom: to-rem($navbar-height-inner-fixed) * -1;
+        }
+    }
+}
+
+
+
+// ********************************************************
+//
+//   TABBED TOOLBAR CONTENT BASE WRAPPER
+//
+// ********************************************************
+.ribbon-nav-container {
+    position: absolute; // don't alter the height of the parent `.navbar`
+    width: 100%;
+    margin-top: to-rem($navbar-bd-width);
+    padding-top: to-rem(get($nav-ribbon-tab-link-config, 'bd-width'));
+    background-color: get($navbar-base-config, 'bg');
+    //
+    // placed here so that the margin of the .container inside it
+    // won't cause the green border to not extend the full width of the screen
+    //
+    border-bottom: get($nav-ribbon-base-config, 'bd-bottom-width') solid get($nav-ribbon-base-config, 'bd-bottom-color');
+
+    //
+    // Calculate the amount of horizontal padding for the container based on the amount of horizontal padding
+    // that the first / last nested `.ribbon-action-group`s will contain based on the viewport width breakpoint.
+    //
+    // Should always result in a total *perceived* horizontal padding of `get($nav-ribbon-base-config, 'padding-horizontal')`
+    //
+    // See: @mixin ribbon-action-group-padding()
+    //
+    @each $viewport-size-key, $breakpoint-key in get($nav-ribbon-base-config, 'viewport-breakpoint-keys') {
+        @include _breakpoint-respond-to($breakpoint-key) {
+            $ribbon-container-horizontal-padding: to-rem(get($nav-ribbon-base-config, 'padding-horizontal'));
+            $ribbon-action-group-horizontal-padding: to-rem(get-deep($nav-ribbon-btn-config, 'padding-horizontal.#{$viewport-size-key}'));
+
+            padding-left: $ribbon-container-horizontal-padding - $ribbon-action-group-horizontal-padding;
+            padding-right: $ribbon-container-horizontal-padding - $ribbon-action-group-horizontal-padding;
+        }
+    }
+
+    //
+    // When a ribbon nav is directly adjacent
+    // to our collapsing "global" nav...
+    //
+    + .navbar-collapse {
+        position: absolute;
+        top: 0;
+        right: to-rem($navbar-height); // make room for help link
+        width: 100%;
+    }
+
+    // Override default vertical-align middle so that all button types
+    // within the tabbed toolbar start off with a consistent 0, 0 coordinate
+    .btn,
+    .btn-group {
+        vertical-align: top;
+    }
+}
+
+
+
+// ********************************************************
+//
+//   TABBED TOOLBAR VERTICAL BUTTONS
+//
+// ********************************************************
+.ribbon-nav-container {
+    .btn-vertical {
+        //
+        // Align with .dropdown .btn-vertical elems
+        // These must be 1px less height, and 1px more top offset
+        // in order to align the labels, while still allowing
+        // the negative bottom margin to make the dd menu top edge
+        // appear flush with the green bottom border of the toolbar
+        //
+        height: to-rem(get($nav-ribbon-btn-config, 'height'));
+        padding-right: to-rem(get-deep($nav-ribbon-btn-config, 'padding-horizontal.md'));
+        padding-left: to-rem(get-deep($nav-ribbon-btn-config, 'padding-horizontal.md'));
+
+        &:not(.btn-default) {
+            // prevent shift when borders are added when dropdown-toggle is open
+            border: to-rem($dropdown-menu-bd-width) solid transparent !important;
+            // prevent :focus from showing radiused outline
+            border-radius: 0;
+        }
+
+        .btn-label-sm {
+            margin-top: $btn-vertical-label-top-offset;
+            margin-bottom: abs($btn-vertical-icon-top-offset);
+            color: get($nav-ribbon-btn-config, 'text-color');
+        }
+
+        .caret {
+            @include triangle-color-vertical(get($nav-ribbon-btn-config, 'caret-color'));
+
+            opacity: 1;
+        }
+
+
+        // ----- HOVER / FOCUS STATES ----- //
+        #{$link-hover-focus} {
+            .btn-label-sm {
+                color: get($nav-ribbon-btn-config, 'text-color-hover');
+            }
+
+            .caret {
+                @include triangle-color-vertical(get($nav-ribbon-btn-config, 'text-color-hover'));
+            }
+        }
+
+
+        // ----- PRESSED STATE ----- //
+        #{$link-pressed} {
+            .btn-label-sm {
+                color: get($nav-ribbon-btn-config, 'text-color-press');
+            }
+
+            .caret {
+                @include triangle-color-vertical(get($nav-ribbon-btn-config, 'text-color-press'));
+            }
+        }
+
+        // ----- DISABLED ----- //
+        #{$btn-disabled-selectors} {
+            @include btn-disabled($bg: get($navbar-base-config, 'bg'),
+                                  $bd-color: transparent,
+                                  $text-color: get($nav-ribbon-btn-config, 'text-color')
+                                 );
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   NON-SPLIT VERTICAL BUTTON FOCUS
+    //
+    //   -> Using outline causes the blue outline to get
+    //      clipped by the flexbox grid blocks that often
+    //      surround them.
+    // ----------------------------------------------------
+    .btn-group:not(.btn-group-split) > .btn-vertical {
+        #{$btn-focus-only-selectors} {
+            @include remove-focus-outline(!important);
+
+            //
+            // Remove focus indicator on mousepress for buttons
+            // @see #1422 / UIP-1240
+            //
+            &:not(:active) {
+                border-color: get($form-control-colors, 'bd-focus') !important;
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   NORMALIZE ICON VERTICAL ALIGNMENT
+    //
+    //  [1] Very strange vertical alignment difference when
+    //      `.btn` is a proper `<button>` element where the
+    //      icon is off by the width of the tabbed toolbar
+    //      bottom "platform" border width - only in the div.
+    //
+    //      See: https://jira.atl.workiva.net/browse/UIP-642
+    //
+    //  [2] Restore top padding removed by [1]
+    // ----------------------------------------------------
+    button.btn-vertical {
+        padding-top: $btn-vertical-label-align-adjustment; // [1]
+    }
+
+    .btn-group-split.btn-group-vertical .btn-vertical:not(.dropdown-toggle) {
+        padding-top: to-rem(get-deep($btn-config, 'padding.base.vertical')); // [2]
+    }
+}
+
+
+
+// ********************************************************
+//
+//   TABBED TOOLBAR DROPDOWNS
+//
+// ********************************************************
+.ribbon-nav-container {
+    // ----------------------------------------------------
+    //   The button
+    // ----------------------------------------------------
+    .dropdown .btn-vertical {
+        // overlap the top border of the dropdown menu
+        margin-bottom: to-rem($dropdown-menu-bd-width) * -1;
+
+        $btn-height-differential: to-rem(get($nav-ribbon-btn-config, 'height') - get($nav-ribbon-btn-config, 'height-natural'));
+        .caret {
+            right: to-rem(get-deep($nav-ribbon-btn-config, 'padding-horizontal.md'));
+            bottom: $btn-vertical-caret-bottom-offset + $btn-height-differential - to-rem($dropdown-menu-bd-width);
+        }
+    }
+
+    // ----------------------------------------------------
+    //  ADJUST HEIGHT OF VERTICAL SPLIT BUTTON DROPDOWNS
+    // ----------------------------------------------------
+    .btn-group-split.btn-group-vertical > .btn-vertical {
+        &:first-child:not(.dropdown-toggle) {
+            height: to-rem(get($nav-ribbon-btn-config, 'height') - get($btn-config, 'dd-toggle-ribbon-nav-vertical-height')) + $btn-vertical-icon-top-offset;
+        }
+    }
+
+    // ----------------------------------------------------
+    //   ADD SPACE BELOW VERTICAL SPLIT BUTTON DROPDOWNS
+    //
+    //   -> Since this context is usally presented with a
+    //      button skin applied, we don't want the bottom
+    //      edge of the dropdown-toggle button to be flush
+    //      with the green border on the bottom of the
+    //      nav-ribbon elem, and we want some space between
+    //      the dropdown-toggle and the menu when it appears
+    // ----------------------------------------------------
+    .btn-group-split.btn-group-vertical {
+        > .dropdown-toggle,
+        .btn-group > .dropdown-toggle {
+            height: auto; // override fixed height set on .ribbon-nav .dropdown .btn-vertical
+            margin-bottom: to-rem(get($btn-config, 'dd-menu-spacing'));
+        }
+    }
+
+    // ----- OPEN / ACTIVE STATE ----- //
+    .dropdown.open .btn-vertical:not(.btn-default) {
+        @include navbar-dropdown-link-active($bd-color: get($dropdown-menu-color-config, 'bd-color'),
+                                             $bg: get($nav-ribbon-base-config, 'bg')
+                                            );
+        // prevent drop shadow of dropdown-menu from showing above
+        z-index: z('dropdown') + 1;
+    }
+}
+
+// ----------------------------------------------------
+//   The dropdown menu spawned from a vertical button
+//
+//   -> Make it look "attached" to the bottom edge
+//      of the tabbed toolbar
+//
+//   TODO: Remove the :not(.ribbon-action-group) selector
+//         once the .has-vertical-buttons selector
+//         becomes required in 2.0.0
+// ----------------------------------------------------
+.ribbon-nav-container .btn-group-vertical:not(.ribbon-action-group) > .dropdown > .dropdown-menu,
+.has-vertical-buttons > .dropdown > .dropdown-menu {
+    margin: 0;
+    border-color: get($dropdown-menu-color-config, 'bd-color');
+    @include border-top-radius(0);
+}
+
+
+
+// ********************************************************
+//
+//   TABBED TOOLBAR VIEWPORT SPACING
+//
+//   TODO: Deprecate the usage of .btn-toolbar without the .ribbon-action-toolbar class in 2.0.0
+//
+// ********************************************************
+.ribbon-nav-container .tab-pane > .btn-toolbar {
+    @include navbar-ribbon-breakpoints();
+}
+
+
+
+// ********************************************************
+//
+//   TABBED TOOLBAR ACTION GROUPS
+//
+// ********************************************************
+// TODO: Deprecate the use of .btn-toolbar elems that lack the .ribbon-action-toolbar CSS class in 2.0.0 (so that we don't have to use the > selector to differentiate top level / child toolbars)
+.ribbon-nav-container .tab-pane > .btn-toolbar {
+    margin-left: 0;
+
+    // TODO: Deprecate the use of .btn-group elems that lack the .ribbon-action-group CSS class in 2.0.0 (so that .btn-toolbar / .btn-groups can both just use the .ribbon-action-group class)
+    > .btn-group {
+        // create a vertical divider between button groups / toolbars
+        @include ribbon-action-group-divider();
+
+        // override standard .btn-group spacing within a toolbar
+        + .btn-group {
+            //
+            // Change left margin to ensure that dropdown toggles
+            // that appear AFTER a divider also cover up that divider
+            //
+            margin-left: to-rem(get($nav-ribbon-btn-group-config, 'divider-bd-width')) * -1;
+        }
+    }
+}
+
+
+
+
+// ********************************************************
+//
+//   TABBED TOOLBAR ACTION GROUPS 2.0
+//
+//   -> Similar to a .btn-toolbar / .btn-group,
+//      without all the inherited styles involving
+//      the flattening of adjacent btn border radii, etc.
+//
+//   -> These act as containers for `.ribbon-action-group`.
+//
+//   -> Required Grid V2 peripheral module prior to the
+//      `1.4.0` release (via #1241)
+//
+//   [1] Ensure that HTML white-space has no effect on the
+//       amount of horizontal spacing between adjacent `.btn`s
+//       within `.ribbon-action-group`, and between adjacent
+//       `.btn-group`s within `.ribbon-action-toolbar`s.
+//
+//       See: https://jira.atl.workiva.net/browse/UIP-958
+//
+// ********************************************************
+    .ribbon-action-toolbar {
+        @include ribbon-action-toolbar-grid-block();
+
+        height: to-rem(get($nav-ribbon-btn-config, 'height')) !important;
+        font-size: 0; // [1]
+    }
+
+
+    // ----------------------------------------------------
+    //   RIBBON ACTION GROUP
+    // ----------------------------------------------------
+    .ribbon-action-group {
+        @include ribbon-action-group-grid-block();
+        @include ribbon-action-group-padding($include-grid-size-styles: false);
+        @include ribbon-action-group-toolbar-children-spacing(to-rem($nav-ribbon-action-group-rows-spacing-horizontal));
+
+        font-size: 0; // [1]
+
+
+        // ----------------------------------------------------
+        //   NON-VERTICAL BTN-TOOLBAR CHILD SPACING ADJUSTMENTS
+        //
+        //   -> https://github.com/Workiva/web-skin/issues/1241
+        // ----------------------------------------------------
+        &:not(.has-unskinned-buttons) {
+            @include btn-toolbar-adjacent-child-spacing($spacing: $nav-ribbon-action-group-rows-spacing-horizontal);
+        }
+
+        // ----------------------------------------------------
+        //   GROUPS WITH NOTHING BUT A SKINNED BUTTON
+        //
+        //   e.g. "Share", "Create Style Guide" buttons
+        //
+        //   -> Vertically align according to spec
+        // ----------------------------------------------------
+        &.has-no-action-group-label {
+            padding-top: 1rem !important;
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   MULTIPLE ROWS WITHIN RIBBON ACTION GROUPS
+    //
+    //   -> https://github.com/Workiva/web-skin/issues/1241
+    // ----------------------------------------------------
+    .ribbon-action-group__rows {
+        @include ribbon-action-group-rows(
+            $horizontal-spacing: $nav-ribbon-action-group-rows-spacing-horizontal,
+            $vertical-spacing: $nav-ribbon-action-group-rows-spacing-vertical,
+            $space-below-row: $nav-ribbon-action-group-rows-spacing-vertical
+        );
+    }
+
+
+    // ----------------------------------------------------
+    //   TABBED TOOLBAR GROUP LABELS
+    //
+    //   [1] Keep the baseline of these labels aligned with
+    //       any adjacent `.btn-label-sm` elems within vertical
+    //       buttons.
+    //
+    //       Only works when buttons above it are of the
+    //       xs size variation.
+    //
+    //   [2] Align labels with labels in `.btn-vertical`
+    //       elements in the same toolbar
+    //
+    //   [3] Ensure that the label colors match the
+    //       text within "vertical" buttons in the toolbar.
+    // ----------------------------------------------------
+    .ribbon-action-group-label {
+        @include small-action-area-label-text();
+
+        line-height: 1.3; // [1]
+        position: relative;
+        top: .6rem; // [2]
+        color: get($nav-ribbon-btn-config, 'text-color'); // [3]
+    }
+
+
+    // ----------------------------------------------------
+    //   PUBLISH BUTTON
+    // ----------------------------------------------------
+    .ribbon-action-group {
+        .btn-publish {
+            min-width: 5rem;
+
+            .icon {
+                margin-right: 0;
+            }
+        }
+    }

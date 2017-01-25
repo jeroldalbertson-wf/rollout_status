@@ -1,0 +1,144 @@
+////
+/// Deprecated Zesty Crayon Color Aliases
+/// ---
+/// @type Color
+/// @group core.color.zesty
+/// @deprecated in `1.6.0`. Will be removed compltely in the `2.0.0` release.
+/// @todo remove in the `2.0.0` release.
+////
+
+
+///
+/// Alternate green colors found within the [Zesty Crayon Color Palette](http://bit.ly/web-skin-color-palette).
+/// ---
+/// @type Map
+/// @requires {variable} $zc-greens-b
+/// ---
+/// @prop {Color} base       [#42ad48] - __DEPRECATED.__
+/// @prop {Color} darker     [#2b7237] - __DEPRECATED.__
+/// @prop {Color} lighter    [#68bd6d] - __DEPRECATED.__
+/// @prop {Color} pastel1    [#8ece91] - __DEPRECATED.__
+/// @prop {Color} pastel2    [#b3deb6] - __DEPRECATED.__
+///
+$zc-greens-alt: (
+    'base':     get($zc-greens-b, '100'),
+    'darker':   get($zc-greens-b, '120'),
+    'lighter':  get($zc-greens-b, '80'),
+    'pastel1':  get($zc-greens-b, '60'),
+    'pastel2':  get($zc-greens-b, '40')
+);
+
+///
+/// Alternate '2' green colors found within the [Zesty Crayon Color Palette](http://bit.ly/web-skin-color-palette).
+/// ---
+/// @type Map
+/// @requires {variable} $zc-greens-c
+/// ---
+/// @prop {Color} base       [#0f7f40] - __DEPRECATED.__
+/// @prop {Color} darker     [#175123] - __DEPRECATED.__
+/// @prop {Color} lighter    [#3f9966] - __DEPRECATED.__
+/// @prop {Color} pastel1    [#6fb28c] - __DEPRECATED.__
+/// @prop {Color} pastel2    [#9fccb3] - __DEPRECATED.__
+///
+$zc-greens-alt2: (
+    'base':     get($zc-greens-c, '100'),
+    'darker':   get($zc-greens-c, '120'),
+    'lighter':  get($zc-greens-c, '80'),
+    'pastel1':  get($zc-greens-c, '60'),
+    'pastel2':  get($zc-greens-c, '40')
+);
+
+/// @requires {variable} $zc-gray-120
+$zc-gray-darker:    $zc-gray-120;
+/// @requires {variable} $zc-gray-90
+$zc-gray-lighter:   $zc-gray-90;
+/// @requires {variable} $zc-gray-80
+$zc-gray-lighter2:  $zc-gray-80;
+/// @requires {variable} $zc-gray-70
+$zc-gray-pastel1:   $zc-gray-70;
+/// @requires {variable} $zc-gray-70
+$zc-gray-lighter3:  $zc-gray-70;
+/// @requires {variable} $zc-gray-60
+$zc-gray-lighter4:  $zc-gray-60;
+/// @requires {variable} $zc-gray-40
+$zc-gray-pastel2:   $zc-gray-40;
+/// @requires {variable} $zc-gray-40
+$zc-gray-lighter5:  $zc-gray-40;
+/// @requires {variable} $zc-gray-20
+$zc-gray-lighter6:  $zc-gray-20;
+
+/// @requires {variable} $zc-blue-120
+$zc-blue-darker:  $zc-blue-120;
+/// @requires {variable} $zc-blue-80
+$zc-blue-lighter: $zc-blue-80;
+/// @requires {variable} $zc-blue-60
+$zc-blue-pastel1: $zc-blue-60;
+/// @requires {variable} $zc-blue-40
+$zc-blue-pastel2: $zc-blue-40;
+
+/// @requires {variable} $zc-orange-120
+$zc-orange-darker:  $zc-orange-120;
+/// @requires {variable} $zc-orange-80
+$zc-orange-lighter: $zc-orange-80;
+/// @requires {variable} $zc-orange-60
+$zc-orange-pastel1: $zc-orange-60;
+/// @requires {variable} $zc-orange-40
+$zc-orange-pastel2: $zc-orange-40;
+
+/// @requires {variable} $zc-purple-120
+$zc-purple-darker:  $zc-purple-120;
+/// @requires {variable} $zc-purple-80
+$zc-purple-lighter: $zc-purple-80;
+/// @requires {variable} $zc-purple-60
+$zc-purple-pastel1: $zc-purple-60;
+/// @requires {variable} $zc-purple-40
+$zc-purple-pastel2: $zc-purple-40;
+
+/// @requires {variable} $zc-red-120
+$zc-red-darker:  $zc-red-120;
+/// @requires {variable} $zc-red-80
+$zc-red-lighter: $zc-red-80;
+/// @requires {variable} $zc-red-60
+$zc-red-pastel1: $zc-red-60;
+/// @requires {variable} $zc-red-40
+$zc-red-pastel2: $zc-red-40;
+
+/// @requires {variable} $zc-green-120
+$zc-green-darker:  $zc-green-120;
+/// @requires {variable} $zc-green-80
+$zc-green-lighter: $zc-green-80;
+/// @requires {variable} $zc-green-60
+$zc-green-pastel1: $zc-green-60;
+/// @requires {variable} $zc-green-40
+$zc-green-pastel2: $zc-green-40;
+
+/// @requires {variable} $zc-green-120-in-gamut
+$zc-green-darker-in-gamut:  $zc-green-120-in-gamut;
+/// @requires {variable} $zc-green-80-in-gamut
+$zc-green-lighter-in-gamut: $zc-green-80-in-gamut;
+/// @requires {variable} $zc-green-60-in-gamut
+$zc-green-pastel1-in-gamut: $zc-green-60-in-gamut;
+/// @requires {variable} $zc-green-40-in-gamut
+$zc-green-pastel2-in-gamut: $zc-green-40-in-gamut;
+
+/// @requires {variable} $zc-green-b
+$zc-green-alt: $zc-green-b;
+/// @requires {variable} $zc-green-b-120
+$zc-green-alt-darker:  $zc-green-b-120;
+/// @requires {variable} $zc-green-b-80
+$zc-green-alt-lighter: $zc-green-b-80;
+/// @requires {variable} $zc-green-b-60
+$zc-green-alt-pastel1: $zc-green-b-60;
+/// @requires {variable} $zc-green-b-40
+$zc-green-alt-pastel2: $zc-green-b-40;
+
+/// @requires {variable} $zc-green-c
+$zc-green-alt2: $zc-green-c;
+/// @requires {variable} $zc-green-c-120
+$zc-green-alt2-darker:  $zc-green-c-120;
+/// @requires {variable} $zc-green-c-80
+$zc-green-alt2-lighter: $zc-green-c-80;
+/// @requires {variable} $zc-green-c-60
+$zc-green-alt2-pastel1: $zc-green-c-60;
+/// @requires {variable} $zc-green-c-40
+$zc-green-alt2-pastel2: $zc-green-c-40;

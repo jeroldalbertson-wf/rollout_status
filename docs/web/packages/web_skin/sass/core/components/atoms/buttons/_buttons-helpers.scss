@@ -1,0 +1,887 @@
+// ********************************************************
+//
+////
+/// Button component helpers
+/// ---
+/// @since 1.0.0
+/// @access public
+/// @group core.components.buttons
+/// @link http://bit.ly/webskin-buttons Button component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/buttons/buttons-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function remove-unit,
+                                                function is,
+                                                function is-string,
+                                                function is-list,
+                                                function is-map,
+                                                function is-number,
+                                                function normalize-xxs-map-key,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+///
+/// Base styles to make a `.btn` element "ready" for punchable effect activation.
+///
+@mixin base-btn-punch-effect {
+    position: relative;
+    top: 0;
+}
+
+///
+/// Reusable styles to activate the "punchable" effect to `.btn` elems
+/// ---
+/// @param {Color}          $shadow-color
+/// @param {Color | Bool}   $rgba-color [false]
+/// @param {Number | Bool}  $rgba-alpha [false]
+/// @param {String} $state ['base'] - Optionally specify 'active' to only output the rules contained within `$btn-pressed-active-selectors`, or 'all' to output everything
+///
+@mixin activate-btn-punch-effect($shadow-color, $rgba-color: false, $rgba-alpha: false, $state: 'base') {
+    $punch-depth: to-rem(get($btn-config, 'shadow-depth'));
+
+    @if unquote($state) != active {
+        box-shadow: 0 $punch-depth 0 0 $shadow-color;
+        @if $rgba-color and $rgba-alpha {
+            box-shadow: 0 $punch-depth 0 0 rgba($rgba-color, $rgba-alpha);
+        }
+    } @else {
+        // ----- PRESSED / ACTIVE (WITHOUT SELECTORS) ----- //
+
+        // Shift the button position so that is looks "punched"
+        top: $punch-depth;
+        // Need !important to override `.btn-group-vertical`
+        box-shadow: none !important;
+    }
+
+    // ----- PRESSED / ACTIVE (WITH SELECTORS) ----- //
+    @if unquote($state) == all {
+        #{$btn-pressed-active-selectors} {
+            // Shift the button position so that is looks "punched"
+            top: $punch-depth;
+            // Need !important to override `.btn-group-vertical`
+            box-shadow: none !important;
+        }
+    }
+}
+
+///
+/// Reusable styles to remove the "punchable" effect from `.btn` elems
+/// ---
+/// @param {String} $state ['all'] - Optionally specify 'active' to only output the rules contained within `$btn-pressed-active-selectors`, or 'base' to only output base state styles
+///
+@mixin remove-btn-punch-effect($state: 'all') {
+    @if unquote($state) != active {
+        //
+        // DO NOT use `!important` for `box-shadow`,
+        // otherwise `:focus` effect will be killed
+        // on `.btn-xs` / `.btn-flat` variations
+        //
+        box-shadow: none;
+    } @else {
+        // ----- PRESSED / ACTIVE (WITHOUT SELECTORS) ----- //
+        top: 0 !important;
+    }
+
+    // ----- PRESSED / ACTIVE (WITH SELECTORS) ----- //
+    @if unquote($state) == all {
+        #{$btn-pressed-active-selectors} {
+            top: 0 !important;
+        }
+    }
+}
+
+///
+/// Reusable style to remove the "punch" effect from xs / xxs size variations of dropdown toggles.
+/// ---
+/// @since 1.3.0
+/// @see {mixin} remove-btn-punch-effect
+///
+@mixin remove-btn-punch-offset-from-xs-dd-toggle($size: xs) {
+    // Needs separate selector structure
+    // instead of just using the standard
+    // `remove-btn-punch-effect()` helper since the
+    // placement of the `.open` class in these cases
+    // is typically applied to the `.btn-group` itself
+    .btn-group-#{$size}.open > .dropdown-toggle {
+        top: 0 !important;
+    }
+}
+
+///
+/// Reusable styles for disabled `.btn` elems
+/// ---
+/// @link http://bit.ly/webskin-buttons-disabled Button component disabled state spec
+/// ---
+/// @requires {variable} $btn-colors-default
+/// ---
+/// @param {Color} $bg
+/// @param {Color} $bd-color
+/// @param {Color} $text-color
+/// @param {Boolean} $global    [false] - Is this include the one that should be considered 'global'? Should only be one global include for each selector.
+///
+@mixin btn-disabled($bg: get($btn-colors-default, 'bg-base'),
+                    $bd-color: get($btn-colors-default, 'bd-base'),
+                    $text-color: get($btn-colors-default, 'text-base'),
+                    $global: false
+                   )
+{
+    @if not $global {
+        @include remove-btn-punch-effect();
+
+        background-color: $bg !important;
+        border-color: $bd-color !important;
+    }
+
+    color: $text-color !important;
+    @include opacity(get($btn-config, 'disabled-alpha'), !important);
+    @include remove-focus-outline(!important, $remove-box-shadow: $global);
+}
+
+///
+/// Reusable styles to vertically align "non-text" symbols nested within `.btn` elems automatically
+/// based on the size of the button, and optionally - the size of the icon specified
+/// ---
+/// @since 1.1.2
+/// @link http://bit.ly/webskin-icons-in-buttons Button component icon spec
+/// @param {String} $size - Size variation CSS class suffix
+///
+@mixin btn-symbol-valign($size) {
+    $map-size: normalize-xxs-map-key($size);
+    //
+    //  NOTES
+    //
+    //  [1] Size the icon automatically based on the .btn-#{$size} size
+    //
+    //  [2] Over-ride the automatic icon-size if icon size is specified
+    //
+    //  [3] Do not output the extra style if its the default pairing
+    //      that was already produced in [1]
+    //
+    //  [4] Do not output the extra style if the icon literally will
+    //      not fit in the button container height
+    //
+    //  [5] If the inner "text height" of the button is less than the
+    //      icon height the icon will need to have it's "valign" adjusted
+    //      since the line height will no longer be able to do it alone.
+    //
+    //  [6] If the inner "text height" of the button is less than the
+    //      icon height the icon will need inverse bottom margin
+    //      to ensure the height of the btn is not changed
+    //
+    //  [7] If the icon is floated right, it exits the box model
+    //      and has to be manually positioned using a calculated offset
+    //
+    //  [8] Vertically align nested `.caret` elems
+    //
+    //  [9] Don't need to re-declare the icon size if its the default
+    //      size for all `.icon` elems
+    //
+    //  [10] Override top offset set for floated icon within standard `.btn` selector
+    //
+
+    $btn-size: $map-size;
+    $this-btn-height-inner: to-rem(get-deep($btn-config, 'height-inner.#{$btn-size}'));
+    $default-icon-size-name: unquote(get-deep($btn-config, 'icon.#{$btn-size}.size-name-16'));
+    $icon-vertical-offset-key: '#{$btn-size}_icon-#{$default-icon-size-name}';
+    //
+    $top-offset: to-rem(get-deep($btn-icon-vertical-offsets, '#{$icon-vertical-offset-key}.top'));
+    $top-offset-float: to-rem(get-deep($btn-icon-vertical-offsets, '#{$icon-vertical-offset-key}.top-floated'));
+    $bottom-offset: to-rem(get-deep($btn-icon-vertical-offsets, '#{$icon-vertical-offset-key}.bottom'));
+
+    // ----- [1] ----- //
+    .icon {
+        // ----- [9] ----- //
+        @if unquote($default-icon-size-name) != base {
+            @include icon-size($default-icon-size-name);
+        }
+
+        top: $top-offset; // [5]
+        margin-bottom: $bottom-offset; // [6]
+
+        // ----- [7] ----- //
+        $default-top-floated-offset: get-deep($btn-icon-vertical-offsets, 'base_icon-base.top-floated');
+        $default-top-floated-offset: if(is-number($default-top-floated-offset), to-rem($default-top-floated-offset), $default-top-floated-offset);
+
+        @if $top-offset-float != $top-offset or
+            $top-offset-float != $default-top-floated-offset {
+            &.pull-right {
+                top: $top-offset-float;
+            }
+        }
+    }
+
+
+    // ----- [2] ----- //
+    @each $icon-size-name in get($btn-config, 'available-icon-sizes') {
+
+        // ----- [3] ----- //
+        @if unquote($icon-size-name) != $default-icon-size-name {
+
+            $icon-size: to-rem(get($icon-base16-size-config, $icon-size-name));
+
+            // ----- [4] ----- //
+            @if ($this-btn-height-inner - $icon-size) >= .2rem {
+                $icon-vertical-offset-key: '#{$btn-size}_icon-#{$icon-size-name}';
+                //
+                $top-offset: to-rem(get-deep($btn-icon-vertical-offsets, '#{$icon-vertical-offset-key}.top'));
+                $top-offset-float: to-rem(get-deep($btn-icon-vertical-offsets, '#{$icon-vertical-offset-key}.top-floated'));
+                $bottom-offset: to-rem(get-deep($btn-icon-vertical-offsets, '#{$icon-vertical-offset-key}.bottom'));
+
+                .icon-#{$icon-size-name} {
+                    @include icon-size($icon-size-name);
+
+                    top: $top-offset; // [5]
+                    margin-bottom: $bottom-offset; // [6]
+
+                    // ----- [7] ----- //
+                    $base-btn-icon-size-key-exists: map-has-key($btn-icon-vertical-offsets, 'base_icon-#{$icon-size-name}');
+                    $default-top-floated-offset: 9999;
+
+                    @if $base-btn-icon-size-key-exists {
+                        $default-top-floated-offset: to-rem(get-deep($btn-icon-vertical-offsets, 'base_icon-#{$icon-size-name}.top-floated'));
+                    }
+
+                    @if $top-offset-float != $top-offset or
+                        $top-offset-float != $default-top-floated-offset {
+                        &.pull-right {
+                            top: $top-offset-float;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // ----- [8] ----- //
+    .caret {
+        @if $size == xxs {
+            margin-top: 50% !important;
+        } @else {
+            margin-top: to-rem(get-deep($btn-config, 'caret-top-offset.#{$btn-size}')) !important;
+        }
+    }
+}
+
+///
+/// Reusable styles to align "non-text" symbols nested within `.btn` elems, e.g. icons, carets, progress-spinners
+/// ---
+/// @since 1.1.2
+/// @link http://bit.ly/webskin-icons-in-buttons Button component icon spec
+/// @param {String} $size - Size variation CSS class suffix
+///
+@mixin btn-symbol-alignment($size) {
+    $map-size: normalize-xxs-map-key($size);
+    //
+    //  NOTES
+    //
+    //  [1] Default for icons is to sit to the left of the component label
+    //      text by way of placing it before the label text in the DOM
+    //
+    //  [2] Default for carets is to sit to the right of the component label
+    //      text by way of placing it after the label text in the DOM
+    //
+    //  [3] Horizontal alignment of symbols using the global alignment modifier
+    //      CSS classes, in the context of a specific button size variation.
+    //      -> NOTE: The base size is skipped because those alignment modifier
+    //         classes are generated as part of core/foundation/tools/utilities
+    //
+
+    // ----- VERTICAL ALIGNMENT ----- //
+    &:not(.btn-vertical) {
+        @include btn-symbol-valign($size);
+    }
+
+    // ----- HORIZONTAL ALIGNMENT (BASE) ----- //
+    $icon-margin-horizontal: to-rem(get-deep($btn-config, 'icon.#{$map-size}.margin-horizontal'));
+    $caret-margin-horizontal: to-rem(get-deep($btn-config, 'caret-horizontal-offset.#{$map-size}'));
+
+    // ----- [1] ----- //
+    .icon {
+        margin-right: $icon-margin-horizontal;
+        margin-left: 0;
+    }
+
+    // ----- [2] ----- //
+    .caret {
+        margin-left: $caret-margin-horizontal;
+        margin-right: 0;
+    }
+
+    // ----- [3] ----- //
+    @if unquote($size) != base {
+        @include component-symbol-alignment($map-size);
+    }
+}
+
+///
+/// Reusable styles to align icons nested within `.btn` elems
+/// ---
+/// @since 0.4.9-4
+/// @deprecated since 1.1.2, use `btn-symbol-alignment` instead
+/// @link http://bit.ly/webskin-icons-in-buttons Button component icon spec
+/// @param {String} $size - Size variation CSS class suffix
+///
+@mixin btn-icon-alignment($size) {
+    @include deprecated-mixin('btn-icon-alignment',
+                              $deprecated-in: '1.1.2',
+                              $use-instead: 'btn-symbol-alignment');
+    @include btn-symbol-alignment($size);
+}
+
+///
+/// Reusable styles to align icons nested within `.btn` elems
+/// ---
+/// @since 0.4.9-4
+/// @deprecated since 1.1.2, use `btn-symbol-alignment` instead
+/// @link http://bit.ly/webskin-icons-in-buttons Button component icon spec
+/// @param {String} $size - Size variation CSS class suffix
+///
+@mixin btn-icon-alignment($size) {
+    @include deprecated-mixin('btn-icon-alignment',
+                              $deprecated-in: '1.1.2',
+                              $use-instead: 'btn-symbol-alignment');
+    @include btn-symbol-alignment($size);
+}
+
+///
+/// Reusable styles to vertically align icons nested within `.btn` elems automatically
+/// based on the size of the button, and optionally - the size of the icon specified
+/// ---
+/// @since 0.1.2
+/// @deprecated since 1.1.2, use `btn-symbol-valign` instead
+/// @link http://bit.ly/webskin-icons-in-buttons Button component icon spec
+/// @param {String} $size - Size variation CSS class suffix
+///
+@mixin btn-icon-valign($size) {
+    @include deprecated-mixin('btn-icon-valign',
+                              $deprecated-in: '1.1.2',
+                              $use-instead: 'btn-symbol-valign');
+    @include btn-symbol-valign($size);
+}
+
+///
+/// Reusable styles for size variations of `.btn` elems
+/// ---
+/// @since 0.3.2
+/// @link http://bit.ly/webskin-button-sizes Button component size variation spec
+/// ---
+/// @param {String}  $size           - CSS class suffix for size variation
+/// @param {Bool}    $global [false] - Is this include the one that should be considered 'global'? Should only be one global include for each size.
+///
+@mixin btn-size($size, $global: false) {
+    $size: unquote($size);
+    $map-size: normalize-xxs-map-key($size);
+
+    $padding-h:      to-rem(get-deep($btn-config, 'padding.#{$map-size}.horizontal'));
+    $padding-v:      to-rem(get-deep($btn-config, 'padding.#{$map-size}.vertical'));
+    $min-height:     if($size == xxs, 0, to-rem(get-deep($btn-config, 'height.#{$map-size}')));
+    $font-size:      to-rem(get-deep($btn-config, 'font-size.#{$map-size}'));
+    $line-height:    to-rem(get-deep($btn-config, 'line-height.#{$map-size}'));
+    $bd-radius:      to-rem(get-deep($btn-config, 'bd-radius.#{$map-size}'));
+
+    @if $size == xxs {
+        $padding-h: $padding-h / 2;
+        $padding-v: .1rem; // just enough to ensure that text doesn't intersect with vertical edges
+        $line-height: normal;
+    }
+
+    min-height:     $min-height;
+    padding:        $padding-v $padding-h;
+    font-size:      $font-size;
+    line-height:    $line-height;
+    border-radius:  $bd-radius;
+
+    // xs / xxs size variations are too small for the "punch effect"
+    @if is($size, xs xxs) {
+        @include remove-btn-punch-effect();
+    }
+
+    // $global infers that this should only be called as "global" once.
+    @if $global {
+        @include btn-symbol-alignment($size);
+
+        //
+        // Make sure that when .no-text class is applied, the result
+        // is a square button.
+        //
+        &.no-text {
+            @if $size != xxs {
+                width: $min-height;
+                height: $min-height;
+                padding-right: 0;
+                padding-left: 0;
+            } @else {
+                width: auto;
+                height: auto;
+            }
+        }
+    }
+}
+
+
+///
+/// Helper fn that declares some key vars needed within button skin mixins.
+/// ---
+/// @since 1.2.2
+/// @returns {Map} - Map of 'skin', 'shd', 'use-rgba-bd-color', 'rgba-bd-base-color', 'rgba-shd-base-color', 'rgba-shd-base-alpha'
+///
+@function get-btn-skin-vars($state-name) {
+    // ----- LOCAL VARIABLES ----- //
+    $skin: get($btn-colors, $state-name);
+    //
+    $shd: get($skin, 'shadow-base');
+    $use-rgba-bd-color:   is($state-name, 'default' 'light');
+    $rgba-bd-base-color:  if($use-rgba-bd-color, get($skin, 'bd-rgba-color'), $black);
+    $rgba-shd-base-color: if($use-rgba-bd-color, get($skin, 'shadow-rgba-color'), false);
+    $rgba-shd-base-alpha: if($use-rgba-bd-color, get($skin, 'shadow-rgba-alpha'), false);
+
+    @return (
+        'skin': $skin,
+        'shd': $shd,
+        'use-rgba-bd-color': $use-rgba-bd-color,
+        'rgba-bd-base-color': $rgba-bd-base-color,
+        'rgba-shd-base-color': $rgba-shd-base-color,
+        'rgba-shd-base-alpha': $rgba-shd-base-alpha
+    );
+}
+
+
+///
+/// Reusable `.btn` state variation styles for the "pressed" / "down" interaction state.
+/// ---
+/// @since 1.2.2
+/// @param {String} $state-name - CSS class suffix for state variation
+///
+@mixin btn-skin-pressed($state-name) {
+    $btn-skin-vars: get-btn-skin-vars($state-name);
+
+    // ----- LOCAL VARIABLES ----- //
+    $skin: get($btn-skin-vars, 'skin');
+    //
+    $shd: get($btn-skin-vars, 'shd');
+    $use-shadow: if($shd == transparent, false, true);
+    $use-rgba-bd-color:   get($btn-skin-vars, 'use-rgba-bd-color');
+    $rgba-bd-base-color:  get($btn-skin-vars, 'rgba-bd-base-color');
+    $rgba-shd-base-color: get($btn-skin-vars, 'rgba-shd-base-color');
+    $rgba-shd-base-alpha: get($btn-skin-vars, 'rgba-shd-base-alpha');
+
+    @if $use-shadow {
+        @include activate-btn-punch-effect($shd, $rgba-shd-base-color, $rgba-shd-base-alpha, $state: 'active');
+    }
+
+    color: get($skin, 'text-press');
+    background-color: get($skin, 'bg-press');
+    border-color: get($skin, 'bd-press');
+
+    @if $use-rgba-bd-color {
+        border-color: rgba($rgba-bd-base-color, get($skin, 'bd-press-rgba-alpha'));
+    }
+}
+
+
+///
+/// Reusable `.btn` state variation styles
+/// ---
+/// @link http://bit.ly/webskin-btn-colors Button component color option spec
+/// @param {String} $state-name - CSS class suffix for state variation
+///
+@mixin btn-skin($state-name) {
+    $btn-skin-vars: get-btn-skin-vars($state-name);
+
+    // ----- LOCAL VARIABLES ----- //
+    $skin: get($btn-skin-vars, 'skin');
+    //
+    $shd: get($btn-skin-vars, 'shd');
+    $use-shadow: if($shd == transparent, false, true);
+    $use-rgba-bd-color:   get($btn-skin-vars, 'use-rgba-bd-color');
+    $rgba-bd-base-color:  get($btn-skin-vars, 'rgba-bd-base-color');
+    $rgba-shd-base-color: get($btn-skin-vars, 'rgba-shd-base-color');
+    $rgba-shd-base-alpha: get($btn-skin-vars, 'rgba-shd-base-alpha');
+
+
+    // ----- DEFAULT STATE ----- //
+    @if $use-shadow {
+        @include activate-btn-punch-effect($shd, $rgba-shd-base-color, $rgba-shd-base-alpha, $state: 'base');
+    } @else {
+        @include remove-btn-punch-effect($state: 'base');
+    }
+
+    color: get($skin, 'text-base');
+    background-color: get($skin, 'bg-base');
+    border-color: get($skin, 'bd-base');
+
+    @if $use-rgba-bd-color {
+        // gray buttons use rgba for borders to
+        // ensure appropriate contrast on gray backgrounds
+        border-color: rgba($rgba-bd-base-color, get($skin, 'bd-rgba-alpha'));
+    }
+
+
+    // ----- HOVER / FOCUS STATES ----- //
+    #{$btn-hover-focus-selectors} {
+        color: get($skin, 'text-hover');
+        background-color: get($skin, 'bg-hover');
+        border-color: get($skin, 'bd-hover');
+
+        @if $use-rgba-bd-color {
+            border-color: rgba($rgba-bd-base-color, get($skin, 'bd-hover-rgba-alpha'));
+        }
+
+        @if $state-name == 'link' {
+            text-decoration: underline;
+            box-shadow: none !important; // underline is enough to indicate focus
+        }
+    }
+
+    #{$btn-focus-only-selectors} {
+        // Adjust border colors for toggle buttons since they don't use box-shadow focus styles,
+        // but instead just change the color of their borders so they look better in their most
+        // common use-case:
+        // (within `.btn-groups` which places buttons adjacent to one another with negative left margin)
+        &.btn-toggle {
+            border-color: get($skin, 'toggle-bd-focus');
+        }
+
+
+        // ----- FOCUS ONLY STATE (ALT ONLY) ----- //
+        @if $state-name == 'alt' {
+            //
+            // Not `.btn-toggle` for this adjustment since toggle buttons use border
+            // colors (not focus shadows) to indicate focus.
+            //
+            &:not(.btn-toggle) {
+                @include focus-shadow($color: $zc-blue-120, $global: false);
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   If a skin has a "discrete" active state, that means
+    //   that it is not the same as a "pressed" / "down"
+    //   state, so it should be treated differently.
+    //
+    //   It also means that the active state is available
+    //   ONLY via the `.active` CSS class - not via the
+    //   dropdown `.open` CSS class.
+    // ----------------------------------------------------
+    @if map-has-key($skin, 'text-active') {
+
+        // ----- DISCRETE PRESSED STATE ----- //
+        #{$link-pressed} {
+            @include btn-skin-pressed($state-name);
+        }
+
+
+        // ----- DISCRETE ACTIVE STATE ----- //
+        &.active {
+            @if $use-shadow {
+                @include activate-btn-punch-effect($shd, $rgba-shd-base-color, $rgba-shd-base-alpha, $state: 'active');
+            }
+
+            $sub-states: (
+                'active': '&',
+                'active-hover': $btn-hover-focus-selectors,
+                'active-press': $link-pressed
+            );
+
+            @each $sub-state, $sub-state-selector in $sub-states {
+                #{$sub-state-selector} {
+                    @if map-has-key($skin, 'text-#{$sub-state}') {
+                        color: get($skin, 'text-#{$sub-state}');
+                    }
+
+                    @if map-has-key($skin, 'bg-#{$sub-state}') {
+                        background-color: get($skin, 'bg-#{$sub-state}');
+                    }
+
+                    @if map-has-key($skin, 'bd-#{$sub-state}') {
+                        border-color: get($skin, 'bd-#{$sub-state}');
+                    }
+                }
+            }
+        }
+
+    } @else {
+
+        // ----- COMBINED PRESSED / ACTIVE STATE ----- //
+        #{$btn-pressed-active-selectors} {
+            @include btn-skin-pressed($state-name);
+
+            @if $state-name == 'link' {
+                &.btn-toggle {
+                    text-decoration: none;
+                }
+            }
+        }
+
+    }
+
+
+    // ----- DISABLED STATE ----- //
+    #{$btn-disabled-selectors} {
+        @include btn-disabled($bg: get($skin, 'bg-base'),
+                              $bd-color: get($skin, 'bd-base'),
+                              $text-color: get($skin, 'text-base')
+                             );
+
+        @if $state-name == 'link' {
+            text-decoration: none;
+        }
+    }
+
+    // Remove background / border color applied to nested icon
+    // in `btn-toggle-skins()` since those are intended only
+    // for "unskinned" buttons.
+    &.btn-toggle--vertical > .icon:before {
+        background-color: transparent !important;
+        border-color: transparent !important;
+    }
+}
+
+///
+/// Reusable `.btn-outline` skin created based on a given `$parent-bg`.
+/// ---
+/// @param {String} $parent-bg  [#fff]      - The background color of the element that your outline button is nested within
+/// @param {String} $state-name ['default'] - Will only work when `$parent-bg` is equal to `$body-bg`.
+///
+@mixin btn-outline-skin($parent-bg: $body-bg, $state-name: 'default') {
+    $outline-skin: false;
+
+    @if $parent-bg == $white {
+
+        @if unquote($state-name) == default {
+            $outline-skin: $btn-outline-colors-default;
+        } @else if unquote($state-name) == link {
+            $outline-skin: $btn-outline-colors-link;
+        } @else {
+            $outline-skin: false;
+        }
+
+    } @else {
+
+        //
+        // A background color other than white was used,
+        // so we'll generate a skin map to create a reverse-contrast
+        // outline button based on that background color.
+        //
+        $outline-skin: (
+            'text-base': contrast-color($parent-bg),
+            'text-hover': darken($parent-bg, $link-color-hover-darken-amount),
+            'text-press': darken($parent-bg, $link-color-pressed-darken-amount),
+            'bd-base': contrast-color($parent-bg),
+            'bd-hover': contrast-color($parent-bg),
+            'bd-press': contrast-color($parent-bg),
+            'bg-base': transparent,
+            'bg-hover': contrast-color($parent-bg),
+            'bg-press': contrast-color($parent-bg)
+        );
+
+    }
+
+
+    @if $outline-skin {
+        //
+        // Outline skin options that deviate from standard
+        // btn-{skin-name} appearance
+        //
+
+        // ----- DEFAULT STATE ----- //
+        color: get($outline-skin, 'text-base');
+        border-color: get($outline-skin, 'bd-base');
+        background-color: get($outline-skin, 'bg-base');
+
+
+        // ----- HOVER / FOCUS STATES ----- //
+        #{$btn-hover-focus-selectors} {
+            color: get($outline-skin, 'text-hover');
+            border-color: get($outline-skin, 'bd-hover');
+            background-color: get($outline-skin, 'bg-hover');
+            text-decoration: none; // override default link state hover
+        }
+
+
+        // ----- PRESSED / ACTIVE STATE ----- //
+        #{$btn-pressed-active-selectors} {
+            color: get($outline-skin, 'text-press');
+            border-color: get($outline-skin, 'bd-press');
+            background-color: get($outline-skin, 'bg-press');
+        }
+
+
+        // ----- DISABLED STATE ----- //
+        #{$btn-disabled-selectors} {
+            @include btn-disabled($bg: get($outline-skin, 'bg-base'),
+                                  $bd-color: get($outline-skin, 'bd-base'),
+                                  $text-color: get($outline-skin, 'text-base')
+                                 );
+        }
+    } @else {
+        //
+        // Outline skins that inherit all other properties
+        // from the btn-{skin-name} skin. All we do here is
+        // remove the background color and reverse the text color
+        // in the base / disabled states
+        //
+        background-color: transparent;
+
+        @if is($state-name, 'success' 'primary') {
+            // Use the "in-gamut" green to improve text readability
+            // See: https://github.com/Workiva/web-skin/issues/1210
+            color: get($zc-greens-in-gamut, '100');
+        } @else {
+            color: get-deep($btn-colors, '#{$state-name}.bg-base');
+        }
+
+        #{$btn-disabled-selectors} {
+            background-color: transparent !important;
+            color: get-deep($btn-colors, '#{$state-name}.bg-base') !important;
+        }
+    }
+}
+
+///
+/// Reusable base styles for `.close` button elems
+/// ---
+/// @since 0.3.2
+/// @link http://bit.ly/webskin-close-button Close button component spec
+/// ---
+/// @param {Boolean} $set-opacity [true] - Whether the `opacity` property should be set
+/// @param {Boolean} $set-cursor  [true] - Whether the `cursor` property should be set to `pointer`
+///
+@mixin close-button-base($set-opacity: true, $set-cursor: true) {
+    $alpha: get($close-btn-config, 'alpha');
+
+    @include button-normalize($set-cursor: $set-cursor);
+
+    padding-bottom: to-rem(get($close-btn-config, 'padding-bottom')); // vertical centering
+    font-family: $font-family-base;
+    font-weight: bold;
+    line-height: 1;
+    color: get($close-btn-config, 'text-color');
+    text-align: center;
+    text-shadow: 0 .1rem 0 rgba($white, 1);
+    @include disable-user-select();
+
+    @if $set-opacity {
+        opacity: $alpha;
+    }
+
+    // make windows sans-serif font for close button match osx
+    @include windows-support {
+        line-height: get($close-btn-config, 'line-height-windows');
+        padding-bottom: 0;
+    }
+}
+
+///
+/// Reusable styles for hovered `.close` button elems
+/// ---
+/// @link http://bit.ly/webskin-close-button Close button component spec
+///
+@mixin close-button-hover {
+    $text-color: get($close-btn-config, 'text-color');
+    $alpha-hover: get($close-btn-config, 'alpha-hover');
+
+    cursor: pointer;
+    text-decoration: none;
+    color: $text-color;
+    opacity: $alpha-hover;
+    @include remove-focus-outline(); // TODO: better way to indicate focus without adding a giant square outline around a transparent button hitarea?
+}
+
+///
+/// Reusable styles for pressed `.close` button elems
+/// ---
+/// @link http://bit.ly/webskin-close-button Close button component spec
+///
+@mixin close-button-press {
+    $text-color: get($close-btn-config, 'text-color');
+    $alpha-press: get($close-btn-config, 'alpha-press');
+
+    color: $text-color;
+    opacity: $alpha-press;
+}
+
+// @todo document this
+@mixin btn-group-vertical-child-base {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+}
+
+// @private
+// @since 1.1.2
+@mixin btn-group-dd-toggle-horizontal-spacing($size: base) {
+    $dd-toggle-pad-key-suffix: if(unquote($size) == base, '-horizontal', '-#{$size}-horizontal');
+    $padding-horizontal: get($btn-config, 'dd-toggle-padding#{$dd-toggle-pad-key-suffix}');
+
+    padding-right: to-rem($padding-horizontal);
+    padding-left: to-rem($padding-horizontal);
+
+    @if unquote($size) == base {
+        // Simulate `no-text` CSS class on the `.btn`
+        .caret {
+            margin-left: 0;
+        }
+    }
+}
+
+///
+/// Generate the selectors to handle double-border prevention of child `.btn` and `.btn-group` elems within a parent `.btn-group`.
+/// ---
+/// @since 1.1.0
+/// @requires {external} SassScript/append <http://bit.ly/sass-append-fn>
+/// ---
+/// @param {Map | List | String} $selectors - Selector `String`, `List` of selector strings, or `Map` containing values that are selector strings
+/// ---
+/// @returns {List} - Comma-separated union of the individual values passed in through the `$selectors` Map
+///
+@function btn-group-prevent-double-border-selectors($selectors) {
+    $selector-list: ();
+
+    @if is-string($selectors) or is-list($selectors) {
+        $selector-list: $selectors;
+    } @else if is-map($selectors) {
+        // Concatenate all the valus in the Map into a single List
+        @each $name, $selector in $selectors {
+            @if is-string($selector) {
+                $selector-list: append($selector-list, unquote($selector), comma);
+            } @else {
+                @error "`btn-group-prevent-double-border-selectors` function expecting the value of Map keys to be a String. #{type-of($selector)} given.";
+            }
+        }
+    } @else {
+        @error "`btn-group-prevent-double-border-selectors` function expecting a String, List or Map. #{type-of($selectors)} given.";
+    }
+
+    @return $selector-list;
+}
+
+
+@mixin btn-toolbar-adjacent-child-spacing($spacing: $spacing-base, $is-global: false) {
+    > .btn,
+    > .btn-group,
+    > .input-group {
+        margin-left: to-rem($spacing);
+
+        &:first-of-type {
+            margin-left: 0;
+        }
+    }
+
+    > .input-group {
+        @include display-flex(inline-flex);
+    }
+}

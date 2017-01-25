@@ -1,0 +1,1227 @@
+// ********************************************************
+//
+//   Two Color Icon Glyph Declarations
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/icons/atoms/glyphs/glyphs-two-color';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $icon-glyph-two-color-module-config:  'core/foundation/icons/atoms/icons-config';
+    $icon-glyph-two-color-module-helpers: 'core/foundation/icons/atoms/icons-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $icon-glyph-two-color-module-config,
+                                          $icon-glyph-two-color-module-helpers);
+//
+// ********************************************************
+
+
+//
+// second color icon pua value functions
+// called via @mixin ws-icon-glyph
+//
+    @function icon-forms-view-after() {
+        @return to-unicode("e9dd");
+    }
+    @function icon-forms-after() {
+        @return to-unicode("e9de");
+    }
+    @function icon-filing-properties-after() {
+        @return to-unicode("e9df");
+    }
+    @function icon-file-sheet-view-g2-after() {
+        @return to-unicode("e9e0");
+    }
+    @function icon-file-open-downloaded-g2-after() {
+        @return to-unicode("e9e1");
+    }
+    @function icon-chart-waterfall-view-after() {
+        @return to-unicode("e9e2");
+    }
+    @function icon-chart-scatter-plot-view-after() {
+        @return to-unicode("e9e3");
+    }
+    @function icon-chart-pie-view-after() {
+        @return to-unicode("e9e4");
+    }
+    @function icon-chart-line-view-after() {
+        @return to-unicode("e9e5");
+    }
+    @function icon-chart-donut-view-after() {
+        @return to-unicode("e9e6");
+    }
+    @function icon-chart-combo-view-after() {
+        @return to-unicode("e9e7");
+    }
+    @function icon-chart-bubble-view-after() {
+        @return to-unicode("e9e8");
+    }
+    @function icon-chart-bar-view-after() {
+        @return to-unicode("e9e9");
+    }
+    @function icon-chart-bar-stacked-view-after() {
+        @return to-unicode("e9ea");
+    }
+    @function icon-chart-bar-stacked-line-view-after() {
+        @return to-unicode("e9eb");
+    }
+    @function icon-chart-bar-horizontal-view-after() {
+        @return to-unicode("e9ec");
+    }
+    @function icon-chart-bar-horizontal-stacked-view-after() {
+        @return to-unicode("e9ed");
+    }
+    @function icon-chart-bar-color-after() {
+        @return to-unicode("e9ee");
+    }
+    @function icon-chart-axis-y-after() {
+        @return to-unicode("e9ef");
+    }
+    @function icon-chart-axis-x-after() {
+        @return to-unicode("e9f0");
+    }
+    @function icon-chart-area-view-after() {
+        @return to-unicode("e9f1");
+    }
+    @function icon-file-book-copy-g2-after() {
+        @return to-unicode("e9c4");
+    }
+    @function icon-file-book-properties-g2-after() {
+        @return to-unicode("e9c5");
+    }
+    @function icon-file-image-add-g2-after() {
+        @return to-unicode("e9c6");
+    }
+    @function icon-folder-add-g2-after() {
+        @return to-unicode("e9c7");
+    }
+    @function icon-folder-attachments-g2-after() {
+        @return to-unicode("e9c8");
+    }
+    @function icon-folder-move-g2-after() {
+        @return to-unicode("e9c9");
+    }
+    @function icon-folder-remove-g2-after() {
+        @return to-unicode("e9ca");
+    }
+    @function icon-format-overlay-after() {
+        @return to-unicode("e9cb");
+    }
+    @function icon-paragraph-spacing-after() {
+        @return to-unicode("e9cc");
+    }
+    @function icon-chart-bar-after() {
+        @return to-unicode("e9cd");
+    }
+    @function icon-chart-bar-horizontal-after() {
+        @return to-unicode("e9ce");
+    }
+    @function icon-enter-after() {
+        @return to-unicode("e9cf");
+    }
+    @function icon-exit-after() {
+        @return to-unicode("e9d0");
+    }
+    @function icon-table-insert-column-left-after() {
+        @return to-unicode("e9bf");
+    }
+    @function icon-table-insert-column-right-after() {
+        @return to-unicode("e9c0");
+    }
+    @function icon-manage-dimension-after() {
+        @return to-unicode("e9c1");
+    }
+    @function icon-text-query-after() {
+        @return to-unicode("e9c2");
+    }
+    @function icon-file-generic-frozen-after() {
+        @return to-unicode("e9b7");
+    }
+    @function icon-warning-sign-fill-after() {
+        @return to-unicode("e9b9");
+    }
+    @function icon-go-to-tag-after() {
+        @return to-unicode("e9ba");
+    }
+    @function icon-lightbox-after() {
+        @return to-unicode("e9bb");
+    }
+    @function icon-format-table-border-outside-thick-after() {
+        @return to-unicode("e907");
+    }
+    @function icon-format-table-border-top-bottom-thick-after() {
+        @return to-unicode("e90b");
+    }
+    @function icon-text-hide-after() {
+        @return to-unicode("e9b5");
+    }
+    @function icon-file-certification-g2-after() {
+        @return to-unicode("e9a3");
+    }
+    @function icon-file-draft-g2-after() {
+        @return to-unicode("e9a4");
+    }
+    @function icon-file-excel-g2-after() {
+        @return to-unicode("e9a5");
+    }
+    @function icon-file-image-g2-after() {
+        @return to-unicode("e9a6");
+    }
+    @function icon-file-mspowerpoint-g2-after() {
+        @return to-unicode("e9a7");
+    }
+    @function icon-file-msword-g2-after() {
+        @return to-unicode("e9a8");
+    }
+    @function icon-file-pdf-g2-after() {
+        @return to-unicode("e9a9");
+    }
+    @function icon-folder-attachments-after() {
+        @return to-unicode("e9aa");
+    }
+    @function icon-pencil-disabled-after() {
+        @return to-unicode("e9ab");
+    }
+    @function icon-xbrl-ixbrl-after() {
+        @return to-unicode("e9ac");
+    }
+    @function icon-table-unhide-column-after() {
+        @return to-unicode("e99c");
+    }
+    @function icon-table-unhide-row-after() {
+        @return to-unicode("e99d");
+    }
+    @function icon-file-open-downloaded-after() {
+        @return to-unicode("e998");
+    }
+    @function icon-fill-range-after() {
+        @return to-unicode("e995");
+    }
+    @function icon-chart-pie-slice-after() {
+        @return to-unicode("e996");
+    }
+    @function icon-chart-pie-color-after() {
+        @return to-unicode("e997");
+    }
+    @function icon-folder-zip-after() {
+        @return to-unicode("e993");
+    }
+    @function icon-workspaces-after() {
+        @return image-url("icons/workspaces-after.svg");
+    }
+    @function icon-twfr-workspaces-after() {
+        @return image-url("icons/twfr-workspaces-after.svg");
+    }
+    @function icon-filing-attachment-confidential-after() {
+        @return to-unicode("e984");
+    }
+    @function icon-connection-lost-after() {
+        @return to-unicode("e985");
+    }
+    @function icon-connection-made-after() {
+        @return to-unicode("e986");
+    }
+    @function icon-xbrl-axis-defaults-after() {
+        @return to-unicode("e987");
+    }
+    @function icon-xbrl-concept-removal-after() {
+        @return to-unicode("e988");
+    }
+    @function icon-xbrl-doc-setting-after() {
+        @return to-unicode("e989");
+    }
+    @function icon-xbrl-export-taxonomy-after() {
+        @return to-unicode("e98a");
+    }
+    @function icon-xbrl-filter-after() {
+        @return to-unicode("e98b");
+    }
+    @function icon-xbrl-validate-outline-after() {
+        @return to-unicode("e98c");
+    }
+    @function icon-cloud-download-after() {
+        @return to-unicode("e98d");
+    }
+    @function icon-cloud-upload-after() {
+        @return to-unicode("e98e");
+    }
+    @function icon-upload-after() {
+        @return to-unicode("e98f");
+    }
+    @function icon-filter-outline-after() {
+        @return to-unicode("e990");
+    }
+    @function icon-data-filter-after() {
+        @return to-unicode("e983");
+    }
+    @function icon-list-select-option-after() {
+        @return to-unicode("e970");
+    }
+    @function icon-list-tree-section-after() {
+        @return to-unicode("e971");
+    }
+    @function icon-menu-list-select-multi-after() {
+        @return to-unicode("e972");
+    }
+    @function icon-menu-list-select-single-after() {
+        @return to-unicode("e973");
+    }
+    @function icon-table-cell-text-clip-after() {
+        @return to-unicode("e974");
+    }
+    @function icon-table-cell-text-overflow-after() {
+        @return to-unicode("e975");
+    }
+    @function icon-table-cell-text-wrap-after() {
+        @return to-unicode("e976");
+    }
+    @function icon-calendar-after() {
+        @return to-unicode("e977");
+    }
+    @function icon-chart-line-after() {
+        @return image-url("icons/chart-line-after.svg");
+    }
+    @function icon-twfr-source-make-after() {
+        @return image-url("icons/twfr-source-make-after.svg");
+    }
+    @function icon-twfr-template-add-after() {
+        @return image-url("icons/twfr-template-add-after.svg");
+    }
+    @function icon-twfr-template-lock-blue-after() {
+        @return image-url("icons/twfr-template-lock-blue-after.svg");
+    }
+    @function icon-changes-accept-reject-after() {
+        @return to-unicode("e925");
+    }
+    @function icon-heart-after() {
+        @return to-unicode("e926");
+    }
+    @function icon-indent-decrease-after() {
+        @return to-unicode("e927");
+    }
+    @function icon-indent-increase-after() {
+        @return to-unicode("e928");
+    }
+    @function icon-object-align-horizontal-center-after() {
+        @return to-unicode("e929");
+    }
+    @function icon-object-align-horizontal-left-after() {
+        @return to-unicode("e92a");
+    }
+    @function icon-object-align-horizontal-right-after() {
+        @return to-unicode("e92b");
+    }
+    @function icon-object-align-vertical-bottom-after() {
+        @return to-unicode("e92c");
+    }
+    @function icon-object-align-vertical-center-after() {
+        @return to-unicode("e92d");
+    }
+    @function icon-object-align-vertical-top-after() {
+        @return to-unicode("e92e");
+    }
+    @function icon-object-distribute-horizontal-after() {
+        @return to-unicode("e92f");
+    }
+    @function icon-object-distribute-vertical-after() {
+        @return to-unicode("e930");
+    }
+    @function icon-arrange-backward-after() {
+        @return to-unicode("e931");
+    }
+    @function icon-arrange-forward-after() {
+        @return to-unicode("e932");
+    }
+    @function icon-arrange-to-back-after() {
+        @return to-unicode("e933");
+    }
+    @function icon-arrange-to-front-after() {
+        @return to-unicode("e934");
+    }
+    @function icon-table-cell-edit-after() {
+        @return to-unicode("e935");
+    }
+    @function icon-table-cells-freeze-after() {
+        @return to-unicode("e936");
+    }
+    @function icon-table-cells-lock-after() {
+        @return to-unicode("e937");
+    }
+    @function icon-table-cells-merge-after() {
+        @return to-unicode("e938");
+    }
+    @function icon-table-hide-column-after() {
+        @return to-unicode("e939");
+    }
+    @function icon-table-hide-row-after() {
+        @return to-unicode("e93a");
+    }
+    @function icon-table-insert-after() {
+        @return to-unicode("e93b");
+    }
+    @function icon-table-remove-after() {
+        @return to-unicode("e93c");
+    }
+    @function icon-file-url-after() {
+        @return to-unicode("e93d");
+    }
+    @function icon-file-sox-report-egocentric-after() {
+        @return to-unicode("e93e");
+    }
+    @function icon-format-clear-after() {
+        @return to-unicode("e93f");
+    }
+    @function icon-format-table-border-bottom-after() {
+        @return to-unicode("e940");
+    }
+    @function icon-format-table-border-bottom-double-after() {
+        @return to-unicode("e941");
+    }
+    @function icon-format-table-border-bottom-thick-after() {
+        @return to-unicode("e942");
+    }
+    @function icon-format-table-border-left-after() {
+        @return to-unicode("e943");
+    }
+    @function icon-format-table-border-left-thick-after() {
+        @return to-unicode("e944");
+    }
+    @function icon-format-table-border-outside-after() {
+        @return to-unicode("e945");
+    }
+    @function icon-format-table-border-right-after() {
+        @return to-unicode("e946");
+    }
+    @function icon-format-table-border-right-thick-after() {
+        @return to-unicode("e947");
+    }
+    @function icon-format-table-border-top-after() {
+        @return to-unicode("e948");
+    }
+    @function icon-format-table-border-top-bottom-after() {
+        @return to-unicode("e949");
+    }
+    @function icon-format-table-border-top-bottom-double-after() {
+        @return to-unicode("e94a");
+    }
+    @function icon-format-table-border-top-thick-after() {
+        @return to-unicode("e94b");
+    }
+    @function icon-chart-area-after() {
+        @return to-unicode("e94c");
+    }
+    @function icon-chart-bar-horizontal-stacked-after() {
+        @return to-unicode("e94d");
+    }
+    @function icon-chart-bar-stacked-after() {
+        @return to-unicode("e94e");
+    }
+    @function icon-chart-bar-stacked-line-after() {
+        @return to-unicode("e94f");
+    }
+    @function icon-chart-bubble-after() {
+        @return to-unicode("e950");
+    }
+    @function icon-chart-combo-after() {
+        @return to-unicode("e951");
+    }
+    @function icon-chart-donut-after() {
+        @return to-unicode("e952");
+    }
+    @function icon-chart-pie-after() {
+        @return to-unicode("e953");
+    }
+    @function icon-chart-scatter-plot-after() {
+        @return to-unicode("e954");
+    }
+    @function icon-chart-waterfall-after() {
+        @return to-unicode("e955");
+    }
+    @function icon-file-project-add-after() {
+        @return to-unicode("e90f");
+    }
+    @function icon-file-project-export-after() {
+        @return to-unicode("e910");
+    }
+    @function icon-file-project-properties-after() {
+        @return to-unicode("e911");
+    }
+    @function icon-file-project-validate-after() {
+        @return to-unicode("e912");
+    }
+    @function icon-file-generic-add-after() {
+        @return to-unicode("e913");
+    }
+    @function icon-xbrl-project-refresh-after() {
+        @return to-unicode("e90e");
+    }
+    @function icon-file-generic-remove-after() {
+        @return to-unicode("e90c");
+    }
+    @function icon-folder-remove-after() {
+        @return to-unicode("e90d");
+    }
+    @function icon-xbrl-concept-new-after() {
+        @return to-unicode("e900");
+    }
+    @function icon-xbrl-concept-deprecated-after() {
+        @return to-unicode("e901");
+    }
+    @function icon-presentation-add-group-after() {
+        @return to-unicode("e902");
+    }
+    @function icon-docpart-move-up-linear-after() {
+        @return to-unicode("e903");
+    }
+    @function icon-docpart-move-down-linear-after() {
+        @return to-unicode("e904");
+    }
+    @function icon-star-outline-after() {
+        @return to-unicode("e905");
+    }
+    @function icon-file-datacollections-draft-after() {
+        @return to-unicode("e906");
+    }
+    @function icon-file-presentation-draft-after() {
+        @return to-unicode("e908");
+    }
+    @function icon-file-workbook-draft-after() {
+        @return to-unicode("e909");
+    }
+    @function icon-file-draft-after() {
+        @return to-unicode("e90a");
+    }
+    @function icon-sox-group-after() {
+        @return to-unicode("e66c");
+    }
+    @function icon-sox-pivot-column-after() {
+        @return to-unicode("e66d");
+    }
+    @function icon-sox-pivot-row-after() {
+        @return to-unicode("e66e");
+    }
+    @function icon-collapse-all-after() {
+        @return to-unicode("e667");
+    }
+    @function icon-expand-all-after() {
+        @return to-unicode("e668");
+    }
+    @function icon-tab-data-collection-after() {
+        @return to-unicode("e669");
+    }
+    @function icon-xbrl-compare-after() {
+        @return to-unicode("e66a");
+    }
+    @function icon-xbrl-after() {
+        @return to-unicode("e66b");
+    }
+    @function icon-xbrl-global-extension-after() {
+        // Used for all xbrl-*-extension glyphs within peripherals/icon-xbrl.scss
+        @return to-unicode("e664");
+    }
+    @function icon-data-focus-after() {
+        @return to-unicode("e665");
+    }
+    @function icon-trash-restore-after() {
+        @return to-unicode("e662");
+    }
+    @function icon-folder-add-after() {
+        @return to-unicode("e663");
+    }
+    @function icon-file-paginate-after() {
+        @return to-unicode("e661");
+    }
+    @function icon-font-subscript-after() {
+        @return to-unicode("e658");
+    }
+    @function icon-font-superscript-after() {
+        @return to-unicode("e659");
+    }
+    @function icon-footnote-after() {
+        @return to-unicode("e65a");
+    }
+    @function icon-horizontal-rule-after() {
+        @return to-unicode("e65b");
+    }
+    @function icon-permissions-after() {
+        @return to-unicode("e617");
+    }
+    @function icon-permissions-exceptions-after() {
+        @return to-unicode("e651");
+    }
+    @function icon-align-bottom-after() {
+        @return to-unicode("e652");
+    }
+    @function icon-align-middle-after() {
+        @return to-unicode("e653");
+    }
+    @function icon-align-top-after() {
+        @return to-unicode("e654");
+    }
+    @function icon-fill-color-after() {
+        @return to-unicode("e655");
+    }
+    @function icon-text-color-after() {
+        @return to-unicode("e656");
+    }
+    @function icon-file-sox-report-after() {
+        @return to-unicode("e64f");
+    }
+    @function icon-user-add-after() {
+        @return to-unicode("e649");
+    }
+    @function icon-workbook-row-column-after() {
+        @return to-unicode("e64a");
+    }
+    @function icon-xbrl-replace-extension-after() {
+        @return to-unicode("e64b");
+    }
+    @function icon-task-create-after() {
+        @return to-unicode("e64c");
+    }
+    @function icon-bookmark-fill-after() {
+        @return to-unicode("e64d");
+    }
+    @function icon-draw-border-color-after() {
+        @return to-unicode("e642");
+    }
+    @function icon-folder-move-after() {
+        @return to-unicode("e643");
+    }
+    @function icon-review-stamp-approved-after() {
+        @return to-unicode("e644");
+    }
+    @function icon-review-stamp-reviewed-after() {
+        @return to-unicode("e645");
+    }
+    @function icon-review-stamp-signed-after() {
+        @return to-unicode("e646");
+    }
+    @function icon-decimals-decrease-after() {
+        @return to-unicode("e640");
+    }
+    @function icon-decimals-increase-after() {
+        @return to-unicode("e641");
+    }
+    @function icon-blackline-review-after() {
+        @return to-unicode("e606");
+    }
+    @function icon-blackline-after() {
+        @return to-unicode("e620");
+    }
+    @function icon-review-after() {
+        @return to-unicode("e636");
+    }
+    @function icon-task-link-after() {
+        @return to-unicode("e637");
+    }
+    @function icon-demote-after() {
+        @return to-unicode("e600");
+    }
+    @function icon-promote-after() {
+        @return to-unicode("e603");
+    }
+    @function icon-copy-after() {
+        @return to-unicode("e607");
+    }
+    @function icon-rename-after() {
+        @return to-unicode("e62b");
+    }
+    @function icon-clipboard-after() {
+        @return to-unicode("e62c");
+    }
+    @function icon-blacklines-next-after() {
+        @return to-unicode("e628");
+    }
+    @function icon-blacklines-prev-after() {
+        @return to-unicode("e629");
+    }
+    @function icon-support-sign-corner-after() {
+        @return to-unicode("e62a");
+    }
+    @function icon-docpart-remove-after() {
+        @return to-unicode("e61f");
+    }
+    @function icon-docpart-promote-after() {
+        @return to-unicode("e618");
+    }
+    @function icon-docpart-move-up-after() {
+        @return to-unicode("e619");
+    }
+    @function icon-docpart-move-down-after() {
+        @return to-unicode("e61a");
+    }
+    @function icon-docpart-demote-after() {
+        @return to-unicode("e61b");
+    }
+    @function icon-docpart-add-before-after() {
+        @return to-unicode("e61c");
+    }
+    @function icon-docpart-add-after-after() {
+        @return to-unicode("e61d");
+    }
+    @function icon-file-image-after() {
+        @return to-unicode("e604");
+    }
+    @function icon-file-copy-after() {
+        @return to-unicode("e601");
+    }
+    @function icon-file-book-copy-after() {
+        @return to-unicode("e602");
+    }
+    @function icon-file-msexcel-after() {
+        @return to-unicode("e000");
+    }
+    @function icon-file-mspowerpoint-after() {
+        @return to-unicode("e001");
+    }
+    @function icon-file-msword-after() {
+        @return to-unicode("e002");
+    }
+    @function icon-file-pdf-after() {
+        @return to-unicode("e003");
+    }
+    @function icon-note-after() {
+        @return to-unicode("e01b");
+    }
+    @function icon-comment-reply-after() {
+        @return to-unicode("e638");
+    }
+    @function icon-comment-upload-support-after() {
+        @return to-unicode("e605");
+    }
+    @function icon-comment-filter-after() {
+        @return to-unicode("e004");
+    }
+    @function icon-comment-outline-lines-after() {
+        @return to-unicode("e005");
+    }
+    @function icon-comment-add-after() {
+        @return to-unicode("e006");
+    }
+    @function icon-spellcheck-after() {
+        @return to-unicode("e007");
+    }
+    @function icon-link-source-after() {
+        @return to-unicode("e008");
+    }
+    @function icon-link-remove-after() {
+        @return to-unicode("e009");
+    }
+    @function icon-link-create-after() {
+        @return to-unicode("e00b");
+    }
+    @function icon-file-link-after() {
+        @return to-unicode("e00c");
+    }
+    @function icon-view-print-area-after() {
+        @return to-unicode("e00d");
+    }
+    @function icon-file-trash-after() {
+        @return to-unicode("e00e");
+    }
+    @function icon-view-trash-after() {
+        @return to-unicode("e00f");
+    }
+    @function icon-file-control-after() {
+        @return to-unicode("e010");
+    }
+    @function icon-file-properties-after() {
+        @return to-unicode("e011");
+    }
+    @function icon-file-validate-after() {
+        @return to-unicode("e012");
+    }
+    @function icon-file-new-after() {
+        @return to-unicode("e013");
+    }
+    @function icon-file-export-after() {
+        @return to-unicode("e014");
+    }
+    @function icon-file-import-after() {
+        @return to-unicode("e015");
+    }
+    @function icon-page-break-after() {
+        @return to-unicode("e016");
+    }
+    @function icon-table-insert-column-after() {
+        @return to-unicode("e017");
+    }
+    @function icon-table-insert-row-after() {
+        @return to-unicode("e018");
+    }
+    @function icon-update-available-after() {
+        @return to-unicode("27f2");
+    }
+    @function icon-highlighter-after() {
+        @return to-unicode("e01a");
+    }
+    @function icon-file-preview-after() {
+        @return to-unicode("e01c");
+    }
+    @function icon-twfr-data-layout-discard-changes-after() {
+        @return to-unicode("e9f2");
+    }
+    @function icon-twfr-file-book-copy-g2-after() {
+        @return to-unicode("e9d2");
+    }
+    @function icon-twfr-file-book-properties-g2-after() {
+        @return to-unicode("e9d3");
+    }
+    @function icon-twfr-file-image-add-g2-after() {
+        @return to-unicode("e9d4");
+    }
+    @function icon-twfr-folder-add-g2-after() {
+        @return to-unicode("e9d5");
+    }
+    @function icon-twfr-folder-attachments-g2-after() {
+        @return to-unicode("e9d6");
+    }
+    @function icon-twfr-folder-move-g2-after() {
+        @return to-unicode("e9d7");
+    }
+    @function icon-twfr-folder-remove-g2-after() {
+        @return to-unicode("e9d8");
+    }
+    @function icon-twfr-format-overlay-after() {
+        @return to-unicode("e9d9");
+    }
+    @function icon-twfr-format-overlay-off-after() {
+        @return to-unicode("e9da");
+    }
+    @function icon-twfr-view-coordinates-after() {
+        @return to-unicode("e9db");
+    }
+    @function icon-twfr-table-cell-indicators-after() {
+        @return to-unicode("e9dc");
+    }
+    @function icon-twfr-table-cell-markup-on-after() {
+        @return image-url("icons/twfr-table-cell-markup-on-after.svg");
+    }
+    @function icon-twfr-table-cell-markup-off-after() {
+        @return image-url("icons/twfr-table-cell-markup-off-after.svg");
+    }
+    @function icon-twfr-manage-dimension-after() {
+        @return to-unicode("e9c3");
+    }
+    @function icon-twfr-warning-sign-fill-after() {
+        @return to-unicode("e9bd");
+    }
+    @function icon-twfr-go-to-tag-after() {
+        @return to-unicode("e9be");
+    }
+    @function icon-twfr-file-certification-g2-after() {
+        @return to-unicode("\e9ad");
+    }
+    @function icon-twfr-file-draft-g2-after() {
+        @return to-unicode("\e9ae");
+    }
+    @function icon-twfr-file-excel-g2-after() {
+        @return to-unicode("\e9af");
+    }
+    @function icon-twfr-file-frozen-g2-after() {
+        @return to-unicode("\e9b0");
+    }
+    @function icon-twfr-file-image-g2-after() {
+        @return to-unicode("\e9b1");
+    }
+    @function icon-twfr-file-mspowerpoint-g2-after() {
+        @return to-unicode("\e9b2");
+    }
+    @function icon-twfr-file-msword-g2-after() {
+        @return to-unicode("\e9b3");
+    }
+    @function icon-twfr-file-pdf-g2-after() {
+        @return to-unicode("\e9b4");
+    }
+    @function icon-twfr-connection-lost-after() {
+        @return to-unicode("e99e");
+    }
+    @function icon-twfr-connection-made-after() {
+        @return to-unicode("e99f");
+    }
+    @function icon-twfr-table-hide-row-after() {
+        @return to-unicode("e9a0");
+    }
+    @function icon-twfr-table-unhide-column-after() {
+        @return to-unicode("e9a1");
+    }
+    @function icon-twfr-table-unhide-row-after() {
+        @return to-unicode("e9a2");
+    }
+    @function icon-twfr-calendar-after() {
+        @return to-unicode("e999");
+    }
+    @function icon-twfr-xbrl-filter-after() {
+        @return to-unicode("e99a");
+    }
+    @function icon-twfr-file-open-downloaded-after() {
+        @return to-unicode("e99b");
+    }
+    @function icon-twfr-xbrl-after() {
+        @return to-unicode("e994");
+    }
+    @function icon-twfr-chart-bar-color-after() {
+        @return to-unicode("e991");
+    }
+    @function icon-twfr-chart-pie-color-after() {
+        @return to-unicode("e992");
+    }
+    @function icon-twfr-chart-axis-x-after() {
+        @return to-unicode("e978");
+    }
+    @function icon-twfr-chart-axis-y-after() {
+        @return to-unicode("e979");
+    }
+    @function icon-twfr-chart-pie-slice-after() {
+        @return to-unicode("e97a");
+    }
+    @function icon-twfr-chart-size-after() {
+        @return to-unicode("e97b");
+    }
+    @function icon-twfr-insert-placeholder-after() {
+        @return to-unicode("e97c");
+    }
+    @function icon-twfr-list-tree-section-after() {
+        @return to-unicode("e97d");
+    }
+    @function icon-twfr-review-stamp-approved-after() {
+        @return to-unicode("e97e");
+    }
+    @function icon-twfr-review-stamp-reviewed-after() {
+        @return to-unicode("e97f");
+    }
+    @function icon-twfr-review-stamp-signed-after() {
+        @return to-unicode("e980");
+    }
+    @function icon-twfr-table-slice-after() {
+        @return to-unicode("e981");
+    }
+    @function icon-twfr-fill-color-after() {
+        @return to-unicode("e982");
+    }
+    @function icon-twfr-comment-create-after() {
+        @return to-unicode("e956");
+    }
+    @function icon-twfr-comment-filter-after() {
+        @return to-unicode("e957");
+    }
+    @function icon-twfr-comment-show-after() {
+        @return to-unicode("e958");
+    }
+    @function icon-twfr-xbrl-blocktag-add-after() {
+        @return to-unicode("e959");
+    }
+    @function icon-twfr-xbrl-detect-after() {
+        @return to-unicode("e95a");
+    }
+    @function icon-twfr-xbrl-locate-after() {
+        @return to-unicode("e95b");
+    }
+    @function icon-twfr-xbrl-settings-advanced-after() {
+        @return to-unicode("e95c");
+    }
+    @function icon-twfr-blackline-create-after() {
+        @return to-unicode("e95d");
+    }
+    @function icon-twfr-changes-accept-reject-after() {
+        @return to-unicode("e95e");
+    }
+    @function icon-twfr-data-validation-after() {
+        @return to-unicode("e95f");
+    }
+    @function icon-twfr-dc-dashboard-after() {
+        @return to-unicode("e960");
+    }
+    @function icon-twfr-review-responsive-after() {
+        @return to-unicode("e961");
+    }
+    @function icon-twfr-sort-after() {
+        @return to-unicode("e962");
+    }
+    @function icon-twfr-spellcheck-after() {
+        @return to-unicode("e963");
+    }
+    @function icon-twfr-table-cell-input-after() {
+        @return to-unicode("e964");
+    }
+    @function icon-twfr-table-cell-reference-after() {
+        @return to-unicode("e965");
+    }
+    @function icon-twfr-template-after() {
+        @return to-unicode("e966");
+    }
+    @function icon-twfr-template-lock-after() {
+        @return to-unicode("e967");
+    }
+    @function icon-twfr-template-manage-after() {
+        @return to-unicode("e968");
+    }
+    @function icon-twfr-template-master-edit-after() {
+        @return to-unicode("e969");
+    }
+    @function icon-twfr-template-unlock-after() {
+        @return to-unicode("e96a");
+    }
+    @function icon-twfr-link-source-after() {
+        @return to-unicode("e96b");
+    }
+    @function icon-twfr-review-after() {
+        @return to-unicode("e96c");
+    }
+    @function icon-twfr-file-properties-after() {
+        @return to-unicode("e96d");
+    }
+    @function icon-twfr-file-sox-report-egocentric-after() {
+        @return to-unicode("e96e");
+    }
+    @function icon-twfr-arrange-after() {
+        @return to-unicode("e914");
+    }
+    @function icon-twfr-chart-insert-after() {
+        @return to-unicode("e915");
+    }
+    @function icon-twfr-shape-insert-after() {
+        @return to-unicode("e917");
+    }
+    @function icon-twfr-table-after() {
+        @return to-unicode("e918");
+    }
+    @function icon-twfr-table-cells-freeze-after() {
+        @return to-unicode("e919");
+    }
+    @function icon-twfr-table-hide-column-after() {
+        @return to-unicode("e91a");
+    }
+    @function icon-twfr-table-cells-lock-after() {
+        @return to-unicode("e91b");
+    }
+    @function icon-twfr-table-cells-merge-after() {
+        @return to-unicode("e91c");
+    }
+    @function icon-twfr-table-clear-after() {
+        @return to-unicode("e91d");
+    }
+    @function icon-twfr-table-format-after() {
+        @return to-unicode("e91e");
+    }
+    @function icon-twfr-table-insert-after() {
+        @return to-unicode("e91f");
+    }
+    @function icon-twfr-text-insert-after() {
+        @return to-unicode("e920");
+    }
+    @function icon-twfr-view-print-area-after() {
+        @return to-unicode("e921");
+    }
+    @function icon-twfr-file-duplicate-after() {
+        @return to-unicode("e922");
+    }
+    @function icon-twfr-file-image-add-after() {
+        @return to-unicode("e923");
+    }
+    @function icon-twfr-file-presentation-format-after() {
+        @return to-unicode("e924");
+    }
+    @function icon-twfr-xbrl-project-refresh-after() {
+        @return to-unicode("e916");
+    }
+    @function icon-twfr-formatting-conditional-after() {
+        @return image-url("icons/twfr-formatting-conditional-after.svg");
+    }
+    @function icon-color-wheel-after() {
+        @return image-url("icons/color-wheel-after.svg");
+    }
+    @function icon-twfr-file-format-after() {
+        @return to-unicode("e65c");
+    }
+    @function icon-twfr-file-paginate-after() {
+        @return to-unicode("e65d");
+    }
+    @function icon-twfr-file-validate-after() {
+        @return to-unicode("e65e");
+    }
+    @function icon-twfr-format-clear-after() {
+        @return to-unicode("e65f");
+    }
+    @function icon-twfr-view-trash-after() {
+        @return to-unicode("e660");
+    }
+    @function icon-twfr-fill-range-after() {
+        @return to-unicode("e657");
+    }
+    @function icon-twfr-file-sox-report-after() {
+        @return to-unicode("e650");
+    }
+    @function icon-twfr-clipboard-inverse-after() {
+        @return to-unicode("e64e");
+    }
+    @function icon-twfr-folder-zip-after() {
+        @return to-unicode("e647");
+    }
+    @function icon-twfr-file-attachment-after() {
+        @return to-unicode("e648");
+    }
+    @function icon-twfr-move-up-after() {
+        @return to-unicode("e639");
+    }
+    @function icon-twfr-move-down-after() {
+        @return to-unicode("e63a");
+    }
+    @function icon-twfr-demote-after() {
+        @return to-unicode("e63b");
+    }
+    @function icon-twfr-promote-after() {
+        @return to-unicode("e63c");
+    }
+    @function icon-twfr-discard-changes-after() {
+        @return to-unicode("e63d");
+    }
+    @function icon-twfr-permissions-after() {
+        @return to-unicode("e63e");
+    }
+    @function icon-twfr-task-create-after() {
+        @return to-unicode("e63f");
+    }
+    @function icon-twfr-insert-after() {
+        @return to-unicode("e635");
+    }
+    @function icon-twfr-link-format-after() {
+        @return to-unicode("e62d");
+    }
+    @function icon-twfr-link-remove-after() {
+        @return to-unicode("e62e");
+    }
+    @function icon-twfr-file-link-after() {
+        @return to-unicode("e630");
+    }
+    @function icon-twfr-link-add-after() {
+        @return to-unicode("e631");
+    }
+    @function icon-twfr-file-url-after() {
+        @return to-unicode("e632");
+    }
+    @function icon-twfr-trash-restore-after() {
+        @return to-unicode("e627");
+    }
+    @function icon-twfr-file-preview-after() {
+        @return to-unicode("e624");
+    }
+    @function icon-twfr-file-control-after() {
+        @return to-unicode("e625");
+    }
+    @function icon-twfr-file-add-after() {
+        @return to-unicode("e626");
+    }
+    @function icon-twfr-file-generic-add-after() {
+        @return to-unicode("e608");
+    }
+    @function icon-twfr-file-import-after() {
+        @return to-unicode("e609");
+    }
+    @function icon-twfr-file-export-after() {
+        @return to-unicode("e60a");
+    }
+    @function icon-twfr-table-cells-delete-after() {
+        @return to-unicode("e60b");
+    }
+    @function icon-twfr-table-cells-add-after() {
+        @return to-unicode("e60c");
+    }
+    @function icon-twfr-file-book-copy-after() {
+        @return to-unicode("e61e");
+    }
+    @function icon-twfr-file-datacollections-draft-after() {
+        @return to-unicode("e612");
+    }
+    @function icon-twfr-file-links-draft-after() {
+        @return to-unicode("e96f");
+    }
+    @function icon-twfr-file-draft-after() {
+        @return to-unicode("e614");
+    }
+    @function icon-twfr-file-presentation-draft-after() {
+        @return to-unicode("e615");
+    }
+    @function icon-twfr-file-workbook-draft-after() {
+        @return to-unicode("e616");
+    }
+    @function icon-twfr-file-image-after() {
+        @return to-unicode("e60d");
+    }
+    @function icon-twfr-file-msexcel-after() {
+        @return to-unicode("e60e");
+    }
+    @function icon-twfr-file-mspowerpoint-after() {
+        @return to-unicode("e60f");
+    }
+    @function icon-twfr-file-msword-after() {
+        @return to-unicode("e610");
+    }
+    @function icon-twfr-file-pdf-after() {
+        @return to-unicode("e611");
+    }
+    @function icon-twfr-folder-add-after() {
+        @return to-unicode("e621");
+    }
+    @function icon-twfr-folder-move-after() {
+        @return to-unicode("e622");
+    }
+    @function icon-twfr-rename-after() {
+        @return to-unicode("e623");
+    }
+    @function icon-twfr-file-dc-frozen-beta-after() {
+        @return to-unicode("e633");
+    }
+    @function icon-twfr-file-dc-draft-beta-after() {
+        @return to-unicode("e634");
+    }
+
+
+//
+// DON'T PASTE OVER THESE
+//
+
+    // All comment-* icons that need a white
+    // background to show through the shape that
+    // is "cut out" from the glyph itself
+    // use this glyph for the backing.
+    @function icon-comment-backing() {
+        @return to-unicode("e9b6");
+    }
+
+    // .icon-upload / .icon-download share this
+    // white background to show through the shape
+    // that is "cut out" from the glyph itself
+    @function icon-upload-download-backing() {
+        @return to-unicode("e9b8");
+    }
+
+    // .icon-twfr-upload / .icon-twfr-download share this
+    // white background to show through the shape
+    // that is "cut out" from the glyph itself
+    @function icon-twfr-upload-download-backing() {
+        @return to-unicode("e9bc");
+    }
+
+    // .icon-close-sign / .icon-na-sign share this
+    // white background to show through the shape
+    // that is "cut out" from the glyph itself
+    @function icon-circle-sign-backing() {
+        @return to-unicode("e9d1");
+    }
+
+    // All file-*-frozen icons use this glyph
+    @function icon-twfr-file-frozen-after() {
+        @return to-unicode("e613");
+    }
+
+    @function icon-comment-after() {
+        // IMPORTANT:
+        // this must remain equivalent to
+        // .icon-comment-lines
+        @return to-unicode("e68b");
+    }

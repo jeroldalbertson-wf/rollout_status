@@ -1,0 +1,167 @@
+// ********************************************************
+
+////
+/// Popover dialog component configuration
+/// ---
+/// @access public
+/// @group core.components.popovers
+/// @link http://bit.ly/webskin-popovers Popover dialog component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/popovers-shared-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend);
+//
+// ********************************************************
+
+
+///
+/// Global configuration for `.popover` components.
+/// _Extends `$dialog-size-sm-config`_
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {function} extend
+/// @requires {variable} $dialog-config
+/// @requires {variable} $dialog-size-sm-config
+/// @requires {variable} $triangle-config
+/// @requires {variable} $font-size-sm
+/// @requires {variable} $border-radius-sm
+/// @requires {variable} $zc-gray-120
+/// @requires {variable} $white
+/// ---
+/// @prop {Number} bd-width         [1px]       - Default border width
+/// @prop {Number} bd-radius        [4px]       - Default border radius
+/// @prop {Number} padding          [0]         - Default padding
+/// @prop {Number} content-padding  [16px]      - Default padding of `.popover .inner` content elem
+/// @prop {Number} max-width        [300px]     - Default maximum width
+/// @prop {Number} min-width        [170px]     - Default minimum width
+///
+/// @prop {Color} bg            [#ffffff] - Default background color
+/// @prop {Color} text-color    [#595959] - Default text color
+/// @prop {Color} bd-color      [#b2b2b2] - Default border color
+///
+/// @prop {Number} arrow-width          [20px]      - Default width of a `.popover .arrow` elem
+/// @prop {Number} arrow-outer-width    [22px]      - Calculated width of the `::after` pseudo elem of a `.popover .arrow`. _Added via `@extend`_
+/// @prop {Color}  arrow-color          [#ffffff]   - Default color of a `.popover .arrow` elem. _Added via `@extend`_
+/// @prop {Color}  arrow-outer-color    [#b2b2b2]   - Default color of the `::after` pseudo elem of a `.popover .arrow`
+///
+/// @prop {Number} header-line-height   [1.2]           - Line height for the `.popover .title` elem
+/// @prop {List}   title-margin         [-16px 0 8px]   - Default margin of the `.popover .title` elem. _Added via `@extend`_
+/// @prop {List}   title-padding        [13px 0 0]      - Default padding of the `.popover .title` elem
+/// @prop {Number} title-font-size      [18px]          - Default font size of the `.popover .title` elem
+/// @prop {String} title-font-weight    [normal]        - Default font weight of the `.popover .title` elem
+///
+/// @prop {Number} min-height           [5.4rem]
+/// @prop {Number} close-btn-width      [3.4rem] - Calculated width of a `.close` button nested within a `.popover--dismissible`. _Added via `@extend`_
+/// @prop {Number} close-btn-height     [3.4rem] - Calculated height of a `.close` button nested within a `.popover--dismissible`. _Added via `@extend`_
+///
+$popover-config: (
+    // structure
+    'bd-width': get($dialog-config, 'bd-width'),
+    'bd-radius': get($dialog-config, 'bd-radius'),
+    'padding': get($dialog-config, 'padding'),
+    'content-padding': get($dialog-size-base-config, 'content-padding'),
+    'max-width': 300px,
+    'min-width': 170px,
+    // skin
+    'bg': get($dialog-config, 'bg'),
+    'text-color': get($dialog-config, 'text-color'),
+    'bd-color': get($dialog-config, 'bd-color'),
+    // arrows
+    'arrow-width': get-deep($triangle-config, 'lg.width'),
+    'arrow-outer-width': null, // actual calculated value inserted via @extend
+    'arrow-color': null, // actual calculated value inserted via @extend,
+    'arrow-outer-color': null, // actual calculated value inserted via @extend
+    // title
+    'title-line-height': get($dialog-size-base-config, 'header-line-height'),
+    'title-margin': null, // actual calculated value inserted via @extend
+    'title-padding': get($dialog-size-base-config, 'title-padding-top') 0 get($dialog-size-base-config, 'title-padding-bottom'),
+    'title-font-size': get($dialog-size-base-config, 'header-font-size'),
+    'title-font-weight': get($dialog-size-base-config, 'header-font-weight'),
+    // dismissible
+    'min-height': null, // actual calculated value inserted via @extend
+    'close-btn-width': null, // actual calculated value inserted via @extend
+    'close-btn-height': null // actual calculated value inserted via @extend
+) !default;
+
+
+// ----------------------------------------------------
+//   CALCULATED VALUES
+//   -> based on $popover-config
+//
+//   -> cannot be included in initial map declaration
+//      because the calculations depend on values
+//      within the map, and Sass has no ability to
+//      reference a key in a map from within that map.
+//
+//   -> documented as props of $popover-config
+//      because they are added via extend() below.
+// ----------------------------------------------------
+    $popover-arrow-width: get($popover-config, 'arrow-width');
+    $popover-arrow-outer-width: $popover-arrow-width + (get($popover-config, 'bd-width') * 2);
+    $popover-arrow-color: get($popover-config, 'bg');
+    $popover-arrow-outer-color: get($popover-config, 'bd-color');
+    $popover-content-padding: get($popover-config, 'content-padding');
+    $popover-title-margin: ($popover-content-padding * -1) 0 ($popover-content-padding / 2) 0;
+    $popover-title-padding-top: nth(get($popover-config, 'title-padding'), 1);
+    $popover-title-padding-bottom: nth(get($popover-config, 'title-padding'), 3);
+    $popover-title-height: to-rem(box-model-height(
+        $padding-vertical: to-px(floor(average($popover-title-padding-top $popover-title-padding-bottom))),
+        $font-size: get($popover-config, 'title-font-size'),
+        $line-height: get($popover-config, 'title-line-height'),
+        $bd-width: 0
+    ));
+    $popover-min-height: to-rem(box-model-height(
+        $padding-vertical: get($popover-config, 'content-padding'),
+        $bd-width: get($popover-config, 'bd-width')
+    ));
+    $popover-close-btn-height: $popover-title-height;
+    $popover-close-btn-width: $popover-close-btn-height;
+
+    // ----- EXTEND popover config with calc'd values ----- //
+    $popover-config: extend($popover-config,
+        (
+            'arrow-outer-width': $popover-arrow-outer-width,
+            'arrow-color': $popover-arrow-color,
+            'arrow-outer-color': $popover-arrow-outer-color,
+            'title-margin': $popover-title-margin,
+            'min-height': $popover-min-height,
+            'close-btn-width': $popover-close-btn-width,
+            'close-btn-height': $popover-close-btn-height
+        )
+    );
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED CONFIG ALIAS / SHORTHAND
+//
+//   -> DO NOT MODIFY THESE (modify the map config)
+//
+// ********************************************************
+    $popover-padding: get($popover-config, 'padding');
+    $popover-min-width: get($popover-config, 'min-width');
+    $popover-max-width: get($popover-config, 'max-width');
+    $popover-bg: get($popover-config, 'bg');
+    $popover-text-color: get($popover-config, 'text-color');
+    $popover-bd-color: get($popover-config, 'bd-color');
+    $popover-bd-radius: get($popover-config, 'bd-radius');
+    $popover-bd-width: get($popover-config, 'bd-width');
+
+    $popover-title-margin: get($popover-config, 'title-margin');
+    $popover-title-padding: get($popover-config, 'title-padding');
+    $popover-title-line-height: get($popover-config, 'title-line-height');
+    $popover-title-font-size: get($popover-config, 'title-font-size');
+    $popover-title-font-weight: get($popover-config, 'title-font-weight');

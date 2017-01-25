@@ -1,0 +1,253 @@
+// ********************************************************
+//
+//   ALERT COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-alerts
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/dialogs/alerts';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $dialogs-alerts-module-config:  'core/components/atoms/dialogs/alerts-config';
+    $dialogs-alerts-module-helpers: 'core/components/atoms/dialogs/alerts-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $dialogs-alerts-module-config);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE STRUCTURE (unskinned, inline)
+//
+//   By default, alerts appear "inline" - alongside other
+//   content, and have a left "platform" edge border
+//   that is a darker shade of the background color.
+//
+// ********************************************************
+.alert {
+    min-height: to-rem(get($alert-config, 'min-height')); // for empty alerts
+    padding: to-rem($alert-padding);
+    margin-bottom: to-rem(get($alert-config, 'spacing-vertical'));
+    border-left: to-rem($alert-platform-bd-width) solid transparent;
+    text-align: left;
+
+    // Improve alignment and spacing of inner content
+    > p,
+    > ul {
+        margin-bottom: 0;
+    }
+    > p + p {
+        margin-top: $paragraph-margin-bottom / 2;
+    }
+}
+
+
+// ********************************************************
+//
+//   TOAST ALERTS (unskinned, float above app content)
+//
+//   -> Single toast alerts display full-width at the top
+//      or bottom edge of the viewport.
+//
+//   -> Multiple toast alerts should appear within a
+//      `.alert-toaster` container, stacked vertically
+//      atop one-another.
+//
+// ********************************************************
+.alert-toast {
+    z-index: z('toast-alert'); // keep above EVERYTHING
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: to-rem($alert-padding-toast);
+    width: get($alert-config, 'toast-single-width');
+    text-align: center;
+    // Toast alerts that float above app content do not have a platform border
+    border-left-width: 0;
+
+    // Top edge of the viewport by default
+    @include slide-down($finish: 0, $position: fixed);
+
+    // Bottom edge of the viewport
+    @at-root .alert-toast-bottom {
+        @include slide-up($finish: 0, $position: fixed);
+    }
+}
+
+
+// ********************************************************
+//
+//   ALERT HEADINGS
+//
+// ********************************************************
+.alert-heading {
+    margin: to-rem($alert-heading-margin);
+    font-size: to-rem($alert-heading-font-size);
+    font-weight: $alert-heading-font-weight;
+    line-height: to-rem($alert-heading-line-height);
+    color: $headings-color;
+}
+
+
+// ********************************************************
+//
+//  ALERT LINKS
+//
+//  [1] Currently, only links within "toast" alerts need
+//      special styling - since those alerts have reverse
+//      text contrast.
+//
+// ********************************************************
+.alert-link {
+    .alert-toast & { // [1]
+        $toast-link-color: get-deep($alert-colors-default, 'toast.text-color');
+
+        color: rgba($toast-link-color, 1);
+        text-decoration: underline;
+
+        #{$link-hover-focus} {
+            color: rgba($toast-link-color, .8);
+        }
+
+        #{$link-pressed} {
+            color: rgba($toast-link-color, .9);
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   DISMISSIBLE VARIATION
+//   -> Expands the right padding to account for the
+//      `.close` button's positioning
+//
+// ********************************************************
+.alert-dismissible {
+    padding-right: to-rem($alert-close-btn-width);
+
+    // Adjust close button position
+    .close {
+        position: relative;
+        top: to-rem($alert-padding-vertical) * -1;
+        right: to-rem($alert-close-btn-width) * -1;
+        width: to-rem($alert-close-btn-width);
+        height: to-rem($alert-close-btn-height);
+        // if the alert is positioned absolute or fixed
+        // a negative bottom margin must be added to
+        // prevent the alert from doubling its height
+        margin-bottom: to-rem($alert-close-btn-height) * -1;
+    }
+}
+
+
+// ********************************************************
+//
+//   SKIN COLOR VARIATIONS
+//
+//   [1] Inline alerts (with left platform edge)
+//
+//   [2] Floating "toast" alerts (no platform edge)
+//
+// ********************************************************
+    @include alert-skins(); // [1]
+    @include alert-toast-skins(); // [2]
+
+
+// ********************************************************
+//
+//   SIZE VARIATIONS
+//
+//   [1] Typically used when nested inside a `.modal-footer`
+//       where the height needs to line up with the height
+//       of a button.
+//
+//   [2] Typically used in-combination with the `.alert-inverse`
+//       skin variation to mimic a `.tooltip`. (UIP-896)
+//
+// ********************************************************
+    @include alert-size(sm); // [1]
+    @include alert-size(xs); // [2]
+
+
+// ********************************************************
+//
+//   TOASTER
+//
+//   -> Single viewport corner location where one or more
+//      toast alert messages could appear stacked atop
+//      one another.
+//
+// ********************************************************
+.alert-toaster {
+    position: fixed;
+    z-index: z('toast-alert');
+    // mobile-first default size / positioning
+    width: 100%;
+    bottom: 0;
+    left: 0;
+
+    // Relatively positioned alerts in the toaster ensure automatic vertical stacking
+    .alert-toast {
+        position: relative;
+        z-index: z('toast-alert') - 5;
+        margin-bottom: to-rem(get($alert-config, 'spacing-vertical')); // space out adjacent toasts
+
+        &.in {
+            z-index: z('toast-alert');
+        }
+    }
+
+    // Add a max width above mobile screen sizes for toasters
+    // that are not intended to be horizontally centered
+    &:not(.alert-toaster-center) {
+        @include respond-to('screen-sm and up') {
+            left: to-rem($alert-toast-margin);
+            max-width: to-rem(get($alert-config, 'toaster-max-width'));
+
+            .alert-toast {
+                left: 0;
+                margin-left: 0;
+                width: 100%;
+                text-align: left;
+            }
+        }
+    }
+}
+
+    // ----------------------------------------------------
+    //   STACKED TOAST ALERT POSITION VARIATIONS
+    //   -> Default is bottom left
+    // ----------------------------------------------------
+    .alert-toaster-top {
+        top: to-rem($alert-toast-margin);
+        bottom: auto;
+    }
+
+    .alert-toaster-right {
+        @include respond-to('screen-sm and up') {
+            right: to-rem($alert-toast-margin);
+            left: auto !important; // !important to override :not(.alert-toast-center)
+        }
+    }
+
+    .alert-toaster-center {
+        .alert {
+            text-align: center;
+        }
+    }
+
+
+// ********************************************************
+//
+//   MODAL FOOTER NESTED ALERT
+//
+// ********************************************************
+.modal-footer .alert {
+    position: relative;
+    margin: 0;
+}

@@ -1,0 +1,260 @@
+// ********************************************************
+//
+//   TABBED NAV COMPONENTS STYLE MODULE
+//   http://bit.ly/webskin-nav-tabs
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/navs/nav-tabs';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $nav-tabs-module-config:  'core/components/atoms/navs/config/nav-tab-config';
+    $nav-tabs-module-helpers: 'core/components/atoms/navs/navs-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $nav-tabs-module-config,
+                                          $nav-tabs-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE NAV TAB CONTAINER
+//   -> Wraps around `.nav-tabs` and `.tab-content`
+//
+// ********************************************************
+.tabbable {
+    @include clearfix();
+}
+
+
+// ********************************************************
+//
+//   BASE TAB NAV (`<ul>`)
+//
+// ********************************************************
+.nav-tabs {
+    @include clearfix();
+
+    margin-bottom: $nav-tabs-content-spacing-rem; // provide some separation from tab-content
+    border-bottom: $nav-tabs-bd-width-rem solid get($nav-tabs-config, 'bd-color'); // Give the tabs something to sit on
+}
+
+
+// ********************************************************
+//
+//   NAV TAB ITEMS / ITEM HITAREAS
+//
+// ********************************************************
+.nav-tabs > .nav-item {
+    float: left;
+    margin-bottom: $nav-tabs-bd-width-rem * -1; // Make the list-items overlay the bottom border
+
+    // ----------------------------------------------------
+    //   NAV TAB LINKS (`.hitarea`)
+    // ----------------------------------------------------
+    > .hitarea {
+        @if $nav-tabs-tab-bd-radius-rem != 0 {
+            @include border-top-radius($nav-tabs-tab-bd-radius-rem);
+        }
+
+        @if $nav-tabs-tab-bd-width-rem != 0 {
+            border: $nav-tabs-tab-bd-width-rem solid transparent;
+        }
+
+        width: auto; // so that float / margin between tabs works
+        padding: to-rem(get($nav-tabs-tab-config, 'padding'));
+        margin-right: $nav-tabs-tab-spacing-rem;
+        color: get($nav-tabs-tab-config, 'text-color');
+
+        // ----- HOVER / FOCUS STATES ----- //
+        #{$link-hover-focus} {
+            color: get($nav-tabs-tab-config, 'text-color-hover');
+            background-color: get($nav-tabs-tab-config, 'bg-hover');
+        }
+
+        // ----- PRESSED STATE ----- //
+        #{$link-pressed} {
+            color: get($nav-tabs-tab-config, 'text-color-press');
+            background-color: get($nav-tabs-tab-config, 'bg-press');
+        }
+
+        // ----- DISABLED NAV TAB ITEM STATES ----- //
+        #{$nav-disabled-selectors} {
+            color: get($nav-tabs-tab-config, 'text-color-disabled') !important;
+            background-color: get($nav-tabs-tab-config, 'bg-disabled') !important;
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   ACTIVE ITEM "PLATFORM"
+    //
+    //   -> Visible only in active / open state
+    // ----------------------------------------------------
+    &:after {
+        @include nav-tabs-tab-platform-bottom();
+    }
+
+
+    // ----------------------------------------------------
+    //   ACTIVE / OPEN NAV TAB ITEM STATES
+    // ----------------------------------------------------
+    &.active,
+    &.open {
+        > .hitarea {
+            background-color: get($nav-tabs-tab-config, 'bg-active');
+            color: get($nav-tabs-tab-config, 'text-color-active');
+
+            // ----- ACTIVE + HOVER / FOCUS STATES ----- //
+            #{$link-hover-focus} {
+                background-color: get($nav-tabs-tab-config, 'bg-active');
+                color: get($nav-tabs-tab-config, 'text-color-active');
+            }
+
+            // ----- ACTIVE + PRESSED STATE ----- //
+            #{$link-pressed} {
+                background-color: get($nav-tabs-tab-config, 'bg-active');
+                color: get($nav-tabs-tab-config, 'text-color-active');
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   ACTIVE NAV TAB ITEM STATE
+    // ----------------------------------------------------
+    &.active {
+        // ----- REVEAL "PLATFORM" INDICATOR (active only) ----- //
+        &:after {
+            background-color: get($nav-tabs-tab-config, 'selected-platform-color');
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   NAV TAB DROPDOWN ITEMS
+//
+// ********************************************************
+.nav-tabs {
+    // ----------------------------------------------------
+    //   DROPDOWN MENU BASE
+    // ----------------------------------------------------
+    .dropdown > .dropdown-menu {
+        margin-top: $nav-tabs-bd-width-rem * -1;
+        border-color: get($nav-tabs-tab-config, 'bd-color');
+        border-top-color: transparent; // Allow the "platform" color to show-through.
+        @include border-top-radius(0);
+    }
+}
+
+
+// ********************************************************
+//
+//   NAV TAB CONTENT AREAS
+//
+// ********************************************************
+.tab-content > .tab-pane {
+    outline: 0;
+    @include nav-tab-content-visibility-control();
+}
+
+
+// ********************************************************
+//
+//   NAV TAB DIRECTION VARIATIONS
+//
+// ********************************************************
+
+    // ------------------------------------------------
+    //   BOTTOM
+    //   -> Tab content sits above floating tabs
+    //   -> `.tabbable.tabs-below > .nav-tabs`
+    // ------------------------------------------------
+    .tabs-below {
+        > .nav-tabs {
+            @include nav-tabs-below();
+        }
+    }
+
+    // ------------------------------------------------
+    //   LEFT
+    //   -> Tab content sits to the right of
+    //      vertically stacked tabs.
+    //
+    //      Use flexbox to ensure that the height of
+    //      the nav and it's associated content
+    //      remain equal.
+    //
+    //   -> `.tabbable.tabs-left > .nav-tabs`
+    // ------------------------------------------------
+    .tabs-left {
+        @include display-flex();
+
+        > .nav-tabs {
+            @include nav-tabs-left();
+        }
+    }
+
+
+
+    // ------------------------------------------------
+    //   RIGHT
+    //   -> Tab content sits to the left of
+    //      vertically stacked tabs
+    //
+    //      Use flexbox to ensure that the height of
+    //      the nav and it's associated content
+    //      remain equal.
+    //
+    //   -> `.tabbable.tabs-right > .nav-tabs`
+    // ------------------------------------------------
+    .tabs-right {
+        @include display-flex();
+
+        > .nav-tabs {
+            @include nav-tabs-right();
+        }
+    }
+
+
+
+// ********************************************************
+//
+//  CONDENSED NAV TAB SIZE VARIATION
+//
+//  -> Used for "toolbar menus" in Gen 2 Wdesk Apps
+//  -> UIP-1076
+//
+// ********************************************************
+.nav-tabs--sm {
+    margin-bottom: get($nav-tabs-sm-config, 'content-spacing');
+    border-bottom-width: get($nav-tabs-sm-config, 'bd-width');
+
+    > .nav-item {
+        > .hitarea {
+            font-size: get($nav-tabs-sm-tab-config, 'font-size');
+            line-height: 1.1;
+            padding: get($nav-tabs-sm-tab-config, 'padding');
+            text-transform: capitalize;
+        }
+
+        // ----------------------------------------------------
+        //  ADJUST PERCEIVED SPACING BETWEEN TABS
+        //
+        //  -> By offsetting the platform indicator edge left
+        //     and right while maintaining additonal padding
+        //     between the adjacent clickable areas.
+        // ----------------------------------------------------
+        &:after {
+            height: get($nav-tabs-sm-tab-config, 'selected-platform-size');
+            right: get($nav-tabs-sm-tab-config, 'selected-platform-edge-offset');
+            left: get($nav-tabs-sm-tab-config, 'selected-platform-edge-offset');
+        }
+    }
+}

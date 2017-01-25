@@ -1,0 +1,279 @@
+// ********************************************************
+
+////
+/// List group component helpers
+/// ---
+/// @since 1.0.0
+/// @group core.components.list-group
+/// @link http://bit.ly/webskin-list-groups List group component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/list-groups/list-groups-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function to-rem,
+                                                function calc-nav-divider-margin);
+//
+// ********************************************************
+
+
+///
+/// Reusable base styles for clickable `.list-group-item.hitarea` elems
+///
+@mixin list-group-item-link-base {
+    width: 100%; // overrule default <button> width auto
+    text-align: left; // overrule default <button> text-align
+    color: get($list-group-link-config, 'text-color');
+    @include disable-user-select();
+
+
+    // ----- HOVER / FOCUS STATES ----- //
+    #{$link-hover-focus} {
+        @include nav-link-state($list-group-link-config, 'hover');
+
+        text-decoration: none;
+    }
+
+
+    // ----- FOCUS-ONLY STATE ----- //
+    #{$focus} {
+        //
+        // Place focused items above their siblings
+        // to ensure the outline style is not clipped
+        // by the negative bottom margin
+        //
+        z-index: 2;
+        border-radius: to-rem(get-deep($list-group-base-config, 'bd-radius.base'));
+    }
+
+
+    // ----- PRESSED STATE ----- //
+    #{$link-pressed} {
+        @include nav-link-state($list-group-link-config, 'press');
+        // Keep the focus outline in this case because of all the adjacent
+        // sibling styles we have regarding border rounding in focused state.
+        @include focus-shadow-inset();
+    }
+}
+
+
+///
+/// Reusable styles for active, clickable `.list-group-item.hitarea` elems
+///
+@mixin list-group-item-link-active {
+    @include nav-link-state($list-group-link-config, 'active');
+
+    font-weight: bold;
+    z-index: 2; // Place active items above their siblings for proper border styling
+
+
+    // ----- ACTIVE + HOVER / FOCUS STATES ----- //
+    #{$link-hover-focus} {
+        @include nav-link-state($list-group-link-config, 'active');
+    }
+
+    #{$focus},
+    &#{$focus-class} {
+        // Since there is no background color / border color associated with
+        // active list-group-items, we should keep the inset box-shadow on focus.
+        @include focus-shadow-inset();
+    }
+
+
+    // ----- ACTIVE + PRESSED STATE ----- //
+    #{$link-pressed} {
+        @include nav-link-state($list-group-link-config, 'active');
+    }
+
+
+    // Force color / weight to inherit for custom content
+    .list-group-item-heading {
+        color: inherit;
+        font-weight: inherit;
+    }
+
+    .list-group-item-text {
+        color: inherit;
+        font-weight: inherit;
+    }
+}
+
+
+///
+/// Reusable styles for disabled, clickable `.list-group-item.hitarea` elems
+///
+@mixin list-group-item-link-disabled {
+    text-decoration: none !important;
+    background-color: get($list-group-link-config, 'bg-disabled') !important;
+    color: rgba(get($list-group-link-config, 'text-color'), get($list-group-link-config, 'disabled-alpha')) !important;
+
+    // ----- ACTIVE + DISABLED ----- //
+    .active > &,
+    &.active {
+        background-color: rgba(get($list-group-link-config, 'bg-active'), get($list-group-link-config, 'disabled-alpha')) !important;
+        color: rgba(get($list-group-link-config, 'text-color-active'), get($list-group-link-config, 'disabled-alpha')) !important;
+    }
+
+    // Force color to inherit for custom content
+    .list-group-item-heading,
+    .list-group-item-text {
+        color: inherit !important;
+    }
+}
+
+
+///
+/// Reusable `.list-group-item` state variation styles
+/// ---
+/// @param {String} $state-name - CSS class suffix for state variation
+///
+@mixin list-group-item-skin($state-name) {
+    $skin: get($list-group-item-colors, $state-name);
+
+    .list-group-item-#{$state-name} {
+        background-color: get($skin, 'bg');
+        border-color: get($skin, 'bd-color');
+        color: get($skin, 'text-color');
+
+        .list-group-item-heading,
+        .list-group-item-text {
+            color: inherit;
+        }
+
+        // ----- CLICKABLE HITAREAS (FOR NAVS) ----- //
+        &.hitarea {
+            // ----- HOVER / FOCUS STATES ----- //
+            #{$link-hover-focus} {
+                background-color: get($skin, 'bg-hover');
+                color: get($skin, 'text-color-hover');
+            }
+
+            // ----- PRESSED STATE ----- //
+            #{$link-pressed} {
+                background-color: get($skin, 'bg-press');
+                color: get($skin, 'text-color-press');
+            }
+
+            // ----- ACTIVE STATE (for navs) ----- //
+            .active > &,
+            &.active {
+                &,
+                #{$link-hover-focus} {
+                    // override active state bg with contextual skin bg
+                    background-color: get($skin, 'bg-active');
+                    color: get($skin, 'text-color-active');
+                }
+            }
+        }
+    }
+}
+
+
+///
+/// Reusable heading styles for use within size variations of `.list-group` components
+/// ---
+/// @param {String} $size [base] - CSS class suffix for optional size variation
+///
+@mixin list-group-item-heading($size: base) {
+    // only need to declare base color once,
+    // without a size variation specified
+    @if $size == base {
+        color: $headings-color;
+
+        // Within a clickable list-item
+        .hitarea & {
+            color: inherit;
+        }
+    }
+
+    margin-bottom: to-rem(get-deep($list-group-item-config, 'padding.#{$size}.top'));
+    padding-top: to-rem(get-deep($list-group-item-config, 'heading-padding.#{$size}.top'));
+    padding-bottom: to-rem(get-deep($list-group-item-config, 'heading-padding.#{$size}.bottom'));
+    font-size: to-rem(get-deep($list-group-item-config, 'heading-font-size.#{$size}'));
+    line-height: to-rem(get-deep($list-group-item-config, 'heading-line-height.#{$size}'));
+
+    &:first-child {
+        //
+        // let the spacing applied to .list-group-item-heading
+        // stand on its own without interference from the
+        // inner padding of the group item
+        //
+        margin-top: to-rem(get-deep($list-group-item-config, 'padding.#{$size}.top')) * -1;
+    }
+}
+
+
+///
+/// Reusable styles for size variations of `.list-group` components
+/// ---
+/// @param {String}  $size - CSS class suffix for size variation
+///
+@mixin list-group-item-size($size) {
+
+    .list-group-#{$size} .list-group-item {
+        padding: to-rem(get-deep($list-group-item-config, 'padding.#{$size}.all'));
+        font-size: to-rem(get-deep($list-group-item-config, 'font-size.#{$size}'));
+        line-height: to-rem(get-deep($list-group-item-config, 'line-height.#{$size}'));
+    }
+
+
+    // ----------------------------------------------------
+    //   CUSTOM CONTENT HEADING SIZE ADJUSTMENT
+    //
+    //   -> Base heading size / style declared in _list-group.scss
+    // ----------------------------------------------------
+    .list-group-#{$size} .list-group-item-heading {
+        @include list-group-item-heading($size);
+    }
+
+
+    // ----------------------------------------------------
+    //   DIVIDER MARGIN ADJUSTMENT
+    // ----------------------------------------------------
+    .list-group-#{$size} .list-group-divider {
+        margin: to-rem(calc-nav-divider-margin(get-deep($list-group-item-config, 'padding.#{$size}.top'), get($list-group-base-config, 'bd-width')));
+    }
+
+
+    // ----------------------------------------------------
+    //   ACTIVE / FOCUS STATE RADIUS ADJUSTMENT
+    // ----------------------------------------------------
+    .list-group-#{$size}:not(.list-group-bordered) .list-group-item.hitarea {
+        &.active,
+        #{$focus} {
+            border-radius: to-rem(get-deep($list-group-base-config, 'bd-radius.#{$size}'));
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   BORDERED VARIATION RADIUS ADJUSTMENT
+    //
+    //   -> Base bd radius declared in _list-group.scss
+    // ----------------------------------------------------
+    .list-group-#{$size}.list-group-bordered {
+        .list-group-item.hitarea {
+            &.active,
+            #{$focus} {
+                border-radius: 0;
+            }
+        }
+
+        > li:first-child > .list-group-item,
+        > .list-group-item:first-child {
+            @include border-top-radius(to-rem(get-deep($list-group-base-config, 'bd-radius.#{$size}')) !important);
+        }
+
+        > li:last-child > .list-group-item,
+        > .list-group-item:last-child {
+            @include border-bottom-radius(to-rem(get-deep($list-group-base-config, 'bd-radius.#{$size}')) !important);
+        }
+    }
+}

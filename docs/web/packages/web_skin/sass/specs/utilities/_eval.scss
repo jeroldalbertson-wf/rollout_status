@@ -1,0 +1,458 @@
+@mixin _test-arglist($arguments...) {
+    $_arglist: $arguments !global;
+    @content;
+}
+
+
+// ----------------------------------------------------
+//   is-true()
+// ----------------------------------------------------
+@include describe('[is-true]') {
+    @include describe('when value is [null]') {
+        @include it('should return false') {
+            @include should(expect( is-true(null) ), to(equal( false )));
+        }
+    }
+
+    @include describe('when value is [false]') {
+        @include it('should return false') {
+            @include should(expect( is-true(false) ), to(equal( false )));
+        }
+    }
+
+    @include describe('when value is an empty string') {
+        @include it('should return false') {
+            @include should(expect( is-true('') ), to(equal( false )));
+        }
+    }
+
+    @include describe('when value is an empty list') {
+        @include it('should return false') {
+            @include should(expect( is-true(()) ), to(equal( false )));
+        }
+    }
+
+    @include describe('when value is [true]') {
+        @include it('should return true') {
+            @include should(expect( is-true(true) ), to(equal( true )));
+        }
+    }
+
+    @include describe('when value is string[false]') {
+        @include it('should return true') {
+            @include should(expect( is-true('false') ), to(equal( true )));
+        }
+    }
+
+    @include describe('when value is string[null]') {
+        @include it('should return true') {
+            @include should(expect( is-true('null') ), to(equal( true )));
+        }
+    }
+
+    @include describe('when value is zero') {
+        @include it('should return true') {
+            @include should(expect( is-true(0) ), to(equal( true )));
+        }
+    }
+
+    @include describe('when value is a string with a single space') {
+        @include it('should return true') {
+            @include should(expect( is-true(' ') ), to(equal( true )));
+        }
+    }
+
+    @include describe('when value is a non-empty list') {
+        @include it('should return true') {
+            @include should(expect( is-true((a,b,c)) ), to(equal( true )));
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   is-{type}
+//
+//   -> aliases for type-of('foo') == {type}
+// ----------------------------------------------------
+@include describe('[type-of] alias') {
+    @include describe('[is-bool]') {
+        @include it('should return false') {
+            @include should(expect( is-bool(hello) ), to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( is-bool(false) ), to(equal( true )));
+        }
+    }
+
+    @include describe('[is-map]') {
+        @include it('should return false') {
+            @include should(expect( is-map(hello) ), to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( is-map((foo: 'bar')) ), to(equal( true )));
+        }
+    }
+
+    @include describe('[is-list]') {
+        @include it('should return false') {
+            @include should(expect( is-list(hello) ), to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( is-list(('foo', 'bar')) ), to(equal( true )));
+            @include should(expect( is-list(('foo' 'bar')) ),  to(equal( true )));
+        }
+    }
+
+    @include describe('[is-arglist]') {
+        @include it('should return false') {
+            @include should(expect( is-arglist(('foo', 'bar')) ), to(equal( false )));
+        }
+        @include it('should return true') {
+            @include _test-arglist(foo, bar, baz) {
+                @include should(expect( is-arglist($_arglist) ), to(equal( true )));
+            }
+        }
+    }
+
+    @include describe('[is-number]') {
+        @include it('should return false') {
+            @include should(expect( is-number('0') ), to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( is-number(0) ),    to(equal( true )));
+            @include should(expect( is-number(0px) ),  to(equal( true )));
+            @include should(expect( is-number(0s) ),   to(equal( true )));
+            @include should(expect( is-number(0ms) ),  to(equal( true )));
+            @include should(expect( is-number(0rem) ), to(equal( true )));
+        }
+    }
+
+    @include describe('[is-number-with-valid-unit]') {
+        @include it('should return false when unit is present on a zero value') {
+            @include should(expect( is-number-with-valid-unit(0px) ),  to(equal( false )));
+        }
+        @include it('should return false when no unit is present on a non-zero value') {
+            @include should(expect( is-number-with-valid-unit(1) ),    to(equal( false )));
+            @include should(expect( is-number-with-valid-unit(-1) ),   to(equal( false )));
+        }
+        @include it('should return true for a unitless zero value') {
+            @include should(expect( is-number-with-valid-unit(0) ),    to(equal( true )));
+        }
+        @include it('should return true for a non-zero value with a unit') {
+            @include should(expect( is-number-with-valid-unit(1px) ),  to(equal( true )));
+            @include should(expect( is-number-with-valid-unit(-1px) ), to(equal( true )));
+        }
+    }
+
+    @include describe('[is-unitless-number]') {
+        @include it('should return false') {
+            @include should(expect( is-unitless-number(0px) ),  to(equal( false )));
+            @include should(expect( is-unitless-number(1px) ),  to(equal( false )));
+            @include should(expect( is-unitless-number(-1px) ), to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( is-unitless-number(0) ),    to(equal( true )));
+            @include should(expect( is-unitless-number(1) ),    to(equal( true )));
+            @include should(expect( is-unitless-number(-1) ),   to(equal( true )));
+        }
+    }
+
+    @include describe('[is-string]') {
+        @include it('should return false') {
+            @include should(expect( is-string(0) ), to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( is-string('hello') ), to(equal( true )));
+            @include should(expect( is-string(hello) ),   to(equal( true )));
+        }
+    }
+
+    @include describe('[is-color]') {
+        @include it('should return false') {
+            @include should(expect( is-color(0) ), to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( is-color(#fff) ), to(equal( true )));
+            @include should(expect( is-color(red) ),  to(equal( true )));
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   is-{unit}
+//
+//   -> aliases for unit('0{unit}') == {unit}
+// ----------------------------------------------------
+@include describe('[unit] alias') {
+    @include describe('[is-percentage]') {
+        @include it('should return false') {
+            @include should(expect( is-percentage(hello, false) ), to(equal( false )));
+            @include should(expect( is-percentage(0px) ),   to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( is-percentage(0%) ), to(equal( true )));
+        }
+    }
+
+    @include describe('[is-pixels]') {
+        @include it('should return false') {
+            @include should(expect( is-pixels(hello, false) ), to(equal( false )));
+            @include should(expect( is-pixels(0rem) ),  to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( is-pixels(0px) ), to(equal( true )));
+        }
+    }
+
+    @include describe('[is-px]') {
+        @include it('should return false') {
+            @include should(expect( is-px(hello, false) ), to(equal( false )));
+            @include should(expect( is-px(0rem) ),  to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( is-px(0px) ), to(equal( true )));
+        }
+    }
+
+    @include describe('[is-rem]') {
+        @include it('should return false') {
+            @include should(expect( is-rem(hello, false) ), to(equal( false )));
+            @include should(expect( is-rem(0px) ),   to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( is-rem(0rem) ), to(equal( true )));
+        }
+    }
+
+    @include describe('[is-em]') {
+        @include it('should return false') {
+            @include should(expect( is-em(hello, false) ), to(equal( false )));
+            @include should(expect( is-em(0rem) ),  to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( is-em(0em) ), to(equal( true )));
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   is()
+// ----------------------------------------------------
+@include describe('[is]') {
+    @include describe('when values is not a list or an arglist') {
+        @include it('should return false') {
+            @include should(expect( is('hello', 'goodbye', false) ), to(equal( false )));
+            @include should(expect( is('hello', 'hello', false) ),   to(equal( false )));
+        }
+    }
+
+    @include describe('when values is a list') {
+        @include it('should return false') {
+            @include should(expect( is('hello', 'goodbye' 'seeya') ),  to(equal( false )));
+            @include should(expect( is('hello', 'hellos' 'ohhello') ), to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( is('hello', 'goodbye' 'hello' 'seeya') ), to(equal( true )));
+        }
+    }
+
+    @include describe('when values is an arglist') {
+        @include _test-arglist(rotateX, rotateY) {
+            @include it('should return false') {
+                @include should(expect( is(rotate, $_arglist) ), to(equal( false )));
+            }
+        }
+        @include _test-arglist(rotateX, rotate) {
+            @include it('should return false') {
+                @include should(expect( is(rotateY, $_arglist) ), to(equal( false )));
+            }
+        }
+        @include _test-arglist(rotateX, rotateY) {
+            @include it('should return true') {
+                @include should(expect( is(rotateX, $_arglist) ), to(equal( true )));
+            }
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   str-has()
+// ----------------------------------------------------
+@include describe('[str-has]') {
+    @include describe('when values is not a list or an arglist') {
+        @include it('should return false') {
+            @include should(expect( str-has(rotateY, rotate, false) ), to(equal( false )));
+            @include should(expect( str-has(rotateY, rotate, false) ), to(equal( false )));
+        }
+    }
+
+    @include describe('when values is a list') {
+        @include it('should return false') {
+            @include should(expect( str-has(rotate, rotateY rotateX) ), to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( str-has(rotateY, rotateX rotateY) ), to(equal( true )));
+            @include should(expect( str-has(rotateY, rotateX rotate) ),  to(equal( true )));
+        }
+    }
+
+    @include describe('when values is an arglist') {
+        @include _test-arglist(rotateY, rotateX) {
+            @include it('should return false') {
+                @include should(expect( str-has(rotate, $_arglist) ), to(equal( false )));
+            }
+        }
+        @include _test-arglist(rotateX, rotateY) {
+            @include it('should return true') {
+                @include should(expect( str-has(rotateY, $_arglist) ), to(equal( true )));
+            }
+        }
+        @include _test-arglist(rotateX, rotate) {
+            @include it('should return true') {
+                @include should(expect( str-has(rotateY, $_arglist) ), to(equal( true )));
+            }
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   list-has()
+// ----------------------------------------------------
+@include describe('[list-has]') {
+    @include describe('when values is a list') {
+        @include it('should return false') {
+            @include should(expect( list-has(rotateY rotateX, rotate) ), to(equal( false )));
+            @include should(expect( list-has(rotateX rotate, rotateY) ), to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( list-has(rotateX rotateY, rotateY) ), to(equal( true )));
+        }
+    }
+
+    @include describe('when values is an arglist') {
+        @include _test-arglist(rotateY, rotateX) {
+            @include it('should return false') {
+                @include should(expect( list-has($_arglist, rotate) ), to(equal( false )));
+            }
+        }
+        @include _test-arglist(rotateX, rotate) {
+            @include it('should return false') {
+                @include should(expect( list-has($_arglist, rotateY) ), to(equal( false )));
+            }
+        }
+        @include _test-arglist(rotateX, rotateY) {
+            @include it('should return true') {
+                @include should(expect( list-has($_arglist, rotateY) ), to(equal( true )));
+            }
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   mod()
+// ----------------------------------------------------
+@include describe('[mod]') {
+    @include describe('when numerator or denominator is not a number') {
+        @include it('should return false') {
+            @include should(expect( mod('10', 5, false) ), to(equal( false )));
+            @include should(expect( mod(10, '5', false) ), to(equal( false )));
+        }
+    }
+
+    @include describe('when both numerator and denominator are a number') {
+        @include it('should return false') {
+            @include should(expect( mod(10, 4) ), to(equal( false )));
+            @include should(expect( mod(10px, 4px) ), to(equal( false )));
+        }
+        @include it('should return true') {
+            @include should(expect( mod(10, 5) ), to(equal( true )));
+            @include should(expect( mod(10px, 5px) ), to(equal( true )));
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   is-even-number()
+// ----------------------------------------------------
+@include describe('[is-even-number]') {
+    @include describe('when number is odd') {
+        @include it('should return false') {
+            @include should(expect( is-even-number(5) ), to(equal( false )));
+        }
+    }
+
+    @include describe('when number is even') {
+        @include it('should return true') {
+            @include should(expect( is-even-number(4) ), to(equal( true )));
+        }
+    }
+
+    @include describe('when number is zero') {
+        @include it('should return true') {
+            @include should(expect( is-even-number(0) ), to(equal( true )));
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   is-time()
+// ----------------------------------------------------
+@include describe('[is-time]') {
+    @include describe('when value is a unitless number') {
+        @include it('should return false') {
+            @include should(expect( is-time(0) ), to(equal( false )));
+        }
+    }
+
+    @include describe('when value is a number with a non-time unit') {
+        @include it('should return false') {
+            @include should(expect( is-time(0px) ), to(equal( false )));
+        }
+    }
+
+    @include describe('when value is a number with a unit of ms') {
+        @include it('should return true') {
+            @include should(expect( is-time(0ms) ), to(equal( true )));
+        }
+    }
+
+    @include describe('when value is a number with a unit of s') {
+        @include it('should return true') {
+            @include should(expect( is-time(0s) ), to(equal( true )));
+        }
+    }
+
+    @include describe('when value is a string') {
+        @include describe('that is interpolated as a unitless number') {
+            @include it('should return false') {
+                @include should(expect( is-time('0') ), to(equal( false )));
+            }
+        }
+
+        @include describe('that is interpolated as a number with a non-time unit') {
+            @include it('should return false') {
+                @include should(expect( is-time('0px') ), to(equal( false )));
+            }
+        }
+
+        @include describe('that is interpolated as a number with a unit of ms') {
+            @include it('should return true') {
+                @include should(expect( is-time('0ms') ), to(equal( true )));
+            }
+        }
+
+        @include describe('that is interpolated as a number with a unit of s') {
+            @include it('should return true') {
+                @include should(expect( is-time('0s') ), to(equal( true )));
+            }
+        }
+    }
+}

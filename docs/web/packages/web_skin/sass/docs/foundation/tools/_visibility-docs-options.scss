@@ -1,0 +1,83 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/foundation/tools/visibility-docs-options';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+@include responsive-invisibility(".hidden-dev-notes");
+@include responsive-invisibility(".hidden-design-notes");
+@include responsive-invisibility(".hidden-design-assets");
+
+//
+// Hide things that should only be visible if the
+//
+// "Code Examples" option is turned on
+//
+.docs-opts-code-off {
+    //
+    // disable for now, since we've hidden code examples by default,
+    // and added a button to toggle their visibility
+    //
+    // @include responsive-invisibility(".tabbed-markup");
+    // @include responsive-invisibility(".visible-code");
+    // @include responsive-invisibility(".highlight");
+
+    // // keep certain code examples on no matter what
+    // &.page-getting-started {
+    //     @include responsive-visibility(".highlight");
+    // }
+    // @include responsive-visibility(".always-visible-code")
+}
+
+.docs-opts-code-snippets-off {
+    //
+    // Disable for now since we are not showing these at all no matter what
+    //
+    // @include responsive-invisibility(".visible-code-snippets");
+}
+
+.docs-opts-code-angularjs-off {
+    @include responsive-invisibility(".visible-angularjs");
+}
+
+.docs-opts-code-dart-off {
+    @include responsive-invisibility(".visible-dart");
+}
+
+.docs-opts-dev-notes-off {
+    @include responsive-invisibility(".visible-dev-notes");
+    @include responsive-visibility(".hidden-dev-notes");
+}
+
+.docs-opts-design-assets-off {
+    @include responsive-invisibility(".visible-design-assets");
+    @include responsive-visibility(".hidden-design-assets");
+}
+
+.docs-opts-design-notes-off {
+    @include responsive-invisibility(".visible-design-notes");
+    @include responsive-visibility(".hidden-design-notes");
+}
+
+.docs-opts-dev-notes-off,
+.docs-opts-design-notes-off {
+    // If a callout is both a design AND a dev note
+    @include responsive-visibility(".visible-dev-notes.visible-design-notes");
+}
+.docs-opts-dev-notes-off.docs-opts-design-notes-off {
+    @include responsive-invisibility(".visible-dev-notes.visible-design-notes");
+    @include responsive-invisibility(".visible-dev-notes");
+    @include responsive-invisibility(".visible-design-notes");
+}
+
+.docs-opts-dev-notes-off.docs-opts-design-notes-off,
+.docs-opts-design-notes-on.docs-opts-dev-notes-on {
+    // If a callout is intended to be mutually exclusive, display the "dev" note when both
+    // options are selected, or when both options are unselected.
+    @include responsive-visibility(".hidden-design-notes.visible-dev-notes");
+    @include responsive-invisibility(".visible-design-notes.hidden-dev-notes");
+}
+

@@ -1,0 +1,115 @@
+// ********************************************************
+//
+    $module: 'peripherals/panels-global-jobs/global-jobs-list';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   JOBS LIST
+// ----------------------------------------------------
+    .jobs-list {
+        table-layout: fixed;
+    }
+
+
+// ----------------------------------------------------
+//   JOB META / STATUS COLUMNS
+// ----------------------------------------------------
+    .job-item {
+        // ----- global column styles ----- //
+        .item-col {
+            padding: 0 to-rem(get-deep($panel-config, 'sm.body-padding'));
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-color: get($panel-colors-default, 'bg');
+        }
+
+        // ----- specific columns ----- //
+        .item-icon {
+            width: to-rem($icon-size-base + (get($job-panel-config, 'item-padding') * 2));
+            // establish min-height for row via fixed height here
+            height: to-rem(get($job-panel-config, 'item-height'));
+        }
+
+        .item-name {
+            padding-left: 0; // keep it closer to the icon
+        }
+
+        .item-progress {
+            width: to-rem(get($job-panel-config, 'item-progress-bar-width') + (get($job-panel-config, 'item-padding') * 2));
+
+            .progress {
+                margin: 0;
+            }
+
+            .btn {
+                float: right;
+            }
+        }
+
+        //
+        // when a selectable job item is hovered -
+        // add an extra bit of "indication" that it can be clicked
+        //
+        // NOTE: this style assumes that the action button is a .btn-link
+        //
+        #{$hover} {
+            .item-progress .btn-link {
+                text-decoration: underline;
+                color: $link-color-hover;
+            }
+        }
+    }
+
+
+// ----------------------------------------------------
+//   JOB ROW STATES
+//
+//   -> pending
+//   -> done
+//      -> error
+//      -> success
+// ----------------------------------------------------
+    // ----- PENDING STATE (default) ----- //
+    .job-item {
+        // hide "done-state-only" items
+        .item-icon-error,
+        .item-icon-success,
+        .item-progress .btn {
+            display: none;
+        }
+    }
+
+    // ----- DONE STATES ----- //
+    .job-item.job-done {
+        // hide "pending-state-only" items
+        .item-icon-pending,
+        .item-progress .progress {
+            display: none;
+        }
+
+        // ----- DONE (WITH ERRORS) ----- //
+        &.job-error {
+            .item-icon-error {
+                display: inline-block;
+                color: $state-danger;
+            }
+            .item-btn-error {
+                display: inline-block;
+            }
+        }
+
+        // ----- DONE (NO ERRORS) ----- //
+        &.job-success {
+            .item-icon-success {
+                display: inline-block;
+                color: $state-success;
+            }
+            .item-btn-success {
+                display: inline-block;
+            }
+        }
+    }

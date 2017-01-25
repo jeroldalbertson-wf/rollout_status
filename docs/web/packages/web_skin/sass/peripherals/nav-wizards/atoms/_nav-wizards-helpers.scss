@@ -1,0 +1,25 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/nav-wizards/atoms/nav-wizards-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCIES:
+//
+    @import 'nav-wizards-config';
+//
+// ********************************************************
+
+@mixin nav-wizard-separator-arrow {
+    position: absolute;
+    z-index: get($nav-link-config, 'z-index-active'); // keep above .hitarea (even active ones)
+    top:  to-rem($nav-pills-pill-spacing) * -1;
+    left: to-rem($nav-pills-pill-spacing) * -1;
+    display: block;
+    width: 0;
+    height: 0;
+    border-width: to-rem($nav-wizard-sep-arrow-width 0 $nav-wizard-sep-arrow-width $nav-wizard-sep-arrow-width);
+    border-style: solid none solid solid;
+    border-color: transparent transparent transparent $body-bg;
+}

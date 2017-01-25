@@ -1,0 +1,110 @@
+// ********************************************************
+//
+//   WDESK APP LOADING PROGRESS STYLE MODULE (V2)
+//   http://bit.ly/webskin-progress-app-loading
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/progress/progress-app-loading';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $progress-app-loading-module-config:  'core/components/atoms/progress/progress-config';
+    $progress-app-loading-module-helpers: 'core/components/atoms/progress/progress-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $progress-app-loading-module-config,
+                                          $progress-app-loading-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BLINKING ELLIPSIS LOADING INDICATOR
+//
+//   These styles are usage-agnostic.  They don't necessarily
+//   have to be used on the "global" Wdesk app loading page.
+//
+//   <div class="loading-ellipsis">
+//      <i class="loading-ellipsis__dot loading-ellipsis__dot--first"></i>
+//      <i class="loading-ellipsis__dot loading-ellipsis__dot--middle"></i>
+//      <i class="loading-ellipsis__dot loading-ellipsis__dot--last"></i>
+//   </div>
+//
+//   [1] The keyframes needed to animate the three dots
+//   [2] The CSS selectors for each of the three dots
+//
+// ********************************************************
+    .loading-ellipsis,
+    .loading-ellipsis__message,
+    .loading-ellipsis__dot {
+        @include disable-user-select();
+    }
+
+    @include _loading-ellipsis-dot-keyframes(); // [1]
+    @include loading-ellipsis-dots(); // [2]
+
+
+
+
+// ********************************************************
+//
+//   WDESK APP LOADING STYLES (V2)
+//
+//   <div class="wdesk-loading-frame">
+//       <div class="wdesk-loading">
+//           <div class="wdesk-loading__content">
+//               <div class="wdesk-loading__logo">...</div>
+//               <div class="loading-ellipsis wdesk-loading__ellipsis">
+//                   <i class="loading-ellipsis__message wdesk-loading__message">Loading</i>
+//                   <i class="loading-ellipsis__dot loading-ellipsis__dot--first">.</i>
+//                   <i class="loading-ellipsis__dot loading-ellipsis__dot--middle">.</i>
+//                   <i class="loading-ellipsis__dot loading-ellipsis__dot--last">.</i>
+//               </div>
+//           </div>
+//       </div>
+//   </div>
+//
+//   [1] Container that centers vertically within `.wdesk-loading-frame`
+//   [2] Container that centers horizontally within `.wdesk-loading`
+//   [3] Mimics a `.grid-content` element
+//
+// ********************************************************
+    .wdesk-loading-frame {
+        @include grid-frame($orientation: vertical, $align: center);
+    }
+
+    .wdesk-loading { // [1]
+        @include display-flex();
+        @include grid-size(shrink);
+        @include grid-align(center);
+        text-align: center;
+    }
+
+    .wdesk-loading__content { // [2]
+        @include display-flex();
+        @include grid-size(shrink);
+        display: block; // [3]
+    }
+
+    .wdesk-loading__logo {
+        @include prevent-bg-image-clip();
+
+        width: get($app-loading-v2-config, 'logo-width');
+        height: get($app-loading-v2-config, 'logo-height');
+        background-image: image-url('#{$wdesk-logo-dir}wdesk-logo_color.svg');
+    }
+
+    .wdesk-loading__ellipsis {
+        color: get($app-loading-v2-config, 'loading-text-color');
+        margin-top: get($app-loading-v2-config, 'loading-text-font-size');
+        font-size: get($app-loading-v2-config, 'loading-text-font-size');
+
+        &,
+        .wdesk-loading__message,
+        .loading-ellipsis__dot {
+            font-style: get($app-loading-v2-config, 'loading-text-font-style');
+        }
+    }

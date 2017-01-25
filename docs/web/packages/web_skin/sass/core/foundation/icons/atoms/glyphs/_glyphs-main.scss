@@ -1,0 +1,1966 @@
+// ********************************************************
+//
+//   Main Icon Glyph Declarations that are included
+//   in `core/foundation/icons`
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/icons/atoms/glyphs/glyphs-main';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $icon-glyph-main-module-config:  'core/foundation/icons/atoms/icons-config';
+    $icon-glyph-main-module-helpers: 'core/foundation/icons/atoms/icons-helpers';
+    $icon-glyph-second-color-function-module: 'core/foundation/icons/atoms/glyphs/glyphs-two-color';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $icon-glyph-main-module-config,
+                                          $icon-glyph-main-module-helpers,
+                                          $icon-glyph-second-color-function-module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   16px "Main" Icons
+//
+// ********************************************************
+@mixin ws-icon-glyphs-main-16($include-anomalies: true) {
+    @include ws-icon-glyph("ea50",  $selector: '.icon-excel-sync',
+                                    $first-color: $zc-green);
+
+    @include ws-icon-glyph("ea51",  $selector: '.icon-forms',
+                                    $second-color: $zc-gray-70);
+
+    @include ws-icon-glyph("ea52",  $selector: '.icon-forms-view',
+                                    $second-color: $zc-gray-70);
+
+    @include ws-icon-glyph("ea53",  $selector: '.icon-filing-properties',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea54",  $selector: '.icon-filing');
+
+    @include ws-icon-glyph("ea55",  $selector: '.icon-rocket');
+
+    @include ws-icon-glyph("ea56",  $selector: '.icon-workflow',
+                                    $first-color: $zc-gray-80);
+
+    @include ws-icon-glyph("ea34",  $selector: '.icon-folder-attachments-g2',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("ea35",  $selector: '.icon-folder-move-g2',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea36",  $selector: '.icon-folder-add-g2',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("ea37",  $selector: '.icon-folder-remove-g2',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("ea38",  $selector: '.icon-folder-zip-g2');
+
+    @include ws-icon-glyph("ea39",  $selector: '.icon-format-overlay',
+                                    $first-color: $link-color-pressed,
+                                    $second-color: $zc-blue-40);
+
+    @include ws-icon-glyph("ea3a",  $selector: '.icon-na-sign',
+                                    $first-color: $link-color-hover,
+                                    $icon-with-solid-white-backing: true,
+                                    $second-color-fn: 'icon-circle-sign-backing');
+
+    @include ws-icon-glyph("ea3b",  $selector: '.icon-paragraph-spacing',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea3c",  $selector: '.icon-zoom-actual-size');
+
+    @include ws-icon-glyph("ea2f",  $selector: '.icon-manage-dimension',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("ea30",  $selector: '.icon-text-query',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea25",  $selector: '.icon-lightbox',
+                                    $first-color: $zc-gray-80,
+                                    $icon-with-solid-white-backing: true);
+
+    @include ws-icon-glyph("ea26",  $selector: '.icon-off-site',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("ea27",  $selector: '.icon-bell');
+
+    @include ws-icon-glyph("ea1b",  $selector: '.icon-beaker');
+
+    @include ws-icon-glyph("ea3d",  $selector: '.icon-beaker-badge',
+                                    $first-color: $link-color-hover);
+
+    @include ws-icon-glyph("ea1c",  $selector: '.icon-format-line-style');
+
+    @include ws-icon-glyph("ea1d",  $selector: '.icon-text-hide',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("ea0f",  $selector: '.icon-folder-fill-g2');
+
+    @include ws-icon-glyph("ea10",  $selector: '.icon-folder-g2');
+
+    @include ws-icon-glyph("ea3e",  $selector: '.icon-folder-open-g2');
+
+    @include ws-icon-glyph("ea11",  $selector: '.icon-certification-g2',
+                                    $first-color: color('doctypes.wfml-doc.red.base'));
+
+    @include ws-icon-glyph("ea03",  $selector: '.icon-screen-merge');
+
+    @include ws-icon-glyph("ea04",  $selector: '.icon-screen-split-vertical');
+
+    @include ws-icon-glyph("e900",  $selector: '.icon-connection-lost',
+                                    $second-color: $zc-orange-120);
+
+    @include ws-icon-glyph("e901",  $selector: '.icon-connection-made',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e9f3",  $selector: '.icon-fill-range',
+                                    $first-color: $zc-blue,
+                                    $second-color: $white);
+
+    @include ws-icon-glyph("e9f4",  $selector: '.icon-lightbulb');
+
+    @include ws-icon-glyph("e9f2",  $selector: '.icon-section-exception',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e9f0",  $selector: '.icon-sec-sign-outline');
+
+    @include ws-icon-glyph("e9e2",  $selector: '.icon-bookmark-indicator-outline');
+
+    @include ws-icon-glyph("e9e3",  $selector: '.icon-bookmark-indicator-fill');
+
+    @include ws-icon-glyph("e9e4",  $selector: '.icon-dashboard');
+
+    @include ws-icon-glyph("e9e5",  $selector: '.icon-dashboard-fill');
+
+    @include ws-icon-glyph("e9e6",  $selector: '.icon-database');
+
+    @include ws-icon-glyph("e9e7",  $selector: '.icon-database-fill');
+
+    @include ws-icon-glyph("e9e8",  $selector: '.icon-user-profile');
+
+    @include ws-icon-glyph("e9e9",  $selector: '.icon-user-profile-fill');
+
+    @include ws-icon-glyph("e906",  $selector: '.icon-filing-attachment-confidential',
+                                    $first-color: $zc-gray-80,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e90e",  $selector: '.icon-sort-alphabetical-ascending');
+
+    @include ws-icon-glyph("e90f",  $selector: '.icon-sort-alphabetical-descending');
+
+    @include ws-icon-glyph("e913",  $selector: '.icon-sort-filter-ascending');
+
+    @include ws-icon-glyph("e922",  $selector: '.icon-sort-filter-descending');
+
+    @include ws-icon-glyph("e923",  $selector: '.icon-sort-numeric-ascending');
+
+    @include ws-icon-glyph("e997",  $selector: '.icon-sort-numeric-descending');
+
+    @include ws-icon-glyph("e998",  $selector: '.icon-workspaces',
+                                    $first-color: $zc-gray-80,
+                                    $second-color-font: 'img');
+
+    @include ws-icon-glyph("e9d5",  $selector: '.icon-tick',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e9d4",  $selector: '.icon-data-filter',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9d3",  $selector: '.icon-color-picker-none',
+                                    $first-color: $zc-orange);
+
+    @include ws-icon-glyph("e9b1",  $selector: '.icon-tie-out-untied',
+                                    $first-color: $zc-gray-70);
+
+    @include ws-icon-glyph("e9b2",  $selector: '.icon-tie-out-tied',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e9b3",  $selector: '.icon-input-caps-lock-indicator',
+                                    $first-color: get($form-control-colors, 'placeholder-text-base'));
+
+    @include ws-icon-glyph("e9b4",  $selector: '.icon-list-select-option',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9b5",  $selector: '.icon-list-tree-section',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9b6",  $selector: '.icon-menu-list-select-multi',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9b7",  $selector: '.icon-menu-list-select-single',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9b8",  $selector: '.icon-table-cell-text-clip',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9b9",  $selector: '.icon-table-cell-text-overflow',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9ba",  $selector: '.icon-table-cell-text-wrap',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e921",  $selector: '.icon-announcement');
+
+    @include ws-icon-glyph("e924",  $selector: '.icon-changes-accept-reject',
+                                    $first-color: $zc-green,
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e925",  $selector: '.icon-changes-next',
+                                    $first-color: $zc-orange-120);
+
+    @include ws-icon-glyph("e926",  $selector: '.icon-changes-prev',
+                                    $first-color: $zc-orange-120);
+
+    @include ws-icon-glyph("e927",  $selector: '.icon-heart',
+                                    $first-color: $white,
+                                    $second-color: $zc-gray-70);
+
+    @include ws-icon-glyph("e928",  $selector: '.icon-indent-decrease',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e929",  $selector: '.icon-indent-increase',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e92a",  $selector: '.icon-insert-auto-text');
+
+    @include ws-icon-glyph("e92b",  $selector: '.icon-insert-hyperlink',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e92c",  $selector: '.icon-insert-page-number');
+
+    @include ws-icon-glyph("e92d",  $selector: '.icon-object-align-horizontal-center',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e92e",  $selector: '.icon-object-align-horizontal-left',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e92f",  $selector: '.icon-object-align-horizontal-right',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e930",  $selector: '.icon-object-align-vertical-bottom',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e931",  $selector: '.icon-object-align-vertical-center',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e932",  $selector: '.icon-object-align-vertical-top',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e933",  $selector: '.icon-object-distribute-horizontal',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e934",  $selector: '.icon-object-distribute-vertical',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e935",  $selector: '.icon-arrange-backward',
+                                    $first-color: $zc-gray-80,
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e936",  $selector: '.icon-arrange-forward',
+                                    $first-color: $zc-gray-80,
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e937",  $selector: '.icon-arrange-to-back',
+                                    $first-color: $zc-gray-80,
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e938",  $selector: '.icon-arrange-to-front',
+                                    $first-color: $zc-gray-80,
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e939",  $selector: '.icon-shapes-arrow-diag-double');
+
+    @include ws-icon-glyph("e93a",  $selector: '.icon-shapes-arrow-diag');
+
+    @include ws-icon-glyph("e93b",  $selector: '.icon-shapes-arrow-down');
+
+    @include ws-icon-glyph("e93c",  $selector: '.icon-shapes-arrow-left');
+
+    @include ws-icon-glyph("e93d",  $selector: '.icon-shapes-arrow-right');
+
+    @include ws-icon-glyph("e93e",  $selector: '.icon-shapes-basic');
+
+    @include ws-icon-glyph("e93f",  $selector: '.icon-shapes-box-left');
+
+    @include ws-icon-glyph("e940",  $selector: '.icon-shapes-box-right');
+
+    @include ws-icon-glyph("e941",  $selector: '.icon-shapes-card');
+
+    @include ws-icon-glyph("e942",  $selector: '.icon-shapes-database');
+
+    @include ws-icon-glyph("e943",  $selector: '.icon-shapes-decision');
+
+    @include ws-icon-glyph("e944",  $selector: '.icon-shapes-delay');
+
+    @include ws-icon-glyph("e945",  $selector: '.icon-shapes-diamond');
+
+    @include ws-icon-glyph("e946",  $selector: '.icon-shapes-direct-access');
+
+    @include ws-icon-glyph("e947",  $selector: '.icon-shapes-display');
+
+    @include ws-icon-glyph("e948",  $selector: '.icon-shapes-document');
+
+    @include ws-icon-glyph("e949",  $selector: '.icon-shapes-elbow-connector');
+
+    @include ws-icon-glyph("e94a",  $selector: '.icon-shapes-input-output');
+
+    @include ws-icon-glyph("e94b",  $selector: '.icon-shapes-internal-storage');
+
+    @include ws-icon-glyph("e94c",  $selector: '.icon-shapes-magnetic-disk');
+
+    @include ws-icon-glyph("e94d",  $selector: '.icon-shapes-manual-input');
+
+    @include ws-icon-glyph("e94e",  $selector: '.icon-shapes-manual-operation');
+
+    @include ws-icon-glyph("e94f",  $selector: '.icon-shapes-off-page-connector');
+
+    @include ws-icon-glyph("e950",  $selector: '.icon-shapes-off-page-reference');
+
+    @include ws-icon-glyph("e951",  $selector: '.icon-shapes-oval-left');
+
+    @include ws-icon-glyph("e952",  $selector: '.icon-shapes-oval-right');
+
+    @include ws-icon-glyph("e953",  $selector: '.icon-shapes-oval');
+
+    @include ws-icon-glyph("e954",  $selector: '.icon-shapes-preparation-hexagon');
+
+    @include ws-icon-glyph("e955",  $selector: '.icon-shapes-process');
+
+    @include ws-icon-glyph("e956",  $selector: '.icon-shapes-rectangle-rounded-left');
+
+    @include ws-icon-glyph("e957",  $selector: '.icon-shapes-rectangle-rounded-right');
+
+    @include ws-icon-glyph("e958",  $selector: '.icon-shapes-rectangle-rounded');
+
+    @include ws-icon-glyph("e959",  $selector: '.icon-shapes-rectangle');
+
+    @include ws-icon-glyph("e95a",  $selector: '.icon-shapes-star');
+
+    @include ws-icon-glyph("e95b",  $selector: '.icon-shapes');
+
+    @include ws-icon-glyph("e95c",  $selector: '.icon-text-insert');
+
+    @include ws-icon-glyph("e95d",  $selector: '.icon-format-clear',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e95e",  $selector: '.icon-format-table-border-all',
+                                    $first-color: $zc-blue-60);
+
+    @include ws-icon-glyph("e95f",  $selector: '.icon-format-table-border-bottom-double',
+                                    $first-color: $zc-blue-60,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e960",  $selector: '.icon-format-table-border-bottom-thick',
+                                    $first-color: $zc-blue-60,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e961",  $selector: '.icon-format-table-border-bottom',
+                                    $first-color: $zc-blue-60,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e962",  $selector: '.icon-format-table-border-left-thick',
+                                    $first-color: $zc-blue-60,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e963",  $selector: '.icon-format-table-border-left',
+                                    $first-color: $zc-blue-60,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e964",  $selector: '.icon-format-table-border-none',
+                                    $first-color: $zc-blue-60);
+
+    @include ws-icon-glyph("e965",  $selector: '.icon-format-table-border-outside',
+                                    $first-color: $zc-gray,
+                                    $second-color: $zc-blue-60);
+
+    @include ws-icon-glyph("ea1e",  $selector: '.icon-format-table-border-outside-thick',
+                                    $first-color: $zc-blue-60,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e966",  $selector: '.icon-format-table-border-right-thick',
+                                    $first-color: $zc-blue-60,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e967",  $selector: '.icon-format-table-border-right',
+                                    $first-color: $zc-blue-60,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e968",  $selector: '.icon-format-table-border-top-bottom-double',
+                                    $first-color: $zc-blue-60,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("ea1f",  $selector: '.icon-format-table-border-top-bottom-thick',
+                                    $first-color: $zc-blue-60,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e969",  $selector: '.icon-format-table-border-top-bottom',
+                                    $first-color: $zc-blue-60,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e96a",  $selector: '.icon-format-table-border-top-thick',
+                                    $first-color: $zc-blue-60,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e96b",  $selector: '.icon-format-table-border-top',
+                                    $first-color: $zc-blue-60,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e96d",  $selector: '.icon-list-bullets-open');
+
+    @include ws-icon-glyph("e96e",  $selector: '.icon-list-bullets-square');
+
+    @include ws-icon-glyph("e96f",  $selector: '.icon-list-bullets-asterisk');
+
+    @include ws-icon-glyph("e970",  $selector: '.icon-list-bulllets-cross');
+
+    @include ws-icon-glyph("e971",  $selector: '.icon-list-alpha-caps');
+
+    @include ws-icon-glyph("e972",  $selector: '.icon-list-alpha-lower');
+
+    @include ws-icon-glyph("e973",  $selector: '.icon-list-number');
+
+    @include ws-icon-glyph("e974",  $selector: '.icon-list-roman-caps');
+
+    @include ws-icon-glyph("e975",  $selector: '.icon-list-roman-lower');
+
+    @include ws-icon-glyph("e976",  $selector: '.icon-list-style-none');
+
+    @include ws-icon-glyph("ea57",  $selector: '.icon-chart-axis-x',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea58",  $selector: '.icon-chart-axis-y',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e65e",  $selector: '.icon-chart-bar',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea59",  $selector: '.icon-chart-bar-view',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea5a",  $selector: '.icon-chart-bar-color',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e977",  $selector: '.icon-chart-bar-horizontal',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea5b",  $selector: '.icon-chart-bar-horizontal-view',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e978",  $selector: '.icon-chart-bar-stacked',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea5c",  $selector: '.icon-chart-bar-stacked-view',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e979",  $selector: '.icon-chart-bar-horizontal-stacked',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea5d",  $selector: '.icon-chart-bar-horizontal-stacked-view',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e97a",  $selector: '.icon-chart-combo',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea5e",  $selector: '.icon-chart-combo-view',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e97b",  $selector: '.icon-chart-bar-stacked-line',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea5f",  $selector: '.icon-chart-bar-stacked-line-view',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e97c",  $selector: '.icon-chart-waterfall',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea60",  $selector: '.icon-chart-waterfall-view',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e97d",  $selector: '.icon-chart-area',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea61",  $selector: '.icon-chart-area-view',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e97e",  $selector: '.icon-chart-bubble',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea62",  $selector: '.icon-chart-bubble-view',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e97f",  $selector: '.icon-chart-donut',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea63",  $selector: '.icon-chart-donut-view',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e980",  $selector: '.icon-chart-line',
+                                    $second-color: transparent,
+                                    $second-color-font: 'img');
+
+    @include ws-icon-glyph("ea64",  $selector: '.icon-chart-line-view',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e981",  $selector: '.icon-chart-pie',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea65",  $selector: '.icon-chart-pie-view',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9f5",  $selector: '.icon-chart-pie-slice',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e982",  $selector: '.icon-chart-scatter-plot',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea66",  $selector: '.icon-chart-scatter-plot-view',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9f6",  $selector: '.icon-chart-pie-color',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e983",  $selector: '.icon-table-insert',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e984",  $selector: '.icon-table-remove',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e985",  $selector: '.icon-table-hide-column',
+                                    $second-color: $zc-gray-70);
+
+    @include ws-icon-glyph("ea05",  $selector: '.icon-table-unhide-column',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e986",  $selector: '.icon-table-hide-row',
+                                    $second-color: $zc-gray-70);
+
+    @include ws-icon-glyph("ea06",  $selector: '.icon-table-unhide-row',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e987",  $selector: '.icon-table-cells-merge',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e988",  $selector: '.icon-table-cells-freeze',
+                                    $second-color: $zc-gray-70);
+
+    @include ws-icon-glyph("e989",  $selector: '.icon-table-cells-lock',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e98a",  $selector: '.icon-table-cell-edit',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e907",  $selector: '.icon-ticket');
+
+    @include ws-icon-glyph("e902",  $selector: '.icon-star-outline',
+                                    $second-color: $white);
+
+    @include ws-icon-glyph("e903",  $selector: '.icon-star',
+                                    $first-color: $zc-orange-80);
+
+    @include ws-icon-glyph("e904",  $selector: '.icon-presentation-add-group',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e905",  $selector: '.icon-slide-master');
+
+    @include ws-icon-glyph("e908",  $selector: '.icon-color-wheel',
+                                    $first-color: transparent,
+                                    $second-color: transparent,
+                                    $second-color-font: 'img');
+
+    @include ws-icon-glyph("e725",  $selector: '.icon-sox-group',
+                                    $second-color: $link-color-hover);
+
+    @include ws-icon-glyph("e726",  $selector: '.icon-sox-pivot-column',
+                                    $second-color: $link-color-hover);
+
+    @include ws-icon-glyph("e727",  $selector: '.icon-sox-pivot-row',
+                                    $second-color: $link-color-hover);
+
+    @include ws-icon-glyph("e728",  $selector: '.icon-reset');
+
+    @include ws-icon-glyph("e71b",  $selector: '.icon-collapse-all',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e71c",  $selector: '.icon-expand-all',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e71d",  $selector: '.icon-comma');
+
+    @include ws-icon-glyph("e71e",  $selector: '.icon-tab-data-collection',
+                                    $second-color: shade-of($zc-gray, 50%));
+
+    @include ws-icon-glyph("e71f",  $selector: '.icon-history');
+
+    @include ws-icon-glyph("e718",  $selector: '.icon-formula-sum',
+                                    $first-color: $zc-orange-120);
+
+    @include ws-icon-glyph("e719",  $selector: '.icon-formula-recalc',
+                                    $first-color: $zc-orange-120);
+
+    @include ws-icon-glyph("e71a",  $selector: '.icon-cross-foot',
+                                    $first-color: $zc-orange-120);
+
+    @include ws-icon-glyph("e707",  $selector: '.icon-format-outline');
+
+    @include ws-icon-glyph("e708",  $selector: '.icon-data-focus',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e709",  $selector: '.icon-data-relationships');
+
+    @include ws-icon-glyph("e70a",  $selector: '.icon-data-layout');
+
+    @include ws-icon-glyph("e6e4",  $selector: '.icon-publish-caret');
+
+    @include ws-icon-glyph("e70b",  $selector: '.icon-format-painter');
+
+    @include ws-icon-glyph("e6cb",  $selector: '.icon-draw-border-color',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e6cc",  $selector: '.icon-draw-cursor-pointer');
+
+    @include ws-icon-glyph("e6cd",  $selector: '.icon-draw-line-arrow-down');
+
+    @include ws-icon-glyph("e6ce",  $selector: '.icon-draw-line-arrow-up');
+
+    @include ws-icon-glyph("e6cf",  $selector: '.icon-draw-line');
+
+    @include ws-icon-glyph("e6d0",  $selector: '.icon-draw-oval-outline');
+
+    @include ws-icon-glyph("e6d1",  $selector: '.icon-draw-rectangle-arrow-outline');
+
+    @include ws-icon-glyph("e6d2",  $selector: '.icon-draw-square-outline');
+
+    @include ws-icon-glyph("e6d3",  $selector: '.icon-folder-move',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6d4",  $selector: '.icon-review-stamp-approved',
+                                    $second-color: $zc-green-b);
+
+    @include ws-icon-glyph("e6d5",  $selector: '.icon-review-stamp-reviewed',
+                                    $second-color: $zc-blue-120);
+
+    @include ws-icon-glyph("e6d6",  $selector: '.icon-review-stamp-signed',
+                                    $second-color: $zc-purple);
+
+    @include ws-icon-glyph("e60a",  $selector: '.icon-decimals-decrease',
+                                    $second-color: $zc-blue,
+                                    $left: -.05rem);
+
+    @include ws-icon-glyph("e6c3",  $selector: '.icon-decimals-increase',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e680",  $selector: '.icon-blackline-review',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e699",  $selector: '.icon-blackline',
+                                    $second-color: $zc-gray-70);
+
+    @include ws-icon-glyph("e90a",  $selector: '.icon-currency');
+
+    @include ws-icon-glyph("e90b",  $selector: '.icon-percentage');
+
+    @include ws-icon-glyph("e69a",  $selector: '.icon-format');
+
+    @include ws-icon-glyph("e69b",  $selector: '.icon-review',
+                                    $second-color: $zc-blue,
+                                    $left: -.05rem);
+
+    @include ws-icon-glyph("e69e",  $selector: '.icon-task-link',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e676",  $selector: '.icon-folder-open');
+
+    @include ws-icon-glyph("e679",  $selector: '.icon-folder');
+
+    @include ws-icon-glyph("e9ea",  $selector: '.icon-folder-fill');
+
+    @include ws-icon-glyph("e9f1",  $selector: '.icon-folder-zip',
+                                    $second-color: $zc-gray-80);
+
+    @include ws-icon-glyph("ea12",  $selector: '.icon-folder-attachments',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e705",  $selector: '.icon-folder-add',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e909",  $selector: '.icon-folder-remove',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e61f",  $selector: '.icon-demote',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e620",  $selector: '.icon-promote',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e654",  $selector: '.icon-copy',
+                                    $second-color: $zc-blue,
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e655",  $selector: '.icon-cut');
+
+    @include ws-icon-glyph("e656",  $selector: '.icon-rename',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e60d",  $selector: '.icon-blacklines-next',
+                                    $second-color: $zc-gray-70,
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e697",  $selector: '.icon-blacklines-prev',
+                                    $second-color: $zc-gray-70,
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e6c4",  $selector: '.icon-doc-outline');
+
+    @include ws-icon-glyph("e6a0",  $selector: '.icon-docpart-remove',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e6b8",  $selector: '.icon-docpart-promote',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6b9",  $selector: '.icon-docpart-move-up',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6ba",  $selector: '.icon-docpart-move-down',
+                                    $second-color: $zc-blue);
+
+    $docpart-move-up-linear-pua: 'e90c';
+    $docpart-move-down-linear-pua: 'e90d';
+    @include ws-icon-glyph($docpart-move-up-linear-pua,  $selector: '.icon-docpart-move-up-linear',
+                                                         $second-color: $zc-blue);
+
+        // Custom CSS class that uses an existing glyph rotated
+        @include ws-icon-glyph($docpart-move-up-linear-pua, $selector: '.icon-docpart-move-left-linear',
+                                                            $second-color: $zc-blue,
+                                                            $second-color-fn: 'icon-docpart-move-up-linear-after');
+
+    @include ws-icon-glyph($docpart-move-down-linear-pua, $selector: '.icon-docpart-move-down-linear',
+                                                          $second-color: $zc-blue);
+
+        // Custom CSS class that uses an existing glyph rotated
+        @include ws-icon-glyph($docpart-move-down-linear-pua, $selector: '.icon-docpart-move-right-linear',
+                                                              $second-color: $zc-blue,
+                                                              $second-color-fn: 'icon-docpart-move-down-linear-after');
+
+    @include ws-icon-glyph("e6bb",  $selector: '.icon-docpart-demote',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6bc",  $selector: '.icon-docpart-add-before',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e6bd",  $selector: '.icon-docpart-add-after',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e6b0",  $selector: '.icon-template-master',
+                                    $first-color: color('doctypes.wfml-doc.blue.base'));
+
+    @include ws-icon-glyph("e6b1",  $selector: '.icon-template-child',
+                                    $left: .15rem);
+
+    @include ws-icon-glyph("e6b2",  $selector: '.icon-clipboard',
+                                    $second-color: $zc-blue,
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e629",  $selector: '.icon-task-create',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9eb",  $selector: '.icon-task-create-fill',
+                                    $second-color: $zc-blue,
+                                    $second-color-fn: 'icon-task-create-after');
+
+    @include ws-icon-glyph(get-deep($icon-shared-pua-codes, 'main.checkmark'), $selector: '.icon-checkmark');
+
+    @include ws-icon-glyph("e601",  $selector: '.icon-checkmark-sign');
+
+    @include ws-icon-glyph("e6a4",  $selector: '.icon-checkmark-sign-outline');
+
+    @include ws-icon-glyph("e602",  $selector: '.icon-close');
+
+    @include ws-icon-glyph("e603",  $selector: '.icon-close-sign',
+                                    $first-color: $zc-red,
+                                    $icon-with-solid-white-backing: true,
+                                    $second-color-fn: 'icon-circle-sign-backing');
+
+    @include ws-icon-glyph("e6a6",  $selector: '.icon-close-sign-outline');
+
+    @include ws-icon-glyph("e604",  $selector: '.icon-plus');
+
+    @include ws-icon-glyph("e605",  $selector: '.icon-plus-sign');
+
+    @include ws-icon-glyph("e6a7",  $selector: '.icon-plus-sign-outline');
+
+    @include ws-icon-glyph("e6e5",  $selector: '.icon-plus-small');
+
+    @include ws-icon-glyph(get-deep($icon-shared-pua-codes, 'main.minus'), $selector: '.icon-minus');
+
+    @include ws-icon-glyph("e607",  $selector: '.icon-minus-sign');
+
+    @include ws-icon-glyph("e6a8",  $selector: '.icon-minus-sign-outline');
+
+    @include ws-icon-glyph("e608",  $selector: '.icon-blocked');
+
+    @include ws-icon-glyph("e6a9",  $selector: '.icon-empty-sign-outline');
+
+    @include ws-icon-glyph("e65b",  $selector: '.icon-notification',
+                                    $first-color: $zc-orange-120);
+
+    @include ws-icon-glyph("e609",  $selector: '.icon-warning-sign-outline',
+                                    $first-color: $zc-orange);
+
+    @include ws-icon-glyph("ea28",  $selector: '.icon-warning-sign-fill',
+                                    $first-color: $zc-orange,
+                                    $icon-with-solid-white-backing: true);
+
+    @include ws-icon-glyph("e60b",  $selector: '.icon-notification-sign-outline');
+
+    @include ws-icon-glyph("e60c",  $selector: '.icon-help-sign-outline', $first-color: $zc-purple-80);
+
+    @include ws-icon-glyph("e698",  $selector: '.icon-help-sign', $first-color: $zc-purple-80);
+
+    @include ws-icon-glyph("e6c5",  $selector: '.icon-support-sign-corner',
+                                    $first-color: $zc-purple-80,
+                                    $second-color: $white,
+                                    $second-color-font: get-deep($icon-font-config, 'two-color.name'),
+                                    $require-two-color-selector: false);
+
+    @include ws-icon-glyph("e60e",  $selector: '.icon-arrow-up',
+                                    $top: -.05rem, $left: .05rem);
+
+    @include ws-icon-glyph("e60f",  $selector: '.icon-arrow-right',
+                                    $top: .05rem, $left: .05rem);
+
+    @include ws-icon-glyph("e610",  $selector: '.icon-arrow-down',
+                                    $top: -.05rem, $left: .05rem);
+
+    @include ws-icon-glyph("e611",  $selector: '.icon-arrow-left',
+                                    $top: .05rem, $left: .05rem);
+
+    @include ws-icon-glyph("e612",  $selector: '.icon-arrow-up-sign-outline',
+                                    $left: .05rem,
+                                    $top: -.05rem);
+
+    @include ws-icon-glyph("e613",  $selector: '.icon-arrow-down-sign-outline',
+                                    $left: .05rem,
+                                    $top: -.05rem);
+
+    @include ws-icon-glyph("e9e1",  $selector: '.icon-download-prepare',
+                                    $left: .05rem,
+                                    $top: -.05rem);
+
+    @include ws-icon-glyph("e69c",  $selector: '.icon-comments-arrow-up');
+
+    @include ws-icon-glyph("e69d",  $selector: '.icon-comments-arrow-down');
+
+    $icon-chevron-double-left-pua: get-deep($icon-shared-pua-codes, 'main.chevron-double-left');
+    @include ws-icon-glyph($icon-chevron-double-left-pua, $selector: '.icon-chevron-double-left');
+
+        // Custom CSS class that uses an existing glyph rotated
+        @include ws-icon-glyph($icon-chevron-double-left-pua, $selector: '.icon-chevron-double-up');
+
+    $icon-chevron-double-right-pua: get-deep($icon-shared-pua-codes, 'main.chevron-double-right');
+    @include ws-icon-glyph($icon-chevron-double-right-pua, $selector: '.icon-chevron-double-right');
+
+        // Custom CSS class that uses an existing glyph rotated
+        @include ws-icon-glyph($icon-chevron-double-right-pua, $selector: '.icon-chevron-double-down');
+
+    @include ws-icon-glyph("e614",  $selector: '.icon-chevron-up');
+
+    @include ws-icon-glyph("e615",  $selector: '.icon-chevron-right');
+
+    @include ws-icon-glyph("e616",  $selector: '.icon-chevron-down');
+
+    @include ws-icon-glyph("e617",  $selector: '.icon-chevron-left');
+
+    @include ws-icon-glyph("e618",  $selector: '.icon-chevron-up-sm');
+
+    @include ws-icon-glyph("e619",  $selector: '.icon-chevron-right-sm');
+
+    @include ws-icon-glyph("e61a",  $selector: '.icon-chevron-down-sm');
+
+    @include ws-icon-glyph("e61b",  $selector: '.icon-chevron-left-sm');
+
+    @include ws-icon-glyph("e6aa",  $selector: '.icon-carousel-prev');
+
+    @include ws-icon-glyph("e6ab",  $selector: '.icon-carousel-next');
+
+    @include ws-icon-glyph("e61c",  $selector: '.icon-undo',
+                                    $first-color: $zc-orange);
+
+    @include ws-icon-glyph("e61d",  $selector: '.icon-redo',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e6ac",  $selector: '.icon-reply');
+
+    @include ws-icon-glyph("e61e",  $selector: '.icon-message-forward');
+
+    @include ws-icon-glyph("e621",  $selector: '.icon-contract');
+
+    @include ws-icon-glyph("e622",  $selector: '.icon-expand');
+
+    @include ws-icon-glyph("e623",  $selector: '.icon-cog');
+
+    @include ws-icon-glyph("e624",  $selector: '.icon-menu-list');
+
+    $icon-gripper-rule-pua: get-deep($icon-shared-pua-codes, 'main.gripper-rule');
+    @include ws-icon-glyph($icon-gripper-rule-pua, $selector: '.icon-gripper-rule',
+                                                   $top: -.05rem);
+
+        // Custom CSS class that uses an existing glyph rotated
+        @include ws-icon-glyph($icon-gripper-rule-pua, $selector: '.icon-gripper-rule-vertical',
+                                                       $left: .05rem);
+
+    $icon-gripper-pua: get-deep($icon-shared-pua-codes, 'main.gripper');
+    @include ws-icon-glyph($icon-gripper-pua, $selector: '.icon-gripper');
+
+        // Custom CSS class that uses an existing glyph rotated
+        @include ws-icon-glyph($icon-gripper-pua, $selector: '.icon-gripper-vertical');
+
+    @include ws-icon-glyph("e626",  $selector: '.icon-home');
+
+    @include ws-icon-glyph("e627",  $selector: '.icon-refresh');
+
+    @include ws-icon-glyph("e62a",  $selector: '.icon-pending');
+
+    @include ws-icon-glyph("e9ec",  $selector: '.icon-pending-fill');
+
+    @include ws-icon-glyph("e62b",  $selector: '.icon-downloaded',
+                                    $first-color: $zc-green,
+                                    $icon-with-solid-white-backing: true,
+                                    $second-color-fn: 'icon-upload-download-backing');
+
+    @include ws-icon-glyph("ea29",  $selector: '.icon-uploaded',
+                                    $first-color: $zc-blue,
+                                    $icon-with-solid-white-backing: true,
+                                    $second-color-fn: 'icon-upload-download-backing');
+
+    @include ws-icon-glyph("e62c",  $selector: '.icon-upload',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e62d",  $selector: '.icon-cloud-upload',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e62e",  $selector: '.icon-cloud-download',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e62f",  $selector: '.icon-cloud');
+
+    @include ws-icon-glyph("e96c",  $selector: '.icon-hidden-chars');
+
+    @include ws-icon-glyph("e6ea",  $selector: '.icon-align-middle',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6eb",  $selector: '.icon-align-bottom',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6ec",  $selector: '.icon-align-top',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e630",  $selector: '.icon-align-left',
+                                    $top: -1px);
+
+    @include ws-icon-glyph("e631",  $selector: '.icon-align-center',
+                                    $top: -1px);
+
+    @include ws-icon-glyph("e632",  $selector: '.icon-align-right',
+                                    $top: -1px);
+
+    @include ws-icon-glyph("e633",  $selector: '.icon-align-justify',
+                                    $top: -1px);
+
+    @include ws-icon-glyph("e6fc",  $selector: '.icon-list-bullets-filled');
+
+    @include ws-icon-glyph("e6fd",  $selector: '.icon-font-superscript',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6fe",  $selector: '.icon-font-subscript',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e634",  $selector: '.icon-italic',
+                                    $left: -.05rem);
+
+    @include ws-icon-glyph("e635",  $selector: '.icon-bold');
+
+    @include ws-icon-glyph("e6ed",  $selector: '.icon-underline');
+
+    @include ws-icon-glyph("e6f6",  $selector: '.icon-strikethrough');
+
+    @include ws-icon-glyph("e6f7",  $selector: '.icon-text-color',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e6f8",  $selector: '.icon-fill-color',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e636",  $selector: '.icon-font');
+
+    @include ws-icon-glyph("e637",  $selector: '.icon-formula');
+
+    @include ws-icon-glyph("e638",  $selector: '.icon-quote-open');
+
+    @include ws-icon-glyph("e639",  $selector: '.icon-quote-close');
+
+    @include ws-icon-glyph("e63a",  $selector: '.icon-spellcheck',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e63b",  $selector: '.icon-link-source',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e63c",  $selector: '.icon-page-break',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6ff",  $selector: '.icon-horizontal-rule',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e700",  $selector: '.icon-footnote',
+                                    $second-color: $zc-blue,
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e63d",  $selector: '.icon-link');
+
+    @include ws-icon-glyph("e63e",  $selector: '.icon-link-broken');
+
+    @include ws-icon-glyph("e63f",  $selector: '.icon-link-remove',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e640",  $selector: '.icon-link-create',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e641",  $selector: '.icon-link-format');
+
+    @include ws-icon-glyph("e642",  $selector: '.icon-delete-backspace');
+
+    @include ws-icon-glyph("e643",  $selector: '.icon-print');
+
+    @include ws-icon-glyph("e644",  $selector: '.icon-filter',
+                                    $first-color: color('doctypes.wfml-doc.blue.base'));
+
+    @include ws-icon-glyph("e999",  $selector: '.icon-filter-sm',
+                                    $first-color: color('doctypes.wfml-doc.blue.base'));
+
+    @include ws-icon-glyph("ea3f",  $selector: '.icon-filter-outline-sm');
+
+    @include ws-icon-glyph("e6be",  $selector: '.icon-filter-outline',
+                                    $first-color: color('doctypes.wfml-doc.blue.base'),
+                                    $second-color: $white);
+
+    @include ws-icon-glyph("e645",  $selector: '.icon-trash');
+
+    @include ws-icon-glyph("e646",  $selector: '.icon-view-trash',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e706",  $selector: '.icon-trash-restore',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e647",  $selector: '.icon-symbol');
+
+    @include ws-icon-glyph("e648",  $selector: '.icon-feedback',
+                                    $top: -.05rem);
+
+    @include ws-icon-glyph("e9ed",  $selector: '.icon-feedback-fill',
+                                    $top: -.05rem);
+
+    @include ws-icon-glyph("e649",  $selector: '.icon-drawer',
+                                    $top: -.05rem);
+
+    @include ws-icon-glyph("e64a",  $selector: '.icon-drawer-full',
+                                    $top: -.05rem);
+
+    @include ws-icon-glyph("e64b",  $selector: '.icon-pencil');
+
+    @include ws-icon-glyph("e64c",  $selector: '.icon-pencil-draw');
+
+    @include ws-icon-glyph("ea13",  $selector: '.icon-pencil-disabled',
+                                    $first-color: $zc-gray-70,
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e64d",  $selector: '.icon-pencil-sign');
+
+    @include ws-icon-glyph("e99a",  $selector: '.icon-pencil-sign-outline');
+
+    @include ws-icon-glyph("e64e",  $selector: '.icon-eye');
+
+    @include ws-icon-glyph("e64f",  $selector: '.icon-eye-blocked');
+
+    @include ws-icon-glyph("e650",  $selector: '.icon-find');
+
+    @include ws-icon-glyph("e651",  $selector: '.icon-search');
+
+    @include ws-icon-glyph("e652",  $selector: '.icon-zoom-in');
+
+    @include ws-icon-glyph("e653",  $selector: '.icon-zoom-out');
+
+    @include ws-icon-glyph("ea2a",  $selector: '.icon-go-to-tag',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e657",  $selector: '.icon-tag');
+
+    @include ws-icon-glyph("e658",  $selector: '.icon-tags');
+
+    @include ws-icon-glyph("e659",  $selector: '.icon-attachment');
+
+    @include ws-icon-glyph("e65a",  $selector: '.icon-flag');
+
+    @include ws-icon-glyph("e65f",  $selector: '.icon-play-sign-outline',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e660",  $selector: '.icon-play');
+
+    @include ws-icon-glyph("e661",  $selector: '.icon-pause');
+
+    @include ws-icon-glyph("e662",  $selector: '.icon-stop');
+
+    @include ws-icon-glyph("e663",  $selector: '.icon-backward',
+                                    $left: -.05rem);
+
+    @include ws-icon-glyph("e664",  $selector: '.icon-forward');
+
+    @include ws-icon-glyph("e665",  $selector: '.icon-first');
+
+    @include ws-icon-glyph("e666",  $selector: '.icon-last');
+
+    @include ws-icon-glyph("e667",  $selector: '.icon-previous',
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e668",  $selector: '.icon-next',
+                                    $left: -.05rem);
+
+    @include ws-icon-glyph("e669",  $selector: '.icon-eject');
+
+    @include ws-icon-glyph("e66a",  $selector: '.icon-heartbeat');
+
+    @include ws-icon-glyph("e66b",  $selector: '.icon-connection');
+
+    @include ws-icon-glyph("e671",  $selector: '.icon-calendar',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6f9",  $selector: '.icon-permissions',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6fa",  $selector: '.icon-permissions-exceptions',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e677",  $selector: '.icon-users',
+                                    $top: .05rem);
+
+    @include ws-icon-glyph("e678",  $selector: '.icon-user',
+                                    $top: -.05rem);
+
+    @include ws-icon-glyph("e6da",  $selector: '.icon-user-add',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e67a",  $selector: '.icon-key');
+
+    @include ws-icon-glyph("e67b",  $selector: '.icon-lock');
+
+    @include ws-icon-glyph("e67c",  $selector: '.icon-unlock');
+
+    @include ws-icon-glyph("e67d",  $selector: '.icon-enter',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e67e",  $selector: '.icon-exit',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e681",  $selector: '.icon-library-bookshelf');
+
+    @include ws-icon-glyph("e682",  $selector: '.icon-certification');
+
+    $icon-bookmark-pua: get-deep($icon-shared-pua-codes, 'main.bookmark');
+    @include ws-icon-glyph($icon-bookmark-pua, $selector: '.icon-bookmark');
+
+    @include ws-icon-glyph("e6db",  $selector: '.icon-bookmark-outline');
+
+        // PUA must match .icon-bookmark
+        @include ws-icon-glyph($icon-bookmark-pua, $selector: '.icon-bookmark-fill',
+                                                   $first-color: $zc-blue,
+                                                   $second-color: $white);
+
+    @include ws-icon-glyph("e684",  $selector: '.icon-note',
+                                    $first-color: color('highlight.default'),
+                                    $icon-with-solid-white-backing: true,
+                                    $top: -.05rem);
+
+    @include ws-icon-glyph("e685",  $selector: '.icon-highlighter',
+                                    $second-color: color('highlight.default'));
+
+    @include ws-icon-glyph("e686",  $selector: '.icon-comment-on');
+
+    $icon-comment-pua: get-deep($icon-shared-pua-codes, 'main.comment');
+    @include ws-icon-glyph($icon-comment-pua, $selector: '.icon-comment',
+                                              $first-color: $white,
+                                              $second-color: color('highlight.default'),
+                                              $second-color-font: $icon-font-name-main);
+
+    $icon-comment-outline-pua: "e688";
+    @include ws-icon-glyph($icon-comment-outline-pua,  $selector: '.icon-comment-outline');
+
+        @include ws-icon-glyph($icon-comment-outline-pua, $selector: '.icon-comment-outline-fill',
+                                    $first-color: inherit,
+                                    $icon-with-solid-white-backing: true,
+                                    $second-color-fn: 'icon-comment-backing',
+                                    $require-two-color-selector: false);
+
+    @include ws-icon-glyph("e69f",  $selector: '.icon-comment-reply',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e689",  $selector: '.icon-comment-checkmark',
+                                    $first-color: $zc-green,
+                                    $icon-with-solid-white-backing: true,
+                                    $second-color-fn: 'icon-comment-backing');
+
+    @include ws-icon-glyph("e68a",  $selector: '.icon-comment-reopen',
+                                    $first-color: $zc-blue,
+                                    $icon-with-solid-white-backing: true,
+                                    $second-color-fn: 'icon-comment-backing');
+
+    @include ws-icon-glyph("ea20",  $selector: '.icon-comment-move',
+                                    $first-color: $zc-blue,
+                                    $icon-with-solid-white-backing: true,
+                                    $second-color-fn: 'icon-comment-backing');
+
+    @include ws-icon-glyph("ea21",  $selector: '.icon-comment-jump',
+                                    $first-color: $zc-blue,
+                                    $icon-with-solid-white-backing: true,
+                                    $second-color-fn: 'icon-comment-backing');
+
+    @include ws-icon-glyph("e68b",  $selector: '.icon-comment-lines');
+
+    @include ws-icon-glyph("e68c",  $selector: '.icon-comment-outline-lines',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e68d",  $selector: '.icon-comment-filter',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e68e",  $selector: '.icon-comment-add',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e6a3",  $selector: '.icon-comment-upload-support',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e6ad",  $selector: '.icon-comment-ban');
+
+    @include ws-icon-glyph("e68f",  $selector: '.icon-comment-disconnect');
+
+    @include ws-icon-glyph("e690",  $selector: '.icon-comment-cursor',
+                                    $first-color: $zc-blue,
+                                    $icon-with-solid-white-backing: true,
+                                    $second-color-fn: 'icon-comment-backing',
+                                    $require-two-color-selector: false);
+
+    @include ws-icon-glyph("e691",  $selector: '.icon-table',
+                                    $top: -.05rem,
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e692",  $selector: '.icon-view-print-area',
+                                    $second-color: $zc-blue-60,
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("ea31",  $selector: '.icon-table-insert-column-left',
+                                    $second-color: $zc-green,
+                                    $top: -.05rem,
+                                    $left: .05rem);
+
+    $icon-table-insert-column-pua: get-deep($icon-shared-pua-codes, 'main.table-insert-column');
+    @include ws-icon-glyph($icon-table-insert-column-pua, $selector: '.icon-table-insert-column',
+                                                          $second-color: $zc-green,
+                                                          $top: -.05rem,
+                                                          $left: .05rem);
+
+        // PUA must match .icon-table-insert-column
+        @include ws-icon-glyph($icon-table-insert-column-pua, $selector: '.icon-table-remove-column',
+                                                              $second-color: $zc-orange,
+                                                              $second-color-fn: 'icon-table-insert-column-after',
+                                                              $top: -.05rem,
+                                                              $left: .05rem);
+
+        // PUA must match .icon-table-insert-column
+        @include ws-icon-glyph($icon-table-insert-column-pua, $selector: '.icon-table-cells-merge-vertical',
+                                                              $second-color: $zc-blue,
+                                                              $second-color-fn: 'icon-table-insert-column-after',
+                                                              $top: -.05rem,
+                                                              $left: .05rem);
+
+    $icon-table-insert-row-pua: get-deep($icon-shared-pua-codes, 'main.table-insert-row');
+    @include ws-icon-glyph($icon-table-insert-row-pua, $selector: '.icon-table-insert-row',
+                                                       $second-color: $zc-green,
+                                                       $top: -.05rem,
+                                                       $left: .05rem);
+
+        // PUA must match .icon-table-insert-row
+        @include ws-icon-glyph($icon-table-insert-row-pua, $selector: '.icon-table-remove-row',
+                                                           $second-color: $zc-orange,
+                                                           $second-color-fn: 'icon-table-insert-row-after',
+                                                           $top: -.05rem,
+                                                           $left: .05rem);
+
+        // PUA must match .icon-table-insert-row
+        @include ws-icon-glyph($icon-table-insert-row-pua, $selector: '.icon-table-cells-merge-horizontal',
+                                                           $second-color: $zc-blue,
+                                                           $second-color-fn: 'icon-table-insert-row-after',
+                                                           $top: -.05rem,
+                                                           $left: .05rem);
+
+    @include ws-icon-glyph("ea32",  $selector: '.icon-table-insert-column-right',
+                                    $second-color: $zc-green,
+                                    $top: -.05rem,
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e6dc",  $selector: '.icon-workbook-sheet',
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e6dd",  $selector: '.icon-workbook-row-column',
+                                    $second-color: $zc-gray-70,
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e695",  $selector: '.icon-zoom-page-height',
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e696",  $selector: '.icon-zoom-page-width',
+                                    $top: -.05rem);
+
+    @include ws-icon-glyph("e6a1",  $selector: '.icon-github');
+
+
+
+    // ------------------------------------------------
+    //   SPECIAL CASES / EXTENSIONS
+    // ------------------------------------------------
+    @if $include-anomalies {
+        .icon-chevron-double-down,
+        .icon-chevron-double-up {
+            @include rotate(90deg);
+        }
+
+        .icon-gripper-rule-vertical,
+        .icon-gripper-vertical {
+            @include rotate(90deg);
+        }
+
+        .icon-docpart-move-left-linear,
+        .icon-docpart-move-right-linear {
+            @include rotate(-90deg);
+        }
+
+        // --------------------------------------------
+        //  DEPRECATIONS
+        //
+        //  TODO: Remove in the 2.0.0 release
+        // --------------------------------------------
+        .icon-info-sign-outline {
+            @extend .icon-notification-sign-outline;
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   24px "Main" Icons
+//
+// ********************************************************
+@mixin ws-icon-glyphs-main-24($include-anomalies: true) {
+    @include ws-icon-glyph("ea67",  $selector: '.icon-twfr-data-layout');
+
+    @include ws-icon-glyph("ea68",  $selector: '.icon-twfr-data-layout-discard-changes',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("ea69",  $selector: '.icon-twfr-filing');
+
+    @include ws-icon-glyph("ea6a",  $selector: '.icon-twfr-rocket');
+
+    @include ws-icon-glyph("ea40",  $selector: '.icon-twfr-table-cell-markup-off',
+                                    $second-color-font: 'img');
+
+    @include ws-icon-glyph("ea41",  $selector: '.icon-twfr-table-cell-markup-on',
+                                    $second-color-font: 'img');
+
+    @include ws-icon-glyph("ea42",  $selector: '.icon-twfr-table-cell-indicators',
+                                    $second-color: $zc-gray-70);
+
+    $twfr-chevron-right-pua: 'ea43';
+    @include ws-icon-glyph($twfr-chevron-right-pua,  $selector: '.icon-twfr-chevron-right');
+
+        // Custom CSS classes that uses an existing glyph rotated
+        @include ws-icon-glyph($twfr-chevron-right-pua, $selector: '.icon-twfr-chevron-left');
+        @include ws-icon-glyph($twfr-chevron-right-pua, $selector: '.icon-twfr-chevron-down');
+        @include ws-icon-glyph($twfr-chevron-right-pua, $selector: '.icon-twfr-chevron-up');
+
+    @include ws-icon-glyph("ea44",  $selector: '.icon-twfr-folder-attachments-g2',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("ea45",  $selector: '.icon-twfr-folder-move-g2',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea46",  $selector: '.icon-twfr-folder-add-g2',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("ea47",  $selector: '.icon-twfr-folder-remove-g2',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("ea48",  $selector: '.icon-twfr-folder-zip-g2');
+
+    @include ws-icon-glyph("ea49",  $selector: '.icon-twfr-folder-fill-g2');
+
+    @include ws-icon-glyph("ea4a",  $selector: '.icon-twfr-format-overlay-off',
+                                    $second-color: $zc-blue-40);
+
+    @include ws-icon-glyph("ea4b",  $selector: '.icon-twfr-format-overlay',
+                                    $second-color: $zc-blue-40);
+
+    $twfr-view-coordinates-pua: 'ea4c';
+    @include ws-icon-glyph($twfr-view-coordinates-pua, $selector: '.icon-twfr-view-coordinates',
+                                                       $second-color: $zc-blue);
+
+        @include ws-icon-glyph($twfr-view-coordinates-pua, $selector: '.icon-twfr-table-formatting',
+                                                           $second-color: $zc-gray-70,
+                                                           $second-color-fn: 'icon-twfr-view-coordinates-after');
+
+    @include ws-icon-glyph("ea4d",  $selector: '.icon-twfr-zoom-actual-size');
+
+    @include ws-icon-glyph("ea33",  $selector: '.icon-twfr-manage-dimension',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("ea2b",  $selector: '.icon-twfr-downloaded',
+                                    $first-color: $zc-green,
+                                    $icon-with-solid-white-backing: true,
+                                    $second-color-fn: 'icon-twfr-upload-download-backing');
+
+    @include ws-icon-glyph("ea2c",  $selector: '.icon-twfr-uploaded',
+                                    $first-color: $zc-blue,
+                                    $icon-with-solid-white-backing: true,
+                                    $second-color-fn: 'icon-twfr-upload-download-backing');
+
+    @include ws-icon-glyph("ea4e",  $selector: '.icon-twfr-warning-sign-outline',
+                                    $first-color: $zc-orange);
+
+    @include ws-icon-glyph("ea2d",  $selector: '.icon-twfr-warning-sign-fill',
+                                    $first-color: $zc-orange,
+                                    $icon-with-solid-white-backing: true);
+
+    @include ws-icon-glyph("ea22",  $selector: '.icon-twfr-font-size');
+
+    @include ws-icon-glyph("ea23",  $selector: '.icon-twfr-format-line-weight');
+
+    @include ws-icon-glyph("ea24",  $selector: '.icon-twfr-beaker');
+
+    @include ws-icon-glyph("ea14",  $selector: '.icon-twfr-folder-g2');
+
+    @include ws-icon-glyph("ea4f",  $selector: '.icon-twfr-folder-open-g2');
+
+    @include ws-icon-glyph("ea15",  $selector: '.icon-twfr-certification-g2',
+                                    $first-color: color('doctypes.wfml-doc.red.base'));
+
+    @include ws-icon-glyph("ea16",  $selector: '.icon-twfr-expand');
+
+    @include ws-icon-glyph("ea17",  $selector: '.icon-twfr-zoom-in');
+
+    @include ws-icon-glyph("ea18",  $selector: '.icon-twfr-zoom-out');
+
+    @include ws-icon-glyph("ea19",  $selector: '.icon-twfr-zoom-page-height');
+
+    @include ws-icon-glyph("ea1a",  $selector: '.icon-twfr-zoom-page-width');
+
+    @include ws-icon-glyph("ea07",  $selector: '.icon-twfr-connection-lost',
+                                    $second-color: $zc-orange-120);
+
+    @include ws-icon-glyph("ea08",  $selector: '.icon-twfr-connection-made',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("ea09",  $selector: '.icon-twfr-screen-merge');
+
+    @include ws-icon-glyph("ea0a",  $selector: '.icon-twfr-screen-split-vertical');
+
+    @include ws-icon-glyph("ea0b",  $selector: '.icon-twfr-play-sign-outline',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e9fa",  $selector: '.icon-twfr-calendar',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9fb",  $selector: '.icon-twfr-frozen');
+
+    @include ws-icon-glyph("e9fc",  $selector: '.icon-twfr-pencil');
+
+    @include ws-icon-glyph("ea2e",  $selector: '.icon-twfr-go-to-tag',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9fd",  $selector: '.icon-twfr-tag');
+
+    @include ws-icon-glyph("e9fe",  $selector: '.icon-twfr-user');
+
+    @include ws-icon-glyph("e9ff",  $selector: '.icon-twfr-users');
+
+    @include ws-icon-glyph("ea00",  $selector: '.icon-twfr-reset');
+
+    @include ws-icon-glyph("e9f7",  $selector: '.icon-twfr-message-forward');
+
+    @include ws-icon-glyph("e9f8",  $selector: '.icon-twfr-reply');
+
+    @include ws-icon-glyph("e9f9",  $selector: '.icon-twfr-lightbulb');
+
+    @include ws-icon-glyph("e99b",  $selector: '.icon-twfr-cross-foot');
+
+    @include ws-icon-glyph("e9d9",  $selector: '.icon-twfr-formula-recalc',
+                                    $first-color: $zc-orange-120);
+
+    @include ws-icon-glyph("e9da",  $selector: '.icon-twfr-pencil-sign-outline');
+
+    @include ws-icon-glyph("e9db",  $selector: '.icon-twfr-previous-quarter');
+
+    @include ws-icon-glyph("e9dc",  $selector: '.icon-twfr-previous-year');
+
+    @include ws-icon-glyph("e9dd",  $selector: '.icon-twfr-tick',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e9de",  $selector: '.icon-twfr-minus');
+
+    @include ws-icon-glyph("e9df",  $selector: '.icon-twfr-minus-sign-outline');
+
+    @include ws-icon-glyph("e9e0",  $selector: '.icon-twfr-minus-sign');
+
+    @include ws-icon-glyph("e9d6",  $selector: '.icon-twfr-plus');
+
+    @include ws-icon-glyph("e9d7",  $selector: '.icon-twfr-plus-sign-outline');
+
+    @include ws-icon-glyph("e9d8",  $selector: '.icon-twfr-plus-sign');
+
+    @include ws-icon-glyph("e9bb",  $selector: '.icon-twfr-chart-axis-x',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9bc",  $selector: '.icon-twfr-chart-axis-y',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9ee",  $selector: '.icon-twfr-chart-bar');
+
+    @include ws-icon-glyph("e9bd",  $selector: '.icon-twfr-chart-bar-color',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9be",  $selector: '.icon-twfr-chart-label');
+
+    @include ws-icon-glyph("e9bf",  $selector: '.icon-twfr-chart-pie-slice',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9ef",  $selector: '.icon-twfr-chart-pie');
+
+    @include ws-icon-glyph("e9c0",  $selector: '.icon-twfr-chart-pie-color',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9c1",  $selector: '.icon-twfr-chart-shape');
+
+    @include ws-icon-glyph("e9c2",  $selector: '.icon-twfr-chart-size',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9c3",  $selector: '.icon-twfr-checkmark');
+
+    @include ws-icon-glyph("e9c4",  $selector: '.icon-twfr-draw-cursor-pointer');
+
+    @include ws-icon-glyph("e9c5",  $selector: '.icon-twfr-draw-line-arrow-down');
+
+    @include ws-icon-glyph("e9c6",  $selector: '.icon-twfr-draw-line-arrow-up');
+
+    @include ws-icon-glyph("e9c7",  $selector: '.icon-twfr-draw-line');
+
+    @include ws-icon-glyph("e9c8",  $selector: '.icon-twfr-draw-oval-outline');
+
+    @include ws-icon-glyph("e9c9",  $selector: '.icon-twfr-draw-rectangle-arrow-outline');
+
+    @include ws-icon-glyph("e9ca",  $selector: '.icon-twfr-draw-square-outline');
+
+    @include ws-icon-glyph("e9cb",  $selector: '.icon-twfr-insert-placeholder',
+                                    $first-color: $zc-gray-70,
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e9cc",  $selector: '.icon-twfr-list-tree-section',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9cd",  $selector: '.icon-twfr-review-stamp-approved',
+                                    $second-color: $zc-green-b);
+
+    @include ws-icon-glyph("e9ce",  $selector: '.icon-twfr-review-stamp-reviewed',
+                                    $second-color: $zc-blue-120);
+
+    @include ws-icon-glyph("e9cf",  $selector: '.icon-twfr-review-stamp-signed',
+                                    $second-color: $zc-purple);
+
+    @include ws-icon-glyph("e9d0",  $selector: '.icon-twfr-table-slice',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9d1",  $selector: '.icon-twfr-text-box');
+
+    @include ws-icon-glyph("e9d2",  $selector: '.icon-twfr-fill-color',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e98b",  $selector: '.icon-twfr-bookmark-outline');
+
+    @include ws-icon-glyph("e98c",  $selector: '.icon-twfr-filter',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e98d",  $selector: '.icon-twfr-filter-outline');
+
+    @include ws-icon-glyph("e98e",  $selector: '.icon-twfr-find');
+
+    @include ws-icon-glyph("e98f",  $selector: '.icon-twfr-paragraph');
+
+    @include ws-icon-glyph("e990",  $selector: '.icon-twfr-search');
+
+    @include ws-icon-glyph("e991",  $selector: '.icon-twfr-comment-create',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e992",  $selector: '.icon-twfr-comment-filter',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e993",  $selector: '.icon-twfr-comment-hide');
+
+    @include ws-icon-glyph("e994",  $selector: '.icon-twfr-comment-show',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea6b",  $selector: '.icon-twfr-comment-ban');
+
+    @include ws-icon-glyph("e995",  $selector: '.icon-twfr-comment-next',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e996",  $selector: '.icon-twfr-comment-prev',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e99c",  $selector: '.icon-twfr-blackline-create',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e99d",  $selector: '.icon-twfr-changes-accept-reject',
+                                    $first-color: $zc-green,
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e99e",  $selector: '.icon-twfr-changes-next',
+                                    $first-color: $zc-orange-120);
+
+    @include ws-icon-glyph("e99f",  $selector: '.icon-twfr-changes-prev',
+                                    $first-color: $zc-orange-120);
+
+    @include ws-icon-glyph("e9a0",  $selector: '.icon-twfr-data-validation',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e9a1",  $selector: '.icon-twfr-dc-dashboard',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9a2",  $selector: '.icon-twfr-review-responsive',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9a3",  $selector: '.icon-twfr-sort',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9a4",  $selector: '.icon-twfr-spellcheck',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e9a5",  $selector: '.icon-twfr-table-cell-input',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9a6",  $selector: '.icon-twfr-table-cell-reference',
+                                    $second-color: $zc-gray-70);
+
+    @include ws-icon-glyph("e9a7",  $selector: '.icon-twfr-template',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9a8",  $selector: '.icon-twfr-template-add',
+                                    $second-color-font: 'img');
+
+    @include ws-icon-glyph("e9a9",  $selector: '.icon-twfr-template-lock-blue',
+                                    $second-color-font: 'img');
+
+    @include ws-icon-glyph("e9aa",  $selector: '.icon-twfr-template-lock',
+                                    $second-color: $zc-gray-70);
+
+    @include ws-icon-glyph("e9ab",  $selector: '.icon-twfr-template-manage',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9ac",  $selector: '.icon-twfr-template-master-edit',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9ad",  $selector: '.icon-twfr-template-unlock',
+                                    $second-color: $zc-gray-70);
+
+    @include ws-icon-glyph("e9ae",  $selector: '.icon-twfr-link-source',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9af",  $selector: '.icon-twfr-review',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e9b0",  $selector: '.icon-twfr-font');
+
+    @include ws-icon-glyph("e910",  $selector: '.icon-twfr-arrange',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e911",  $selector: '.icon-twfr-attachment');
+
+    @include ws-icon-glyph("e912",  $selector: '.icon-twfr-chart-insert',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e914",  $selector: '.icon-twfr-close-file',
+                                    $first-color: $zc-orange);
+
+    @include ws-icon-glyph("e915",  $selector: '.icon-twfr-print');
+
+    @include ws-icon-glyph("e916",  $selector: '.icon-twfr-shape-insert',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e917",  $selector: '.icon-twfr-table-cells-freeze',
+                                    $second-color: $zc-gray-70);
+
+    @include ws-icon-glyph("e918",  $selector: '.icon-twfr-table-hide-column',
+                                    $second-color: $zc-gray-70);
+
+    @include ws-icon-glyph("ea0c",  $selector: '.icon-twfr-table-unhide-column',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("ea0d",  $selector: '.icon-twfr-table-hide-row',
+                                    $second-color: $zc-gray-70);
+
+    @include ws-icon-glyph("ea0e",  $selector: '.icon-twfr-table-unhide-row',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e919",  $selector: '.icon-twfr-table-cells-lock',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e91a",  $selector: '.icon-twfr-table-cells-merge',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e91b",  $selector: '.icon-twfr-table-clear',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e91c",  $selector: '.icon-twfr-table-format',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e91d",  $selector: '.icon-twfr-table-insert',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e91e",  $selector: '.icon-twfr-table',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e91f",  $selector: '.icon-twfr-text-insert',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e920",  $selector: '.icon-twfr-view-print-area',
+                                    $second-color: $zc-blue-60);
+
+    @include ws-icon-glyph("ea01",  $selector: '.icon-twfr-undo',
+                                    $first-color: $zc-orange);
+
+    @include ws-icon-glyph("ea02",  $selector: '.icon-twfr-redo',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e724",  $selector: '.icon-twfr-formatting-conditional',
+                                    $second-color-font: 'img');
+
+    @include ws-icon-glyph("e701",  $selector: '.icon-twfr-format-clear',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e702",  $selector: '.icon-twfr-format-painter',
+                                    $top: -.05rem);
+
+    @include ws-icon-glyph("e703",  $selector: '.icon-twfr-hidden-chars');
+
+    @include ws-icon-glyph("e6fb",  $selector: '.icon-twfr-fill-range',
+                                    $first-color: $zc-blue,
+                                    $second-color: $white,
+                                    $left: -.05rem);
+
+    @include ws-icon-glyph("e65c",  $selector: '.icon-twfr-help-sign',
+                                    $first-color: $zc-purple-80);
+
+    @include ws-icon-glyph("e65d",  $selector: '.icon-twfr-database');
+
+    @include ws-icon-glyph("e66c",  $selector: '.icon-twfr-user-profile');
+
+    @include ws-icon-glyph("e66d",  $selector: '.icon-twfr-dashboard',
+                                    $top: -.05rem);
+
+    @include ws-icon-glyph("e674",  $selector: '.icon-twfr-workspaces',
+                                    $first-color: $zc-gray-80,
+                                    $second-color-font: 'img');
+
+    @include ws-icon-glyph("e6df",  $selector: '.icon-twfr-refresh');
+
+    @include ws-icon-glyph("e6de",  $selector: '.icon-twfr-clipboard-inverse',
+                                    $first-color: $zc-blue,
+                                    $second-color: $white);
+
+    @include ws-icon-glyph("e6d7",  $selector: '.icon-twfr-comment-outline-lines');
+
+    @include ws-icon-glyph("e6d8",  $selector: '.icon-twfr-folder-zip',
+                                    $second-color: $zc-gray-80);
+
+    @include ws-icon-glyph("e6d9",  $selector: '.icon-twfr-sec-sign-outline');
+
+    $twfr-move-up-pua: 'e6a2';
+    $twfr-move-down-pua: 'e6a5';
+    @include ws-icon-glyph($twfr-move-up-pua, $selector: '.icon-twfr-move-up',
+                                              $second-color: $zc-blue);
+
+        // Custom CSS class that uses an existing glyph rotated
+        @include ws-icon-glyph($twfr-move-up-pua, $selector: '.icon-twfr-move-left',
+                                                  $second-color: $zc-blue,
+                                                  $second-color-fn: 'icon-twfr-move-up-after');
+
+    @include ws-icon-glyph($twfr-move-down-pua, $selector: '.icon-twfr-move-down',
+                                                $second-color: $zc-blue);
+
+        // Custom CSS class that uses an existing glyph rotated
+        @include ws-icon-glyph($twfr-move-down-pua, $selector: '.icon-twfr-move-right',
+                                                    $second-color: $zc-blue,
+                                                    $second-color-fn: 'icon-twfr-move-down-after');
+
+    @include ws-icon-glyph("e6ae",  $selector: '.icon-twfr-demote',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6af",  $selector: '.icon-twfr-promote',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6b3",  $selector: '.icon-twfr-discard-changes',
+                                    $second-color: $zc-orange,
+                                    $top: .05rem);
+
+    @include ws-icon-glyph("e6b4",  $selector: '.icon-twfr-recently-updated');
+
+    @include ws-icon-glyph("e6b5",  $selector: '.icon-twfr-formula-sum',
+                                    $first-color: $zc-orange-120,
+                                    $top: .05rem);
+
+    @include ws-icon-glyph("e6b6",  $selector: '.icon-twfr-history');
+
+    @include ws-icon-glyph("e6b7",  $selector: '.icon-twfr-permissions',
+                                    $second-color: $zc-blue,
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e6bf",  $selector: '.icon-twfr-cog');
+
+    @include ws-icon-glyph("e6c0",  $selector: '.icon-twfr-tab-add');
+
+    @include ws-icon-glyph("e6c1",  $selector: '.icon-twfr-task-check');
+
+    @include ws-icon-glyph("e6c2",  $selector: '.icon-twfr-task-create',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e675",  $selector: '.icon-twfr-insert',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e66e",  $selector: '.icon-twfr-source-make',
+                                    $second-color-font: 'img');
+
+    @include ws-icon-glyph("e66f",  $selector: '.icon-twfr-reminder');
+
+    @include ws-icon-glyph("e670",  $selector: '.icon-twfr-unlock');
+
+    @include ws-icon-glyph("e672",  $selector: '.icon-twfr-lock');
+
+    @include ws-icon-glyph("e673",  $selector: '.icon-twfr-formula',
+                                    $top: -.05rem,
+                                    $left: .05rem);
+
+    @include ws-icon-glyph("e67f",  $selector: '.icon-twfr-link-format',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6e0",  $selector: '.icon-twfr-link-remove',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e6e1",  $selector: '.icon-twfr-link-add',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e6e2",  $selector: '.icon-twfr-link',
+                                    $top: -.05rem,
+                                    $left: -.05rem);
+
+    @include ws-icon-glyph("e6e6",  $selector: '.icon-twfr-checkmark-sign-outline',
+                                    $first-color: $zc-green);
+
+    @include ws-icon-glyph("e6e7",  $selector: '.icon-twfr-library-bookshelf');
+
+    @include ws-icon-glyph("e6e8",  $selector: '.icon-twfr-table-cells-delete',
+                                    $second-color: $zc-orange);
+
+    @include ws-icon-glyph("e6e9",  $selector: '.icon-twfr-table-cells-add',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e6ee",  $selector: '.icon-twfr-menu-list');
+
+    @include ws-icon-glyph("e6ef",  $selector: '.icon-twfr-feedback',
+                                    $top: -.1rem);
+
+    @include ws-icon-glyph("e6e3",  $selector: '.icon-twfr-folder',
+                                    $top: .05rem);
+
+    @include ws-icon-glyph("e6f0",  $selector: '.icon-twfr-folder-add',
+                                    $second-color: $zc-green,
+                                    $top: .05rem);
+
+    @include ws-icon-glyph("e6f1",  $selector: '.icon-twfr-folder-move',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6f2",  $selector: '.icon-twfr-folder-open',
+                                    $top: .05rem);
+
+    @include ws-icon-glyph("e6f3",  $selector: '.icon-twfr-rename',
+                                    $second-color: $zc-orange,
+                                    $top: -.05rem);
+
+    @include ws-icon-glyph("e6f4",  $selector: '.icon-twfr-trash');
+
+    @include ws-icon-glyph("e6f5",  $selector: '.icon-twfr-trash-restore',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e704",  $selector: '.icon-twfr-view-trash',
+                                    $second-color: $zc-blue);
+
+
+
+    // ------------------------------------------------
+    //   SPECIAL CASES / EXTENSIONS
+    // ------------------------------------------------
+    @if $include-anomalies {
+        .icon-twfr-move-left,
+        .icon-twfr-move-right {
+            @include rotate(-90deg);
+        }
+
+        .icon-twfr-chevron-left {
+            @include rotate(180deg);
+        }
+
+        .icon-twfr-chevron-down {
+            @include rotate(90deg);
+        }
+
+        .icon-twfr-chevron-up {
+            @include rotate(-90deg);
+        }
+
+        // --------------------------------------------
+        //  DEPRECATIONS
+        //
+        //  TODO: Remove in the 2.0.0 release
+        // --------------------------------------------
+        .icon-twfr-table-cells-hide {
+            @extend .icon-twfr-table-hide-column;
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   All "Main" Icons
+//
+// ********************************************************
+@mixin ws-icon-glyphs-main($include-anomalies: true) {
+    @include ws-icon-glyphs-main-16($include-anomalies);
+    @include ws-icon-glyphs-main-24($include-anomalies);
+}

@@ -1,0 +1,56 @@
+// ********************************************************
+
+////
+/// Manifest that imports configs that define default browser and os support levels.
+/// ---
+/// @access private
+/// @group core.internals.support
+////
+
+    $module: 'core/api/config/support/defaults';
+    $module: add-api-module($module);
+
+// ********************************************************
+
+
+///
+/// Flag to turn touch-only styles on/off. The value of many elem state utility variables (like `$hover-class`) change based on this value to prevent unwanted _flickering_ of clickable elements on touch devices.
+/// ---
+/// @type Boolean
+/// @since 0.2.3
+/// ---
+/// @see {variable} hover-class
+///
+$touch-only: false !default;
+
+///
+/// Absolute lowest version of MSIE that Web Skin core module supports, no matter what values are passed to the `set-browser-minimum-versions` function.
+///
+/// __Changed from `8` to `10` in web-skin `1.3.6`.__
+/// ---
+/// @group core.internals.support.browser
+/// @type Number
+/// @since 1.0.0
+///
+$min-ie-supported-platform: 10;
+
+
+
+// ********************************************************
+//
+//   INDIVIDUAL DEFAULT SUPPORT CONFIGS
+//
+// ********************************************************
+    @import 'defaults/browser-support-defaults';
+    @import 'defaults/css3-experimental-support-defaults';
+    @import 'defaults/os-support-defaults';
+
+
+
+// ********************************************************
+//
+//   DEPRECATED SUPPORT CONFIGS
+//   -> For 0.4.x backwards-compatibility
+//
+// ********************************************************
+    @import "../../../_deprecated/_constants/support";

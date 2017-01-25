@@ -1,0 +1,44 @@
+// ********************************************************
+//
+//   DEPENDENCIES:
+//
+    @import '../../comments/atoms/comments-config';
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/comments/atoms/comments-popover-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// navbars in popover headers
+$popover-navbar-padding-bottom:     get($dialog-size-sm-config, 'header-padding-horizontal');
+$popover-navbar-height:             get($dialog-size-base-config, 'header-min-height') - get($dialog-config, 'padding') - 1;
+$popover-navbar-btn-width:          get-deep($btn-config, 'height.xs');
+$popover-navbar-btn-height:         $popover-navbar-btn-width + 4;
+$popover-navbar-elem-offset-top:    round(($popover-navbar-height - $popover-navbar-btn-height) / 2) + 3; // vertical centering
+
+// NOTE POPOVERS
+$popover-comment-content-padding:   round(get($popover-config, 'content-padding') / 2);
+$popover-comment-width:             300px;
+$popover-comment-inner-width:       $popover-comment-width - ($popover-comment-content-padding);
+$popover-comment-height:            get($dialog-size-base-config, 'header-min-height') + $default-comment-textarea-height + ($popover-comment-content-padding);
+$popover-comment-title-font-size:   $font-size-base;
+
+$popover-comment-type-toggle-width: get($cbox-switch-config, 'width');
+
+$popover-comment-thread-actions-offset-right:   get($caret-only-btn-widths, 'xs') + 4px; // how much room does the first comment's timestamp need on the right side
+$popover-comment-thread-header-margin-top:      -$popover-comment-content-padding;
+$popover-comment-title-line-height:             $popover-navbar-btn-height; // vertical centering with comment type toggle switch
+$popover-comment-thread-header-height:          $popover-comment-content-padding + $popover-comment-title-line-height + 5; // not sure why the extra 5px is needed
+$popover-comment-timestamp-max-width:           90px; // NOTE: If you change the meta font size... this will have to increase.
+$popover-comment-title-width-new:               $popover-comment-inner-width - $popover-comment-type-toggle-width;
+$popover-comment-title-width-existing:          $popover-comment-inner-width - $popover-comment-thread-actions-offset-right - $popover-comment-timestamp-max-width;
+$popover-comment-reply-name-width:              $popover-comment-inner-width - $popover-comment-timestamp-max-width;
+
+$popover-comment-thread-overlay-bg:             lighten($dialog-backdrop-bg, 10);
+$popover-comment-thread-overlay-alpha:          .6; // when a thread/comment confirmation modal is open ("wash out" the rest of the thread content)
+$popover-comment-thread-closed-overlay-alpha:   .3; // when thread is closed
+
+$comment-thead-header-height: $popover-comment-thread-header-height;

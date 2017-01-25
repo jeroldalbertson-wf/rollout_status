@@ -1,0 +1,97 @@
+// ********************************************************
+//
+    $module: 'core/foundation/tools/draggables';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ***********************************************\/***********************************************
+//
+//  DRAGGABLE ELEMENT CLASSES
+//
+//  ->  Implemented in `/foundation/tools` so that the selectors come last in the core Web Skin
+//      style cascade to easily override any previously applied component styles in most cases.
+//
+//
+//  [1] Entity can be dragged.
+//
+//      Adds nothing but cursor styling and removes text-selection capabilities. When a
+//      mousepress occurs (`:active`), the styling from `.is-dragging` is applied.
+//
+//      Use [draggable] attribute value as a selector to add default styling when the native
+//      HTML5 draggable attribute is set to true (no CSS classes necessary).
+//
+//      This, combined with applying the `.is-dragging` styles via the `:active` pseudo class
+//      ensures that our base "draggable" styling patterns are applied to ANY element within a
+//      Wdesk app that is draggable / being dragged -  even if the consumer fails to add the CSS
+//      classes we provide.
+//
+//
+//  [2] Indicate that more than one entity can be dragged.
+//
+//
+//  [3] Entity is being dragged.
+//
+//      These CSS classes would need to be added dynamically by consumers in-response to the
+//      `dragstart` event, and removed in-response to the `dragend` event if for some reason the
+//      `:active` pseudo class selector did not apply to the method by which the user is dragging.
+//
+//
+//  [4] Indicate that more than one entity is being dragged.
+//
+//      Is represented by a single element, but the indication of more than one entity in the
+//      store / model of the app being dragged is accomplished by "duplicating" and offsetting the
+//      bordered appearance beneath the top element as a second and third box-shadow applied.
+//
+// ***********************************************/\***********************************************
+    // ----- [1] ----- //
+    [draggable="true"],
+    .is-draggable {
+        @include is-draggable-base();
+    }
+
+    // ----- [2] ----- //
+    .is-draggable--multi {
+        &:active {
+            @include is-dragging-multi();
+        }
+    }
+
+    // ----- [3] ----- //
+    .is-dragging {
+        @include is-dragging-base();
+    }
+
+    // ----- [4] ----- //
+    .is-dragging--multi {
+        @include is-dragging-multi();
+    }
+
+
+
+
+// ***********************************************\/***********************************************
+//
+//  DROP AREA ELEMENT CLASSES
+//
+//
+//  [1] Indicate that files can be dropped here.
+//
+//
+//  [2] Consumer would need to dynamically add this class to the `.is-drop-target` element when
+//      the `dragover` event fires.
+//
+// ***********************************************/\***********************************************
+    .is-drop-target { // [1]
+        background: get($drop-target-config, 'bg-color');
+        border: $drop-target-border;
+        color: get($drop-target-config, 'text-color');
+        text-align: center;
+
+        @at-root .is-drop-target--dragover { // [10]
+            background: get($drop-target-config, 'bg-color-over');
+            border-color: get($drop-target-config, 'bd-color-over');
+            color: get($drop-target-config, 'text-color-over');
+        }
+    }

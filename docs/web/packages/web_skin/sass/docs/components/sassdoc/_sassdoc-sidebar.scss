@@ -1,0 +1,104 @@
+// ********************************************************
+//
+//   Local adjustments to the global
+//   Web Skin docs sidebar and enclosed
+//   side navigation structure for
+//   the sassdoc layout(s)
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/sassdoc/sassdoc-sidebar';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.sassdoc-sidebar .sassdoc-sidenav .nav-item > .hitarea {
+    > .sidebar__annotation {
+        font-weight: normal !important;
+        color: #ccc !important;
+
+        &:before { content: "("; }
+        &:after { content: ")"; }
+    }
+}
+
+
+// ----------------------------------------------------
+//   Tighten up the spacing since we have a lot more
+//   nesting in sassdoc sidebar
+// ----------------------------------------------------
+$sassdoc-sidenav-group-indents: (
+    'child-nav':                get($sidenav-group-indents, 'child-nav') - $docs-spacing-sm,
+    'grandchild-nav':           get($sidenav-group-indents, 'child-nav') + $docs-spacing-base,
+    'great-grandchild-nav':     get($sidenav-group-indents, 'grandchild-nav') + $docs-spacing-base,
+    'great2-grandchild-nav':    get($sidenav-group-indents, 'great-grandchild-nav') + $docs-spacing-base,
+    'great3-grandchild-nav':    get($sidenav-group-indents, 'great2-grandchild-nav')
+);
+
+
+// ----------------------------------------------------
+//   Tweak style of items that are children
+//   of the sidebar "type" links so the
+//   "type" headers appear like headers
+//   with no active state
+// ----------------------------------------------------
+    $item-type-indent: get($sidenav-group-indents, 'grandchild-nav');
+    $item-type-color: lighten($sidenav-link-color, 10);
+
+    .sassdoc-sidebar .nav {
+        // Nested nav item indentations
+        @include docs-sidenav-nested-item-indentations($indent-config: $sassdoc-sidenav-group-indents);
+
+        // Make the "VARIABLES" and "FUNCTIONS" and "MIXINS" headers
+        // not look like standard nav items
+        .nav__item__types {
+            > .nav-item {
+                > .hitarea {
+                    color: $item-type-color;
+                    text-shadow: 0 .1rem 0 rgba($white, .5);
+                    font-weight: bold; // even if not active
+                    text-transform: uppercase;
+                }
+
+                &.active {
+                    &,
+                    #{$link-hover-focus} {
+                        > .hitarea {
+                            color: $item-type-color !important; // even if active
+                            border-right-color: transparent !important;
+                        }
+                    }
+                }
+            }
+        }
+
+        // if there's not multiple types in a group
+        // then the .nav__item__types <ul> is hidden
+        // and we need to reduce the indent of each item
+        .nav__item__types > .nav__items {
+            > .nav-item > .hitarea {
+                padding-left: to-rem($item-type-indent) !important;
+            }
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Reduce the vertical height
+//   of each item in a sidenav because
+//   of the sheer number of them
+// ----------------------------------------------------
+    // ----- Item Type Links and their Items ----- //
+    .sassdoc-sidebar .nav .nav,
+    .sassdoc-sidebar .nav .nav .nav,
+    .sassdoc-sidebar .nav .nav .nav .nav {
+        padding-top: 0;
+
+        > .nav-item > .hitarea {
+            font-size: to-rem($font-size-md);
+            padding-top: .2rem;
+            padding-bottom: .2rem;
+            padding-right: to-rem($sidenav-link-bd-width + 1);
+        }
+    }

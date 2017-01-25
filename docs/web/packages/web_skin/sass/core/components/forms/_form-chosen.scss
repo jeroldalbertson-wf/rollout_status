@@ -1,0 +1,159 @@
+// ********************************************************
+//
+//   CHOSEN JS COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-forms-selects
+//
+//   Styling necessary only for UX consumers that are still
+//   using the wdesk-chosen.js jQuery plugin to render
+//   multi-selects.
+//
+//   Production styling for the Web Skin Dart `DropdownSeelct`
+//   component and it's variations (multi select, typeahead, etc)
+//   is located in `_form-dropdown-select.scss`.
+//
+//   The Base `js-chosen` CSS class applied to the root
+//   element only when rendered using the `wdesk-chosen.js`
+//   plugin.
+//
+//   Adding that class as a parent selector for all styles
+//   in this module prevents accidental pollution of styles
+//   for the Dart `DropdownSelect` component - which should
+//   work standalone.
+//
+//   Eventually all the `chosen-*` classes will be removed
+//   from the Dart component markup (UIP-1025), at which time
+//   the additional parent class will serve as a way to
+//   ensure that we can verify the appearance of both the
+//   jQuery plugin markup, and the Dart markup - in the
+//   same place (Web Skin Docs).
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/forms/form-chosen';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $forms-chosen-module-config:  'core/components/atoms/forms/config/form-chosen-config';
+    $forms-chosen-module-helpers: 'core/components/atoms/forms/forms-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $forms-chosen-module-config,
+                                          $forms-chosen-module-helpers);
+//
+// ********************************************************
+
+
+.js-chosen {
+    // ----------------------------------------------------
+    //  CHOSEN DROPDOWN MENU
+    // ----------------------------------------------------
+    .chosen-drop {
+        z-index: z('popover');
+        margin-left: 0;
+        max-width: none;
+        min-width: 0;
+
+        .chosen-results {
+            overflow-x: hidden;
+            overflow-y: auto;
+            max-height: 24rem;
+        }
+    }
+
+    // ----------------------------------------------------
+    //  CHOSEN SINGLE DROPDOWN TRIGGER
+    // ----------------------------------------------------
+    .chosen-single {
+        display: block;
+    }
+
+    // like a dropdown header
+    .group-result {
+        @include dropdown-menu-header();
+
+        .text-highlighted {
+            color: darken(get($dropdown-menu-color-config, 'header-text-color'), 25);
+        }
+    }
+
+    .group-option .hitarea {
+        padding-left: to-rem(get($dropdown-menu-base-size-config, 'link-padding-horizontal') * 2) !important;
+    }
+
+    &.chosen-container-multi .chosen-drop .result-selected {
+        // Don't show it in the dropdown once its been selected
+        display: none;
+    }
+
+
+    // ----------------------------------------------------
+    //  SIZE VARIATIONS
+    //
+    //  Accomplished by adding the `input-{size}` CSS class
+    //  to the `<select>` element that gets converted by
+    //  `wdesk-chosen.js` assuming that the
+    //  `inherit_select_classes` option is `true`.
+    // ----------------------------------------------------
+    @each $size-name, $size-config in $chsn-search-size-variations {
+        .dropdown-toggle.btn-#{$size-name} {
+            // Common size variation styling shared by both
+            // Dart components and chosen.js ones
+            @include dropdown-select-size($size-name, $size-config);
+
+            // Size variation styling required only by chosen.js component
+            .chosen-choices {
+                @include input-size($size-name, $set-height: false);
+                // Subtle differences between this and a standard <input>
+                height: auto !important;
+
+                .search-field .form-control {
+                    height: to-rem(get($size-config, 'field-height'));
+                    min-height: to-rem(get($size-config, 'field-height'));
+                    font-size: to-rem(get($size-config, 'field-font-size'));
+                }
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //  DISABLED COMPONENT STATE
+    // ----------------------------------------------------
+    &.chosen-disabled {
+        @include disabled-cursor();
+
+        .chosen-single {
+            @include btn-disabled();
+        }
+
+        .search-choice-close {
+            @include disabled-cursor();
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //  CHOSEN COMPONENT WITHIN V1 / V2 GRID COLUMNS
+    //
+    //  [1] Remove grid column padding if the
+    //      `.chosen-container` element IS the grid
+    //      column / block.
+    //
+    //  [2] Override the inline `width` style applied by the
+    //      plugin so that the component "fits" within the
+    //      column / block.
+    // ----------------------------------------------------
+    &[class*="col-"],
+    &[class*="grid-block"] {
+        padding: 0; // [1]
+    }
+
+    // ----- [2] ----- //
+    [class*="col-"] > &,
+    [class*="col-"] > .form-group > &,
+    [class*="grid-block"] > &,
+    [class*="grid-block"] > .form-group > & {
+        width: 100% !important;
+    }
+}

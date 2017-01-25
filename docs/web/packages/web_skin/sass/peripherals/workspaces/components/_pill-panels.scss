@@ -1,0 +1,243 @@
+// ********************************************************
+//
+//   PILL PANELS COMPONENT STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/components/pill-panels';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $wksp-module-config:  'peripherals/workspaces/atoms/workspaces-config';
+    $wksp-module-helpers: 'peripherals/workspaces/atoms/workspaces-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $wksp-module-config,
+                                          $wksp-module-helpers);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Prevent overflow / scrollbar appearing caused by
+//   expanded pill panel when sidebar is collapsed
+// ----------------------------------------------------
+.wksp-sidebar-minimized .wksp-pill-panel-container {
+    overflow: hidden;
+}
+
+.wksp-pill-panel {
+    border-width: to-rem(get($wksp-sidebar-pill-panel-config, 'bd-width'));
+
+
+    // ----------------------------------------------------
+    //   CLICKABLE "PILL" HEADING
+    //
+    //   [1] Make the height match the height of a
+    //       standard wksp nav hitarea.
+    //
+    //   [2] Round the corners of the panel title so it
+    //       looks like a standard nav pill link.
+    //
+    //   [3] Override .panel-group .panel-heading[data-toggle]
+    //
+    //   [5] Restore the bottom border radius of the heading
+    //       hitarea since the collapsible panels are hidden
+    //       in a minimized sidebar state.
+    //
+    //   [7] Restore the vertical alignment of the label
+    //       now that its absolutely positioned to prevent
+    //       the label from appearing to "jump" when the
+    //       sidebar minimize transition begins.
+    //
+    //   [8] Only flatten the bottom border radius if the
+    //       panel-heading is part of a panel that actually
+    //       has collapsible content.
+    //
+    //       NOTE: This logic must be implemented based on
+    //       whether or not the toggle button presented in
+    //       the sidebar is intended to simply load new
+    //       content into main, or expand to reveal children
+    //       that load new content into main.
+    //
+    // ----------------------------------------------------
+    .panel-heading.hitarea {
+        @include truncate-text();
+
+        text-transform: uppercase;
+        font-size: to-rem($font-size-md);
+        padding-top: to-rem(get($wksp-sidebar-hitarea-config, 'padding-vertical'));    // [1]
+        padding-bottom: to-rem(get($wksp-sidebar-hitarea-config, 'padding-vertical')); // [1]
+        border-radius: to-rem(get($nav-pills-pill-config, 'bd-radius')); // [2]
+        border-bottom-width: to-rem($global-component-bd-width); // [3]
+
+
+        // ----- ACTIVE / OPEN STATE OF COLLAPSIBLE STRUCTURE ----- //
+        &.wksp-pill-panel-is-collapsible {
+            &.open,
+            &.active {
+                @include border-bottom-radius(0); // [8]
+            }
+        }
+
+
+        // ----- MINIMIZED SIDEBAR ----- //
+        .wksp-sidebar-minimized & {
+            border-radius: to-rem(get($nav-pills-pill-config, 'bd-radius')) !important; // [5]
+
+            $abs-vertical-center: get($wksp-sidebar-hitarea-config, 'padding-vertical') + to-rem($global-component-bd-width * 2) + .3rem; // [7]
+            .wksp-hitarea-label {
+                top: $abs-vertical-center;
+            }
+
+            &.open,
+            &.active {
+                .wksp-hitarea-label {
+                    top: $abs-vertical-center - .1rem; // bold font-weight throws it off during transition
+                }
+            }
+        }
+    }
+
+    // ----- ACTIVE / EXPANDED STATE ----- //
+    .active > .panel-heading.hitarea,
+    .panel-heading.hitarea.open,
+    .panel-heading.hitarea.active {
+        font-weight: bold;
+    }
+
+
+    // ----------------------------------------------------
+    //   PANEL BODY
+    //
+    //   [1] Add some extra spacing so that the first
+    //       nav-item, when active does not appear to
+    //       intersect with the shadow created by
+    //       `.panel-collapse:after`, and so that the
+    //       last item in the nav isn't flush with the
+    //       bottom of the scrolling container.
+    //
+    //   [2] Transition the opacity of the nav based on
+    //       the minimized or maximized state of the sidebar.
+    //
+    // ----------------------------------------------------
+    .panel-body {
+        @include border-bottom-radius(to-rem(get($nav-pills-pill-config, 'bd-radius')));
+
+        padding-top: 0;
+        padding-bottom: 0;
+        background-color: get($wksp-sidebar-pill-panel-config, 'body-bg');
+
+        > .nav {
+            @include wksp-sidebar-pill-panel-nav-transitions('min-to-max'); // [2]
+
+            margin-top: to-rem(get($nav-pills-pill-config, 'padding-vertical'));    // [1]
+            margin-bottom: to-rem(get($nav-pills-pill-config, 'padding-vertical')); // [1]
+
+
+            // ----- MINIMIZED SIDEBAR ----- //
+            .wksp-sidebar-minimized & {
+                @include wksp-sidebar-pill-panel-nav-transitions('max-to-min');  // [2]
+
+                opacity: 0;
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   COLLAPSIBLE PANEL CHILD NAV ITEMS
+    //
+    //   [1] Align the left edge of the hitarea label
+    //       with the left edge of the panel heading label.
+    //
+    //   [2] Reset the vertical margin between adjacent
+    //       nav-item hitareas that was set in
+    //       `workspaces/components/sidebar-hitareas`.
+    //
+    // ----------------------------------------------------
+    .wksp-nav-pills > .nav-item {
+        > .hitarea {
+            $panel-heading-icon-total-width: to-rem(icon-size-base-24() + $nav-link-icon-margin-horizontal);
+            $panel-heading-padding-left: get($wksp-sidebar-hitarea-config, 'padding-horizontal');
+
+            padding-left: $panel-heading-icon-total-width - $panel-heading-padding-left; // [1]
+        }
+
+        + .nav-item > .hitarea {
+            margin-top: to-rem(get($nav-pills-pill-config, 'stacked-spacing')); // [2]
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   PANEL COLLAPSE BODY WRAPPER
+    //
+    //   NOTE: This element should be conditionally hidden
+    //         if the accompanying toggle button in the
+    //         sidebar is intended to simply load new
+    //         content into main without expanding to
+    //         reveal children that load new content into main.
+    //
+    //   ---
+    //
+    //   [1] Create an inset shadow at the top of the
+    //       collapse elem wrapping around the panel
+    //       body when the panel is expanded.
+    //
+    //   [2] Hide the inner content shadow added in
+    //       `workspaces/components/sidebar-hoverable-skins`
+    //       when the panel is minimizing, or when the sidebar
+    //       is minimized.
+    //
+    //   [3] Make the adjacent panel body top border color
+    //       match the background color.
+    //       (overrides collapsible panel default styling)
+    //
+    //   [4] Handle the visibility / transitions needed
+    //       when a pill panel is expanded, but the sidebar
+    //       is minimized.
+    //
+    // ----------------------------------------------------
+    .panel-collapse {
+        position: relative;
+
+        // ----- [1] ----- //
+        &:after {
+            display: block;
+            position: absolute;
+            content: "";
+            height: to-rem(abs(get-deep($wksp-sidebar-hovered-pill-panel-config, 'content-shadow-config.offset-y')));
+            top: to-rem(abs(get-deep($wksp-sidebar-hovered-pill-panel-config, 'content-shadow-config.offset-y')));
+            left: 0;
+            right: 0;
+            box-shadow: build-box-shadow(get($wksp-sidebar-hovered-pill-panel-config, 'content-shadow-config'));
+        }
+    }
+
+    .collapsed + .panel-collapse.collapsing:after,
+    .wksp-sidebar-minimized & .panel-collapse:after {
+        opacity: 0; // [2]
+    }
+
+    .panel-group & {
+        .panel-heading.hitarea + .panel-collapse .panel-body {
+            border-top-color: get($wksp-sidebar-pill-panel-config, 'body-bg'); // [3]
+        }
+    }
+
+    // ----- [4] ----- //
+    .panel-collapse {
+        @include wksp-sidebar-pill-panel-transitions('min-to-max');
+
+
+        // ----- MINIMIZED SIDEBAR ----- //
+        .wksp-sidebar-minimized & {
+            @include wksp-sidebar-pill-panel-transitions('max-to-min');
+
+            opacity: 0;
+            height: 0 !important;
+        }
+    }
+}

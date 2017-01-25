@@ -1,0 +1,39 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/comments/comments-shared';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.comments textarea {
+    @include comment-textarea();
+}
+
+.comment-body {
+    @include comment-body();
+}
+
+.popover,
+.panel {
+    .modal-open {
+        overflow: visible; // override default .modal-open styles
+    }
+}
+
+.thread-overlay {
+    position: absolute; // fixed position breaks in MSIE
+    display: none;
+
+    .thread-status {
+        position: absolute;
+        right: to-rem($dialog-sm-content-padding);
+        bottom: to-rem($dialog-sm-content-padding / 2);
+        font-style: italic;
+        color: $black;
+        text-align: right;
+        cursor: default;
+    }
+}

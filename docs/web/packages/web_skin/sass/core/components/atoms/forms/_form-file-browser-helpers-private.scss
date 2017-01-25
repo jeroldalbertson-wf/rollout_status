@@ -1,0 +1,54 @@
+// ********************************************************
+
+////
+/// Private file browser component helpers
+/// ---
+/// @since 1.4.0
+/// @access private
+/// @group core.internals.components.form-controls
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/forms/form-file-browser-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+/// @returns {String} Size variation selector for the top-level `.form-control-file` element.
+@function _file-browser-size-wrapper-selector($size, $group: false) {
+    @return if($group,
+        '.form-control-file',
+        '.form-control-file.input-#{unquote($size)}'
+    );
+}
+
+/// @returns {String} Size variation selector for the `.form-control-file__custom-input` elem within a `.form-control-file` component.
+@function _file-browser-size-custom-input-selector($size, $group: false) {
+    @return if($group,
+        '.form-control-file__custom-input',
+        '.input-#{unquote($size)} .form-control-file__custom-input'
+    );
+}
+
+/// @returns {String} Size variation selector for the "button" within a `.form-control-file` component.
+@function _file-browser-size-button-selector($size, $group: false) {
+    @return if($group,
+        '.form-control-file__custom-input#{get($file-browser-config, 'button-selector')}',
+        '.input-#{unquote($size)} .form-control-file__custom-input#{get($file-browser-config, 'button-selector')}'
+    );
+}
+
+/// @returns {String} Size variation selector for the input "placeholder" within a `.form-control-file` component.
+@function _file-browser-size-input-text-selector($size, $group: false) {
+    @return if($group,
+        '.form-control-file__custom-input#{get($file-browser-config, 'input-display-selector')}',
+        '.input-#{unquote($size)} .form-control-file__custom-input#{get($file-browser-config, 'input-display-selector')}'
+    );
+}

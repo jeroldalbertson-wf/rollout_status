@@ -1,0 +1,147 @@
+// ********************************************************
+//
+//   PAGINATION COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-navs-pagination
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/navs/pagination';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $navs-pagination-module-config:  'core/components/atoms/navs/config/nav-pagination-config';
+    $navs-pagination-module-helpers: 'core/components/atoms/navs/navs-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $navs-pagination-module-config,
+                                          $navs-pagination-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE PAGINATION CONTAINER
+//
+// ********************************************************
+.pagination {
+    display: inline-block;
+    margin-top: to-rem(get-deep($pagination-size-config, 'base.margin-vertical'));
+    margin-bottom: to-rem(get-deep($pagination-size-config, 'base.margin-vertical'));
+    list-style: none;
+}
+
+
+// ********************************************************
+//
+//   PAGINATION PAGES / PAGE HITAREAS
+//   -> Remixes overall look 'n feel from `.nav-pills`
+//
+// ********************************************************
+.pagination > .nav-item {
+    float: left;
+
+    // ----------------------------------------------------
+    //   ADJACENT SIBLING SPACING
+    // ----------------------------------------------------
+    + .nav-item > .hitarea {
+        margin-left: to-rem(get-deep($pagination-size-config, 'base.item-spacing'));
+    }
+
+    // ----------------------------------------------------
+    //   PAGE HITAREA
+    // ----------------------------------------------------
+    > .hitarea {
+        @include nav-pills-pill($set-border-radius: false);
+
+        display: block;
+
+        // ----- PAGE HOVER STATE ----- //
+        #{$hover} {
+            @include nav-pills-pill-hover();
+        }
+
+
+        // ----- PAGE PRESSED STATE ----- //
+        #{$link-pressed} {
+            @include nav-pills-pill-press();
+        }
+
+
+        // ----- FOCUS-ONLY STATE FOR ACCESSIBILITY ----- //
+        #{$focus} {
+            @include nav-pills-pill-hover($set-border-color: false);
+            // use a border instead of outline since these have rounded corners
+            @include focus-border();
+        }
+
+
+        // ----- PAGE DISABLED STATE ----- //
+        #{$nav-disabled-selectors} {
+            @include nav-pills-pill-disabled();
+        }
+    }
+
+    // ----------------------------------------------------
+    //   ACTIVE PAGE STATE
+    // ----------------------------------------------------
+    &.active > .hitarea {
+        @include nav-pills-pill-active();
+    }
+
+    // ----------------------------------------------------
+    //   CORNER ROUNDING
+    // ----------------------------------------------------
+    &:first-child > .hitarea {
+        @include border-left-radius(to-rem(get-deep($pagination-size-config, 'base.item-bd-radius')));
+    }
+
+    &:last-child  > .hitarea {
+        @include border-right-radius(to-rem(get-deep($pagination-size-config, 'base.item-bd-radius')));
+    }
+}
+
+
+// ********************************************************
+//
+//   SIZE VARIATIONS
+//
+// ********************************************************
+@each $size-name, $size-config in map-remove($pagination-size-config, 'base') {
+    $margin-vertical: to-rem(get($size-config, 'margin-vertical'));
+    $item-padding:    to-rem(get($size-config, 'item-padding'));
+    $item-font-size:  to-rem(get($size-config, 'font-size'));
+    $item-bd-radius:  to-rem(get($size-config, 'item-bd-radius'));
+    $item-spacing:    to-rem(get($size-config, 'item-spacing'));
+
+    // ----------------------------------------------------
+    //   BASE PAGINATION CONTAINER
+    // ----------------------------------------------------
+    .pagination-#{$size-name} {
+        margin-top: $margin-vertical;
+        margin-bottom: $margin-vertical;
+    }
+
+    // ----------------------------------------------------
+    //   PAGINATION PAGES / PAGE HITAREAS
+    // ----------------------------------------------------
+    .pagination-#{$size-name} > .nav-item {
+        > .hitarea {
+            padding: $item-padding;
+            font-size: $item-font-size;
+        }
+
+        &:first-child > .hitarea {
+            @include border-left-radius($item-bd-radius);
+        }
+
+        &:last-child > .hitarea {
+            @include border-right-radius($item-bd-radius);
+        }
+
+        + .nav-item > .hitarea {
+            margin-left: $item-spacing;
+        }
+    }
+}

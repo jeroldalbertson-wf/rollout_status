@@ -1,0 +1,32 @@
+// ********************************************************
+//
+$module: add-api-module('core/api/config/support/msie-lt9');
+//
+//   Import this module to compile a stylesheet
+//   with support for MSIE 8
+//
+//   Deprecated in `1.3.6`
+//
+//   TODO: Remove completely in `2.0.0`
+//
+// ********************************************************
+
+@warn "DEPRECATION WARNING: As of January 15, 2016, Wdesk no longer supports MSIE 8 or 9.  This Sass peripheral will be removed in version `2.0.0`";
+
+// ----------------------------------------------------
+//   Default support
+// ----------------------------------------------------
+@import "defaults";
+
+
+// ----------------------------------------------------
+//   Change MSIE support level to 8
+// ----------------------------------------------------
+@include set-supported-browsers(ie);
+@include set-browser-minimum-versions(('ie': '8'));
+
+
+// ----------------------------------------------------
+//   Change OS support to Windows only
+// ----------------------------------------------------
+@include set-supported-os(win);

@@ -1,0 +1,291 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-icon-glyphs';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+$glyph-search-results-container-height: $glyph-height * 5;
+
+//
+// GLYPH CONTAINER(S)
+//
+    .glyph-search-results-container {
+        @include scrollbar-compensation();
+
+        height: $glyph-search-results-container-height; // show at least 5 rows before scrolling
+        padding-top: to-rem($line-height-base-px);
+        padding-left: .2rem; // Don't clip the focus style of the glyphs on the far left
+        padding-bottom: .6rem; // Don't clip the focus style of the glyphs in the last visible row
+        overflow: auto;
+        cursor: pointer; // prevent cursor flickering as the user moves their cursor from glyph-to-glyph
+    }
+
+    .glyph-search-empty-view {
+        height: $glyph-search-results-container-height;
+        margin-top: 0;
+        padding-top: get($empty-view-config, 'margin-top');
+    }
+
+    .glyph-search-loading {
+        height: $glyph-search-results-container-height;
+        margin-top: 0;
+        padding-top: get($empty-view-config, 'margin-top');
+    }
+
+    .glyph {
+        // height: $glyph-height;
+        padding-top: $glyph-padding;
+        padding-bottom: $glyph-padding;
+        font-size: to-rem($font-size-base);
+        line-height: $line-height-base;
+        text-align: center;
+    }
+
+    .glyph-inner {
+        @include transition(background-color $glyph-trans);
+
+        position: relative;
+        height: $glyph-height - $glyph-inner-spacing;
+        margin: ($glyph-padding - ($glyph-inner-spacing / 2)) * -1; // 6px perceived spacing between each glyph
+        overflow: hidden;
+        background: $glyph-inner-bg;
+        border: $docs-example-bd-width solid $glyph-inner-bd-color;
+        border-radius: $glyph-inner-bd-radius;
+    }
+
+    @include respond-to('screen-sm and up') {
+        .glyph-inner {
+            width: 16rem;
+        }
+    }
+
+    @include respond-to('screen-lg and up') {
+        .glyph-inner {
+            height: $glyph-height-col-lg - $glyph-inner-spacing;
+            width: 20rem;
+        }
+    }
+
+
+//
+// GLYPH CONTENTS
+//
+    .glyph-example {
+        padding-top: to-rem($line-height-base-px);
+        padding-bottom: to-rem($glyph-inner-spacing * 2);
+
+        [data-size-base="24"] & {
+            // Ensure that there is room at the bottom of the box for the
+            // SVG download button, and that it doesn't obscure the name
+            // of the icon when it appears.
+            padding-bottom: 0;
+        }
+    }
+
+    .glyph-size-base {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        padding-right: .5rem;
+        padding-bottom: .4rem;
+        padding-left: .4rem;
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 500;
+        background-color: $glyph-inner-bd-color;
+        text-shadow: .1rem .1rem $glyph-meta-color;
+        border-radius: 0;
+        @include border-top-right-radius($glyph-inner-bd-radius);
+        @include border-bottom-left-radius($glyph-inner-bd-radius);
+    }
+
+    .glyph-meta {
+        font-size: to-rem($font-size-md);
+        color: $glyph-meta-color;
+    }
+
+    .glyph-meta-tag-cell {
+        padding-bottom: 0; // Prevent double-spacing
+
+        .label {
+            display: inline-block;
+            font-family: $font-family-monospace;
+            font-size: .85em;
+            font-weight: normal;
+            margin-bottom: .35em;
+            color: $text-color;
+            text-transform: lowercase;
+            background-color: $docs-code-bd;
+
+            &.label-warning {
+                background-color: #eab775;
+            }
+        }
+    }
+
+    .glyph-meta-popover {
+        $glyph-popover-item-padding: to-rem(round($dialog-sm-content-padding / 2));
+        $glyph-popover-body-padding: to-rem($dialog-content-padding - 2) $glyph-popover-item-padding;
+        box-shadow: 0 0 .5rem .2rem rgba($black, .3);
+        font-size: to-rem($font-size-md);
+        color: $glyph-popover-meta-color;
+
+        .inner {
+            max-width: 36rem;
+        }
+
+        .title {
+            margin-bottom: 0;
+        }
+
+        .panel {
+            margin: to-rem($dialog-sm-content-padding) * -1;
+
+            // give the text some room to breathe
+            font-size: to-rem($font-size-md);
+            line-height: $line-height-base;
+
+            .panel-body {
+                font-size: to-rem($font-size-md) !important;
+                padding: $glyph-popover-body-padding;
+            }
+
+            .table {
+                font-size: to-rem($font-size-md) !important;
+                table-layout: fixed;
+
+                th[scope="row"] {
+                    width: 8.8rem;
+                    text-align: right;
+                }
+            }
+
+            code {
+                font-size: 100%;
+                color: #4f9fcf; // matches pygments Name.Attribute
+                background-color: $docs-code-bg;
+                border: .1rem solid $docs-code-bd;
+                border-radius: to-rem($code-bd-radius);
+            }
+
+            .highlight {
+                padding: ($glyph-popover-item-padding + .2rem);
+                margin: $glyph-popover-item-padding 0;
+
+                pre code {
+                    font-size: to-rem($font-size-md);
+                    background-color: transparent;
+                    border: 0 none;
+                    border-radius: 0;
+                }
+            }
+
+            td > .highlight-wrapper:last-child .highlight {
+                margin-bottom: 0;
+            }
+        }
+
+        .glyph-media-left {
+            // make the space on the right the same as the space above/below within the panel-body
+            margin-right: nth($glyph-popover-body-padding, 1);
+
+            .btn-color-toggle-container {
+                padding-top: nth($glyph-popover-body-padding, 1);
+            }
+
+            // this is the link around the .icon
+            .glyph-meta-example-link {
+                display: block;
+                padding: 1rem;
+                border-radius: to-rem($border-radius-base);
+                text-align: center;
+                color: $text-color !important;
+
+                .icon {
+                    display: inline-block;
+                }
+            }
+        }
+    }
+
+    // Our iconography-helpers.js file toggles this class based on whether we're showing a 2-color icon or not.
+    // The striped BG is useful for recognizing whether a two-color icon has a white backing or not.
+    .glyph-ex-striped-backing {
+        @include crosshatch-bg();
+    }
+
+    .glyph-name {
+        @include truncate-text();
+        @include transition(color $glyph-trans);
+
+        display: block;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    .glyph-svg-dl-btn {
+        position: absolute;
+        right: .5rem;
+        bottom: .5rem;
+        display: block;
+        width: auto;
+        clear: both;
+        font-size: to-rem($font-size-md);
+        line-height: normal;
+
+        .btn {
+            display: none; // hide until hover
+            @include opacity(0);
+            @include transition(opacity $glyph-trans);
+
+            border-color: transparent;
+        }
+    }
+
+    //
+    // Handle glyph hover/focus styling
+    //
+    .glyph {
+        cursor: pointer;
+
+        // put the same styling on .glyph-inner as we do on hover/focus when its popover is open
+        &[aria-describedby] {
+            .glyph-inner {
+                background-color: $glyph-inner-bg-hover;
+            }
+        }
+
+        #{$link-hover-focus} {
+            .glyph-inner {
+                background-color: $glyph-inner-bg-hover;
+            }
+
+            .glyph-meta {
+                color: $glyph-meta-color-hover;
+            }
+
+            //
+            // Show the SVG download button when the glyph is hovered/focused
+            // but keep the opacity down until the button itself is actually hovered
+            //
+            .glyph-svg-dl-btn .btn {
+                display: block;
+                @include opacity(.7);
+            }
+        }
+
+        //
+        // Show the SVG download button when the button itself is hovered/focused
+        // and increase the opacity to 100%
+        //
+        .glyph-svg-dl-btn .btn {
+            #{$link-hover-focus} {
+                display: block;
+                @include opacity(1);
+            }
+        }
+    }

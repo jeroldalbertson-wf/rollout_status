@@ -1,0 +1,1081 @@
+// ----------------------------------------------------
+
+//+  PARTIAL:  _deprecated/_constants/_variables.scss
+//+  PARENT:   _deprecated/_manifest.scss
+
+// NOTE: DO NOT USE THESE!!! They were deprecated in `1.0.0` will be removed no later than `2.0.0`
+// TODO: Remove no later than `2.0.0`
+
+// ----------------------------------------------------
+
+    //
+    $mutedPct:                          $muted-pct;
+    //
+    $headingsFontFace:                  $headings-font-family;
+    $headingsColor:                     $headings-color;
+    $headingsLineHeight:                $headings-line-height;
+    $headingsKerning:                   $headings-kerning;
+    $headingsMargins:                   $headings-margins;
+    //
+    $headingMainTitleFontSize:          $h1-font-size;
+    $headingMainTitleLineHeight:        $h1-line-height;
+    $headingSuperHeaderFontSize:        $h2-font-size;
+    $headingSuperHeaderLineHeight:      $h2-line-height;
+    $heading1FontSize:                  $h3-font-size;
+    $heading1LineHeight:                $h3-line-height;
+    $heading2FontSize:                  $h4-font-size;
+    $heading2LineHeight:                $h4-line-height;
+    $heading3FontSize:                  $h5-font-size;
+    $heading3LineHeight:                $h5-line-height;
+    $heading4FontSize:                  $h6-font-size;
+    $heading4LineHeight:                $h6-line-height;
+    //
+    $fakeHeadings:                      unquote(".h1") unquote(".h2") unquote(".h3") unquote(".h4") unquote(".h5") unquote(".h6");
+    $headingFontSizes:                  $h1-font-size, $h2-font-size, $h3-font-size, $h4-font-size, $h5-font-size, $h6-font-size;
+    $headingLineHeights:                $h1-line-height, $h2-line-height, $h3-line-height, $h4-line-height, $h5-line-height, $h6-line-height;
+    //
+    $btnFontFamily:                     get($btn-config, 'font-family');
+    $btnFontSize:                       get-deep($btn-config, 'font-size.base');
+    //
+    $panelCopyFontWeight:               normal;
+    $panelCopyFontSize:                 $font-size-base;
+    $panelCopyLineHeight:               $line-height-base;
+    $panelCopyColor:                    $text-color;
+    //
+    $panelHeaderFontWeight:             bold;
+    $panelHeaderFontSize:               $font-size-base;
+    $panelHeaderLineHeight:             get-deep($panel-config, 'base.header-line-height');
+    $panelHeaderColor:                  get($panel-colors-default, 'header-text-color');
+    //
+    $dialogsFontWeight:                 normal;
+    $dialogsFontSize:                   $font-size-md;
+    $dialogsLineHeight:                 $line-height-base-px;
+    $dialogsColor:                      get($dialog-config, 'text-color');
+    //
+    $inlineCalloutFontWeight:           bold;
+    $inlineCalloutFontSize:             $dialogsFontSize;
+    $inlineCalloutLineHeight:           $dialogsLineHeight;
+    $inlineCalloutColor:                $dialogsColor;
+    //
+    $navRibbonLabelFontFace:            get($nav-ribbon-btn-config, 'label-font-family');
+    $navRibbonLabelFontWeight:          get($nav-ribbon-btn-config, 'label-font-weight');
+    $navRibbonLabelFontSize:            get($nav-ribbon-btn-config, 'label-font-size');
+    $navRibbonLabelLineHeight:          get($nav-ribbon-btn-config, 'label-line-height');
+    $navRibbonLabelColor:               get($nav-ribbon-btn-config, 'text-color');
+    $navRibbonLabelColorHover:          get($nav-ribbon-btn-config, 'text-color-hover');
+    $navRibbonLabelIconColor:           $navRibbonLabelColor;
+    $navRibbonLabelCaret:               get($nav-ribbon-btn-config, 'caret-color');
+    //
+    $state_default:                     $state-default;
+    $state_defaultColor:                $state-default-text;
+    $state_defaultBg:                   $state-default-bg;
+    $state_defaultBd:                   $state-default-bd;
+    //
+    $state_primary:                     $state-primary;
+    $state_primaryColor:                $state-primary-text;
+    $state_primaryBg:                   $state-primary-bg;
+    $state_primaryBd:                   $state-primary-bd;
+    //
+    $state_alt:                         $state-alt;
+    $state_altColor:                    $state-alt-text;
+    $state_altBg:                       $state-alt-bg;
+    $state_altBd:                       $state-alt-bd;
+    //
+    $state_success:                     $state-success;
+    $state_successColor:                $state-success-text;
+    $state_successBg:                   $state-success-bg;
+    $state_successBd:                   $state-success-bd;
+    //
+    $state_warning:                     $state-warning;
+    $state_warningColor:                $state-warning-text;
+    $state_warningBg:                   $state-warning-bg;
+    $state_warningBd:                   $state-warning-bd;
+    //
+    $state_error:                       $state-danger;
+    $state_errorColor:                  $state-danger-text;
+    $state_errorBg:                     $state-danger-bg;
+    $state_errorBd:                     $state-danger-bd;
+    //
+    $btnColorDefault:                   get($btn-colors-default, 'text-base');
+    $btnBgDefault:                      get($btn-colors-default, 'bg-base');
+    $btnBdDefault:                      get($btn-colors-default, 'bd-base');
+    $btnShdDefault:                     get($btn-colors-default, 'shadow-base');
+    $btnColorDefaultHover:              get($btn-colors-default, 'text-hover');
+    $btnBgDefaultHover:                 get($btn-colors-default, 'bg-hover');
+    $btnBdDefaultHover:                 get($btn-colors-default, 'bd-hover');
+    $btnShdDefaultHover:                get($btn-colors-default, 'shadow-hover');
+    $btnColorDefaultPress:              get($btn-colors-default, 'text-press');
+    $btnBgDefaultPress:                 get($btn-colors-default, 'bg-press');
+    $btnBdDefaultPress:                 get($btn-colors-default, 'bd-press');
+    $btnShdDefaultPress:                get($btn-colors-default, 'shadow-press');
+    //
+    $btnColorLight:                     get($btn-colors-light, 'text-base');
+    $btnBgLight:                        get($btn-colors-light, 'bg-base');
+    $btnBdLight:                        get($btn-colors-light, 'bd-base');
+    $btnShdLight:                       get($btn-colors-light, 'shadow-base');
+    $btnColorLightHover:                get($btn-colors-light, 'text-hover');
+    $btnBgLightHover:                   get($btn-colors-light, 'bg-hover');
+    $btnBdLightHover:                   get($btn-colors-light, 'bd-hover');
+    $btnShdLightHover:                  get($btn-colors-light, 'shadow-hover');
+    $btnColorLightPress:                get($btn-colors-light, 'text-press');
+    $btnBgLightPress:                   get($btn-colors-light, 'bg-press');
+    $btnBdLightPress:                   get($btn-colors-light, 'bd-press');
+    $btnShdLightPress:                  get($btn-colors-light, 'shadow-press');
+    //
+    $btnColorInverse:                   get($btn-colors-inverse, 'text-base');
+    $btnBgInverse:                      get($btn-colors-inverse, 'bg-base');
+    $btnBdInverse:                      get($btn-colors-inverse, 'bd-base');
+    $btnShdInverse:                     get($btn-colors-inverse, 'shadow-base');
+    $btnColorInverseHover:              get($btn-colors-inverse, 'text-hover');
+    $btnBgInverseHover:                 get($btn-colors-inverse, 'bg-hover');
+    $btnBdInverseHover:                 get($btn-colors-inverse, 'bd-hover');
+    $btnShdInverseHover:                get($btn-colors-inverse, 'shadow-hover');
+    $btnColorInversePress:              get($btn-colors-inverse, 'text-press');
+    $btnBgInversePress:                 get($btn-colors-inverse, 'bg-press');
+    $btnBdInversePress:                 get($btn-colors-inverse, 'bd-press');
+    $btnShdInversePress:                get($btn-colors-inverse, 'shadow-press');
+    //
+    $btnColorPrimary:                   get($btn-colors-primary, 'text-base');
+    $btnBgPrimary:                      get($btn-colors-primary, 'bg-base');
+    $btnBdPrimary:                      get($btn-colors-primary, 'bd-base');
+    $btnShdPrimary:                     get($btn-colors-primary, 'shadow-base');
+    $btnColorPrimaryHover:              get($btn-colors-primary, 'text-hover');
+    $btnBgPrimaryHover:                 get($btn-colors-primary, 'bg-hover');
+    $btnBdPrimaryHover:                 get($btn-colors-primary, 'bd-hover');
+    $btnShdPrimaryHover:                get($btn-colors-primary, 'shadow-hover');
+    $btnColorPrimaryPress:              get($btn-colors-primary, 'text-press');
+    $btnBgPrimaryPress:                 get($btn-colors-primary, 'bg-press');
+    $btnBdPrimaryPress:                 get($btn-colors-primary, 'bd-press');
+    $btnShdPrimaryPress:                get($btn-colors-primary, 'shadow-press');
+    //
+    $btnColorSuccess:                   get($btn-colors-success, 'text-base');
+    $btnBgSuccess:                      get($btn-colors-success, 'bg-base');
+    $btnBdSuccess:                      get($btn-colors-success, 'bd-base');
+    $btnShdSuccess:                     get($btn-colors-success, 'shadow-base');
+    $btnColorSuccessHover:              get($btn-colors-success, 'text-hover');
+    $btnBgSuccessHover:                 get($btn-colors-success, 'bg-hover');
+    $btnBdSuccessHover:                 get($btn-colors-success, 'bd-hover');
+    $btnShdSuccessHover:                get($btn-colors-success, 'shadow-hover');
+    $btnColorSuccessPress:              get($btn-colors-success, 'text-press');
+    $btnBgSuccessPress:                 get($btn-colors-success, 'bg-press');
+    $btnBdSuccessPress:                 get($btn-colors-success, 'bd-press');
+    $btnShdSuccessPress:                get($btn-colors-success, 'shadow-press');
+    //
+    $btnColorAlt:                       get($btn-colors-alt, 'text-base');
+    $btnBgAlt:                          get($btn-colors-alt, 'bg-base');
+    $btnBdAlt:                          get($btn-colors-alt, 'bd-base');
+    $btnShdAlt:                         get($btn-colors-alt, 'shadow-base');
+    $btnColorAltHover:                  get($btn-colors-alt, 'text-hover');
+    $btnBgAltHover:                     get($btn-colors-alt, 'bg-hover');
+    $btnBdAltHover:                     get($btn-colors-alt, 'bd-hover');
+    $btnShdAltHover:                    get($btn-colors-alt, 'shadow-hover');
+    $btnColorAltPress:                  get($btn-colors-alt, 'text-press');
+    $btnBgAltPress:                     get($btn-colors-alt, 'bg-press');
+    $btnBdAltPress:                     get($btn-colors-alt, 'bd-press');
+    $btnShdAltPress:                    get($btn-colors-alt, 'shadow-press');
+    //
+    $btnColorWarning:                   get($btn-colors-warning, 'text-base');
+    $btnBgWarning:                      get($btn-colors-warning, 'bg-base');
+    $btnBdWarning:                      get($btn-colors-warning, 'bd-base');
+    $btnShdWarning:                     get($btn-colors-warning, 'shadow-base');
+    $btnColorWarningHover:              get($btn-colors-warning, 'text-hover');
+    $btnBgWarningHover:                 get($btn-colors-warning, 'bg-hover');
+    $btnBdWarningHover:                 get($btn-colors-warning, 'bd-hover');
+    $btnShdWarningHover:                get($btn-colors-warning, 'shadow-hover');
+    $btnColorWarningPress:              get($btn-colors-warning, 'text-press');
+    $btnBgWarningPress:                 get($btn-colors-warning, 'bg-press');
+    $btnBdWarningPress:                 get($btn-colors-warning, 'bd-press');
+    $btnShdWarningPress:                get($btn-colors-warning, 'shadow-press');
+    //
+    $btnColorError:                     get($btn-colors-danger, 'text-base');
+    $btnBgError:                        get($btn-colors-danger, 'bg-base');
+    $btnBdError:                        get($btn-colors-danger, 'bd-base');
+    $btnShdError:                       get($btn-colors-danger, 'shadow-base');
+    $btnColorErrorHover:                get($btn-colors-danger, 'text-hover');
+    $btnBgErrorHover:                   get($btn-colors-danger, 'bg-hover');
+    $btnBdErrorHover:                   get($btn-colors-danger, 'bd-hover');
+    $btnShdErrorHover:                  get($btn-colors-danger, 'shadow-hover');
+    $btnColorErrorPress:                get($btn-colors-danger, 'text-press');
+    $btnBgErrorPress:                   get($btn-colors-danger, 'bg-press');
+    $btnBdErrorPress:                   get($btn-colors-danger, 'bd-press');
+    $btnShdErrorPress:                  get($btn-colors-danger, 'shadow-press');
+    //
+    $alertBgDefault:                    get($alert-colors-default, 'bg');
+    $alertBgAlt:                        get($alert-colors-default, 'bg');
+    $alertBgSuccess:                    get($alert-colors-success, 'bg');
+    $alertBgPrimary:                    $alertBgSuccess;
+    $alertBgWarning:                    get($alert-colors-warning, 'bg');
+    $alertBgError:                      get($alert-colors-danger, 'bg');
+    //
+    $alertBdDefault:                    get($alert-colors-default, 'bd-color');
+    $alertBdAlt:                        get($alert-colors-default, 'bd-color');
+    $alertBdSuccess:                    get($alert-colors-success, 'bd-color');
+    $alertBdPrimary:                    $alertBdSuccess;
+    $alertBdWarning:                    get($alert-colors-warning, 'bd-color');
+    $alertBdError:                      get($alert-colors-danger, 'bd-color');
+    //
+    $alertColorDefault:                 $zc-gray;
+    $alertColorAlt:                     $zc-gray;
+    $alertColorSuccess:                 $zc-gray;
+    $alertColorPrimary:                 $zc-gray;
+    $alertColorWarning:                 $zc-gray;
+    $alertColorError:                   $zc-gray;
+    //
+    $alertHeadingBdDefault:             transparent;
+    $alertHeadingBdAlt:                 transparent;
+    $alertHeadingBdSuccess:             transparent;
+    $alertHeadingBdPrimary:             transparent;
+    $alertHeadingBdWarning:             transparent;
+    $alertHeadingBdError:               transparent;
+    //
+    $panelBdDefault:                    get($panel-colors-default, 'bd-color');
+    $panelBdPrimary:                    get($panel-colors-success-inverse, 'bd-color');
+    $panelBdAlt:                        get($panel-colors-alt, 'bd-color');
+    $panelBdSuccess:                    get($panel-colors-success, 'bd-color');
+    $panelBdWarning:                    get($panel-colors-warning, 'bd-color');
+    $panelBdError:                      get($panel-colors-danger, 'bd-color');
+    //
+    $panelFocusBdDefault:               get($panel-colors-default, 'bd-color-focus');
+    $panelFocusBdPrimary:               get($panel-colors-success-inverse, 'bd-color-focus');
+    $panelFocusBdAlt:                   get($panel-colors-alt, 'bd-color-focus');
+    $panelFocusBdSuccess:               get($panel-colors-success, 'bd-color-focus');
+    $panelFocusBdWarning:               get($panel-colors-warning, 'bd-color-focus');
+    $panelFocusBdError:                 get($panel-colors-danger, 'bd-color-focus');
+    //
+    $panelHeadingColorDefault:          get($panel-colors-default, 'header-text-color');
+    $panelHeadingColorPrimary:          get($panel-colors-success-inverse, 'header-text-color');
+    $panelHeadingColorAlt:              get($panel-colors-alt, 'header-text-color');
+    $panelHeadingColorSuccess:          get($panel-colors-success, 'header-text-color');
+    $panelHeadingColorWarning:          get($panel-colors-warning, 'header-text-color');
+    $panelHeadingColorError:            get($panel-colors-danger, 'header-text-color');
+    //
+    $panelHeadingBdDefault:             get($panel-colors-default, 'header-bd-color');
+    $panelHeadingBdPrimary:             get($panel-colors-success-inverse, 'header-bd-color');
+    $panelHeadingBdAlt:                 get($panel-colors-alt, 'header-bd-color');;
+    $panelHeadingBdSuccess:             get($panel-colors-success, 'header-bd-color');;
+    $panelHeadingBdWarning:             get($panel-colors-warning, 'header-bd-color');;
+    $panelHeadingBdError:               get($panel-colors-danger, 'header-bd-color');;
+    //
+    $panelHeadingBgDefault:             get($panel-colors-default, 'header-bg');
+    $panelHeadingBgPrimary:             get($panel-colors-success-inverse, 'header-bg');
+    $panelHeadingBgAlt:                 get($panel-colors-alt, 'header-bg');
+    $panelHeadingBgSuccess:             get($panel-colors-success, 'header-bg');
+    $panelHeadingBgWarning:             get($panel-colors-warning, 'header-bg');
+    $panelHeadingBgError:               get($panel-colors-danger, 'header-bg');
+    //
+    $progressBarBgDefault:              get($progress-bar-config, 'bar-bg');
+    $progressBarBgPrimary:              get-deep($progress-bar-config, 'state-colors.success.bg');
+    $progressBarBgAlt:                  get-deep($progress-bar-config, 'state-colors.alt.bg');
+    $progressBarBgSuccess:              get-deep($progress-bar-config, 'state-colors.success.bg');
+    $progressBarBgWarning:              get-deep($progress-bar-config, 'state-colors.warning.bg');
+    $progressBarBgError:                get-deep($progress-bar-config, 'state-colors.danger.bg');
+    //
+    $states_min:                        $state-names-min;
+    $state_colors:                      $state-default-text, $state-primary-text, $state-alt-text, $state-success-text, $state-warning-text, $state-danger-text;
+    $state_bgs:                         $state-default-bg, $state-primary-bg, $state-alt-bg, $state-success-bg, $state-warning-bg, $state-danger-bg;
+    $state_bds:                         $state-default-bd, $state-primary-bd, $state-alt-bd, $state-success-bd, $state-warning-bd, $state-danger-bd;
+    //
+    $panelBds:                          $panelBdDefault, $panelBdPrimary, $panelBdAlt, $panelBdSuccess, $panelBdWarning, $panelBdError;
+    $panelFocusBds:                     $panelFocusBdDefault, $panelFocusBdPrimary, $panelFocusBdAlt, $panelFocusBdSuccess, $panelFocusBdWarning, $panelFocusBdError;
+    $panelHeadingBgs:                   $panelHeadingBdDefault, $panelHeadingBdPrimary, $panelHeadingBdAlt, $panelHeadingBdSuccess, $panelHeadingBdWarning, $panelHeadingBdError;
+    $panelHeadingColors:                $panelHeadingColorDefault, $panelHeadingColorPrimary, $panelHeadingColorAlt, $panelHeadingColorSuccess, $panelHeadingColorWarning, $panelHeadingColorError;
+    $panelHeadingBds:                   $panelHeadingBdDefault, $panelHeadingBdPrimary, $panelHeadingBdAlt, $panelHeadingBdSuccess, $panelHeadingBdWarning, $panelHeadingBdError;
+    //
+    $state_btnColors:                   $btnColorDefault, $btnColorPrimary, $btnColorAlt, $btnColorSuccess, $btnColorWarning, $btnColorError, $btnColorLight, $btnColorInverse;
+    $state_btnBgs:                      $btnBgDefault, $btnBgPrimary, $btnBgAlt, $btnBgSuccess, $btnBgWarning, $btnBgError, $btnBgLight, $btnBgInverse;
+    $state_btnBds:                      $btnBdDefault, $btnBdPrimary, $btnBdAlt, $btnBdSuccess, $btnBdWarning, $btnBdError, $btnBdLight, $btnBdInverse;
+    $state_btnShds:                     $btnShdDefault, $btnShdPrimary, $btnShdAlt, $btnShdSuccess, $btnShdWarning, $btnShdError, $btnShdLight, $btnShdInverse;
+    //
+    $state_btnColorsHover:              $btnColorDefaultHover, $btnColorPrimaryHover, $btnColorAltHover, $btnColorSuccessHover, $btnColorWarningHover, $btnColorErrorHover, $btnColorLightHover, $btnColorInverseHover;
+    $state_btnBgsHover:                 $btnBgDefaultHover, $btnBgPrimaryHover, $btnBgAltHover, $btnBgSuccessHover, $btnBgWarningHover, $btnBgErrorHover, $btnBgLightHover, $btnBgInverseHover;
+    $state_btnBdsHover:                 $btnBdDefaultHover, $btnBdPrimaryHover, $btnBdAltHover, $btnBdSuccessHover, $btnBdWarningHover, $btnBdErrorHover, $btnBdLightHover, $btnBdInverseHover;
+    $state_btnShdsHover:                $btnShdDefaultHover, $btnShdPrimaryHover, $btnShdAltHover, $btnShdSuccessHover, $btnShdWarningHover, $btnShdErrorHover, $btnShdLightHover, $btnShdInverseHover;
+    //
+    $state_btnColorsPress:              $btnColorDefaultPress, $btnColorPrimaryPress, $btnColorAltPress, $btnColorSuccessPress, $btnColorWarningPress, $btnColorErrorPress, $btnColorLightPress, $btnColorInversePress;
+    $state_btnBgsPress:                 $btnBgDefaultPress, $btnBgPrimaryPress, $btnBgAltPress, $btnBgSuccessPress, $btnBgWarningPress, $btnBgErrorPress, $btnBgLightPress, $btnBgInversePress;
+    $state_btnBdsPress:                 $btnBdDefaultPress, $btnBdPrimaryPress, $btnBdAltPress, $btnBdSuccessPress, $btnBdWarningPress, $btnBdErrorPress, $btnBdLightPress, $btnBdInversePress;
+    $state_btnShdsPress:                $btnShdDefaultPress, $btnShdPrimaryPress, $btnShdAltPress, $btnShdSuccessPress, $btnShdWarningPress, $btnShdErrorPress, $btnShdLightPress, $btnShdInversePress;
+    //
+    $state_min_colors:                  $state-alt-text, $state-success-text, $state-warning-text, $state-danger-text;
+    $state_min_bgs:                     $state-alt-bg, $state-success-bg, $state-warning-bg, $state-danger-bg;
+    $state_min_bds:                     $state-alt-bd, $state-success-bd, $state-warning-bd, $state-danger-bd;
+    //
+    $alertBgs:                          $alertBgAlt, $alertBgSuccess, $alertBgWarning, $alertBgError;
+    $alertBds:                          $alertBdAlt, $alertBdSuccess, $alertBdWarning, $alertBdError;
+    $alertColors:                       $alertColorAlt, $alertColorSuccess, $alertColorWarning, $alertColorError;
+    $alertHeadingBds:                   $alertHeadingBdAlt, $alertHeadingBdSuccess, $alertHeadingBdWarning, $alertHeadingBdError;
+    //
+    $progressBgs:                       $progressBarBgAlt, $progressBarBgSuccess, $progressBarBgWarning, $progressBarBgError;
+    //
+    $bodyBg:                            $body-bg;
+    $textColor:                         $text-color;
+    //
+    $linkColor:                         $link-color;
+    $linkColorHover:                    $link-color-hover;
+    $linkColorPressed:                  $link-color-pressed;
+    $linkColorDisabled:                 $link-color-disabled;
+    //
+    $linkColorHoverShift:               $elem-hover-text-darken-amount-default;
+    $linkTextShadow:                    $link-text-shadow;
+    //
+    $headingBdWidth:                    $headings-bd-width;
+    $headingBdColor:                    $headings-bd-color;
+    //
+    $definitionListTermWidth:           $definition-list-term-width;
+    //
+    $btnPadTops:                        get-deep($btn-config, 'padding.xs.vertical') get-deep($btn-config, 'padding.sm.vertical') get-deep($btn-config, 'padding.base.vertical') get-deep($btn-config, 'padding.lg.vertical');
+    $btnHeights:                        get-deep($btn-config, 'height.xs') get-deep($btn-config, 'height.sm') get-deep($btn-config, 'height.base') get-deep($btn-config, 'height.lg');
+    $btnInnerHeights:                   get-deep($btn-config, 'height-inner.xs') get-deep($btn-config, 'height-inner.sm') get-deep($btn-config, 'height-inner.base') get-deep($btn-config, 'height-inner.lg');
+    $btnTextHeights:                    get-deep($btn-config, 'height-text.xs') get-deep($btn-config, 'height-text.sm') get-deep($btn-config, 'height-text.base') get-deep($btn-config, 'height-text.lg');
+    //
+    $btnDropdownMenuSpacing:            get($btn-config, 'dd-menu-spacing');
+    $btnDdTogglePadReduce:              get($btn-config, 'dd-toggle-pad-reduce');
+    //
+    $caretColor:                        $caret-color;
+    $caretAlpha:                        $caret-alpha;
+    //
+    $menuVLinkColor:                    get($nav-secondary-link-config, 'text-color');
+    $menuVLinkColorHover:               get($nav-secondary-link-config, 'text-color-hover');
+    $menuVLinkColorPress:               get($nav-secondary-link-config, 'text-color-press');
+    $menuVLinkColorActive:              get($nav-secondary-link-config, 'text-color-active');
+    //
+    $menuVLinkBg:                       get($nav-secondary-link-config, 'bg');
+    $menuVLinkBgHover:                  get($nav-secondary-link-config, 'bg-hover');
+    $menuVLinkBgPress:                  get($nav-secondary-link-config, 'bg-press');
+    $menuVLinkBgActive:                 get($nav-secondary-link-config, 'bg-active');
+    //
+    $menuVBdColor:                      get($nav-secondary-config, 'bd-color');
+    //
+    $menuVLinkHeaderFontSizeMod:        $dropdown-header-font-size-mod;
+    $menuVBdWidth:                      $dropdown-menu-bd-width;
+    //
+    $menuVShadowThreshold:              $dropdown-menu-shadow-threshold;
+    $menuVShadow:                       $dropdown-menu-shadow;
+    $menuVShadowUp:                     $dropup-menu-shadow;
+    //
+    $menuVMinWidth:                     get($dropdown-menu-base-size-config, 'min-width');
+    $menuVMaxWidth:                     get($dropdown-menu-base-size-config, 'max-width');
+    $menuVBdRadius:                     get($dropdown-menu-base-size-config, 'bd-radius');
+    $menuVPaddingVertical:              get($dropdown-menu-base-size-config, 'padding-vertical');
+    $menuVPaddingHorizontal:            get($dropdown-menu-base-size-config, 'padding-horizontal');
+    $menuVPadding:                      get($dropdown-menu-base-size-config, 'padding');
+    //
+    $menuVDividerMargin:                get($dropdown-menu-base-size-config, 'divider-margin');
+    $menuVLinkPaddingHorizontal:        get($dropdown-menu-base-size-config, 'link-padding-horizontal');
+    $menuVLinkPaddingVertical:          get($dropdown-menu-base-size-config, 'link-padding-vertical');
+    $menuVLinkPadding:                  get($dropdown-menu-base-size-config, 'link-padding');
+    $menuVLinkIconMargin:               get($dropdown-menu-base-size-config, 'link-icon-margin-horizontal');
+    $menuVLinkFontSize:                 get($dropdown-menu-base-size-config, 'font-size');
+    $menuVLinkHeaderFontSize:           get($dropdown-menu-base-size-config, 'header-font-size');
+    $menuVLinkLineHeight:               get($dropdown-menu-base-size-config, 'line-height');
+    $menuVLinkElemHeight:               get($dropdown-menu-base-size-config, 'link-height');
+    //
+    $menuVMinWidth_md:                  get($dropdown-menu-md-size-config, 'min-width');
+    $menuVMaxWidth_md:                  get($dropdown-menu-md-size-config, 'max-width');
+    $menuVBdRadius_md:                  get($dropdown-menu-md-size-config, 'bd-radius');
+    $menuVPaddingVertical_md:           get($dropdown-menu-md-size-config, 'padding-vertical');
+    $menuVPaddingHorizontal_md:         get($dropdown-menu-md-size-config, 'padding-horizontal');
+    $menuVPadding_md:                   get($dropdown-menu-md-size-config, 'padding');
+    //
+    $menuVLinkPaddingHorizontal_md:     get($dropdown-menu-md-size-config, 'link-padding-horizontal');
+    $menuVLinkPaddingVertical_md:       get($dropdown-menu-md-size-config, 'link-padding-vertical');
+    $menuVLinkPadding_md:               get($dropdown-menu-md-size-config, 'link-padding');
+    $menuVLinkIconMargin_md:            get($dropdown-menu-md-size-config, 'link-icon-margin-horizontal');
+    $menuVLinkFontSize_md:              get($dropdown-menu-md-size-config, 'font-size');
+    $menuVLinkHeaderFontSize_md:        get($dropdown-menu-md-size-config, 'header-font-size');
+    $menuVLinkLineHeight_md:            get($dropdown-menu-md-size-config, 'line-height');
+    $menuVLinkElemHeight_md:            get($dropdown-menu-md-size-config, 'link-height');
+    //
+    $menuVMinWidth_lg:                  get($dropdown-menu-lg-size-config, 'min-width');
+    $menuVMaxWidth_lg:                  get($dropdown-menu-lg-size-config, 'max-width');
+    $menuVBdRadius_lg:                  get($dropdown-menu-lg-size-config, 'bd-radius');
+    $menuVPaddingVertical_lg:           get($dropdown-menu-lg-size-config, 'padding-vertical');
+    $menuVPaddingHorizontal_lg:         get($dropdown-menu-lg-size-config, 'padding-horizontal');
+    $menuVPadding_lg:                   get($dropdown-menu-lg-size-config, 'padding');
+    //
+    $menuVLinkPaddingHorizontal_lg:     get($dropdown-menu-lg-size-config, 'link-padding-horizontal');
+    $menuVLinkPaddingVertical_lg:       get($dropdown-menu-lg-size-config, 'link-padding-vertical');
+    $menuVLinkPadding_lg:               get($dropdown-menu-lg-size-config, 'link-padding');
+    $menuVLinkIconMargin_lg:            get($dropdown-menu-lg-size-config, 'link-icon-margin-horizontal');
+    $menuVLinkFontSize_lg:              get($dropdown-menu-lg-size-config, 'font-size');
+    $menuVLinkHeaderFontSize_lg:        get($dropdown-menu-lg-size-config, 'header-font-size');
+    $menuVLinkLineHeight_lg:            get($dropdown-menu-lg-size-config, 'line-height');
+    $menuVLinkElemHeight_lg:            get($dropdown-menu-lg-size-config, 'link-height');
+    //
+    $dropdownMenuBg:                    get($dropdown-menu-color-config, 'bg');
+    $dropdownMenuBdColor:               get($dropdown-menu-color-config, 'bd-color'); // #bebebe
+    $dropdownMenuDividerColor:          get($dropdown-menu-color-config, 'divider-bd-color');
+    //
+    $menuVLinkElemPadding:              $popover-content-padding;
+    //
+    $dropdownHeaderColor:               get($dropdown-menu-color-config, 'header-text-color');
+    //
+    $dropdownInfoPanelBg:               get($dropdown-menu-color-config, 'info-panel-bg');
+    $dropdownInfoPanelBdWidth:          $dropdown-info-panel-bd-width;
+    $dropdownInfoPanelBdColor:          get($dropdown-menu-color-config, 'info-panel-bd-color');
+    $dropdownInfoPanelHeaderColor:      get($dropdown-menu-color-config, 'info-panel-header-color');
+    //
+    $navBgDefault:                      get($nav-base-config, 'bg');
+    //
+    $navLinkPadding:                    $nav-link-padding;
+    $navLinkLineHeight:                 get($nav-link-config, 'line-height');
+    $navLinkHeight:                     get($nav-link-config, 'height');
+    //
+    $navLinkColor:                      get($nav-link-config, 'text-color');
+    $navLinkColorHover:                 get($nav-link-config, 'text-color-hover');
+    $navLinkColorPress:                 get($nav-link-config, 'text-color-press');
+    $navLinkColorActive:                get($nav-link-config, 'text-color-active');
+    $navLinkColorDisabled:              get($nav-link-config, 'text-color-disabled');
+    //
+    $navLinkBg:                         get($nav-link-config, 'bg');
+    $navLinkBgHover:                    get($nav-link-config, 'bg-hover');
+    $navLinkBgPress:                    get($nav-link-config, 'bg-press');
+    $navLinkBgActive:                   get($nav-link-config, 'bg-active');
+    $navLinkBgDisabled:                 get($nav-link-config, 'bg-disabled');
+    //
+    $navBdWidth:                        get($nav-base-config, 'bd-width');
+    $navBdColor:                        get($nav-base-config, 'bd-color');
+    $navBdWidthEmphasized:              get($nav-link-config, 'platform-bd-width');
+    $navBdColorEmphasized:              get($nav-link-config, 'platform-bd-color');
+    //
+    $navDividerMargin:                  $nav-vertical-divider-margin;
+    //
+    $subNavBdWidth:                     $breadcrumb-bordered-bd-width;
+    $subNavBdColor:                     $breadcrumb-bordered-bd-color;
+    $subNavBdWidthEmphasized:           get($nav-base-config, 'bd-width');
+    $subNavBdColorEmphasized:           get($nav-link-config, 'platform-bd-color');
+    //
+    $breadcrumbPadding:                 $breadcrumb-padding;
+    $breadcrumbBorderedPadding:         $breadcrumb-bordered-padding;
+    $breadcrumbMargin:                  0;
+    $breadcrumbFontSize:                $breadcrumb-font-size;
+    $breadcrumbBg:                      $breadcrumb-bg;
+    //
+    $breadcrumbCrumbColor:              $breadcrumb-crumb-text-color;
+    $breadcrumbCrumbColorHover:         $breadcrumb-crumb-text-color-hover;
+    $breadcrumbCrumbColorPress:         $breadcrumb-crumb-text-color-press;
+    $breadcrumbCrumbColorActive:        $breadcrumb-crumb-text-color-active;
+    $breadcrumbCrumbDividerColor:       $breadcrumb-crumb-divider-color;
+    $breadcrumbCrumbSpacingH:           $breadcrumb-crumb-spacing-horizontal;
+    $breadcrumbCrumbDividerAngleAdjust: $breadcrumb-crumb-divider-angle-adjust;
+    //
+    $breadcrumbCrumbPaddingLeft:        $breadcrumb-crumb-padding-left;
+    $breadcrumbCrumbPaddingRight:       $breadcrumb-crumb-padding-right;
+    $breadcrumbCrumbMarginLeft:         $breadcrumb-crumb-margin-left;
+    $breadcrumbCrumbMarginRight:        $breadcrumb-crumb-margin-right;
+    //
+    $breadcrumbHeaderFontSize:                  $breadcrumb-header-font-size;
+    $breadcrumbHeaderCrumbSpacingH:             $breadcrumb-header-crumb-spacing-horizontal;
+    $breadcrumbHeaderCrumbDividerAngleAdjust:   $breadcrumb-header-crumb-divider-angle-adjust;
+    $breadcrumbHeaderMaxHeight:                 $breadcrumb-header-max-height;
+    $breadcrumbFontHeight:                      $breadcrumb-header-text-height;
+    $breadcrumbHeaderPaddingTop:                $breadcrumb-header-padding-top;
+    $breadcrumbHeaderPaddingBottom:             $breadcrumb-header-padding-bottom;
+    $breadcrumbHeaderCrumbPaddingLeft:          $breadcrumb-header-crumb-padding-left;
+    $breadcrumbHeaderCrumbPaddingRight:         $breadcrumb-header-crumb-padding-right;
+    $breadcrumbHeaderCrumbMarginLeft:           $breadcrumb-header-crumb-margin-left;
+    $breadcrumbHeaderCrumbMarginRight:          $breadcrumb-header-crumb-margin-right;
+    //
+    $navJustifiedHalvedWidth:   $nav-justified-halved-width;
+    $navJustifiedHalvedMargin:  $nav-justified-halved-margin;
+    //
+    $nav-tabs-tab-spacing:      0; // Changed from 3px via UIP-1076
+    $navTabSpacing:             $nav-tabs-tab-spacing;
+    $navTabBdColor:             get($nav-tabs-tab-config, 'bd-color');
+    $navTabBdWidth:             get($nav-tabs-tab-config, 'bd-width');
+    $navTabBgActive:            get($nav-link-config, 'bg-active');
+    $navTabContentSpacing:      get($nav-tabs-config, 'content-spacing');
+    $navTabVerticalMinWidth:    get($nav-tabs-tab-config, 'stacked-min-width');
+    //
+    $pillTabSpacing:            get($nav-pills-pill-config, 'spacing');
+    $pillTabPadding:            get($nav-pills-pill-config, 'padding');
+    $pillTabSpacingStacked:     get($nav-pills-pill-config, 'stacked-spacing');
+    $pillTabLinkColor:          get($nav-link-config, 'text-color');
+    $pillTabLinkColorHover:     get($nav-pills-pill-config, 'text-color-hover');
+    $pillTabLinkColorPress:     get($nav-pills-pill-config, 'text-color-press');
+    $pillTabLinkColorActive:    get($nav-link-config, 'text-color-active');
+    $pillTabLinkColorDisabled:  get($nav-link-config, 'text-color-disabled');
+    $pillTabLinkBg:             get($nav-pills-pill-config, 'bg');
+    $pillTabLinkBgHover:        get($nav-pills-pill-config, 'bg-hover');
+    $pillTabLinkBgPress:        get($nav-pills-pill-config, 'bg-press');
+    $pillTabLinkBgActive:       get($nav-pills-pill-config, 'bg-active');
+    $pillTabLinkBgDisabled:     get($nav-pills-pill-config, 'bg-disabled');
+    $pillTabLinkBdWidth:        get($nav-pills-pill-config, 'bd-width');
+    //
+    $navbarPadTop:                      get($navbar-base-config, 'padding-top');
+    $navbarPadRight:                    get($navbar-base-config, 'padding-right');
+    $navbarPadBot:                      get($navbar-base-config, 'padding-bottom');
+    $navbarPadLeft:                     get($navbar-base-config, 'padding-left');
+    $navbarPadding:                     get($navbar-base-config, 'padding');
+    //
+    $navbarEdgeOffset:                  get($navbar-base-config, 'min-edge-offset');
+    $navbarFontSize:                    get($navbar-base-config, 'font-size');
+    $navbarColor:                       get($navbar-base-config, 'text-color');
+    $navbarBg:                          get($navbar-base-config, 'bg');
+    $navbarBdWidth:                     get($navbar-base-config, 'bd-width');
+    $navbarBdColor:                     get($navbar-base-config, 'bd-color');
+    $navbarBdRadius:                    get($navbar-base-config, 'bd-radius');
+    //
+    $navbarHeight:                      get($navbar-base-config, 'height');
+    $navbarInnerHeight:                 get($navbar-base-config, 'height-inner');
+    $navbarFixedInnerHeight:            get($navbar-base-config, 'height-inner-fixed');
+    $navbarLogoAlignOffset:             0;
+    //
+    $navbarLinkHeight:                  $navbarHeight;
+    $navbarLinkLineHeight:              $navbarLinkHeight;
+    $navbarFixedLinkHeight:             $navbarLinkHeight;
+    $navbarFixedLinkLineHeight:         $navbarFixedLinkHeight;
+    //
+    $navbarLinkPaddingVertical:         get($navbar-link-config, 'padding-vertical');
+    $navbarLinkPaddingHorizontal:       get($navbar-link-config, 'padding-horizontal');
+    $navbarLinkColor:                   get($navbar-link-config, 'text-color');
+    $navbarLinkColorHover:              get($navbar-link-config, 'text-color-hover');
+    $navbarLinkColorPress:              get($navbar-link-config, 'text-color-press');
+    $navbarLinkColorActive:             get($navbar-link-config, 'text-color-active');
+    $navbarLinkColorDisabled:           get($navbar-link-config, 'text-color-disabled');
+    //
+    $navbarLinkBg:                      get($navbar-link-config, 'bg');
+    $navbarLinkBgHover:                 get($navbar-link-config, 'bg-hover');
+    $navbarLinkBgPress:                 get($navbar-link-config, 'bg-press');
+    $navbarLinkBgActive:                get($navbar-link-config, 'bg-active');
+    $navbarLinkBgDisabled:              get($navbar-link-config, 'bg-disabled');
+    //
+    $navbarBrandHeight:                 get($navbar-brand-config, 'height');
+    $navbarBrandLinkPaddingRight:       get($navbar-brand-config, 'link-padding-right');
+    $navbarBrandColor:                  get($navbar-brand-config, 'solution-color');
+    $navbarBrandColorHover:             get($navbar-brand-config, 'solution-color-hover');
+    $navbarBrandBgHover:                get($navbar-brand-config, 'solution-bg-hover');
+    $navbarBrandLogoMaxHeight:          $navbar-brand-logo-max-height;
+    $navbarBrandLogoOffsetTop:          get($navbar-brand-config, 'logo-offset-top');
+    $navbarBrandLowercaseOffset:        get($navbar-brand-config, 'solution-lowercase-offset');
+    //
+    $navbarTabOffsetV:                  0;
+    $navbarTabMenuHeight:               $navbarLinkHeight;
+    $navbarTabMenuLinkLineHeight:       $navbarLinkLineHeight;
+    $navbarFixedTabMenuHeight:          $navbarFixedLinkHeight;
+    $navbarFixedTabMenuLineHeight:      $navbarFixedLinkLineHeight;
+    //
+    $navbarDropdownMenuOverlapShadow:   $navbar-dropdown-menu-overlap-shadow;
+    $navbarDropupMenuOverlapShadow:     $navbar-dropup-menu-overlap-shadow;
+    $navbarDropdownCaretMargin:         $caret-margin-top;
+    //
+    $navCollapseDropShadow:             $nav-collapse-drop-shadow;
+    //
+    $navbarCollapseWidth:               $navbar-collapse-width;
+    //
+    $navbarGlobalHelpIconColor:         $navbar-global-help-icon-color;
+    $navbarGlobalHelpIconColorHover:    $navbar-global-help-icon-color-hover;
+    //
+    $navRibbonBg:                       get($nav-ribbon-base-config, 'bg');
+    $navRibbonGroupDividerBdColor:      get($nav-ribbon-btn-group-config, 'divider-bd-color');
+    $navRibbonGroupDividerBdWidth:      get($nav-ribbon-btn-group-config, 'divider-bd-width');
+    $navRibbonPadBottom:                get($nav-ribbon-base-config, 'padding-vertical');
+    $navRibbonPadTop:                   get($nav-ribbon-base-config, 'padding-vertical');
+    $navRibbonPadding:                  get($nav-ribbon-base-config, 'padding');
+    $navRibbonMinHeight:                get($nav-ribbon-base-config, 'tab-content-min-height');
+    $navRibbonInnerHeight:              get($nav-ribbon-base-config, 'tab-content-min-height');
+    $navRibbonButtonPadTop:             get($nav-ribbon-btn-config, 'padding-top');
+    $navRibbonButtonPadBottom:          get($nav-ribbon-btn-config, 'padding-bottom');
+    $navRibbonButtonPadX:               get-deep($nav-ribbon-btn-config, 'padding-horizontal.md');
+    $navRibbonButtonPadXCnd:            get-deep($nav-ribbon-btn-config, 'padding-horizontal.sm');
+    $navRibbonButtonPadXMobile:         get-deep($nav-ribbon-btn-config, 'padding-horizontal.xs');
+    //
+    $navbarRibbonTabLinkBdWidth:        get($nav-ribbon-tab-link-config, 'bd-width');
+    $navbarRibbonTabLinkBdColorActive:  get($nav-ribbon-tab-link-config, 'bd-color-active');
+    $navbarRibbonTabLinkBgActive:       get($nav-ribbon-tab-link-config, 'bg-active');
+    $navbarRibbonTabLinkColorActive:    get($nav-ribbon-tab-link-config, 'text-color-active');
+    //
+    $navbarRibbonTabLinkOffset:         get($navbar-base-config, 'height') - (get($navbar-base-config, 'height') - $navbar-brand-logo-max-height) - (get($nav-ribbon-tab-link-config, 'bd-width') - get($navbar-base-config, 'bd-width')) - get($navbar-base-config, 'font-size') + get($navbar-brand-config, 'solution-lowercase-offset');
+    $navbarRibbonTabLinkLineHeight:     $navbarLinkLineHeight + $navbarRibbonTabLinkOffset;
+    //
+    $navbarBlockLinkBgHoverTint:        get($nav-block-link-config, 'bg-alpha-hover');
+    $navbarBlockLinkColor:              get($nav-block-link-config, 'text-color');
+    $navbarBlockLinkColorHover:         get($nav-block-link-config, 'text-color-hover');
+    $navbarBlockLinkColorPress:         get($nav-block-link-config, 'text-color-press');
+    $navbarBlockLinkColorActive:        get($nav-block-link-config, 'text-color-active');
+    //
+    $navbarBlockLinkBg:                 get($nav-block-link-config, 'bg');
+    $navbarBlockLinkBgHover:            get($nav-block-link-config, 'bg-hover');
+    $navbarBlockLinkBgPress:            get($nav-block-link-config, 'bg-press');
+    $navbarBlockLinkBgActive:           get($nav-block-link-config, 'bg-active');
+    //
+    $globalStatusBarHeight:             24px;
+    //
+    $labelPadding:                      get($label-config, 'padding');
+    $labelColor:                        get($label-config, 'text-color');
+    $labelColorHover:                   get($label-config, 'text-color-hover');
+    $labelBg:                           get($label-config, 'bg-color');
+    $labelBgSuccess:                    $state-success;
+    $labelBgInfo:                       $state-alt;
+    $labelBgWarning:                    $state-warning;
+    $labelBgDanger:                     $state-danger;
+    //
+    $badgeFontSize:                     get($badge-config, 'font-size');
+    $badgeFontSizeXsmall:               get($badge-config, 'font-size-xs');
+    $badgePadding:                      $badge-padding;
+    $badgePaddingSmall:                 get($badge-config, 'padding-sm');
+    $badgePaddingXsmall:                get($badge-config, 'padding-xs');
+    $badgeHeight:                       $badge-height;
+    $badgeHeightSmall:                  get($badge-config, 'height-sm');
+    $badgeHeightXsmall:                 get($badge-config, 'height-xs');
+    $badgeMinWidth:                     get($badge-config, 'min-width');
+    $badgeHspacing:                     get($badge-config, 'spacing-horizontal');
+    $badgeColor:                        get($badge-config, 'text-color');
+    $badgeBg:                           get($badge-config, 'bg');
+    $badgeColorHover:                   get($badge-config, 'text-color-hover');
+    //
+    $dialogHeaderMargin:                0 0 $dialog-sm-content-padding 0;
+    $dialogHeaderPadding:               get($dialog-size-lg-config, 'header-padding-vertical') get($dialog-size-lg-config, 'header-padding-horizontal');
+    $dialogHeaderFontSize:              get($dialog-size-lg-config, 'header-font-size');
+    $dialogHeaderLineHeight:            get($dialog-size-lg-config, 'header-line-height');
+    $dialogHeaderMinHeight:             get($dialog-size-lg-config, 'header-min-height');
+    //
+    $dialogHeaderMarginSm:              $dialogHeaderMargin;
+    $dialogHeaderPaddingSm:             get($dialog-size-sm-config, 'header-padding-vertical') get($dialog-size-sm-config, 'header-padding-horizontal');
+    $dialogHeaderFontSizeSm:            get($dialog-size-sm-config, 'header-font-size');
+    $dialogHeaderLineHeightSm:          get($dialog-size-sm-config, 'header-line-height');
+    $dialogFooterPaddingSm:             $dialog-sm-content-padding;
+    $dialogBodyPaddingSm:               $dialog-sm-content-padding;
+    $dialogHeaderMinHeightSm:           get($dialog-size-sm-config, 'header-min-height');
+    //
+    $dialogBodyPaddingXs:               8px;
+    $dialogHeaderPaddingXs:             get($dialog-size-sm-config, 'header-padding-vertical') get($dialog-size-sm-config, 'header-padding-horizontal');
+    $dialogHeaderFontSizeXs:            get($dialog-size-sm-config, 'header-font-size');
+    $dialogHeaderFontWeightXs:          normal;
+    //
+    $dialogColor:                       get($dialog-config, 'text-color');
+    $dialogBg:                          get($dialog-config, 'bg');
+    $dialogBdWidth:                     $dialog-bd-width;
+    $dialogBdColor:                     $dialog-bd-color;
+    $dialogBdRadius:                    $dialog-bd-radius;
+    $dialogPadding:                     get($dialog-config, 'padding');
+    $dialogShadowThreshold:             $dialog-shadow-threshold;
+    $dialogShadow:                      get($dialog-config, 'shadow');
+    //
+    $dialogActionsBdColor:              $zc-gray-40;
+    //
+    $tooltipBg:                         $tooltip-bg;
+    $tooltipColor:                      $tooltip-text-color;
+    $tooltipBdColor:                    $tooltip-bd-color;
+    $tooltipBdRadius:                   $tooltip-bd-radius;
+    $tooltipBdWidth:                    $tooltip-bd-width;
+    //
+    $tooltipBgGray:                     $dialog-gray-bg;
+    $tooltipBdGray:                     $dialog-gray-bd-color;
+    $dialogArrowBdColor:                $tooltipBdGray;
+    //
+    $tooltipMaxWidth:                   $tooltip-max-width;
+    $tooltipPadding:                    $tooltip-padding;
+    //
+    $tooltipArrowWidth:                 $tooltip-arrow-width;
+    $tooltipArrowOuterWidth:            $tooltip-arrow-outer-width;
+    $tooltipArrowColor:                 $tooltip-arrow-color;
+    $tooltipArrowOuterColor:            $tooltip-arrow-outer-color;
+    //
+    $arrowDirections:                   $triangle-directions;
+    //
+    $popoverBg:                         $popover-bg;
+    $popoverMaxWidth:                   $popover-max-width;
+    $popoverMinWidth:                   $popover-min-width;
+    //
+    $popoverArrowWidth:                 $popover-arrow-width;
+    $popoverArrowOuterWidth:            $popover-arrow-outer-width;
+    $popoverArrowColor:                 $popover-arrow-color;
+    $popoverArrowOuterColor:            $popover-arrow-outer-color;
+    //
+    $popoverTitleMargin:                $popover-title-margin;
+    $popoverTitlePadding:               $popover-title-padding;
+    $popoverTitleFontSize:              $popover-title-font-size;
+    $popoverTitleBg:                    $dialogBg;
+    $popoverTitleBdWidth:               0;
+    $popoverTitleBdColor:               $dialogActionsBdColor;
+    //
+    $popoverNavListItemPadding:         $popover-content-padding;
+    $popoverNavListItemHeight:          ($popoverNavListItemPadding * 2) + ceil(get($dropdown-menu-base-size-config, 'line-height') * get($dropdown-menu-base-size-config, 'font-size'));
+    //
+    $modalBg:                           get($modal-config, 'bg');
+    $modalShadow:                       get($modal-config, 'shadow');
+    $modalBdColor:                      get($modal-config, 'bd-color');
+    //
+    $modalInnerPadding:                 $modal-content-padding;
+    $modalBodyFirstPaddingTop:          $modalInnerPadding + 6;
+    $modalBodyContentPaddingHorizontal: $modalInnerPadding;
+    $modalDialogOffset:                 $modal-dialog-offset-mobile;
+    $modalDialogOffsetMedium:           $modal-dialog-offset-base;
+    //
+    $modalDialogWidth:                  $modal-dialog-width;
+    $modalDialogWidthLarge:             $modal-dialog-lg-width;
+    $modalDialogWidthSmall:             $modal-dialog-sm-width;
+    //
+    $modalContentHeight:                250px;
+    //
+    $modalActionsPaddingVertical:       $modalInnerPadding;
+    $modalActionsPaddingHorizontal:     $modalInnerPadding;
+    //
+    $modalFooterGutterTop:              $modalInnerPadding;
+    $modalFooterGutterBot:              $modalInnerPadding;
+    $modalFooterHeight:                 get-deep($modal-config, 'base.footer-height');
+    //
+    $modalTitleBdWidth:                 0;
+    $modalTitleBdColor:                 $dialogActionsBdColor;
+    //
+    $modalSessionTimeoutHeight:         $modal-session-timeout-height;
+    //
+    $closeBtnFontSize:                  get($close-btn-config, 'font-size');
+    $closeBtnAlpha:                     get($close-btn-config, 'alpha');
+    $closeBtnAlphaHover:                get($close-btn-config, 'alpha-hover');
+    $closeBtnColor:                     get($close-btn-config, 'text-color');
+    $clearSearchFontSize:               $closeBtnFontSize;
+    $closeBtnPaddingBottom:             get($close-btn-config, 'padding-bottom');
+    //
+    $alertBdRadius:                     $alert-bd-radius;
+    $alertBdWidth:                      $alert-bd-width;
+    //
+    $alertPaddingVertical:              $alert-padding-vertical;
+    $alertPaddingHorizontal:            $alert-padding-horizontal;
+    $alertPadding:                      $alert-padding;
+    //
+    $alertPaddingSmallVertical:         $alert-sm-padding-vertical;
+    $alertPaddingSmall:                 $alert-sm-padding;
+    //
+    $alertLinkFontWeight:               inherit;
+    $alertLinkDarken:                   10%;
+    //
+    $alertCloseWidth:                   $alert-close-btn-width;
+    $alertCloseHeight:                  $alert-close-btn-height;
+    $alertBlockCloseHeight:             $alert-close-btn-width;
+    //
+    $tableBg:                           $table-bg;
+    $tableBgAccent:                     $table-cell-bg-accent;
+    $tableBgHover:                      $table-cell-bg-hover;
+    $tableBgPress:                      $table-cell-bg-press;
+    $tableBgActive:                     $table-cell-bg-active;
+    //
+    $tableBgAccentDarkness:             $table-cell-bg-accent-darkness;
+    //
+    $tableBdColor:                      $table-bd-color;
+    $tableBdWidth:                      $table-bd-width;
+    $tableBdRadius:                     get($table-config, 'rounded-bd-radius');
+    $tableStripedRowBdWidth:            get($table-config, 'striped-row-bd-width');
+    //
+    $tableCellPadding:                  $table-cell-padding;
+    $tableCellPadX:                     $table-cell-padding;
+    $tableCellPadY:                     $table-cell-padding;
+    $tableCellPad:                      $table-cell-padding $table-cell-padding;
+    //
+    $tableCellPadCnd:                   $table-sm-cell-padding;
+    $tableCellPadXCnd:                  $table-sm-cell-padding;
+    $tableCellPadYCnd:                  $table-sm-cell-padding;
+    //
+    $tableCellHeight:                   $table-cell-height;
+    $tableCellHeightCnd:                $table-sm-cell-height;
+    //
+    $tableTheadBdColor:                 $table-header-bd-color;
+    $tableTheadColor:                   $table-header-color;
+    $tableTheadFontSize:                get($table-cell-config, 'header-font-size');
+    $tableTheadLineHeight:              get($table-cell-config, 'header-line-height');
+    //
+    $tableBorderedTheadColor:           $tableTheadColor;
+    $tableBorderedTheadBg:              $tableBg;
+    //
+    $tableHeaderCellColor:              $tableTheadColor;
+    $tableHeaderCellPad:                $table-header-cell-padding;
+    $tableHeaderCellPadCnd:             $table-sm-header-cell-padding;
+    //
+    $tableHeaderCellPadOffset:          0;
+    $tableHeaderCellPadOffsetCnd:       0;
+    //
+    $tableHeaderCellHeight:             $table-header-cell-height;
+    $tableHeaderCellHeightCnd:          $table-sm-header-cell-height;
+    //
+    $tableHeaderCellHeightInner:        $table-header-cell-height - ($table-header-cell-padding * 2);
+    $tableHeaderCellHeightCndInner:     $table-sm-header-cell-height - ($table-sm-header-cell-padding * 2);
+    //
+    $tableCellFont:                     $table-font-family;
+    $tableCellColor:                    $table-cell-color;
+    $tableCellColorHover:               $table-cell-color-hover;
+    $tableCellColorPress:               $table-cell-color-press;
+    $tableCellColorActive:              $table-cell-color-active;
+    //
+    $tableSortTheadColorHover:          $table-sortable-header-color-hover;
+    $tableSortTheadColorSorted:         $table-sortable-header-color-sorted;
+    $tableSortCaretColor:               $table-sortable-caret-color;
+    $tableSortCaretColorHover:          $table-sortable-caret-color-hover;
+    $tableSortCaretColorSorted:         $table-sortable-caret-color-sorted;
+    $tableSortCaretAlpha:               $table-sortable-caret-alpha;
+    $tableSortCaretAlphaHover:          $table-sortable-caret-alpha-hover;
+    $tableSortCaretAlphaSorted:         $table-sortable-caret-alpha-sorted;
+    //
+    $tableTransitionSpeed:              $table-transition-speed;
+    $tableTransitionProperties:         quote(inspect($table-transition-properties));
+    //
+    $panelBg:                           get($panel-colors-default, 'bg');
+    $panelInnerBdColor:                 get($panel-colors-default, 'bd-color');
+    $panelBdWidth:                      get($panel-config, 'bd-width');
+    $panelBdRadius:                     get($panel-config, 'bd-radius');
+    $panelFooterBg:                     get($panel-colors-default, 'footer-bg');
+    $panelFooterPaddingVertical:        get-deep($panel-config, 'base.footer-padding-vertical');
+    $panelBodyPadding:                  get-deep($panel-config, 'base.body-padding');
+    $panelTitleFontSize:                get-deep($panel-config, 'base.title-font-size');
+    $panelHeadingLineHeight:            get-deep($panel-config, 'base.header-line-height');
+    $panelHeadingPaddingVertical:       get-deep($panel-config, 'base.header-padding-top');
+    $panelHeadingHeight:                get-deep($panel-config, 'base.header-height');
+    $panelHeadingToggleHoverDarken:     $elem-hover-bg-darken-amount-default;
+    //
+    $panelCnBodyPadding:                get-deep($panel-config, 'sm.body-padding');
+    $panelCnTitleFontSize:              get-deep($panel-config, 'sm.title-font-size');
+    $panelCnHeadingPadding:             get-deep($panel-config, 'sm.header-padding');
+    $panelCnHeadingLineHeight:          get-deep($panel-config, 'sm.header-line-height');
+    $panelCnHeadingHeight:              get-deep($panel-config, 'sm.header-height');
+    $panelCnBdRadius:                   $panelBdRadius;
+    //
+    $jobPanelWidth:                     480px;
+    $jobPanelRtOffset:                  36px;
+    //
+    $jobPanelTitleColor:                $white;
+    $jobPanelHeadingBg:                 $zc-gray;
+    $jobPanelHeadingBgWarning:          $zc-orange;
+    $jobPanelHeadingBgSuccess:          $zc-green;
+    //
+    $jobPanelHeadingIconSize:           16px;
+    $jobPanelHeadingIconVOffset:        5px;
+    //
+    $jobPanelHeadingCloseBtnWidth:      26px;
+    //
+    $jobItemPadding:                    8px;
+    $jobItemHeight:                     48px;
+    $jobItemProgressBarWidth:           140px;
+    $jobItemActionWidth:                60px;
+    //
+    $formBdWidth:                       $form-bd-width;
+    $formBdColor:                       $form-bd-color;
+    //
+    $inputColorPlaceholder:             get-deep($form-control-config, 'colors.placeholder-text-base');
+    $inputColor:                        get-deep($form-control-config, 'colors.text-base');
+    $inputColorFocus:                   get-deep($form-control-config, 'colors.text-focus');
+    $inputColorDisabled:                get-deep($form-control-config, 'colors.text-disabled');
+    //
+    $inputBdColor:                      get-deep($form-control-config, 'colors.bd-fallback');
+    $inputBdColorFocus:                 get-deep($form-control-config, 'colors.bd-focus');
+    $inputBdColorDisabled:              get-deep($form-control-config, 'colors.bd-disabled');
+    $inputBdRgbaColor:                  get-deep($form-control-config, 'colors.bd-rgba-color');
+    $inputBdRgbaAlpha:                  get-deep($form-control-config, 'colors.bd-rgba-alpha');
+    //
+    $inputBg:                           get-deep($form-control-config, 'colors.bg');
+    $inputBgDisabled:                   get-deep($form-control-config, 'colors.bg-disabled');
+    //
+    $inputBdRadius:                     get-deep($form-control-config, 'bd-radius.base');
+    //
+    $inputShadowAlpha:                  get($form-control-inset-shadow-config, 'alpha');
+    $inputShadowInner:                  $form-control-inset-shadow;
+    //
+    $inputPaddingVerticalMSIE:          0;
+    //
+    $cboxRadioSpacing:                  get($cbox-radio-config, 'spacing-horizontal');
+    $radioCboxTopMargin:                get($cbox-radio-config, 'margin-top');
+    $selectCaretSize:                   $select-caret-size;
+    //
+    $cboxBdColor:                       get($cbox-radio-config, 'bd-color');
+    $cboxBdColorFocus:                  get($cbox-radio-config, 'bd-color-focus');
+    $cboxBgColorChecked:                get($cbox-radio-config, 'bg-checked');
+    //
+    $cboxTargetHeightPx:                get($cbox-radio-config, 'height-px');
+    $radioIndicatorTargetSize:          get($cbox-radio-config, 'radio-indicator-size-px');
+    $cboxDefaultParentFontSize:         $font-size-base;
+    //
+    $radioActiveInset:                  get($cbox-radio-config, 'radio-indicator-size');
+    $cboxHeight:                        get($cbox-radio-config, 'height');
+    $cboxWidth:                         get($cbox-radio-config, 'width');
+    $cboxRadioTopOffset:                get($cbox-radio-config, 'indicator-offset-top'); // centered on line height
+    $radioIndicatorOffsetLeft:          get($cbox-radio-config, 'radio-indicator-offset-left');
+    $radioIndicatorOffsetTop:           get($cbox-radio-config, 'radio-indicator-offset-top');
+    $radioIndicatorSize:                get($cbox-radio-config, 'radio-indicator-size');
+    //
+    $horizontalComponentLblRightPad:    $horizontal-component-lbl-right-pad;
+    $horizontalComponentLblTopPad:      $horizontal-component-lbl-top-pad;
+    $formActionsBackground:             $form-actions-background;
+    //
+    $legendFontSize:                    get($form-config, 'legend-font-size');
+    $legendFontFace:                    get($form-config, 'legend-font-family');
+    $legendColor:                       get($form-config, 'legend-text-color');
+    $legendMarginBottom:                get($form-config, 'legend-margin-bottom');
+    //
+    $listGroupBg:                       get($list-group-base-config, 'bg');
+    $listGroupBdWidth:                  get($list-group-base-config, 'bd-width');
+    $listGroupBd:                       get($list-group-base-config, 'bd-color');
+    $listGroupBdRadius:                 get($list-group-base-config, 'bd-radius');
+    //
+    $listGroupBgHover:                  get($list-group-link-config, 'bg-hover');
+    $listGroupColorHover:               get($list-group-link-config, 'text-color-hover');
+    $listGroupBgPress:                  get($list-group-link-config, 'bg-press');
+    $listGroupColorPress:               get($list-group-link-config, 'text-color-press');
+    $listGroupBgActive:                 get($list-group-link-config, 'bg-active');
+    $listGroupColorActive:              get($list-group-link-config, 'text-color-active');
+    $listGroupBdActive:                 $listGroupBd;
+    //
+    $listGroupLinkColor:                get($list-group-link-config, 'text-color');
+    $listGroupLinkHeadingColor:         $headings-color;
+    //
+    $dpDaySize:                         get($datepicker-config, 'day-cell-width');
+    $dpContentPad:                      get($datepicker-config, 'content-padding');
+    $dpMinWidth:                        get($datepicker-config, 'min-width');
+    $dpSwitchWidth:                     get($datepicker-config, 'switch-width');
+    $dpMoYrSize:                        get($datepicker-config, 'mo-yr-cell-width');
+    $dpMoYrSizePx:                      get($datepicker-config, 'mo-yr-cell-width-px');
+    //
+    $dpDayFontSize:                     get($datepicker-config, 'cell-font-size');
+    $dpCwFontSize:                      get($datepicker-config, 'cal-week-cell-font-size');
+    //
+    $dpBg:                              get($popover-config, 'bg');
+    $dpBdRadius:                        get($popover-config, 'bd-radius');
+    $dpBdColor:                         $zc-gray-40;
+    $dpInnerBdColor:                    get($datepicker-config, 'cell-bd-color');
+    $dpDowColor:                        get($datepicker-config, 'header-cell-text-color');
+    //
+    $dpLinkBg:                          get($datepicker-config, 'cell-bg');
+    $dpLinkBgHover:                     get($datepicker-config, 'cell-bg-hover');
+    $dpLinkBgPress:                     get($datepicker-config, 'cell-bg-press');
+    $dpLinkBgActive:                    get($datepicker-config, 'cell-bg-active');
+    $dpLinkBgDisabled:                  get($datepicker-config, 'cell-bg-disabled');
+    //
+    $dpLinkColor:                       get($datepicker-config, 'cell-text-color');
+    $dpLinkColorHover:                  get($datepicker-config, 'cell-text-color-hover');
+    $dpLinkColorPress:                  get($datepicker-config, 'cell-text-color-press');
+    $dpLinkColorActive:                 get($datepicker-config, 'cell-text-color-active');
+    $dpLinkColorDisabled:               get($datepicker-config, 'cell-text-color-disabled');
+    //
+    $dpLinkOldBg:                       get($datepicker-config, 'cell-bg-past');
+    $dpLinkTodayBg:                     get($datepicker-config, 'cell-bg-today');
+    //
+    $dpLinkOldColor:                    get($datepicker-config, 'cell-text-color-past');
+    $dpLinkTodayColor:                  get($datepicker-config, 'cell-text-color-today');
+    //
+    $codeBdRadius:                      $code-bd-radius;
+    $codeBg:                            $code-bg;
+    $codeBd:                            $code-bd;
+    $codeColor:                         $code-color;
+    //
+    $kbdBg:                             $kbd-bg;
+    $kbdColor:                          $kbd-color;
+    //
+    $preBg:                             $pre-bg;
+    $preColor:                          $pre-color;
+    $preBdColor:                        $pre-bd-color;
+    $preScrollableMaxHeight:            $pre-scrollable-max-height;
+    //
+    $progressBg:                        get($progress-bar-config, 'bg');
+    $progressBarHeight:                 $progress-bar-height;
+    $progressBarBdRadius:               get-deep($progress-bar-config, 'bd-radius.base');
+    $progressBarBgSize:                 $progress-bar-bg-size;
+    $progressBarGifUrl:                 get($progress-bar-config, 'bar-gif-url');
+    //
+    $progressBarLblFontSize:            get-deep($progress-bar-config, 'label-font-size.base');
+    $progressBarLblFontWeight:          get($progress-bar-config, 'label-font-weight');
+    $progressBarLblColor:               get($progress-bar-config, 'label-text-color');
+    $progressBarLblShdColor:            get($progress-bar-config, 'label-shadow-color');
+    $progressBarLblShdAlpha:            get($progress-bar-config, 'label-shadow-alpha');
+    //
+    $progressBarHeightSm:               $progress-bar-sm-height;
+    $progressBarBdRadiusSm:             get-deep($progress-bar-config, 'bd-radius.sm');
+    $progressBarLblFontSizeSm:          get-deep($progress-bar-config, 'label-font-size.sm');
+    //
+    $progressBarHeightXs:               $progress-bar-xs-height;
+    $progressBarBdRadiusXs:             get-deep($progress-bar-config, 'bd-radius.xs');
+    $progressBarLblFontSizeXs:          get-deep($progress-bar-config, 'label-font-size.xs');
+    //
+    $spinnerColor:                      get($progress-spinner-config, 'color');
+    $spinnerAlphaBase:                  get($progress-spinner-config, 'alpha-base');
+    $spinnerAlphaOn:                    get($progress-spinner-config, 'alpha-on');
+    $spinnerLabelColor:                 get($progress-spinner-config, 'label-text-color');
+    $spinnerLabelFontSize:              get-deep($progress-spinner-config, 'label-font-size.base');
+    //
+    $hrBdWidth:                         $hr-bd-width;
+    $hrBdColor:                         $hr-bd-color;
+    //
+    $wellBackground:                    $well-bg;
+    $wellBdWidth:                       $well-bd-width;
+    $wellBdColor:                       $well-bd-color;
+    //
+    $thumbnailPadding:                  $thumbnail-padding;
+    $thumbnailBg:                       $thumbnail-bg;
+    $thumbnailBdColor:                  $thumbnail-bd-color;
+    $thumbnailBdWidth:                  $thumbnail-bd-width;
+    $thumbnailBdRadius:                 $thumbnail-bd-radius;
+    $thumbnailCaptionColor:             $thumbnail-caption-color;
+    $thumbnailCaptionPadding:           $thumbnail-caption-padding;
+    //
+    $scrollBarWidthDefault:             $scroll-bar-width-default;
+    $scrollBarWidthWebkit:              $scroll-bar-width-webkit;
+    $scrollBarWidthCustom:              $scroll-bar-width-ws;
+    $scrollBarWebkit:                   $scroll-bar-webkit;
+    $scrollBarWebkitThumb:              $scroll-bar-webkit-thumb;
+    $scrollBarRadius:                   $scroll-bar-radius;
+    $scrollBarBdWidth:                  $scroll-bar-bd-width;
+    $scrollBarBdColor:                  $scroll-bar-bd-color;
+    $scrollBarBg:                       $scroll-bar-bg;
+    //
+    $paginationItemSpacing:             get-deep($pagination-size-config, 'base.item-spacing');
+    //
+    $pageIndicatorSize:                 get($page-indicator-config, 'diameter');
+    $pageIndicatorBg:                   get($page-indicator-config, 'bg');
+    $pageIndicatorBgActive:             get($page-indicator-config, 'bg-active');
+    //
+    $jumbotronBg:                       $zc-gray-40;
+    $jumbotronHeadingColor:             $headings-color;
+    $jumbotronLeadColor:                inherit;
+    //
+    $blockquoteBdWidth:                 $blockquote-bd-width;
+    //
+    $carouselControlPadding:            $carousel-control-padding;
+    $carouselControlIconSize:           $carousel-control-icon-size;
+    $carouselControlWidth:              $carousel-control-width;
+    $carouselControlColor:              $carousel-control-color;
+    $carouselControlColorHover:         $carousel-control-color-hover;
+    $carouselCaptionColor:              $carousel-caption-text-color;
+    $carouselPadding:                   $carousel-padding;
+    $carouselInnerPadBottom:            $carousel-inner-padding-bottom;
+    //
+    $gridColumnWidthMobile:             $grid-column-width-sm;
+    $gridColumnWidthDesktop:            $grid-column-width-md;
+    $gridColumnWidthDesktopLarge:       $grid-column-width-lg;
+    $gridColumnWidthDesktopHuge:        $grid-column-width-xl;
+    //
+    $navListLinkColor:          get($list-group-link-config, 'text-color');
+    $navListLinkColorHover:     get($list-group-link-config, 'text-color-hover');
+    $navListLinkColorPress:     get($list-group-link-config, 'text-color-press');
+    $navListLinkColorActive:    get($list-group-link-config, 'text-color-active');
+    $navListLinkColorDisabled:  get($list-group-link-config, 'text-color-disabled');
+    //
+    $navListLinkBg:             get($list-group-link-config, 'bg');
+    $navListLinkBgHover:        get($list-group-link-config, 'bg-hover');
+    $navListLinkBgPress:        get($list-group-link-config, 'bg-press');
+    $navListLinkBgActive:       get($list-group-link-config, 'bg-active');
+    $navListLinkBgDisabled:     get($list-group-link-config, 'bg-disabled');
+    //
+    $navListBdWidth:            get($nav-secondary-config, 'bd-width');
+    $navListBdColor:            get($nav-secondary-config, 'bd-width');
+    //
+    $navListLinkPadding:        get-deep($list-group-item-config, 'padding.base.all');
+    $navListLinkFontSize:       get-deep($list-group-item-config, 'font-size.base');
+    $navListLinkHeight:         get-deep($list-group-item-config, 'min-height.base');
+    //
+    $navListCaretWidth:                         $caret-width;
+    $navListCaretHeight:                        $caret-height;
+    $navListCaretSizeRatio:                     $caret-size-ratio;
+    $navListCaretSizeDifferential:              $caret-size-differential;
+    //
+    $navListCaretColorFallback:                 get($list-group-tree-link-caret-config, 'fallback-color');
+    $navListCaretDarkness:                      darkness($navListCaretColorFallback);
+    $navListCaretColor:                         rgba(get($list-group-tree-link-caret-config, 'color'), get($list-group-tree-link-caret-config, 'alpha'));
+    $navListCaretColorActive:                   get($list-group-tree-link-caret-config, 'color-active');
+    $navListCaretContainerWidth:                get($list-group-tree-link-caret-config, 'container-width');
+    $navListCaretContainerHeight:               get($list-group-tree-link-caret-config, 'container-height');
+    $navListCaretMarginVertical:                get($list-group-tree-link-caret-config, 'margin-top');
+    $navListCaretMarginHorizontal:              get($list-group-tree-link-caret-config, 'margin-left');
+    $navListCaretMarginVerticalCollapsed:       get($list-group-tree-link-caret-config, 'margin-top-collapsed');
+    $navListCaretMarginHorizontalCollapsed:     get($list-group-tree-link-caret-config, 'margin-left-collapsed');
+    //
+    $navListLinkCollapsingPaddingLeft:          get-deep($list-group-tree-link-sizes, 'padding.base.left');
+    $navListLinkCollapsingPaddingRight:         get-deep($list-group-tree-link-sizes, 'padding.base.right');
+    //
+    $navListGroupBdSpacing:                     get($list-group-tree-group-config, 'bd-spacing-vertical');

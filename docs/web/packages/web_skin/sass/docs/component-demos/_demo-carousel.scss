@@ -1,0 +1,37 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-carousel';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.ws-example {
+    .carousel {
+        // our examples should all use 50rem wide images for now
+        max-width: 50rem;
+        // center them
+        margin: 0 auto;
+
+        // hide the page indicators to make room for the "Get Started Button"
+        &.carousel-tour {
+            &.at-right-edge .page-indicators {
+                display: none;
+            }
+        }
+
+        .carousel-caption > .btn {
+            margin-top: .8rem;
+        }
+
+        .carousel-caption .lead {
+            line-height: $line-height-lg;
+        }
+    }
+
+    .modal .carousel {
+        max-width: none;
+    }
+}

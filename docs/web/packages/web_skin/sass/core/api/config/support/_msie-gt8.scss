@@ -1,0 +1,26 @@
+// ********************************************************
+//
+$module: add-api-module('core/api/config/support/msie-gt8');
+//
+//   Import this module to compile a stylesheet
+//   with support for MSIE 9+
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Default support
+// ----------------------------------------------------
+@import "defaults";
+
+
+// ----------------------------------------------------
+//   Only support MSIE
+// ----------------------------------------------------
+@include set-supported-browsers((ie, ie-mobile));
+
+
+// ----------------------------------------------------
+//   Change OS support to Windows only
+// ----------------------------------------------------
+@include set-supported-os(win);

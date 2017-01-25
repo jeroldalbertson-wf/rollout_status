@@ -1,0 +1,458 @@
+@include describe('[remove-unit]') {
+    @include describe('when a unitless number is provided') {
+        @include it('should return the number') {
+            $actual: remove-unit(2);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( 2 )));
+        }
+    }
+
+    @include describe('when a number with a unit is provided') {
+        @include it('should return the number without the unit') {
+            $actual: remove-unit(2px);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( 2 )));
+        }
+    }
+}
+
+@include describe('[pow]') {
+    @include describe('when [number] is a positive number') {
+        @include describe('and [exponent] is a positive number greater than one') {
+            @include it('should return the correct value') {
+                $actual: pow(10, 2);
+
+                @include should(expect( $actual ), have-type-of('number'));
+                @include should(expect( $actual ), to(be( 100 )));
+            }
+        }
+
+        @include describe('and [exponent] is one') {
+            @include it('should return the correct value') {
+                $actual: pow(10, 1);
+
+                @include should(expect( $actual ), have-type-of('number'));
+                @include should(expect( $actual ), to(be( 10 )));
+            }
+        }
+
+        @include describe('and [exponent] is zero') {
+            @include it('should return the correct value') {
+                $actual: pow(10, 0);
+
+                @include should(expect( $actual ), have-type-of('number'));
+                @include should(expect( $actual ), to(be( 1 )));
+            }
+        }
+
+        @include describe('and [exponent] is negative one') {
+            @include it('should return the correct value') {
+                $actual: pow(10, -1);
+
+                @include should(expect( $actual ), have-type-of('number'));
+                @include should(expect( $actual ), to(be( .1 )));
+            }
+        }
+
+        @include describe('and [exponent] is a negative number greater than one') {
+            @include it('should return the correct value') {
+                $actual: pow(10, -2);
+
+                @include should(expect( $actual ), have-type-of('number'));
+                @include should(expect( $actual ), to(be( .01 )));
+            }
+        }
+    }
+
+    @include describe('when [number] is a negative number') {
+        @include describe('and [exponent] is a positive number greater than one') {
+            @include it('should return the correct value') {
+                $actual: pow(-10, 2);
+
+                @include should(expect( $actual ), have-type-of('number'));
+                @include should(expect( $actual ), to(be( -100 )));
+            }
+        }
+
+        @include describe('and [exponent] is one') {
+            @include it('should return the correct value') {
+                $actual: pow(-10, 1);
+
+                @include should(expect( $actual ), have-type-of('number'));
+                @include should(expect( $actual ), to(be( -10 )));
+            }
+        }
+
+        @include describe('and [exponent] is zero') {
+            @include it('should return the correct value') {
+                $actual: pow(-10, 0);
+
+                @include should(expect( $actual ), have-type-of('number'));
+                @include should(expect( $actual ), to(be( 1 )));
+            }
+        }
+
+        @include describe('and [exponent] is negative one') {
+            @include it('should return the correct value') {
+                $actual: pow(-10, -1);
+
+                @include should(expect( $actual ), have-type-of('number'));
+                @include should(expect( $actual ), to(be( -.1 )));
+            }
+        }
+
+        @include describe('and [exponent] is a negative number greater than one') {
+            @include it('should return the correct value') {
+                $actual: pow(-10, -2);
+
+                @include should(expect( $actual ), have-type-of('number'));
+                @include should(expect( $actual ), to(be( -.01 )));
+            }
+        }
+    }
+}
+
+@include describe('[sum]') {
+    @include describe('when all the numbers in the list are unitless') {
+        @include it('should return the sum') {
+            $actual: sum(5 10 15);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( 30 )));
+        }
+    }
+
+    @include describe('when some of the numbers have a unit') {
+        @include it('should return a unitless sum') {
+            $actual: sum(5 10px 10 5px);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( 30 )));
+        }
+    }
+
+    @include describe('when all of the numbers have a unit') {
+        @include it('should return a unitless sum') {
+            $actual: sum(5px 10px 10px 5px);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( 30 )));
+        }
+    }
+}
+
+@include describe('[average]') {
+    @include it('should return the average of the numbers in the list') {
+        $actual: average(5 10 15);
+
+        @include should(expect( $actual ), have-type-of('number'));
+        @include should(expect( $actual ), to(be( 10 )));
+    }
+}
+
+@include describe('[avg]') {
+    @include it('should return the average of the numbers in the list') {
+        $actual: average(5 10 15);
+
+        @include should(expect( $actual ), have-type-of('number'));
+        @include should(expect( $actual ), to(be( 10 )));
+    }
+}
+
+@include describe('[decimal-round]') {
+    @include describe('when [digits] is the default value') {
+        @include it('should return the correct decimal') {
+            $actual: decimal-round(0.333);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( .3 )));
+        }
+
+        @include it('should return the correct decimal') {
+            $actual: decimal-round(0.666);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( .7 )));
+        }
+    }
+
+    @include describe('when [digits] is zero') {
+        @include it('should return zero') {
+            $actual: decimal-round(0.333, 0);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( 0 )));
+        }
+
+        @include it('should return one') {
+            $actual: decimal-round(0.666, 0);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( 1 )));
+        }
+    }
+
+    @include describe('when [digits] is two') {
+        @include it('should return the correct decimal') {
+            $actual: decimal-round(0.333, 2);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( .33 )));
+        }
+
+        @include it('should return the correct decimal') {
+            $actual: decimal-round(0.666, 2);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( .67 )));
+        }
+    }
+}
+
+@include describe('[decimal-ceil]') {
+    @include describe('when [digits] is the default value') {
+        @include it('should return the correct decimal') {
+            $actual: decimal-ceil(0.333);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( .4 )));
+        }
+
+        @include it('should return the correct decimal') {
+            $actual: decimal-ceil(0.666);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( .7 )));
+        }
+    }
+
+    @include describe('when [digits] is zero') {
+        @include it('should return one') {
+            $actual: decimal-ceil(0.333, 0);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( 1 )));
+        }
+
+        @include it('should return one') {
+            $actual: decimal-ceil(0.666, 0);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( 1 )));
+        }
+    }
+
+    @include describe('when [digits] is two') {
+        @include it('should return the correct decimal') {
+            $actual: decimal-ceil(0.333, 2);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( .34 )));
+        }
+
+        @include it('should return the correct decimal') {
+            $actual: decimal-ceil(0.666, 2);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( .67 )));
+        }
+    }
+}
+
+@include describe('[decimal-floor]') {
+    @include describe('when [digits] is the default value') {
+        @include it('should return the correct decimal') {
+            $actual: decimal-floor(0.333);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( .3 )));
+        }
+
+        @include it('should return the correct decimal') {
+            $actual: decimal-floor(0.666);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( .6 )));
+        }
+    }
+
+    @include describe('when [digits] is zero') {
+        @include it('should return zero') {
+            $actual: decimal-floor(0.333, 0);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( 0 )));
+        }
+
+        @include it('should return zero') {
+            $actual: decimal-floor(0.666, 0);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( 0 )));
+        }
+    }
+
+    @include describe('when [digits] is two') {
+        @include it('should return the correct decimal') {
+            $actual: decimal-floor(0.333, 2);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( .33 )));
+        }
+
+        @include it('should return the correct decimal') {
+            $actual: decimal-floor(0.666, 2);
+
+            @include should(expect( $actual ), have-type-of('number'));
+            @include should(expect( $actual ), to(be( .66 )));
+        }
+    }
+}
+
+// ----------------------------------------------------
+//   REM ROUND HELPERS
+// ----------------------------------------------------
+    $global-default-html-font-size-px: $html-font-size-px;
+    $px-value-one: 13px;
+    $px-value-two: 24px;
+
+    @function rem-round-edge-case-value($px-value-one, $px-value-two, $mode: round) {
+        @return call('rem-#{$mode}', (to-rem(($px-value-one + $px-value-two) / 2.947863)), $px-digits: 2);
+    }
+
+    @function rem-ceil-edge-case-value($px-value-one, $px-value-two) {
+        @return rem-round-edge-case-value($px-value-one, $px-value-two, $mode: ceil);
+    }
+
+    @function rem-floor-edge-case-value($px-value-one, $px-value-two) {
+        @return rem-round-edge-case-value($px-value-one, $px-value-two, $mode: floor);
+    }
+
+    @function get-rounded-pixel-value($rem-round-return-value, $_html-font-size: $html-font-size-px) {
+        @return remove-unit($rem-round-return-value) * $_html-font-size;
+    }
+
+// ----------------------------------------------------
+//   REM ROUND / FLOOR / CEIL
+// ----------------------------------------------------
+    @include describe('[rem-round]') {
+        @include describe('when [html-font-size-px] is the default value') {
+            @include it('should return the correct decimal') {
+                $actual: rem-round((to-rem($px-value-one) + to-rem($px-value-two)) / 2);
+                $expected: to-rem(round(($px-value-one + $px-value-two) / 2));
+
+                @include should(expect( $actual ), to(be( $expected )));
+            }
+        }
+
+        @include describe('when [html-font-size-px] is altered') {
+            $html-font-size-px: 11px !global;
+
+            @include it('should return the correct decimal') {
+                // Sanity check
+                @include should(expect( to-rem($html-font-size-px) ), to(be( 1rem )));
+
+                $actual: rem-round((to-rem($px-value-one) + to-rem($px-value-two)) / 2);
+                $expected: to-rem(round(($px-value-one + $px-value-two) / 2));
+
+                @include should(expect( $actual ), to(be( $expected )));
+            }
+
+            @include describe('and [digits] is something other than zero') {
+                @include it('should return the correct decimal') {
+                    // Sanity check
+                    @include should(expect( to-rem($html-font-size-px) ), to(be( 1rem )));
+
+                    $actual: get-rounded-pixel-value(rem-round-edge-case-value($px-value-one, $px-value-two), $html-font-size-px);
+                    $expected: 12.55px;
+
+                    @include should(expect( inspect($actual) ), to(be( inspect($expected) )));
+                }
+            }
+
+            // Set it back to the real value
+            $html-font-size-px: $global-default-html-font-size-px !global;
+        }
+    }
+
+    @include describe('[rem-ceil]') {
+        @include describe('when [html-font-size-px] is the default value') {
+            @include it('should return the correct decimal') {
+                $actual: rem-round((to-rem($px-value-one) + to-rem($px-value-two)) / 2);
+                $expected: to-rem(round(($px-value-one + $px-value-two) / 2));
+
+                @include should(expect( $actual ), to(be( $expected )));
+            }
+        }
+
+        @include describe('when [html-font-size-px] is altered') {
+            $html-font-size-px: 11px !global;
+
+            @include it('should return the correct decimal') {
+                // Sanity check
+                @include should(expect( to-rem($html-font-size-px) ), to(be( 1rem )));
+
+                $actual: rem-ceil((to-rem($px-value-one) + to-rem($px-value-two)) / 2);
+                $expected: to-rem(ceil(($px-value-one + $px-value-two) / 2));
+
+                @include should(expect( $actual ), to(be( $expected )));
+            }
+
+            @include describe('and [digits] is something other than zero') {
+                @include it('should return the correct decimal') {
+                    // Sanity check
+                    @include should(expect( to-rem($html-font-size-px) ), to(be( 1rem )));
+
+                    $actual: get-rounded-pixel-value(rem-ceil-edge-case-value($px-value-one, $px-value-two), $html-font-size-px);
+                    $expected: 12.56px;
+
+                    @include should(expect( inspect($actual) ), to(be( inspect($expected) )));
+                }
+            }
+
+            // Set it back to the real value
+            $html-font-size-px: $global-default-html-font-size-px !global;
+        }
+    }
+
+    @include describe('[rem-floor]') {
+        @include describe('when [html-font-size-px] is the default value') {
+            @include it('should return the correct decimal') {
+                $actual: rem-round((to-rem($px-value-one) + to-rem($px-value-two)) / 2);
+                $expected: to-rem(round(($px-value-one + $px-value-two) / 2));
+
+                @include should(expect( $actual ), to(be( $expected )));
+            }
+        }
+
+        @include describe('when [html-font-size-px] is altered') {
+            $html-font-size-px: 11px !global;
+
+            @include it('should return the correct decimal') {
+                // Sanity check
+                @include should(expect( to-rem($html-font-size-px) ), to(be( 1rem )));
+
+                $actual: rem-floor((to-rem($px-value-one) + to-rem($px-value-two)) / 2);
+                $expected: to-rem(floor(($px-value-one + $px-value-two) / 2));
+
+                @include should(expect( $actual ), to(be( $expected )));
+            }
+
+            @include describe('and [digits] is something other than zero') {
+                @include it('should return the correct decimal') {
+                    // Sanity check
+                    @include should(expect( to-rem($html-font-size-px) ), to(be( 1rem )));
+
+                    $actual: get-rounded-pixel-value(rem-floor-edge-case-value($px-value-one, $px-value-two), $html-font-size-px);
+                    $expected: 12.55px;
+
+                    @include should(expect( inspect($actual) ), to(be( inspect($expected) )));
+                }
+            }
+
+            // Set it back to the real value
+            $html-font-size-px: $global-default-html-font-size-px !global;
+        }
+    }

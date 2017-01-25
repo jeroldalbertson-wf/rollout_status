@@ -1,0 +1,228 @@
+// ********************************************************
+
+////
+/// Default os support config values
+/// ---
+/// @access public
+/// @group core.support.os
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/support/defaults/os-support-defaults';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function to-number,
+                                                function list-has,
+                                                function is-map,
+                                                function is-list,
+                                                function extend);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   OS SUPPORT
+//
+// ********************************************************
+    ///
+    /// List of operating systems supported by a Sass module.
+    ///
+    /// __Do not modify these values directly.__ Use the `set-supported-os()` mixin to set it.
+    /// ---
+    /// @see {mixin} set-supported-os
+    /// ---
+    /// @type List
+    /// @since 1.0.0
+    /// @see {mixin} set-supported-os
+    ///
+    $supported-os: osx, win, droid, ios;
+
+
+    // ----------------------------------------------------
+    //   OS SUPPORT ALIASES
+    // ----------------------------------------------------
+        ///
+        /// Indicates if Mac OSX is supported by a Sass module.
+        ///
+        /// __Do not modify these values directly.__ Use the `set-supported-os()` mixin to set it.
+        /// ---
+        /// @see {mixin} set-supported-os
+        /// ---
+        /// @type Boolean
+        /// @requires {function} list-has
+        /// @requires {variable} $supported-os
+        ///
+        $macosx-support: list-has($supported-os, osx);
+
+        ///
+        /// Indicates if Windows is supported by a Sass module.
+        ///
+        /// __Do not modify these values directly.__ Use the `set-supported-os()` mixin to set it.
+        /// ---
+        /// @see {mixin} set-supported-os
+        /// ---
+        /// @type Boolean
+        /// @requires {function} list-has
+        /// @requires {variable} $supported-os
+        ///
+        $win-support: list-has($supported-os, win);
+
+        ///
+        /// Indicates if Android is supported by a Sass module.
+        ///
+        /// __Do not modify these values directly.__ Use the `set-supported-os()` mixin to set it.
+        /// ---
+        /// @see {mixin} set-supported-os
+        /// ---
+        /// @type Boolean
+        /// @requires {function} list-has
+        /// @requires {variable} $supported-os
+        ///
+        $droid-support: list-has($supported-os, droid);
+
+        ///
+        /// Indicates if iOS is supported by a Sass module.
+        ///
+        /// __Do not modify these values directly.__ Use the `set-supported-os()` mixin to set it.
+        /// ---
+        /// @see {mixin} set-supported-os
+        /// ---
+        /// @type Boolean
+        /// @requires {function} list-has
+        /// @requires {variable} $supported-os
+        ///
+        $ios-support: list-has($supported-os, ios);
+
+
+    // ----------------------------------------------------
+    //   OS SUPPORT HELPERS
+    // ----------------------------------------------------
+        ///
+        /// Update the list of operating systems supported by a Sass module.
+        /// ---
+        /// @since 1.0.0
+        /// ---
+        /// @param {List | String...} $os - List of one or more operating systems you want to support
+        ///
+        @mixin set-supported-os($os...) {
+            @if not is-list($os) and not is-arglist($os) and not is-string($os) {
+                @error "Mixin `set-supported-os` expecting `$os` to be a `list` or `string`. Received `#{type-of($os)}`.";
+            }
+
+            $supported-os: $os !global;
+
+            // reset browser-support alias values based on new support levels
+            $macosx-support:    list-has($supported-os, osx)   !global;
+            $win-support:       list-has($supported-os, win)   !global;
+            $droid-support:     list-has($supported-os, droid) !global;
+            $ios-support:       list-has($supported-os, ios)   !global;
+        }
+
+
+
+// ********************************************************
+//
+//   OS VERSION SUPPORT
+//
+// ********************************************************
+    ///
+    /// Map of minimum browser versions supported by a Sass module.
+    ///
+    /// __Do not modify these values directly.__ Use the `set-os-minimum-versions()` mixin to set it.
+    /// ---
+    /// @see {mixin} set-os-minimum-versions
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @see {mixin} set-browser-minimum-versions
+    /// ---
+    /// @requires {function} list-has
+    /// @requires {variable} $supported-os
+    ///
+    $os-minimum-versions: (
+        'osx':     if(list-has($supported-os, osx),     '1',   '9999'),
+        'win':     if(list-has($supported-os, win),     '1',   '9999'),
+        'ios':     if(list-has($supported-os, ios),     '5.0', '9999'),
+        'droid':   if(list-has($supported-os, droid),   '3.0', '9999')
+    );
+
+
+    // ----------------------------------------------------
+    //   OS VERSION SUPPORT ALIASES
+    // ----------------------------------------------------
+        ///
+        /// Indicates the minimum version of Mac OSX supported by a Sass module.
+        ///
+        /// __Do not modify these values directly.__ Use the `set-os-minimum-versions()` mixin to set it.
+        /// ---
+        /// @see {mixin} set-os-minimum-versions
+        /// ---
+        /// @type Boolean
+        /// @requires {variable} $os-minimum-versions
+        ///
+        $min-macosx-supported: to-number(map-get($os-minimum-versions, 'osx'));
+
+        ///
+        /// Indicates the minimum version of Windows supported by a Sass module.
+        ///
+        /// __Do not modify these values directly.__ Use the `set-os-minimum-versions()` mixin to set it.
+        /// ---
+        /// @see {mixin} set-os-minimum-versions
+        /// ---
+        /// @type Boolean
+        /// @requires {variable} $os-minimum-versions
+        ///
+        $min-win-supported: to-number(map-get($os-minimum-versions, 'win'));
+
+        ///
+        /// Indicates the minimum version of Android supported by a Sass module.
+        ///
+        /// __Do not modify these values directly.__ Use the `set-os-minimum-versions()` mixin to set it.
+        /// ---
+        /// @see {mixin} set-os-minimum-versions
+        /// ---
+        /// @type Boolean
+        /// @requires {variable} $os-minimum-versions
+        ///
+        $min-droid-supported: to-number(map-get($os-minimum-versions, 'droid'));
+
+        ///
+        /// Indicates the minimum version of iOS supported by a Sass module.
+        ///
+        /// __Do not modify these values directly.__ Use the `set-os-minimum-versions()` mixin to set it.
+        /// ---
+        /// @see {mixin} set-os-minimum-versions
+        /// ---
+        /// @type Boolean
+        /// @requires {variable} $os-minimum-versions
+        ///
+        $min-ios-supported: to-number(map-get($os-minimum-versions, 'ios'));
+
+
+    // ----------------------------------------------------
+    //   OS VERSION SUPPORT HELPERS
+    // ----------------------------------------------------
+        ///
+        /// Update the map of minimum operating system versions supported by a Sass module.
+        /// ---
+        /// @since 1.0.0
+        /// @param {Map} $versions - Map of one or more operating systems you want to modify the minimum supported version for
+        ///
+        @mixin set-os-minimum-versions($versions) {
+            @if not is-map($versions) {
+                @error "Mixin `set-os-minimum-versions` expecting `$versions` to be a `map`. Received `#{type-of($versions)}`.";
+            }
+
+            $os-minimum-versions: extend($os-minimum-versions, $versions) !global;
+
+            // reset os-support alias values based on new support levels
+            $min-macosx-supported:  to-number(map-get($os-minimum-versions, 'osx'))     !global;
+            $min-win-supported:     to-number(map-get($os-minimum-versions, 'win'))     !global;
+            $min-droid-supported:   to-number(map-get($os-minimum-versions, 'droid'))   !global;
+            $min-ios-supported:     to-number(map-get($os-minimum-versions, 'ios'))     !global;
+        }

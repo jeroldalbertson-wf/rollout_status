@@ -1,0 +1,319 @@
+// ********************************************************
+
+////
+/// Progress components configuration
+/// ---
+/// @group core.components.progress
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/progress/progress-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend,
+                                                function image-height,
+                                                function image-width,
+                                                function icon-size-base-16);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   PROGRESS BARS
+//
+// ********************************************************
+    ///
+    /// Configuration for `.progress-bar` components.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @link http://bit.ly/webskin-progress-bars Progress bar component spec
+    /// @link http://bit.ly/webskin-progress-bar-sizes Progress bar size variation spec
+    /// @link http://bit.ly/webskin-progress-bar-state-colors Progress bar state color variation spec
+    /// ---
+    /// @requires {function} image-width
+    /// @requires {function} image-height
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {function} extend
+    /// @requires {variable} $zc-gray-40
+    /// @requires {variable} $zc-gray-120
+    /// @requires {variable} $white
+    /// @requires {variable} $state-default
+    /// @requires {variable} $state-alt
+    /// @requires {variable} $state-success
+    /// @requires {variable} $state-warning
+    /// @requires {variable} $state-danger
+    /// @requires {variable} $line-height-base-px
+    /// @requires {variable} $border-radius-sm
+    /// @requires {variable} $font-size-sm
+    /// @requires {variable} $border-radius-xs
+    /// @requires {variable} $font-size-xs
+    /// ---
+    /// @prop {Color}  bg               [#e3e3e3]   - Background of the base `.progress` elem that contains `.progress-bar`
+    /// @prop {Color}  bar-bg           [#b2b2b2]   - Default background color of a `.progress-bar`
+    /// @prop {Number} bar-width-transition-speed [.6s] - Transition speed used when width of `.progress-bar` changes
+    /// @prop {Number} bar-stripe-animation-speed [2s] - Duration of one full animation cycle for striped `.progress-bar` elems
+    /// @prop {Number} bar-bg-size      [40px]      - Calculated background size used for striped `.progress-bar` gradients. _Added via `@extend`_
+    /// @prop {String} bar-gif-url                  - Deprecated in `1.3.6`. Will be removed completely in `2.0.0`
+    /// @prop {List}   bar-gif-bg-size  [48px 22px] - Calculated background size used for striped .gif image fallback. _Added via `@extend`_. Deprecated in `1.3.6`. Will be removed completely in `2.0.0`
+    ///
+    /// @prop {Map} bd-radius
+    /// @prop {Number} bd-radius.base [3px]   - Border radius of the default `.progress` component
+    /// @prop {Number} bd-radius.sm   [2px]   - Border radius of a `.progress-sm` component variation
+    /// @prop {Number} bd-radius.xs   [0]     - Border radius of a `.progress-xs` component variation
+    ///
+    /// @prop {Map} height
+    /// @prop {Number} height.base [20px] - Height of the default `.progress` component
+    /// @prop {Number} height.sm   [13px] - Calculated height of a `.progress-sm` component variation. _Added via `@extend`_
+    /// @prop {Number} height.xs   [10px] - Calculated height of a `.progress-xs` component variation. _Added via `@extend`_
+    ///
+    /// @prop {Map} label-font-size
+    /// @prop {Number} label-font-size.base [12px] - Font size of text within a `.progress-bar`
+    /// @prop {Number} label-font-size.sm   [11px] - Font size of text within a `.progress-sm .progress-bar` component variation
+    /// @prop {Number} label-font-size.xs   [9px]  - Font size of text within a `.progress-xs .progress-bar` component variation. _Added via `@extend`_
+    ///
+    /// @prop {String} label-font-weight    [bold]      - Font weight of text within a `.progress-bar`
+    /// @prop {Color}  label-text-color     [#ffffff]   - Text color of text within a `.progress-bar`
+    /// @prop {Color}  label-shadow-color   [#444444]   - Text shadow color of text within a `.progress-bar`
+    /// @prop {Number} label-shadow-alpha   [.8]        - Text shadow opacity of text within a `.progress-bar`
+    ///
+    /// @prop {Map} state-colors
+    /// @prop {Color} state-colors.alt.bg     [#0094ff] - Background color of a `.progress-bar-alt` variation
+    /// @prop {Color} state-colors.success.bg [#66cc00] - Background color of a `.progress-bar-success` variation
+    /// @prop {Color} state-colors.warning.bg [#fbad17] - Background color of a `.progress-bar-warning` variation
+    /// @prop {Color} state-colors.danger.bg  [#ee2724] - Background color of a `.progress-bar-danger` variation
+    ///
+    $progress-bar-config: (
+        // colors
+        'bg': $zc-gray-40,
+        'bar-bg': $state-default,
+        'bar-width-transition-speed': .6s,
+        'bar-stripe-animation-speed': 2s,
+        'bar-bg-size': null, // actual calculated value inserted via @extend
+        'bar-gif-url': null,
+        'bar-gif-bg-size': null, // actual calculated value inserted via @extend
+        'bd-radius': (
+            'base': $border-radius-sm,
+            'sm': $border-radius-xs,
+            'xs': 0
+        ),
+        'height': (
+            'base': $line-height-base-px,
+            'sm': null, // actual calculated value inserted via @extend
+            'xs': null // actual calculated value inserted via @extend
+        ),
+        //
+        'label-font-size': (
+            'base': $font-size-sm,
+            'sm': $font-size-xs,
+            'xs': null // actual calculated value inserted via @extend
+        ),
+        'label-font-weight': bold,
+        'label-text-color': $white,
+        'label-shadow-color': $zc-gray-120,
+        'label-shadow-alpha': .8,
+        // state variations
+        'state-colors': (
+            'alt': (
+                'bg': $state-alt
+            ),
+            'success': (
+                'bg': $state-success
+            ),
+            'warning': (
+                'bg': $state-warning
+            ),
+            'danger': (
+                'bg': $state-danger
+            )
+        )
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $progress-bar-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $progress-bar-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $progress-bar-height: get-deep($progress-bar-config, 'height.base');
+        $progress-bar-bg-size: $progress-bar-height * 2;
+        $progress-bar-sm-height: round($progress-bar-height / 1.5);
+        $progress-bar-xs-height: round($progress-bar-height / 2);
+        $progress-bar-xs-label-font-size: $progress-bar-xs-height - 1;
+
+        // ----- EXTEND progress bar config with calc'd values ----- //
+        $progress-bar-config: extend($progress-bar-config,
+            (
+                'bar-bg-size': $progress-bar-bg-size,
+                'height': (
+                    'sm': $progress-bar-sm-height,
+                    'xs': $progress-bar-xs-height
+                ),
+                'label-font-size': (
+                    'xs': $progress-bar-xs-label-font-size
+                )
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   APP LOADING PROGRESS
+//   -> TODO: Move into its own peripheral?
+//
+// ********************************************************
+    // @private
+    // @deprecated
+    // @todo remove completely in 2.0.0
+    $app-loading-config: (
+        'logo-width': 163px, // base default width
+        'logo-height': 48px,
+        'logo-xheight-ratio': .5, // compared to total logo width
+        'logo-xheight': null, // calculated value added via @extend
+
+        'progress-height': get-deep($progress-bar-config, 'height.base'),
+        'copyright-margin-top': get-deep($progress-bar-config, 'height.base') * .75,
+        'copyright-height': null, // calculated value added via @extend
+
+        'content-height': null // calculated value added via @extend
+    ) !default;
+
+    // "v2" is the new global app loading page that uses blinking ellipsis dots
+    // instead of a progress bar.  The CSS classes used in the v1 loading page
+    // are considered deprecated as of `1.4.0`, and will be removed completely in `2.0.0`
+    $app-loading-v2-config: (
+        'logo-width': 12rem,
+        'logo-height': 3.5rem,
+        'logo-margin-bottom': 0,
+        'loading-text-color': $zc-gray-70,
+        'loading-text-font-size': to-rem($font-size-base),
+        'loading-text-font-style': italic
+    );
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $app-loading-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $app-loading-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $app-loading-logo-xheight: ceil(get($app-loading-config, 'logo-height') * get($app-loading-config, 'logo-xheight-ratio'));
+        $app-loading-copyright-height: get($app-loading-config, 'progress-height') + get($app-loading-config, 'copyright-margin-top');
+        $app-loading-content-height: get($app-loading-config, 'logo-height') + $app-loading-logo-xheight + get($app-loading-config, 'progress-height');
+
+        // ----- EXTEND app-loading config with calc'd values ----- //
+        $app-loading-config: extend($app-loading-config,
+            (
+                'logo-xheight': $app-loading-logo-xheight,
+                'copyright-height': $app-loading-copyright-height,
+                'content-height': $app-loading-content-height
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   PROGRESS SPINNER BASE
+//
+// ********************************************************
+    ///
+    /// Configuration for the `.progress-spinner` component.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @link http://bit.ly/webskin-progress-spinners Progress spinner component spec
+    /// @link http://bit.ly/webskin-spinner-sizes Progress spinner size variation spec
+    /// @link http://bit.ly/webskin-spinner-labels Progress spinner component labels spec
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {function} icon-size-base-16
+    /// @requires {variable} $symbol-base16-multipliers
+    /// @requires {variable} $font-size-sm
+    /// @requires {variable} $font-size-lg
+    /// @requires {variable} $font-size-base
+    /// @requires {variable} $zc-gray-90
+    /// ---
+    /// @prop {Color} color             [#707070] - Default color of a `.progress-spinner`
+    /// @prop {Color} label-text-color  [#707070] - Default text color of a `.progress-spinner .progress-label`
+    ///
+    /// @prop {Number} alpha-base       [.25]   - Alpha transparency of the base of the `.progress-spinner`
+    /// @prop {Number} alpha-on         [.75]   - Alpha transparency of the portion of the `.progress-spinner` that is "spinning"
+    /// @prop {Number} rotate-speed     [.75s]  - How long it takes for a `.progress-spinner` to complete one full rotation
+    /// @prop {Number} bd-width-ratio   [.05]   - Constant that can be used to roughly calculate the border width of a `.progress-spinner` based on its diameter
+    ///
+    /// @prop {Map} diameter
+    /// @prop {Number} diameter.base  [32px]  Diameter of base `.progress-spinner`
+    /// @prop {Number} diameter.xl    [115px] Diameter of `.progress-spinner-xl`
+    /// @prop {Number} diameter.lg    [48px]  Diameter of `.progress-spinner-lg`
+    /// @prop {Number} diameter.md    [24px]  Diameter of `.progress-spinner-md`
+    /// @prop {Number} diameter.sm    [16px]  Diameter of `.progress-spinner-sm`
+    ///
+    /// @prop {Map} size
+    /// @prop {Number} size.base  [12px] Font size of base `.progress-spinner .progress-label`
+    /// @prop {Number} size.xl    [18px] Font size of `.progress-spinner-xl .progress-label`
+    /// @prop {Number} size.lg    [14px] Font size of `.progress-spinner-lg .progress-label`
+    /// @prop {Number} size.md    [12px] Font size of `.progress-spinner-md .progress-label`
+    /// @prop {Number} size.sm    [12px] Font size of `.progress-spinner-sm .progress-label`
+    ///
+    $progress-spinner-config: (
+        'color': $zc-gray-90,
+        'label-text-color': $zc-gray-90,
+        'alpha-base': .25,
+        'alpha-on': .75,
+        'rotate-speed': .75s,
+        'bd-width-ratio': .05,
+        'diameter': (
+            'base': icon-size-base-16() * 2,
+            'xl':   icon-size-base-16() * get($symbol-base16-multipliers, 'xxl'),
+            'lg':   icon-size-base-16() * get($symbol-base16-multipliers, 'xl'),
+            'md':   icon-size-base-16() * get($symbol-base16-multipliers, 'md'),
+            'sm':   icon-size-base-16()
+        ),
+        'label-font-size': (
+            'base': $font-size-sm,
+            'xl':   $font-size-lg,
+            'lg':   $font-size-base,
+            'md':   $font-size-sm,
+            'sm':   $font-size-sm
+        )
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED CONFIG ALIAS / SHORTHAND
+//
+//   -> DO NOT MODIFY THESE (modify the map config)
+//
+// ********************************************************
+    $progress-spinner-sizes: map-keys(map-remove(get($progress-spinner-config, 'diameter'), 'base'));
+    $progress-spinner-size-base: get-deep($progress-spinner-config, 'diameter.base');
+    $progress-spinner-size-sm:   get-deep($progress-spinner-config, 'diameter.sm');
+    $progress-spinner-size-md:   get-deep($progress-spinner-config, 'diameter.md');
+    $progress-spinner-size-lg:   get-deep($progress-spinner-config, 'diameter.lg');
+    $progress-spinner-size-xl:   get-deep($progress-spinner-config, 'diameter.xl');

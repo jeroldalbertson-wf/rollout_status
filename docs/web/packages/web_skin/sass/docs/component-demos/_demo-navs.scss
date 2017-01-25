@@ -1,0 +1,67 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-navs';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Tabs
+// ----------------------------------------------------
+.ws-example {
+    // ----- space out example tabbed navs ----- //
+    &.ws-example-tabs .nav-tabs {
+        margin-bottom: to-rem($docs-spacing-base);
+    }
+}
+
+
+// ----------------------------------------------------
+//   Justified Navs
+//   -> All z-indexes must be above 2 to prevent
+//      dropdown-menus spawned from the justified navs
+//      from being clipped by the adjacent `.highlight`
+//   -> z-index of sibling nav-justified elems needs
+//      to be less than the siblings that come before
+//      them in the markup to prevent the dropdown
+//      menus from getting clipped by sibling navs
+// ----------------------------------------------------
+.nav-justified-example {
+    .nav-justified {
+        position: relative;
+        z-index: 4;
+
+        ~ .nav-justified {
+            z-index: 3;
+        }
+    }
+
+    .nav-justified > .dropdown > .dropdown-menu {
+        z-index: 5; // keep menu above adjacent nav-justified menu
+    }
+}
+
+
+// ----------------------------------------------------
+//   Paging Navs
+// ----------------------------------------------------
+.ws-example {
+    // ----- Pagination ----- //
+    > .pagination {
+        margin-top: to-rem($docs-spacing-md);
+        margin-bottom: to-rem($docs-spacing-md);
+    }
+
+    // ----- Pager ----- //
+    > .pager {
+        margin-top: 0;
+    }
+
+    // ----- Page Indicators ----- //
+    > .page-indicators {
+        bottom: 1rem;
+    }
+}

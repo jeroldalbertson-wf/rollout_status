@@ -1,0 +1,337 @@
+// ********************************************************
+
+////
+/// Shared dialog component size variation configuration
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// @access public
+/// @group core.components.shared
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/config/dialog-size-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   LARGE DIALOG SIZE CONFIG
+//
+//   -> `.modal`
+//
+// ********************************************************
+    ///
+    /// Size configuration for dialog components at their large size. `.modal` dialog components are an example of a "large" dialog size.
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {function} mod
+    /// @requires {variable} $padding-lg-horizontal
+    /// @requires {variable} $close-btn-config
+    /// @requires {variable} $webfont-baseline-offset
+    /// ---
+    /// @prop {Number} content-padding              [20px]   - Padding for content / body elems within large dialogs
+    /// @prop {Number} footer-padding               [0 20px 20px 20px] - Padding for footer elems within large dialogs
+    ///
+    /// @prop {Number} header-line-height           [1.1]    - Line height for large dialog headers
+    /// @prop {Number} header-min-height            [42px]   - Calculated minimum height for large dialog headers. _Added via `@extend`_
+    /// @prop {Number} header-font-size             [22px]   - Font size for large dialog headers
+    /// @prop {String} header-font-weight           [normal] - Font weight for large dialog headers
+    /// @prop {Number} header-padding-vertical      [0]      - Vertical padding for large dialog headers
+    /// @prop {Number} header-padding-horizontal    [20px]   - Horizontal padding for large dialog headers. _Added via `@extend`_
+    /// @prop {Number} header-elem-padding-top      [18px]   - Calculated top padding for elems nested within large dialog headers based on desired min-height value of header. _Added via `@extend`_
+    /// @prop {Number} header-elem-padding-bottom   [0]      - Calculated bottom padding for elems nested within large dialog headers based on desired min-height value of header
+    ///
+    /// @prop {Number} title-padding-top    [18px] - Top padding for title elems nested within large dialog headers, adjusted for Lato baseline offset. _Added via `@extend`_
+    /// @prop {Number} title-padding-bottom [0]    - Bottom padding for title elems nested within large dialog headers, adjusted for Lato baseline offset
+    ///
+    /// @prop {Number} close-btn-font-size          [26px]              - Font size of `.close` button elems within large dialog headers
+    /// @prop {Number} close-btn-gibson-normalize   [0]                 - Normalize constant value used to ensure baseline alignment with Lato font used in nested title elem. TODO: Remove in 2.0.0
+    /// @prop {Number} close-btn-padding            [13px 20px 15px]    - Padding for `.close` button elems within large dialog headers. _Added via `@extend`_
+    /// @prop {Number} close-btn-line-height        [22px]              - Line height for `.close` button elems within large dialog headers to ensure baseline alignment with webfont used in nested title elem. _Added via `@extend`_
+    /// @prop {Number} close-btn-width              [55px]              - Calculated width for `.close` button elems within large dialog headers
+    ///
+    $dialog-size-lg-config: (
+        'content-padding': $padding-lg-horizontal + 4,
+        'footer-padding': null, // actual calculated value inserted via @extend
+        //
+        'header-line-height': 1.1,
+        'header-min-height': null, // actual calculated value inserted via @extend
+        'header-font-size': 22px,
+        'header-font-weight': normal,
+        'header-padding-vertical': 0,
+        'header-padding-horizontal': null, // actual calculated value inserted via @extend
+        'header-elem-padding-top': null, // actual calculated value inserted via @extend
+        'header-elem-padding-bottom': 0,
+        //
+        'title-padding-top': null, // actual calculated value inserted via @extend
+        'title-padding-bottom': 0,
+        //
+        'close-btn-font-size': get($close-btn-config, 'font-size-lg'),
+        'close-btn-gibson-normalize': $webfont-baseline-offset * 2,
+        'close-btn-padding': null, // actual calculated value inserted via @extend
+        'close-btn-line-height': null, // actual calculated value inserted via @extend
+        'close-btn-width': 55px // padding-horizontal * 2 + width of &times; at 26px font size (15px)
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $dialog-size-lg-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $dialog-size-lg-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $dialog-lg-content-padding: get($dialog-size-lg-config, 'content-padding');
+        $dialog-lg-header-min-height: (get($dialog-size-lg-config, 'header-font-size') * 2) - 2;
+        $dialog-lg-header-min-height-normalize: if(mod($dialog-lg-header-min-height, 2), 0, 1px);
+        $dialog-lg-header-padding-horizontal: $dialog-lg-content-padding;
+        $dialog-lg-header-elem-padding-top: $dialog-lg-header-min-height - round(get($dialog-size-lg-config, 'header-font-size') * get($dialog-size-lg-config, 'header-line-height'));
+        $dialog-lg-title-padding-top: $dialog-lg-header-elem-padding-top;
+
+        $dialog-lg-close-btn-padding-top: $dialog-lg-header-elem-padding-top;
+        $dialog-lg-close-btn-padding-horizontal: $dialog-lg-header-padding-horizontal;
+        $dialog-lg-close-btn-padding-bottom: get($dialog-size-lg-config, 'close-btn-gibson-normalize');
+        $dialog-lg-close-btn-padding: $dialog-lg-close-btn-padding-top $dialog-lg-close-btn-padding-horizontal $dialog-lg-close-btn-padding-bottom;
+        $dialog-lg-close-btn-line-height: get($dialog-size-lg-config, 'header-font-size') - (get($dialog-size-lg-config, 'close-btn-gibson-normalize') * 2);
+
+        // ----- EXTEND dialog large size config with calc'd values ----- //
+        $dialog-size-lg-config: extend($dialog-size-lg-config,
+            (
+                'footer-padding': 0 $dialog-lg-content-padding $dialog-lg-content-padding $dialog-lg-content-padding,
+                'header-min-height': $dialog-lg-header-min-height,
+                'header-padding-horizontal': $dialog-lg-header-padding-horizontal,
+                'header-elem-padding-top': $dialog-lg-header-elem-padding-top,
+                'title-padding-top': $dialog-lg-title-padding-top,
+                'close-btn-padding': $dialog-lg-close-btn-padding,
+                'close-btn-line-height': $dialog-lg-close-btn-line-height
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   DEFAULT DIALOG SIZE CONFIG
+//
+//   -> `.modal-sm`, `.alert`, `.popover`, `.panel`
+//
+// ********************************************************
+    ///
+    /// Size configuration for dialog components at their default size. `.modal-sm`, `.alert`, `.popover` and `.panel` components are examples of a "default" dialog size.
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {function} extend
+    /// @requires {function} mod
+    /// @requires {variable} $padding-lg-horizontal
+    /// @requires {variable} $webfont-baseline-offset
+    /// @requires {variable} $headings-config
+    /// @requires {variable} $dialog-size-lg-config
+    /// @requires {variable} $padding-lg-horizontal
+    /// @requires {variable} $close-btn-config
+    /// ---
+    /// @prop {Number} content-padding              [16px]  - Padding for content / body elems within dialogs
+    /// @prop {Number} footer-padding               [0 16px 16px 16px] - Padding for footer elems within dialogs
+    ///
+    /// @prop {Number} header-line-height           [1.2]   - Line height for default dialog headers
+    /// @prop {Number} header-min-height            [34px]  - Calculated minimum height for default dialog headers
+    /// @prop {Number} header-font-size             [18px]  - Font size for default dialog headers
+    /// @prop {String} header-font-weight           [normal] - Font weight for default dialog headers
+    /// @prop {Number} header-padding-vertical      [0]     - Vertical padding for default dialog headers
+    /// @prop {Number} header-padding-horizontal    [16px]  - Horizontal padding for default dialog headers. _Added via `@extend`_
+    /// @prop {Number} header-elem-padding-top      [13px]  - Calculated top padding for elems nested within default dialog headers based on desired min-height value of header. _Added via `@extend`_
+    /// @prop {Number} header-elem-padding-bottom   [0]     - Calculated bottom padding for elems nested within default dialog headers based on desired min-height value of header
+    ///
+    /// @prop {Number} title-padding-top    [13px]  - Top padding for title elems nested within default dialog headers, adjusted for Lato baseline offset. _Added via `@extend`_
+    /// @prop {Number} title-padding-bottom [0]     - Bottom padding for title elems nested within default dialog headers, adjusted for Lato baseline offset
+    ///
+    /// @prop {Number} close-btn-font-size          [20px]              - Font size of `.close` button elems within default dialog headers
+    /// @prop {Number} close-btn-gibson-normalize   [0]                 - Normalize constant value used to ensure baseline alignment with Lato font used in nested title elem. TODO: Remove in 2.0.0
+    /// @prop {List}   close-btn-padding            [10px 16px 12px]    - Padding for `.close` button elems within default dialog headers. _Added via `@extend`_
+    /// @prop {Number} close-btn-line-height        [20px]              - Line height for `.close` button elems within default dialog headers to ensure baseline alignment with webfont used in nested title elem. _Added via `@extend`_
+    /// @prop {Number} close-btn-width              [44px]              - Calculated width for `.close` button elems within default dialog headers
+    ///
+    $dialog-size-base-config: (
+        'content-padding': $padding-lg-horizontal,
+        'footer-padding': null, // actual calculated value inserted via @extend
+        //
+        'header-line-height': 1.2,
+        'header-min-height': 34px,
+        'header-font-size': get-deep($headings-config, 'h4.font-size'),
+        'header-font-weight': normal,
+        'header-padding-vertical': 0,
+        'header-padding-horizontal': null, // actual calculated value inserted via @extend
+        'header-elem-padding-top': null, // actual calculated value inserted via @extend
+        'header-elem-padding-bottom': 0,
+        //
+        'title-padding-top': null, // actual calculated value inserted via @extend
+        'title-padding-bottom': 0,
+        //
+        'close-btn-font-size': get($close-btn-config, 'font-size'),
+        'close-btn-gibson-normalize': get($dialog-size-lg-config, 'close-btn-gibson-normalize'),
+        'close-btn-padding': null, // actual calculated value inserted via @extend
+        'close-btn-line-height': null, // actual calculated value inserted via @extend
+        'close-btn-width': 44px // padding-horizontal * 2 + width of &times; at 26px font size (15px)
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $dialog-size-base-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $dialog-size-base-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $dialog-base-content-padding: get($dialog-size-base-config, 'content-padding');
+        $dialog-header-min-height: get($dialog-size-base-config, 'header-min-height');
+        $dialog-header-min-height-normalize: if(mod($dialog-header-min-height, 2), 0, 1px);
+        $dialog-header-padding-horizontal: $dialog-base-content-padding;
+        $dialog-header-elem-padding-top: $dialog-header-min-height - floor(get($dialog-size-base-config, 'header-font-size') * get($dialog-size-base-config, 'header-line-height'));
+        $dialog-title-padding-top: $dialog-header-elem-padding-top + $webfont-baseline-offset;
+
+        $dialog-close-btn-padding-top: $dialog-header-elem-padding-top;
+        $dialog-close-btn-padding-horizontal: $dialog-header-padding-horizontal;
+        $dialog-close-btn-padding-bottom: get($dialog-size-base-config, 'close-btn-gibson-normalize');
+        $dialog-close-btn-padding: $dialog-close-btn-padding-top $dialog-close-btn-padding-horizontal $dialog-close-btn-padding-bottom;
+        $dialog-close-btn-line-height: get($dialog-size-base-config, 'header-font-size') - (get($dialog-size-base-config, 'close-btn-gibson-normalize') * 2);
+
+        // ----- EXTEND dialog base size config with calc'd values ----- //
+        $dialog-size-base-config: extend($dialog-size-base-config,
+            (
+                'footer-padding': 0 $dialog-base-content-padding $dialog-base-content-padding $dialog-base-content-padding,
+                'header-padding-horizontal': $dialog-header-padding-horizontal,
+                'header-elem-padding-top': $dialog-header-elem-padding-top,
+                'title-padding-top': $dialog-title-padding-top,
+                'close-btn-padding': $dialog-close-btn-padding,
+                'close-btn-line-height': $dialog-close-btn-line-height
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   SMALL DIALOG SIZE CONFIG
+//
+//   -> `.alert-sm` and `.panel-condensed`
+//
+// ********************************************************
+    ///
+    /// Size configuration for dialog components at their small size. `.alert-sm` and `.panel-condensed` components are examples of a "small" dialog size.
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {function} mod
+    /// @requires {variable} $padding-sm-horizontal
+    /// @requires {variable} $padding-sm-vertical
+    /// @requires {variable} $dialog-size-base-config
+    /// @requires {variable} $font-size-base
+    /// ---
+    /// @prop {Number} content-padding              [8px]   - Padding for content / body elems within small dialogs
+    ///
+    /// @prop {Number} header-line-height           [1.1]   - Line height for small dialog headers
+    /// @prop {Number} header-min-height            [26px]  - Calculated minimum height for small dialog headers. _Added via `@extend`_
+    /// @prop {Number} header-font-size             [14px]  - Font size for small dialog headers
+    /// @prop {String} header-font-weight           [bold]  - Font weight for small dialog headers
+    /// @prop {Number} header-padding-vertical      [5px]   - Vertical padding for small dialog headers
+    /// @prop {Number} header-padding-horizontal    [8px]   - Horizontal padding for small dialog headers. _Added via `@extend`_
+    /// @prop {Number} header-elem-padding-top      [5px]   - Calculated top padding for elems nested within small dialog headers based on desired min-height value of header. _Added via `@extend`_
+    /// @prop {Number} header-elem-padding-bottom   [5px]   - Calculated bottom padding for elems nested within small dialog headers based on desired min-height value of header. _Added via `@extend`_
+    ///
+    /// @prop {Number} title-padding-top    [5px]           - Top padding for title elems nested within small dialog headers, adjusted for Lato baseline offset. _Added via `@extend`_
+    /// @prop {Number} title-padding-bottom [5px]           - Bottom padding for title elems nested within small dialog headers, adjusted for Lato baseline offset. _Added via `@extend`_
+    ///
+    /// @prop {Number} close-btn-font-size          [20px]          - Font size of `.close` button elems within small dialog headers
+    /// @prop {Number} close-btn-gibson-normalize   [0]             - Normalize constant value used to ensure baseline alignment with Lato font used in nested title elem. TODO: Remove in 2.0.0
+    /// @prop {List}   close-btn-padding            [9px 8px 11px]  - Padding for `.close` button elems within small dialog headers. _Added via `@extend`_
+    /// @prop {Number} close-btn-line-height        [18px]          - Line height for `.close` button elems within small dialog headers to ensure baseline alignment with webfont used in nested title elem. _Added via `@extend`_
+    /// @prop {Number} close-btn-width              [34px]          - Calculated width for `.close` button elems within small dialog headers. _Added via `@extend`_
+    ///
+    $dialog-size-sm-config: (
+        'content-padding': get($dialog-size-base-config, 'content-padding') / 2,
+        //
+        'header-line-height': 1.1,
+        'header-min-height': null, // actual calculated value inserted via @extend
+        'header-font-size': $font-size-base,
+        'header-font-weight': bold,
+        'header-padding-vertical': $padding-sm-vertical,
+        'header-padding-horizontal': null, // actual calculated value inserted via @extend
+        'header-elem-padding-top': null, // actual calculated value inserted via @extend
+        'header-elem-padding-bottom': null, // actual calculated value inserted via @extend
+        //
+        'title-padding-top': null, // actual calculated value inserted via @extend
+        'title-padding-bottom': null, // actual calculated value inserted via @extend
+        //
+        'close-btn-font-size': get($close-btn-config, 'font-size'),
+        'close-btn-gibson-normalize': get($dialog-size-base-config, 'close-btn-gibson-normalize'),
+        'close-btn-padding': null, // actual calculated value inserted via @extend
+        'close-btn-line-height': null // actual calculated value inserted via @extend
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $dialog-size-sm-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $dialog-size-sm-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $dialog-sm-header-padding-vertical: get($dialog-size-sm-config, 'header-padding-vertical');
+        $dialog-sm-header-padding-horizontal: get($dialog-size-sm-config, 'content-padding');
+        $dialog-sm-header-font-size: get($dialog-size-sm-config, 'header-font-size');
+        $dialog-sm-header-line-height: get($dialog-size-sm-config, 'header-line-height');
+        $dialog-sm-header-min-height: ($dialog-sm-header-padding-vertical * 2) + ceil($dialog-sm-header-font-size * $dialog-sm-header-line-height);
+        $dialog-sm-header-min-height-normalize: if(mod($dialog-sm-header-min-height, 2), 0, 1px);
+        $dialog-sm-header-elem-padding-top: $dialog-sm-header-padding-vertical;
+        $dialog-sm-header-elem-padding-bottom: $dialog-sm-header-padding-vertical;
+        $dialog-sm-title-padding-top: $dialog-sm-header-padding-vertical;
+        $dialog-sm-title-padding-bottom: $dialog-sm-header-padding-vertical;
+
+        $dialog-sm-close-btn-padding-top: $dialog-sm-header-elem-padding-top;
+        $dialog-sm-close-btn-padding-horizontal: $dialog-sm-header-padding-horizontal;
+        $dialog-sm-close-btn-padding-bottom: get($dialog-size-sm-config, 'close-btn-gibson-normalize');
+        $dialog-sm-close-btn-padding: $dialog-sm-close-btn-padding-top $dialog-sm-close-btn-padding-horizontal $dialog-sm-close-btn-padding-bottom;
+        $dialog-sm-close-btn-line-height: get($dialog-size-sm-config, 'header-font-size') - (get($dialog-size-sm-config, 'close-btn-gibson-normalize') * 2);
+        $dialog-sm-close-btn-width: $dialog-sm-header-min-height;
+
+        // ----- EXTEND dialog sm size config with calc'd values ----- //
+        $dialog-size-sm-config: extend($dialog-size-sm-config,
+            (
+                'header-min-height': $dialog-sm-header-min-height,
+                'header-padding-horizontal': $dialog-sm-header-padding-horizontal,
+                'header-elem-padding-top': $dialog-sm-header-elem-padding-top,
+                'header-elem-padding-bottom': $dialog-sm-header-elem-padding-bottom,
+                'title-padding-top': $dialog-sm-title-padding-top,
+                'title-padding-bottom': $dialog-sm-title-padding-bottom,
+                'close-btn-padding': $dialog-sm-close-btn-padding,
+                'close-btn-line-height': $dialog-sm-close-btn-line-height,
+                'close-btn-width': $dialog-sm-close-btn-width
+            )
+        );

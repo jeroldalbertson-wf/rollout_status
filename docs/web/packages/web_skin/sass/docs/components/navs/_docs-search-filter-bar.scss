@@ -1,0 +1,80 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/navs/search-filter-bar';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.nav-pills-bar-docs-search-container {
+    @include inset-oval-shadow();
+
+    &[data-ready="false"] {
+        .search-results-container {
+            // don't show icons until filters have been applied by JS
+            // which will change the value of `data-ready` to `true`
+            @include opacity(0);
+        }
+    }
+
+    &[data-ready="true"] {
+        // It's not loading anymore.
+        .glyph-search-loading {
+            display: none;
+        }
+    }
+}
+
+.search-criteria-container {
+    margin-top: to-rem($line-height-base-px);
+    font-size: to-rem($font-size-base) !important;
+    line-height: $line-height-base !important;
+    // Everything within our bar will be 3rem tall... so add even spacing all the way around.
+    padding: to-rem(($nav-pills-pill-height - component-height(sm)) / 2);
+
+    .filter-count-container {
+        display: inline-block;
+        line-height: to-rem(component-height(sm)); // ensure that all text nested within is vertically centered
+
+        &,
+        * {
+            // not a selectable piece of text
+            @include disable-user-select();
+            cursor: default;
+        }
+
+        strong {
+            color: get($nav-link-config, 'text-color'); // override .text-muted
+        }
+    }
+
+    .search-criteria-right {
+        .filter-count-preface,
+        .filter-count-after {
+            display: none; // mobile-first default
+
+            @include respond-to('screen-lg and up') {
+                display: inline;
+            }
+        }
+    }
+
+    // form groups within .search-criteria-left
+    .form-group {
+        height: to-rem(component-height(sm));
+
+        // form-group wrapped around filters
+        &.icon-glyph-set-filters {
+            .icon {
+                color: $zc-blue-80;
+                @include opacity(0);
+            }
+
+            .active .icon {
+                @include opacity(1);
+            }
+        }
+    }
+}

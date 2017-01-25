@@ -1,0 +1,69 @@
+// ********************************************************
+
+////
+/// Component state color variation config manifest
+/// ---
+/// @access private
+/// @type List
+/// @group core.internals.color.state
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/component-color-variations';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function extend,
+                                                function build-box-shadow,
+                                                function reject);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   STATE VARIATION KEYS
+//
+// ********************************************************
+    ///
+    /// Names of all the state-based colors used throughout Web Skin componentry.
+    /// ---
+    /// @requires {variable} $colors-global-states
+    ///
+    $state-names: map-keys($colors-global-states);
+
+    ///
+    /// Names of skins that only exist for `.btn` components
+    /// @since 1.2.2
+    ///
+    $btn-state-extras: 'white', 'light', 'inverse', 'link';
+
+    ///
+    /// Names of all the state-based colors used for `.btn` components.
+    /// ---
+    /// @since 0.4.18
+    /// @requires {variable} $state-names
+    /// @requires {variable} $btn-state-extras
+    ///
+    $btn-state-names: join($state-names, $btn-state-extras, comma);
+
+    ///
+    /// Names of a subset of the state-based colors used throughout Web Skin componentry.
+    /// ---
+    /// @since 0.3.0
+    /// @requires {variable} $state-names
+    ///
+    $state-names-min: reject($state-names, 'default', 'primary');
+
+
+
+// ********************************************************
+//
+//   STATE VARIATION CONFIG IMPORTS
+//
+// ********************************************************
+    @import 'states/state-colors';

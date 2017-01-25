@@ -1,0 +1,127 @@
+// ********************************************************
+//
+//   These are styles that we are using
+//   for examples of actual core table
+//   componentry.
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-tables';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Responsive table examples
+//
+//   Demonstrate responsive tables even
+//   when the viewport width doesn't
+//   match the core use-case / mq
+// ----------------------------------------------------
+.responsive-table-examples {
+    .table-responsive:last-of-type {
+        margin-bottom: 0;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Table column width demo
+// ----------------------------------------------------
+.table-col-size-demo {
+    table-layout: fixed;
+}
+
+
+// ----------------------------------------------------
+//   Migration guide helpers
+// ----------------------------------------------------
+.table-wordy {
+    tbody td,
+    tbody th {
+        padding: 1.4rem;
+    }
+
+    thead th {
+        padding-left: 1.4rem;
+        padding-right: 1.4rem;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Wdesk file/folder data-grid example
+// ----------------------------------------------------
+.table-example-file-data-grid {
+    table-layout: fixed;
+
+    tbody > tr {
+        &:hover {
+            .label {
+                cursor: pointer;
+            }
+        }
+    }
+
+    .col-cbox {
+        // width is added via core style in
+        // sass/core/components/_tables.scss
+    }
+    .col-name {
+        // automatically scale to remaining size
+    }
+    .col-type {
+        @include table-cell-width(75px);
+    }
+    .col-date {
+        @include table-cell-width(155px);
+    }
+}
+
+
+// ----------------------------------------------------
+//   Datatables Demo
+// ----------------------------------------------------
+    .table-datatable {
+        table-layout: fixed;
+
+        th {
+            @include table-cell-width(185px);
+
+            background-color: $zc-gray-20;
+            text-align: center;
+            color: $table-header-color;
+        }
+
+        thead th {
+            padding: .2rem;
+            height: to-rem(get-deep($btn-config, 'height.sm'));
+        }
+
+        .col-hamburger {
+            @include table-cell-width(get($icon-base24-size-config, 'base') * 2);
+
+            .btn {
+                padding: 0;
+                width: 100%;
+                height: to-rem(get-deep($btn-config, 'height.sm') - 4);
+                color: $table-header-color;
+
+                #{$link-hover-focus},
+                #{$link-pressed},
+                &[aria-describedby] {
+                    color: darken($table-header-color, $elem-hover-bg-darken-amount-default);
+                }
+            }
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Rounded corner table demo
+// ----------------------------------------------------
+    .example-rounded-corner-table {
+        @include table-rounded-corners();
+    }
+

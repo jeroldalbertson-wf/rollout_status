@@ -1,0 +1,428 @@
+// ********************************************************
+//
+//   DROPDOWN MENU COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-dropdowns
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/navs/dropdowns';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $navs-dropdowns-module-config:  'core/components/atoms/navs/dropdowns-config';
+    $navs-dropdowns-module-helpers: 'core/components/atoms/navs/dropdowns-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $navs-dropdowns-module-config,
+                                          $navs-dropdowns-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE DROPDOWN CONTAINER
+//
+// ********************************************************
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+// ********************************************************
+//
+//   OVERLAY DROPDOWN CONTAINER
+//
+//
+//   [1] Prevent inline-block `.dropdown`s from collapsing
+//       child `.dropdown-menu` margin during measurement,
+//       making margin appear to be 0.
+//
+//   [2] The .`dropdown` will be `position: absolute` in
+//       this case, and we want to position it relative to
+//       the container, not to the `.dropdown-overlay` node.
+// ********************************************************
+.dropdown-overlay {
+    position: absolute;
+
+    &.form-control {
+        height: auto;
+    }
+
+    &.chosen-container ul {
+        margin-top: to-rem(get($btn-config, 'dd-menu-spacing'));
+    }
+
+    .overlay-target--v2 & {
+        display: block; // [1]
+        position: static; // [2]
+    }
+}
+
+// ********************************************************
+//
+//   BASE DROPDOWN MENU
+//
+// ********************************************************
+.dropdown-menu {
+    @include dropdown-menu-base();
+
+    // ------------------------------------------------
+    //   OPEN STATE
+    // ------------------------------------------------
+    .open > & {
+        display: block;
+    }
+
+    // ------------------------------------------------
+    //   DROPUP VARIATION
+    // ------------------------------------------------
+    .dropup > & {
+        @include dropup-menu-base();
+    }
+
+    // ------------------------------------------------
+    //   OVERLAY VARIATION
+    //
+    //
+    //   [1] Set both top and bottom margin so the shadow doesn't become clipped,
+    //       and so that dropdowns/dropups are positioned the same.
+    //       TODO: better dropdup-as-overlay support
+    // ------------------------------------------------
+    .dropdown-overlay > & {
+        position: relative;
+        float: none;
+
+        .overlay-target--v2 &:not(.dropdown-menu--submenu) {
+            margin: to-rem(get($btn-config, 'dd-menu-spacing')) 0; // [1]
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   DROPDOWN MENU ITEMS / ITEM HITAREAS
+//
+// ********************************************************
+.dropdown-menu {
+    // ----------------------------------------------------
+    //   DROPDOWN MENU ITEMS
+    // ----------------------------------------------------
+    @at-root {
+        .menu-item {
+            @include dropdown-menu-item();
+        }
+    }
+}
+
+// ----------------------------------------------------
+//   DROPDOWN MENU ITEM LINKS (`.hitarea`)
+//
+//   [1] Since hovering a menu item automatically
+//       re-focuses it in Web Skin Dart (UIP-694), and
+//       Web Skin's wdesk-dropdown.js will eventually
+//       do the same (UIP-835) - the presence of a
+//       darker blue outline in-addition to the light
+//       blue background creates a tremendous amount of
+//       visual clutter in a multi-select use-case such
+//       as UIP-664.
+//
+//   [2] The "pointer event" states such as `:hover`,
+//       `:focus` / `.js-focus` should be declared after
+//       "static" states like `.active` or `.checked`
+//       so that the "pointer event" styling is additive
+//       when combined with the static state classes.
+// ----------------------------------------------------
+.dropdown-menu > .menu-item,
+.dropdown-menu--virtual .menu-item {
+    // ----- BASE ITEM HITAREA STYLES ----- //
+    > .hitarea {
+        @include dropdown-menu-link();
+    }
+    // ----- [2] STATIC "CHECKED" ITEM STATE ----- //
+    &.checked > .hitarea {
+        @include dropdown-menu-link-checked();
+    }
+    // ----- [2] STATIC "ACTIVE" ITEM STATE ----- //
+    &.active > .hitarea {
+        @include secondary-nav-link-active();
+    }
+    // ----- [2] STATIC "SELECTED" ITEM STATE ----- //
+    &#{$selected-class} > .hitarea {
+        @include secondary-nav-link-selected();
+    }
+    // ----- [2] PSEUDO CLASSES / POINTER EVENT ITEM STATES ----- //
+    > .hitarea {
+        // ----- HOVER HITAREA STATE ----- //
+        #{$hover} {
+            @include secondary-nav-link-hover();
+        }
+        // ----- FOCUS / SIMULATE FOCUS VIA JS ----- //
+        #{$focus},
+        &#{$focus-class} {
+            @include secondary-nav-link-focus();
+            @include remove-focus-outline(); // [1]
+        }
+        // ----- PRESSED HITAREA STATE ----- //
+        #{$link-pressed} {
+            @include secondary-nav-link-press();
+        }
+        // ----- DISABLED HITAREA STATE ----- //
+        &[disabled],
+        &.disabled {
+            @include secondary-nav-link-disabled();
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   DROPDOWN MENU POSITIONING
+//
+// ********************************************************
+
+    // ----------------------------------------------------
+    //   RIGHT ALIGNED
+    // ----------------------------------------------------
+    .dropdown-menu-right,
+    .pull-right .dropdown-menu {
+        right: 0;
+        left: auto; // undo .dropdown-menu default
+    }
+
+    // ----------------------------------------------------
+    //   LEFT ALIGNED
+    //   -> Left align is the default, but
+    //      `.dropdown-menu-left` can be used in situations
+    //      such as dropdown menus within a `.navbar-right`
+    //      or `.pull-right` context
+    // ----------------------------------------------------
+    .navbar-right,
+    .pull-right {
+        .dropdown-menu-left {
+            right: auto;
+            left: 0;
+        }
+    }
+
+
+// ********************************************************
+//
+//   OPTIONAL DROPDOWN MENU COMPONENTS
+//
+// ********************************************************
+
+    // ----------------------------------------------------
+    //   HEADERS
+    // ----------------------------------------------------
+    .dropdown-header {
+        @include dropdown-menu-header();
+    }
+
+    // ------------------------------------------------
+    //   DIVIDERS
+    //   -> Essentially an `<hr>` between items
+    // ------------------------------------------------
+    .divider {
+        margin: to-rem(get($dropdown-menu-base-size-config, 'divider-margin'));
+        border-top-color: get($dropdown-menu-color-config, 'divider-bd-color');
+    }
+
+    // ----------------------------------------------------
+    //   "INFO" SECTIONS
+    //   -> Creates an area within the dd menu with a
+    //      contrasting light gray background
+    // ----------------------------------------------------
+    .dropdown-info {
+        @include dropdown-menu-info();
+    }
+
+
+// ********************************************************
+//
+//   SIZE VARIATIONS
+//
+// ********************************************************
+    .dropdown-menu-md {
+        @include dropdown-menu-size($dropdown-menu-md-size-config);
+    }
+
+    .dropdown-menu-lg {
+        @include dropdown-menu-size($dropdown-menu-lg-size-config);
+    }
+
+
+// ********************************************************
+//
+//   DROPDOWN BACKDROP
+//   -> Dropdown JS plugin helper class usd to "catch"
+//      body clicks on mobile devices
+//
+// ********************************************************
+.dropdown-backdrop {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    z-index: z('dropdown') - 10;
+}
+
+
+// ********************************************************
+//
+//  DROPDOWN "BOX" VARIATION
+//
+//  -> Just like a `.dropdown-menu`, but it is intended
+//     to house a wide range of components - not just
+//     `.menu-item`s.
+//
+//     REQUIRES THE INCLUSION OF THE `dropdown-menu` class.
+//
+//     <div class="dropdown-menu dropdown-menu--box"></div>
+//
+//  [1] Must allow nested dropdowns to escape.
+//
+//  [2] Grow to be the width of it's children - even if
+//      those children use a "stretch" flexbox layout. (eww)
+// ********************************************************
+.dropdown-menu--box {
+    @include dropdown-menu-size($dropdown-box-base-size-config, $include-menu-item-styles: false);
+
+    float: none;
+    overflow: visible; // [1]
+    white-space: nowrap; // [2]
+
+
+    // ----------------------------------------------------
+    //  CHILD DROPDOWN MENUS
+    //
+    //  [1] Prevent white-space property value pollution.
+    //      Since it's one of those properties that gets
+    //      inherited by all children.
+    //
+    //  [2] Allow a dd menu to be nested within the box
+    //      above (or below) non-menu children
+    //
+    //      <div class="dropdown-menu dropdown-menu--box">
+    //        <div class="dropdown-action-group">
+    //          ...
+    //        </div>
+    //        <div class="dropdown-menu">
+    //          ...
+    //        </div>
+    //      </div>
+    // ----------------------------------------------------
+    .dropdown-menu { // [1]
+        white-space: normal;
+    }
+
+    > .dropdown-menu { // [2]
+        @include dropdown-menu-nested();
+    }
+
+
+    // ----------------------------------------------------
+    //  NON-MENU BOX CHILDREN LAYOUT WRAPPERS
+    //
+    //  [1] Can use selectors namespaced to the dropdown.
+    //
+    //    [1.1] Ensure that HTML white-space has no effect on
+    //          horizontal spacing between groups. (UIP-958)
+    //
+    //  [2] Can re-use DOM that was already being used within
+    //      a Wdesk "tabbed toolbar ribbon" (primary use case)
+    //
+    //    [2.1] Using `!important` to trump the `!important`
+    //          added in `ribbon-action-group-rows-grid-block()`
+    //          TODO: Remove `!important` in the `2.0.0` release
+    // ----------------------------------------------------
+
+        // ----- [1] ----- //
+        @at-root {
+            .dropdown-action-group {
+                @include dropdown-action-group-grid-block();
+                @include dropdown-action-group-toolbar-children-spacing();
+                @include grid-size(shrink);
+
+                padding: get($dropdown-box-base-size-config, 'child-spacing');
+                font-size: 0; // [1.1]
+            }
+
+            .dropdown-action-group__rows {
+                @include dropdown-action-group-rows();
+            }
+
+            .dropdown-action-group__label {
+                @include small-action-area-label-text();
+            }
+        }
+
+        // ----- [2] ----- //
+        .ribbon-action-group {
+            @include dropdown-action-group-toolbar-children-spacing();
+
+            padding: get($dropdown-box-base-size-config, 'child-spacing') !important; // [2.1]
+        }
+
+        .ribbon-action-group__rows {
+            @include ribbon-action-group-rows(
+                $horizontal-spacing: get($dropdown-box-base-size-config, 'child-spacing'),
+                $vertical-spacing: get($dropdown-box-base-size-config, 'child-spacing')
+            );
+        }
+
+
+    // ----------------------------------------------------
+    //  SIZE VARIATIONS
+    // ----------------------------------------------------
+    @at-root {
+        .dropdown-menu--box--md {
+            @include dropdown-menu-size($dropdown-box-md-size-config, $include-menu-item-styles: false);
+        }
+
+        .dropdown-menu--box--lg {
+            @include dropdown-menu-size($dropdown-box-lg-size-config, $include-menu-item-styles: false);
+        }
+    }
+}
+
+// ********************************************************
+//
+// NESTED DROPDOWN MENUS
+//
+// ********************************************************
+    .dropdown-menu--outer {
+        @include dropdown-menu-outer();
+    }
+
+    .dropdown-menu--inner {
+        @include dropdown-menu-nested();
+    }
+
+// ********************************************************
+//
+//  DROPDOWN TRIGGERS NESTED WITHIN OPEN DROPDOWN MENUS
+//
+//  When a `.dropdown-menu--box` contains a child
+//  `.dropdown-trigger`, we need to make sure the
+//  `.caret` within the trigger represents the open
+//  state of it's nearest `.dropdown` ancestor only,
+//  not the grandparent `.dropdown` that is wrapping
+//  around the trigger for the outer dropdown "box".
+//
+// ********************************************************
+    .dropdown:not(.open) .dropdown-toggle {
+        .caret    { @include triangle-direction('down', $width: $caret-width); }
+        .caret-sm { @include triangle-direction('down', $width: $caret-sm-width); }
+        .caret-xs { @include triangle-direction('down', $width: $caret-xs-width); }
+    }
+
+    .dropup:not(.open) .dropdown-toggle {
+        .caret    { @include triangle-direction('up', $width: $caret-width); }
+        .caret-sm { @include triangle-direction('up', $width: $caret-sm-width); }
+        .caret-xs { @include triangle-direction('up', $width: $caret-xs-width); }
+    }

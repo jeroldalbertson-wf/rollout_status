@@ -1,0 +1,131 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-navbars';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.ws-example {
+    .navbar .container {
+        width: 100%;
+        max-width: none;
+    }
+
+    .navbar:last-child {
+        margin-bottom: -.1rem;
+    }
+
+    .navbar-collapse {
+        z-index: 2 !important; // keep above ribbon subnavs
+    }
+
+    // ----- Fixed position won't work contained in an example ----- //
+    .navbar-fixed-top,
+    .navbar-fixed-bottom {
+        position: relative;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+.wdesk-navbar-top-example,
+.wdesk-navbar-bottom-example,
+.wdesk-navbar-top-static-example {
+    padding: 0;
+    // allow collapsed navbar height to change the height of the example container
+    min-height: to-rem(get($navbar-base-config, 'height')) + $docs-example-bd-width;
+
+    // don't show the "example" label
+    &:after {
+        display: none;
+    }
+
+    .navbar {
+        position: absolute;
+        // make sure non-fixed variation examples fill 100% of their containers
+        left: 0;
+        right: 0;
+    }
+}
+
+.wdesk-navbar-top-example ~ .wdesk-navbar-top-example {
+    // make sure dropdowns coming out of navbars stay above adjacent code examples
+    z-index: 4;
+}
+
+.wdesk-navbar-top-static-example > .navbar {
+    margin-bottom: -.1rem;
+}
+
+.wdesk-navbar-top-example,
+.wdesk-navbar-bottom-example {
+    border-radius: 0;
+}
+
+.wdesk-navbar-bottom-example .navbar {
+    margin-bottom: 0 !important;
+}
+
+// Navbar examples nested within .ws-examples--horizontal
+.wdesk-navbar-top-example--horizontal {
+    min-height: 13.8rem;
+    z-index: 4;
+
+    .navbar {
+        top: 4rem;
+    }
+
+    ~ .wdesk-navbar-top-example--horizontal {
+        z-index: 5;
+    }
+}
+
+// Ribbon action group examples nested within .ws-examples--horizontal
+.wdesk-navbar-ribbon-examples--horizontal,
+.wdesk-navbar-ribbon-example--standalone {
+    $action-group-min-height: to-rem(get($nav-ribbon-base-config, 'tab-content-min-height'));
+
+    min-height: $action-group-min-height + 1.1rem;
+
+    .ribbon-action-group {
+        min-height: $action-group-min-height;
+    }
+}
+
+.ws-example > .ribbon-nav-container {
+    position: relative;
+}
+
+.ws-example-ribbon-action-group-label {
+    font-size: to-rem($font-size-base);
+    text-align: center;
+    line-height: to-rem(get($nav-ribbon-btn-group-config, 'divider-height') + 8px);
+    margin: 0;
+    color: $zc-gray-60;
+}
+
+
+// ----------------------------------------------------
+//  Ribbon action groups / responsive DropdownBox demo
+//
+//  -> Show action group expanded within tabbed toolbar
+//     when the viewport is 992px or higher, otherwise
+//     show it within a `DropdownBox`.
+// ----------------------------------------------------
+
+.ws-example-ribbon-action-group--hidden-md-and-up {
+    @include display-flex();
+}
+
+@include respond-to('screen-md and up') {
+    .ws-example-ribbon-action-group--hidden-md-and-up {
+        display: none;
+    }
+
+    .ws-example-ribbon-action-group--visible-md-and-up {
+        @include display-flex();
+    }
+}

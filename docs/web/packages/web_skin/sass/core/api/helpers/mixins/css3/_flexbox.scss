@@ -1,0 +1,796 @@
+// ********************************************************
+
+////
+/// Helper mixins pertaining to the CSS3 Flexible Box Model,
+/// with unified attributes for 2009, 2011 and 2012 flavors.
+/// ---
+/// @since 1.1.0
+/// @access public
+/// @group core.utils.css3-flexbox
+/// @link http://www.w3.org/TR/css-flexbox-1/ CSS3 Flexible Box Model Spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/mixins/css3/flexbox';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function is,
+                                                function is-number,
+                                                function is-string,
+                                                function is-list,
+                                                function property-category-needs-prefix,
+                                                mixin experimental,
+                                                mixin experimental-only-for);
+//
+// ********************************************************
+
+
+///
+/// Defaults used by CSS3 Flexbox helpers to determine if deprecated versions of the flexbox spec are supported
+/// ---
+/// @type Map
+/// ---
+/// @prop {Boolean} 2009 [false] - Whether the 2009 Flexbox spec selectors should be produced
+/// @prop {Boolean} 2011 [true]  - Whether the 2011 Flexbox spec selectors should be produced. _These are only used by MSIE 10_
+///
+$flexbox-support: (
+    '2009': false,
+    '2011': $min-ie-supported < 11
+) !default;
+
+
+///
+/// Defaults used by CSS3 Flexbox helpers
+/// ---
+/// @type Map
+/// ---
+/// @prop {String}          display         [flex]
+/// @prop {String}          direction       [row]
+/// @prop {String}          wrap            [nowrap]
+/// @prop {Number}          grow            [1]
+/// @prop {Number}          shrink          [1]
+/// @prop {String|Number}   basis           [0]
+/// @prop {Number}          ordinal-group   [0]
+/// @prop {String}          justify-content [flex-start]
+/// @prop {String}          align-items     [stretch]
+/// @prop {String}          align-self      [auto]
+/// @prop {String}          align-content   [stretch]
+///
+$flexbox-defaults: (
+    display: flex,
+    direction: row,
+    wrap: nowrap,
+    grow: 1,
+    shrink: 1,
+    basis: 0,
+    ordinal-group: 0,
+    justify-content: flex-start,
+    align-items: stretch,
+    align-self: auto,
+    align-content: stretch
+) !default;
+
+// @private
+@function _flex-property-needs-webkit-prefix() {
+    @return property-category-needs-prefix(flex, chrome) or
+            property-category-needs-prefix(flex, safari) or
+            property-category-needs-prefix(flex, opera);
+}
+
+// @private
+// Shared param values for calling experimental as it relates to most flexbox related CSS properties (2012 spec)
+@mixin _experimental-flexbox-property($property, $value) {
+    @include experimental($property, $value,
+        $moz: property-category-needs-prefix(flex, firefox),
+        $webkit: _flex-property-needs-webkit-prefix(),
+        $ms: false, // Only MSIE 10 needs a prefix, but it's the 2011 spec value anyway (handled individually below)
+        $o: false, // Opera uses -webkit if anything for flex prefixed properties
+        $khtml: false
+    );
+}
+
+///
+/// Generate styles for a __flex container__, a box in which in-flow children are flex items laid out using the flex layout model.
+/// ---
+/// @see {mixin} flex
+/// ---
+/// @requires {variable} $flexbox-defaults
+/// ---
+/// @param {String} $display [flex] - `flex` or `inline-flex`
+/// @param {Bool} $important [false]
+/// ---
+/// @output Vendor-prefixed values for the CSS `display` property. 2009 spec: `box | inline-box`, 2011 spec: `flexbox | inline-flexbox` and current 2012 spec: `flex | inline-flex`
+///
+@mixin display-flex($display: get($flexbox-defaults, display), $important: false) {
+    @if is-string($display) {
+        $display: unquote($display);
+    }
+
+    // ----- ERROR CHECKING ----- //
+    $valid-displays: flex, inline-flex;
+    @if not is($display, $valid-displays) {
+        @error "`display-flex` mixin expecting the `$display` param to be one of (#{$valid-displays}). Was #{$display}";
+    }
+    // ----- END ERROR CHECKING ----- //
+
+    $important: if($important != false, '!important', '');
+
+    @if $display == flex {
+        @if get($flexbox-support, '2009') {
+            // Fallback
+            display: block #{$important};
+
+            // 2009
+            display: -webkit-box #{$important};
+            display:    -moz-box #{$important};
+            display:         box #{$important};
+        }
+
+        // 2011 (IE 10)
+        @if get($flexbox-support, '2011') {
+            display: -ms-flexbox #{$important};
+        }
+
+        // 2012
+        @include experimental-value(display, flex #{$important},
+            $moz: property-category-needs-prefix(flex, firefox),
+            $webkit: _flex-property-needs-webkit-prefix(),
+            $ms: false, // Only MSIE 10 needs a prefix, but it's the 2011 `-ms-flexbox` value (handled above)
+            $o: false, // Opera uses -webkit if anything for flex prefixed properties
+            $khtml: false
+        );
+
+    } @else if $display == inline-flex {
+        @if get($flexbox-support, '2009') {
+            // Fallback
+            display: inline-block #{$important};
+
+            // 2009
+            display: -webkit-inline-box #{$important};
+            display:    -moz-inline-box #{$important};
+            display:         inline-box #{$important};
+        }
+
+        // 2011 (IE 10)
+        @if get($flexbox-support, '2011') {
+            display: -ms-inline-flexbox #{$important};
+        }
+
+        // 2012
+        @include experimental-value(display, inline-flex #{$important},
+            $moz: property-category-needs-prefix(flex, firefox),
+            $webkit: _flex-property-needs-webkit-prefix(),
+            $ms: false, // Only MSIE 10 needs a prefix, but it's the 2011 `-ms-inline-flexbox` value (handled above)
+            $o: false, // Opera uses -webkit if anything for flex prefixed properties
+            $khtml: false
+        );
+    }
+}
+
+///
+/// Generates styles for a __flex item__, the children of a __flex container__.
+/// ---
+/// @see {mixin} display-flex
+/// ---
+/// @param {List | String} $values - A space-separated "shorthand" list of values or 'none': `<Number> flex-grow <Number> flex-shrink [_optional_ <Number | 'auto'> flex-basis]`
+/// @param {Bool} $important [false]
+/// ---
+/// @example scss
+///   .box-that-shrinks {
+///     // Third item in list "flex-basis" - is optional.
+///     @include flex(0 0);
+///   }
+///
+///   .box-that-shrinks-no-smaller-than-25pct {
+///     // The third item in list can be used as a sort of "minimum width" when shrinkable
+///     @include flex(0 0 25%);
+///   }
+///
+///   .box-that-grows {
+///     @include flex(1 1 auto);
+///   }
+/// ---
+/// @output Vendor-prefixed values for the CSS3 `flex` property. 2009 spec: `box-flex`, current 2012 spec: `flex`
+///
+@mixin flex($values, $important: false) {
+    //
+    //  NOTES
+    //
+    //  [1] IE10/IE11 ignore 'flex' shorthand declarations when flex-basis is a unitless number.
+    //      See: https://github.com/philipwalton/flexbugs#4-flex-shorthand-declarations-with-unitless-flex-basis-values-are-ignored
+    //
+    //      [1a] Always use 0% for zero.
+    //           For unitless zero, this ensures the value will have a unit.
+    //           For zero with a unit, this helps guard against (but DOES NOT ALWAYS prevent) unit stripping of zero
+    //           during CSS minification, since most CSS minifiers leave % values along.
+    //
+    //      [1b] Ensure flex-basis has a unit.
+    //
+
+    $flex-grow: 0;
+    $flex-shrink: 0;
+    $flex-basis: 0; // third item in the list is optional
+
+    @if length($values) > 1 {
+        $flex-grow: nth($values, 1);
+        $flex-shrink: nth($values, 2);
+
+        @if length($values) > 2 {
+            $flex-basis: nth($values, 3);
+        }
+    }
+
+    @if is-number($flex-basis) and remove-unit($flex-basis) == 0 {
+        $flex-basis: 0%; // [1a]
+    }
+
+    $value: $flex-grow $flex-shrink $flex-basis;
+
+
+    // ----- ERROR CHECKING ----- //
+    @if not is-list($values) and unquote($values) != none {
+        @error "`flex` mixin expecting the `$values` arg to be a list or 'none'. Was #{type-of($values)}: #{$values}";
+    }
+    // flex-grow
+    @if not is-number($flex-grow) {
+        @error "`flex` mixin expecting the first value in `$values` to be a number. Was #{type-of($flex-grow)}";
+    }
+    @if $flex-grow < 0 {
+        @error "`flex` mixin expecting the first value in `$values` to be a non-negative number. Was #{$flex-grow}";
+    }
+    // flex-shrink
+    @if not is-number($flex-shrink) {
+        @error "`flex` mixin expecting the second value in `$values` to be a number. Was #{type-of($flex-shrink)}";
+    }
+    // flex-basis
+    @if not is-number($flex-basis) and (unquote($flex-basis) != auto) {
+        @error "`flex` mixin expecting the third value in `$values` to be a number, or auto. Was #{$flex-basis}, a #{type-of($flex-basis)}";
+    }
+    @if is-number($flex-basis) and unitless($flex-basis) { // [1b]
+        @error "`flex` mixin expecting the third value in `$values` to not be a unitless number. Was #{$flex-basis}";
+    }
+    // ----- END ERROR CHECKING ----- //
+
+    $important: if($important != false, '!important', '');
+
+    // 2009
+    @if get($flexbox-support, '2009') and unquote($values) != none {
+        -webkit-box-flex: $value #{$important};
+           -moz-box-flex: $value #{$important};
+                box-flex: $value #{$important};
+    }
+
+    // 2011 (IE 10)
+    @if get($flexbox-support, '2011') {
+        -ms-flex: $value #{$important};
+    }
+
+    // 2012
+    @include _experimental-flexbox-property(flex, #{$value} #{$important});
+}
+
+    ///
+    /// Generates styles that determine how much the flex item will grow relative to the rest of the flex items in the flex container when positive free space is distributed.
+    /// ---
+    /// @link http://www.w3.org/TR/css-flexbox-1/#flex-grow-factor The `flex-grow` factor
+    /// @see {mixin} flex
+    /// ---
+    /// @requires {variable} $flexbox-defaults
+    /// ---
+    /// @param {Number} $grow-factor [1] - A positive integer
+    /// @param {Bool} $important [false]
+    /// ---
+    /// @output Vendor-prefixed values: 2011 spec: `flex-positive`, current 2012 spec: `flex-grow`
+    ///
+    @mixin flex-grow($grow-factor: get($flexbox-defaults, grow), $important: false) {
+        // ----- ERROR CHECKING ----- //
+        @if not is-number($grow-factor) {
+            @error "`flex-grow` mixin expecting the value of the `$grow-factor` param to be a number. Was #{type-of($grow-factor)}";
+        }
+        @if not unitless($grow-factor) {
+            @error "`flex-grow` mixin expecting the value of the `$grow-factor` param to be a unitless number. Was unit of #{unit($grow-factor)}";
+        }
+        @if $grow-factor < 0 {
+            @error "`flex-grow` mixin expecting the value of the `$grow-factor` param to be a non-negative number. Was #{$grow-factor}";
+        }
+        // ----- END ERROR CHECKING ----- //
+
+        $important: if($important != false, '!important', '');
+
+        @if $grow-factor != round($grow-factor) {
+            @warn "`flex-grow` mixin expecting the value of the `$grow-factor` param to be an integer. Was #{$grow-factor}. Will round to nearest whole number.";
+            $grow-factor: round($grow-factor);
+        }
+
+        // 2011 (IE 10)
+        @if get($flexbox-support, '2011') {
+            -ms-flex-positive: $grow-factor #{$important};
+        }
+
+        // 2012
+        @include _experimental-flexbox-property(flex-grow, #{$grow-factor} #{$important});
+    }
+
+
+    ///
+    /// Generates styles that determine how much the flex item will shrink relative to the rest of the flex items in the flex container when negative free space is distributed. The flex shrink factor is multiplied by the flex basis when distributing negative space.
+    /// ---
+    /// @link http://www.w3.org/TR/css-flexbox-1/#flex-shrink-factor The `flex-shrink` factor
+    /// @see {mixin} flex
+    /// ---
+    /// @requires {variable} $flexbox-defaults
+    /// ---
+    /// @param {Number} $shrink-factor [1] - A positive integer
+    /// @param {Bool} $important [false]
+    /// ---
+    /// @output Vendor-prefixed values: 2011 spec: `flex-negative`, current 2012 spec: `flex-shrink`
+    ///
+    @mixin flex-shrink($shrink-factor: get($flexbox-defaults, shrink), $important: false) {
+        // ----- ERROR CHECKING ----- //
+        @if not is-number($shrink-factor) {
+            @error "`flex-shrink` mixin expecting the value of the `$shrink-factor` param to be a number. Was #{type-of($shrink-factor)}";
+        }
+        @if not unitless($shrink-factor) {
+            @error "`flex-shrink` mixin expecting the value of the `$shrink-factor` param to be a unitless number. Was unit of #{unit($shrink-factor)}";
+        }
+        @if $shrink-factor < 0 {
+            @error "`flex-shrink` mixin expecting the value of the `$shrink-factor` param to be a non-negative number. Was #{$shrink-factor}";
+        }
+        // ----- END ERROR CHECKING ----- //
+
+        $important: if($important != false, '!important', '');
+
+        @if $shrink-factor != round($shrink-factor) {
+            @warn "`flex-shrink` mixin expecting the value of the `$shrink-factor` param to be an integer. Was #{$shrink-factor}. Will round to nearest whole number.";
+            $shrink-factor: round($shrink-factor);
+        }
+
+        // 2011 (IE 10)
+        @if get($flexbox-support, '2011') {
+            -ms-flex-negative: $shrink-factor #{$important};
+        }
+
+        // 2012
+        @include _experimental-flexbox-property(flex-shrink, #{$shrink-factor} #{$important});
+    }
+
+    ///
+    /// Generates styles that determine how much the flex item will shrink relative to the rest of the flex items in the flex container when negative free space is distributed. The flex shrink factor is multiplied by the flex basis when distributing negative space.
+    /// ---
+    /// @link http://www.w3.org/TR/css-flexbox-1/#propdef-flex-basis The `flex-basis` property
+    /// @see {mixin} flex
+    /// ---
+    /// @requires {variable} $flexbox-defaults
+    /// ---
+    /// @param {Number|String} $width [0]
+    /// @param {Bool} $important [false]
+    /// ---
+    /// @output Vendor-prefixed values: 2011 spec: `flex-preferred-size`, current 2012 spec: `flex-basis`
+    ///
+    @mixin flex-basis($width: get($flexbox-defaults, basis), $important: false) {
+        // ----- ERROR CHECKING ----- //
+        @if not is-number($width) and (unquote($width) != auto) {
+            @error "`flex-basis` mixin expecting the `$width` param value to be a number, or auto. Was #{$width}";
+        }
+        // ----- END ERROR CHECKING ----- //
+
+        $important: if($important != false, '!important', '');
+
+        // 2011 (IE 10)
+        @if get($flexbox-support, '2011') {
+            -ms-flex-preferred-size: $width #{$important};
+        }
+
+        // 2012
+        @include _experimental-flexbox-property(flex-basis, #{$width} #{$important});
+    }
+
+
+///
+/// Generates styles for the `flex-flow` shorthand property which combines `flex-direction` and `flex-wrap` to define the flex container's main and cross axes.
+/// ---
+/// @link http://www.w3.org/TR/css-flexbox-1/#propdef-flex-flow The `flex-flow` property
+/// ---
+/// @requires {function} get
+/// @requires {variable} $flexbox-defaults
+/// ---
+/// @param {String|List} $values [row nowrap] - A "shorthand" string value, or space-separated list of values: `<String> flex-direction [_optional_ <String> flex-wrap]`
+/// @param {Bool} $important [false]
+/// ---
+/// @output Vendor-prefixed values for the CSS3 `flex-flow` property.
+///
+@mixin flex-flow($values: get($flexbox-defaults, direction) get($flexbox-defaults, wrap), $important: false) {
+    $direction: nth($values, 1);
+    $wrap: get($flexbox-defaults, wrap); // second item in the list is optional
+
+    // ----- VALUE ERROR CHECKING ----- //
+    @if not is-list($values) and length($values) > 1 {
+        @error "`flex-flow` mixin expecting the `$values` to be a list. Was #{type-of($values)}";
+    }
+    // ----- END VALUE ERROR CHECKING ----- //
+
+    $important: if($important != false, '!important', '');
+
+    @if length($values) > 1 {
+        $wrap: nth($values, 2);
+    }
+
+    $value: $direction $wrap #{$important};
+
+
+    // ----- DIRECTION / WRAP ERROR CHECKING ----- //
+    // flex-direction
+    $valid-directions: row, row-reverse, column, column-reverse;
+    @if not is($direction, $valid-directions) {
+        @error "`flex-flow` mixin expecting the first value in `$values` to be one of (#{$valid-directions}). Was #{$direction}";
+    }
+    // flex-wrap
+    $valid-wraps: nowrap, wrap, wrap-reverse;
+    @if not is($wrap, $valid-wraps) {
+        @error "`flex-flow` mixin expecting the first value in `$values` to be one of (#{$valid-wraps}). Was #{$wrap}";
+    }
+    // ----- END DIRECTION / WRAP  ERROR CHECKING ----- //
+
+
+    // 2011 (IE 10)
+    @if get($flexbox-support, '2011') {
+        -ms-flex-flow: $value;
+    }
+
+    @include _experimental-flexbox-property(flex-flow, $value);
+}
+
+    ///
+    /// Generates styles that specify how flex items are placed in the flex container, by setting the direction of the flex container's main axis. This determines the direction that flex items are laid out in.
+    /// ---
+    /// @link http://www.w3.org/TR/css-flexbox-1/#propdef-flex-direction The `flex-direction` property
+    /// ---
+    /// @requires {variable} $flexbox-defaults
+    /// ---
+    /// @param {String} $direction [row] - `row`, `row-reverse`, `column` or `column-reverse`
+    /// @param {Bool} $important [false]
+    /// ---
+    /// @output Vendor-prefixed values for the CSS `flex-direction` property. 2009 spec: `box-orient && box-direction`, current 2012 spec: `flex-direction`
+    ///
+    @mixin flex-direction($direction: get($flexbox-defaults, direction), $important: false) {
+        @if is-string($direction) {
+            $direction: unquote($direction);
+        }
+
+
+        // ----- ERROR CHECKING ----- //
+        $valid-directions: row, row-reverse, column, column-reverse;
+        @if not is($direction, $valid-directions) {
+            @error "`flex-direction` mixin expecting the `$direction` param to be one of (#{$valid-directions}). Was #{$direction}";
+        }
+        // ----- END ERROR CHECKING ----- //
+
+        $important: if($important != false, '!important', '');
+
+        @if get($flexbox-support, '2009') {
+            // Alt values.
+            $orient-2009: $direction;
+            $direction-2009: normal;
+
+            @if $direction == row {
+                $orient-2009: horizontal;
+            } @else if $direction == row-reverse {
+                $orient-2009: horizontal;
+                $direction: reverse;
+            } @else if $direction == column {
+                $orient-2009: vertical;
+            } @else if $direction == column-reverse {
+                $orient-2009: vertical;
+                $direction-2009: reverse;
+            }
+
+            -webkit-box-orient: $orient-2009 #{$important};
+               -moz-box-orient: $orient-2009 #{$important};
+                    box-orient: $orient-2009 #{$important};
+
+            -webkit-box-direction: $direction-2009 #{$important};
+               -moz-box-direction: $direction-2009 #{$important};
+                    box-direction: $direction-2009 #{$important};
+        }
+
+        // 2011 (IE 10)
+        @if get($flexbox-support, '2011') {
+            -ms-flex-direction: $direction #{$important};
+        }
+
+        // 2012
+        @include _experimental-flexbox-property(flex-direction, $direction #{$important});
+    }
+
+    ///
+    /// Generates styles that control whether the flex container is single-line or multi-line, and the direction of the cross-axis, which determines the direction new lines are stacked in.
+    /// ---
+    /// @link http://www.w3.org/TR/css-flexbox-1/#propdef-flex-wrap The `flex-wrap` property
+    /// ---
+    /// @requires {variable} $flexbox-defaults
+    /// ---
+    /// @param {String} $wrap [nowrap] - `nowrap`, `wrap`, `wrap-reverse`
+    /// @param {Bool} $important [false]
+    /// ---
+    /// @output Vendor-prefixed values for the CSS `flex-wrap` property. 2009 spec: `box-lines`, current 2012 spec: `flex-wrap`
+    ///
+    @mixin flex-wrap($wrap: get($flexbox-defaults, wrap), $important: false) {
+        @if is-string($wrap) {
+            $wrap: unquote($wrap);
+        }
+
+
+        // ----- ERROR CHECKING ----- //
+        $valid-wraps: nowrap, wrap, wrap-reverse;
+        @if not is($wrap, $valid-wraps) {
+            @error "`flex-wrap` mixin expecting the `$wrap` param to be one of (#{$valid-wraps}). Was #{$wrap}";
+        }
+        // ----- END ERROR CHECKING ----- //
+
+        $important: if($important != false, '!important', '');
+
+        @if get($flexbox-support, '2009') {
+            // Alt values
+            $wrap-2009: $wrap;
+            @if $wrap == nowrap {
+                $wrap-2009: single;
+            } @else {
+                $wrap-2009: multiple;
+            }
+
+            -webkit-box-lines: $wrap-2009 #{$important};
+               -moz-box-lines: $wrap-2009 #{$important};
+                    box-lines: $wrap-2009 #{$important};
+        }
+
+        // 2011 (IE 10)
+        @if get($flexbox-support, '2011') {
+            -ms-flex-wrap: $wrap #{$important};
+        }
+
+        // 2012
+        @include _experimental-flexbox-property(flex-wrap, $wrap #{$important});
+    }
+
+
+///
+/// Generates styles that control the order in which children of a flex container appear, by assigning them to ordinal groups. It takes a single `<Number>` value, which specifies which ordinal group the flex item belongs to.
+/// ---
+/// @link http://www.w3.org/TR/css-flexbox-1/#propdef-order The `order` property
+/// ---
+/// @requires {variable} $flexbox-defaults
+/// ---
+/// @param {Number} $ordinal-group [0]
+/// @param {Bool} $important [false]
+/// ---
+/// @output Vendor-prefixed values: 2009 spec: `box-ordinal-group`, 2011 spec: `flex-order`, current 2012 spec: `order`
+///
+@mixin order($ordinal-group: get($flexbox-defaults, ordinal-group), $important: false) {
+    // ----- ERROR CHECKING ----- //
+    @if not is-number($ordinal-group) {
+        @error "`order` mixin was expecting the `$ordinal-group` param value to be a Number. Was #{type-of($ordinal-group)}";
+    }
+    // ----- END ERROR CHECKING ----- //
+
+    $important: if($important != false, '!important', '');
+
+    @if get($flexbox-support, '2009') {
+        -webkit-box-ordinal-group: $ordinal-group #{$important};
+           -moz-box-ordinal-group: $ordinal-group #{$important};
+                box-ordinal-group: $ordinal-group #{$important};
+    }
+
+    // 2011 (IE 10)
+    @if get($flexbox-support, '2011') {
+        -ms-flex-order: $ordinal-group #{$important};
+    }
+
+    // 2012
+    @include _experimental-flexbox-property(order, $ordinal-group #{$important});
+}
+
+
+///
+/// Generates styles that align flex items along the main axis of the current line of the flex container. This is done after any flexible lengths and any auto margins have been resolved.
+/// ---
+/// @link http://www.w3.org/TR/css-flexbox-1/#propdef-justify-content The `justify-content` property
+/// ---
+/// @requires {variable} $flexbox-defaults
+/// ---
+/// @param {String} $value [flex-start] - `flex-start`, `flex-end`, `center`, `space-between`, `space-around`
+/// @param {Bool} $important [false]
+/// ---
+/// @output Vendor-prefixed values: 2009 spec: `box-pack`, 2011 spec: `flex-pack`, current 2012 spec: `justify-content`
+///
+@mixin justify-content($value: get($flexbox-defaults, justify-content), $important: false) {
+    @if is-string($value) {
+        $value: unquote($value);
+    }
+
+
+    // ----- ERROR CHECKING ----- //
+    $valid-values: flex-start, flex-end, center, space-between, space-around;
+    @if not is($value, $valid-values) {
+        @error "`justify-content` mixin expecting the `$value` param to be one of (#{$valid-values}). Was #{$value}";
+    }
+    // ----- END ERROR CHECKING ----- //
+
+    $important: if($important != false, '!important', '');
+
+    // Alt values.
+    $value-2009-2011: $value;
+    @if $value == flex-start {
+        $value-2009-2011: start;
+    } @else if $value == flex-end {
+        $value-2009-2011: end;
+    } @else if $value == space-between {
+        $value-2009-2011: justify;
+    } @else if $value == space-around {
+        $value-2009-2011: distribute;
+    }
+
+    @if get($flexbox-support, '2009')  {
+        -webkit-box-ordinal-pack: $value-2009-2011 #{$important};
+           -moz-box-ordinal-pack: $value-2009-2011 #{$important};
+                box-ordinal-pack: $value-2009-2011 #{$important};
+    }
+
+    // 2011 (IE 10)
+    @if get($flexbox-support, '2011')  {
+        -ms-flex-pack: $value-2009-2011 #{$important};
+    }
+
+    // 2012
+    @include _experimental-flexbox-property(justify-content, $value #{$important});
+}
+
+
+///
+/// Generates styles that set the default alignment for all of the flex container's items, including anonymous flex items.
+/// ---
+/// @link http://www.w3.org/TR/css-flexbox-1/#propdef-align-items The `align-items` property
+/// ---
+/// @requires {variable} $flexbox-defaults
+/// ---
+/// @param {String} $value [stretch] - `stretch`, `flex-start`, `flex-end`, `center`, `baseline`
+/// @param {Bool} $important [false]
+/// ---
+/// @output Vendor-prefixed values: 2009 spec: `box-align`, 2011 spec: `flex-align`, current 2012 spec: `align-items`
+///
+@mixin align-items($value: get($flexbox-defaults, align-items), $important: false) {
+    @if is-string($value) {
+        $value: unquote($value);
+    }
+
+
+    // ----- ERROR CHECKING ----- //
+    $valid-values: stretch, flex-start, flex-end, center, baseline;
+    @if not is($value, $valid-values) {
+        @error "`align-items` mixin expecting the `$value` param to be one of (#{$valid-values}). Was #{$value}";
+    }
+    // ----- END ERROR CHECKING ----- //
+
+    $important: if($important != false, '!important', '');
+
+    // Alt values.
+    $value-2009-2011: $value;
+    @if $value == flex-start {
+        $value-2009-2011: start;
+    } @else if $value == flex-end {
+        $value-2009-2011: end;
+    }
+
+    @if get($flexbox-support, '2009')  {
+        -webkit-box-align: $value-2009-2011 #{$important};
+           -moz-box-align: $value-2009-2011 #{$important};
+                box-align: $value-2009-2011 #{$important};
+    }
+
+    // 2011 (IE 10)
+    @if get($flexbox-support, '2011')  {
+        -ms-flex-align: $value-2009-2011 #{$important};
+    }
+
+    // 2012
+    @include _experimental-flexbox-property(align-items, $value #{$important});
+}
+
+
+///
+/// Generates styles that allow the alignment set by `align-items` to be overridden for individual flex items.
+/// ---
+/// @link http://www.w3.org/TR/css-flexbox-1/#propdef-align-self The `align-self` property
+/// @see {mixin} align-items
+/// ---
+/// @requires {variable} $flexbox-defaults
+/// ---
+/// @param {String} $value [auto] - `auto`, `stretch`, `flex-start`, `flex-end`, `center`, `baseline`
+/// @param {Bool} $important [false]
+/// ---
+/// @output Vendor-prefixed values: 2011 spec: `flex-item-align`, current 2012 spec: `align-self`
+///
+@mixin align-self($value: get($flexbox-defaults, align-self), $important: false) {
+    @if is-string($value) {
+        $value: unquote($value);
+    }
+
+
+    // ----- ERROR CHECKING ----- //
+    $valid-values: auto, stretch, flex-start, flex-end, center, baseline;
+    @if not is($value, $valid-values) {
+        @error "`align-self` mixin expecting the `$value` param to be one of (#{$valid-values}). Was #{$value}";
+    }
+    // ----- END ERROR CHECKING ----- //
+
+    $important: if($important != false, '!important', '');
+
+    // 2011 (IE 10)
+    @if get($flexbox-support, '2011')  {
+        // Alt values.
+        $value-2011: $value;
+        @if $value == flex-start {
+            $value-2011: start;
+        } @else if $value == flex-end {
+            $value-2011: end;
+        }
+
+        -ms-flex-item-align: $value-2011 #{$important};
+    }
+
+    // 2012
+    @include _experimental-flexbox-property(align-self, $value #{$important});
+}
+
+
+///
+/// Generates styles that align a flex container's lines within the flex container when there is extra space in the cross-axis, similar to how justify-content aligns individual items within the main-axis. Note, this property has no effect when the flex container has only a single line.
+/// ---
+/// @link http://www.w3.org/TR/css-flexbox-1/#propdef-align-content The `align-content` property
+/// @see {mixin} justify-content
+/// ---
+/// @requires {variable} $flexbox-defaults
+/// ---
+/// @param {String} $value [auto] - `stretch`, `flex-start`, `flex-end`, `center`, `space-between`, `space-around`
+/// @param {Bool} $important [false]
+/// ---
+/// @output Vendor-prefixed values: 2011 spec: `flex-line-pack`, current 2012 spec: `align-content`
+///
+@mixin align-content($value: get($flexbox-defaults, align-content), $important: false) {
+    @if is-string($value) {
+        $value: unquote($value);
+    }
+
+
+    // ----- ERROR CHECKING ----- //
+    $valid-values: stretch, flex-start, flex-end, center, space-between, space-around;
+    @if not is($value, $valid-values) {
+        @error "`align-content` mixin expecting the `$value` param to be one of (#{$valid-values}). Was #{$value}";
+    }
+    // ----- END ERROR CHECKING ----- //
+
+    $important: if($important != false, '!important', '');
+
+    // 2011 (IE 10)
+    @if get($flexbox-support, '2011')  {
+        // Alt values.
+        $value-2011: $value;
+        @if $value == flex-start {
+            $value-2011: start;
+        } @else if $value == flex-end {
+            $value-2011: end;
+        } @else if $value == space-between {
+            $value-2011: justify;
+        } @else if $value == space-around {
+            $value-2011: distribute;
+        }
+
+        -ms-flex-line-pack: $value-2011 #{$important};
+    }
+
+    // 2012
+    @include _experimental-flexbox-property(align-content, $value #{$important});
+}

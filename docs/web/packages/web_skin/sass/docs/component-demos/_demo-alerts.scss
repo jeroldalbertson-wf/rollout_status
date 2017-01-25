@@ -1,0 +1,68 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-alerts';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Toaster alerts demo button styling
+// ----------------------------------------------------
+.ws-example {
+    .show-toaster-alerts {
+        .icon {
+            display: none;
+            top: to-rem(round(($icon-size-md - get-deep($btn-config, 'height-text.base')) / 2));
+            margin-top: 0;
+            right: 0;
+            left: auto;
+        }
+
+        &.js-running {
+            padding-right: to-rem($icon-size-md + get-deep($btn-config, 'padding.base.horizontal'));
+
+            .icon {
+                display: block;
+            }
+        }
+    }
+}
+
+// Show a toaster alert within a `.ws-example` (treat .ws-example as the "viewport").
+.ws-toast-alert-example {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+
+    .alert-toast {
+        position: relative !important;
+        display: block !important;
+        opacity: 1 !important;
+        top: 0 !important;
+        margin-bottom: to-rem(get($alert-config, 'spacing-vertical')); // space out adjacent toasts
+    }
+
+    .alert-toast-bottom {
+        top: auto !important;
+        bottom: 0 !important;
+    }
+}
+
+// Don't allow the text to break onto another line
+// when we're trying to display the different alert types side-by-side
+.ws-alert-side-by-side-examples .ws-example {
+    overflow: hidden !important;
+
+    .alert,
+    .alert p {
+        @include truncate-text();
+    }
+}
+
+// Compact the layout a bit so we can show multiple
+// inline alerts "nested" within modal dialogs side-by-side.
+.ws-alert-side-by-side-modal-examples .ws-example {
+
+}

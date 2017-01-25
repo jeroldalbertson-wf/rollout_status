@@ -1,0 +1,47 @@
+// ********************************************************
+//
+//   GRID SYSTEM V1 STYLE MODULE
+//   http://bit.ly/webskin-grid
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/foundation/grid';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   GRID SYSTEM GENERATION
+//
+//   -> Defines Web Skin's standard grid system
+//
+//   -> THIS IS DEPRECATED AS OF 1.1.0 AND WILL REQUIRE
+//      A STANDALONE PERIPHERAL CSS MODULE IN 2.0.0
+// ----------------------------------------------------
+@include make-grid();
+
+
+// ----------------------------------------------------
+//   CONTAINER BREAKPOINTS
+//
+//   -> Set the container width, and override it
+//      for fixed navbars in media queries
+// ----------------------------------------------------
+.container {
+    @include grid-container-base();
+
+    @each $breakpoint in get($grid-config, 'breakpoints') {
+        @include respond-to('screen-#{$breakpoint} and up') {
+            max-width: to-rem(get-deep($grid-config, 'container-width.#{$breakpoint}'));
+        }
+    }
+}
+
+// "Wide" container variant
+.container-wide {
+    @include grid-container-base($gutter: to-rem($grid-wide-gutter-width, $html-font-size-px));
+    // expand to the edge of the viewport no matter what
+    width: $grid-wide-container-width !important;
+    max-width: none !important;
+}

@@ -1,0 +1,42 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/layout/footer';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.ws-footer {
+    padding-top: to-rem($container-gutter-default + 10);
+    padding-bottom: to-rem($container-gutter-default);
+    color: $zc-gray-90;
+    text-align: center;
+    border-top: .1rem solid $zc-gray-40;
+}
+
+
+.footer-links {
+    margin: to-rem($docs-spacing-md) 0;
+    padding: 0;
+
+    li {
+        display: inline;
+        padding: 0 .2rem;
+
+        &:first-child {
+            padding-left: 0;
+        }
+    }
+}
+
+@include respond-to('screen-sm and up') {
+    .ws-footer {
+        text-align: left;
+
+        p {
+            margin-bottom: 0;
+        }
+    }
+}

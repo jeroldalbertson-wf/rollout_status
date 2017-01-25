@@ -1,0 +1,94 @@
+// ********************************************************
+//
+//   PAGINATION "PAGER" COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-navs-pagination-pager
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/navs/pager';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $navs-pager-module-config:  'core/components/atoms/navs/navs-config';
+    $navs-pager-module-helpers: 'core/components/atoms/navs/navs-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $navs-pager-module-config,
+                                          $navs-pager-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE PAGER CONTAINER
+//
+// ********************************************************
+.pager {
+    // centered horizontal alignment
+    margin: to-rem($line-height-base-px) auto;
+    text-align: center;
+}
+
+
+// ********************************************************
+//
+//   PAGER ITEMS / ITEM HITAREAS
+//   -> Remixes overall look 'n feel from `.nav-pills`
+//
+// ********************************************************
+.pager > .nav-item {
+    display: inline-block;
+    float: none;
+
+    // ----------------------------------------------------
+    //   ITEM HITAREA
+    // ----------------------------------------------------
+        > .hitarea {
+            @include nav-pills-pill();
+
+            float: left; // Avoid vertical alignment bug when hitarea is a `<button>` or `<input>`
+
+            // ----- HITAREA HOVER STATE ----- //
+            #{$hover} {
+                @include nav-pills-pill-hover();
+            }
+
+
+            // ----- HITAREA PRESSED STATE ----- //
+            #{$link-pressed} {
+                @include nav-pills-pill-press();
+            }
+
+
+            // ----- FOCUS-ONLY STATE FOR ACCESSIBILITY ----- //
+            #{$focus} {
+                @include nav-pills-pill-hover($set-border-color: false);
+                // use a border instead of outline since these have rounded corners
+                @include focus-border();
+            }
+
+
+            // ----- HITAREA DISABLED STATE ----- //
+            #{$nav-disabled-selectors} {
+                @include nav-pills-pill-disabled();
+            }
+        }
+
+    // ----------------------------------------------------
+    //   ITEM ALIGNMENT
+    // ----------------------------------------------------
+        &.previous,
+        &.next {
+            display: inline;
+        }
+
+        &.previous > .hitarea {
+            float: left;
+        }
+
+        &.next > .hitarea {
+            float: right;
+        }
+}

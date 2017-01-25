@@ -1,0 +1,150 @@
+
+// ********************************************************
+
+////
+/// Global functions to help with value mutations
+/// ---
+/// @access public
+/// @since 1.1.0
+/// @group core.utils.mutate
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/functions/utilities/mutate';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function set-nth,
+                                                function index,
+                                                function is-true,
+                                                function to-list);
+//
+// ********************************************************
+
+
+///
+/// Set a default value if the given arglist is empty
+/// ---
+/// @param {Arglist} $arglist
+/// @param {*}       $default
+/// ---
+/// @returns {Arglist} - Arglist with default value as the first value
+///
+@function set-arglist-default($arglist, $default) {
+    $default-index: index($arglist, default);
+
+    @if $default-index {
+        $arglist: set-nth($arglist, $default-index, $default);
+    }
+
+    @return if(length($arglist) > 0, $arglist, $default);
+}
+
+///
+/// Coerce a list to be comma delimited or make a new, empty comma delimited list.
+/// ---
+/// @param {List} $list ([)]
+/// @returns {List}
+///
+@function comma-list($list: ()) {
+    @return join((), $list, comma);
+}
+
+///
+/// Removes all false and null values from `$list`.
+/// ---
+/// @param {List} $list - list to purge
+/// ---
+/// @example scss
+///   purge(null a false b)
+///   // a b
+/// ---
+/// @returns {List}
+///
+@function purge($list) {
+    $result: ();
+
+    @each $item in $list {
+        @if is-true($item) {
+            $result: append($result, $item, list-separator($list));
+        }
+    }
+
+    @return to-list($result);
+}
+
+///
+/// Replaces `$old` by `$new` in `$list`.
+/// ---
+/// @param {List}    $list  - list to update
+/// @param {*}       $old   - value to replace
+/// @param {*}       $value - new value for $old
+/// ---
+/// @example scss
+///   replace(a b c, b, z)
+///   // a z c
+///
+/// @example scss
+///   replace(a b c, y, z)
+///   // a b c
+/// ---
+/// @returns {List}
+///
+@function replace($list, $old, $value) {
+    $running: true;
+
+    @while $running {
+        $index: index($list, $old);
+
+        @if not $index {
+            $running: false;
+        } @else {
+            $list: set-nth($list, $index, $value);
+        }
+    }
+
+    $list: if(is-true($value), $list, purge($list));
+
+    @return to-list($list);
+}
+
+///
+/// Remove one or more keys from a given list.
+/// ---
+/// @param {List} $list
+/// @param {String...} $keys
+/// ---
+/// @returns {List}
+///
+@function reject($list, $keys...) {
+    $new-list: $list;
+
+    @each $key in $keys {
+        $new-list: replace($new-list, $key, null);
+    }
+
+    @return $new-list;
+}
+
+///
+/// Join multiple items together as a single space separated list
+/// ---
+/// @param {*...} $items
+/// @returns {List} - Space separated list with all the `$items` combined
+///
+@function compact($items...) {
+    $compacted: ();
+
+    @if length($items) > 0 {
+        @each $item in $items {
+            $compacted: join($compacted, $item, space);
+        }
+    } @else {
+        $compacted: join($compacted, $items, space);
+    }
+
+    @return purge($compacted);
+}

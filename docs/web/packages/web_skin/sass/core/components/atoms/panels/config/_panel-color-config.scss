@@ -1,0 +1,754 @@
+// ********************************************************
+
+////
+/// Panel component skin color variation configuration
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// @access public
+/// @group core.components.panels
+/// @link http://bit.ly/webskin-panel-colors Panel component skin color variation spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/panels/config/panel-color-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function extend,
+                                                function color);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   DEFAULT CONTRAST (DARK TEXT, LIGHT BG)
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   DEFAULT CONTRAST / DEFAULT COLOR CONFIG
+    // ----------------------------------------------------
+        ///
+        /// Colors used by the `.panel` component's `.panel-default` color variation.
+        /// ---
+        /// @link http://bit.ly/webskin-panel-colors Panel component color variation spec
+        /// @link http://bit.ly/webskin-panel-focus Panel component focus state
+        /// ---
+        /// @requires {function} get
+        /// @requires {function} extend
+        /// @requires {function} color
+        /// @requires {variable} form-control-colors
+        /// @requires {variable} $nav-secondary-config
+        /// @requires {variable} $text-color
+        /// @requires {variable} $state-default-bg
+        /// @requires {variable} $elem-hover-bg-darken-amount-default
+        /// ---
+        /// @prop {Color} bg                [#ffffff] - Default background color
+        /// @prop {Color} bd-color          [#cbcbcb] - Default border color. Matches border color of global secondary navigation structures because it can contain vertically stacked navs, and tables.
+        /// @prop {Color} bd-color-focus    [#0094ff] - Border color of a `.panel-focus` variation when focused, or a `.panel-hover` variation when hovered
+        ///
+        /// @prop {Color} header-bd-color   [#cbcbcb] - Default border color of `.panel-heading`. _Added via `@extend`_
+        /// @prop {Color} header-text-color [#595959] - Default color of the text within `.panel-heading`
+        /// @prop {Color} header-bg         [#fafafa] - Default background color of `.panel-heading`
+        /// @prop {Color} header-bg-hover   [#ededed] - Background color of a hovered, clickable `.panel-heading[data-toggle]`. _Added via `@extend`_
+        ///
+        /// @prop {Color} footer-bg         [#fafafa] - Default background color of `.panel-footer`
+        ///
+        $panel-colors-default: (
+            'bg': $body-bg,
+            'bd-color': get($nav-secondary-config, 'bd-color'),
+            'bd-color-focus': color('global.#{get($form-control-colors, 'bd-focus-key')}.base'),
+            //
+            'header-bd-color': null, // actual calculated value inserted via @extend
+            'header-text-color': $text-color,
+            'header-bg': $state-default-bg,
+            'header-bg-hover': null, // actual calculated value inserted via @extend
+            'footer-bg': $state-default-bg
+        ) !default;
+
+
+        // ----------------------------------------------------
+        //   CALCULATED VALUES
+        //   -> based on $panel-colors-default
+        //
+        //   -> cannot be included in initial map declaration
+        //      because the calculations depend on values
+        //      within the map, and Sass has no ability to
+        //      reference a key in a map from within that map.
+        //
+        //   -> documented as props of $panel-colors-default
+        //      because they are added via extend() below.
+        // ----------------------------------------------------
+            $panel-default-header-bd-color: get($panel-colors-default, 'bd-color');
+            $panel-default-header-bg-hover: darken(get($panel-colors-default, 'header-bg'), $elem-hover-bg-darken-amount-default);
+
+            // ----- EXTEND default colors config with calc'd values ----- //
+            $panel-colors-default: extend($panel-colors-default,
+                (
+                    'header-bd-color': $panel-default-header-bd-color,
+                    'header-bg-hover': $panel-default-header-bg-hover
+                )
+            );
+
+
+    // ----------------------------------------------------
+    //   DEFAULT CONTRAST / ALTERNATE COLOR CONFIG
+    // ----------------------------------------------------
+        ///
+        /// Colors used by the `.panel` component's `.panel-alt` color variation.
+        /// ---
+        /// @requires {function} get
+        /// @requires {function} extend
+        /// @requires {variable} $panel-colors-default
+        /// @requires {variable} $component-state-alt-bd
+        /// @requires {variable} $component-state-alt-bg
+        /// @requires {variable} $component-state-alt-bg-hover
+        /// @requires {variable} $text-color
+        /// @requires {variable} $elem-hover-bg-darken-amount-default
+        /// ---
+        /// @prop {Color} bg                [#ffffff] - Background color of `.panel-alt`
+        /// @prop {Color} bd-color          [#0085e6] - Border color of `.panel-alt`
+        /// @prop {Color} bd-color-focus    [#0085e6] - Border color of a `.panel-alt .panel-focus` variation when focused, or a `.panel-alt .panel-hover` variation when hovered. _Added via `@extend`_
+        ///
+        /// @prop {Color} header-bd-color   [#0085e6] - Border color of `.panel-alt .panel-heading`. _Added via `@extend`_
+        /// @prop {Color} header-text-color [#595959] - Color of the text within `.panel-alt .panel-heading`
+        /// @prop {Color} header-bg         [#ebf7ff] - Background color of `.panel-alt .panel-heading`
+        /// @prop {Color} header-bg-hover   [#d6eeff] - Background color of a hovered, clickable `.panel-alt .panel-heading[data-toggle]`
+        ///
+        /// @prop {Color} footer-bg         [#fafafa] - Background color of `.panel-footer`
+        ///
+        $panel-colors-alt: (
+            'bg': get($panel-colors-default, 'bg'),
+            'bd-color': $component-state-alt-bd,
+            'bd-color-focus': null, // actual calculated value inserted via @extend
+            //
+            'header-bd-color': null, // actual calculated value inserted via @extend
+            'header-text-color': $text-color,
+            'header-bg': $component-state-alt-bg,
+            'header-bg-hover': $component-state-alt-bg-hover,
+            'footer-bg': get($panel-colors-default, 'footer-bg')
+        ) !default;
+
+
+        // ----------------------------------------------------
+        //   CALCULATED VALUES
+        //   -> based on $panel-colors-alt
+        //
+        //   -> cannot be included in initial map declaration
+        //      because the calculations depend on values
+        //      within the map, and Sass has no ability to
+        //      reference a key in a map from within that map.
+        //
+        //   -> documented as props of $panel-colors-alt
+        //      because they are added via extend() below.
+        // ----------------------------------------------------
+            $panel-alt-bd-color-focus: get($panel-colors-alt, 'bd-color');
+            $panel-alt-header-bd-color: get($panel-colors-alt, 'bd-color');
+
+            // ----- EXTEND alt colors config with calc'd values ----- //
+            $panel-colors-alt: extend($panel-colors-alt,
+                (
+                    'bd-color-focus': $panel-alt-bd-color-focus,
+                    'header-bd-color': $panel-alt-header-bd-color
+                )
+            );
+
+
+    // ----------------------------------------------------
+    //   DEFAULT CONTRAST / SUCCESS COLOR CONFIG
+    // ----------------------------------------------------
+        ///
+        /// Colors used by the `.panel` component's `.panel-success` color variation.
+        /// ---
+        /// @requires {function} get
+        /// @requires {function} extend
+        /// @requires {variable} $panel-colors-default
+        /// @requires {variable} $state-success-bg
+        /// @requires {variable} $component-state-success-bd
+        /// @requires {variable} $component-state-success-bg
+        /// @requires {variable} $component-state-success-bg-hover
+        /// @requires {variable} $text-color
+        /// @requires {variable} $elem-hover-bg-darken-amount-default
+        /// ---
+        /// @prop {Color} bg                [#ffffff] - Background color of `.panel-success`
+        /// @prop {Color} bd-color          [#70b84d] - Border color of `.panel-success`
+        /// @prop {Color} bd-color-focus    [#70b84d] - Border color of a `.panel-success .panel-focus` variation when focused, or a `.panel-success .panel-hover` variation when hovered. _Added via `@extend`_
+        ///
+        /// @prop {Color} header-bd-color   [#70b84d] - Border color of `.panel-success .panel-heading`. _Added via `@extend`_
+        /// @prop {Color} header-text-color [#595959] - Color of the text within `.panel-success .panel-heading`
+        /// @prop {Color} header-bg         [#f6fcf0] - Background color of `.panel-success .panel-heading`
+        /// @prop {Color} header-bg-hover   [#e7f3e0] - Background color of a hovered, clickable `.panel-success .panel-heading[data-toggle]`
+        ///
+        /// @prop {Color} footer-bg         [#fafafa] - Background color of `.panel-footer`
+        ///
+        $panel-colors-success: (
+            'bg': get($panel-colors-default, 'bg'),
+            'bd-color': $component-state-success-bd,
+            'bd-color-focus': null, // actual calculated value inserted via @extend
+            //
+            'header-bd-color': null, // actual calculated value inserted via @extend
+            'header-text-color': $text-color,
+            'header-bg': $component-state-success-bg,
+            'header-bg-hover': $component-state-success-bg-hover,
+            'footer-bg': get($panel-colors-default, 'footer-bg')
+        ) !default;
+
+
+        // ----------------------------------------------------
+        //   CALCULATED VALUES
+        //   -> based on $panel-colors-success
+        //
+        //   -> cannot be included in initial map declaration
+        //      because the calculations depend on values
+        //      within the map, and Sass has no ability to
+        //      reference a key in a map from within that map.
+        //
+        //   -> documented as props of $panel-colors-success
+        //      because they are added via extend() below.
+        // ----------------------------------------------------
+            $panel-success-bd-color-focus: get($panel-colors-success, 'bd-color');
+            $panel-success-header-bd-color: get($panel-colors-success, 'bd-color');
+
+            // ----- EXTEND success colors config with calc'd values ----- //
+            $panel-colors-success: extend($panel-colors-success,
+                (
+                    'bd-color-focus': $panel-success-bd-color-focus,
+                    'header-bd-color': $panel-success-header-bd-color
+                )
+            );
+
+
+    // ----------------------------------------------------
+    //   DEFAULT CONTRAST / WARNING COLOR CONFIG
+    // ----------------------------------------------------
+        ///
+        /// Colors used by the `.panel` component's `.panel-warning` color variation.
+        /// ---
+        /// @requires {function} get
+        /// @requires {function} extend
+        /// @requires {variable} $panel-colors-default
+        /// @requires {variable} $state-warning-bg
+        /// @requires {variable} $component-state-warning-bd
+        /// @requires {variable} $component-state-warning-bg
+        /// @requires {variable} $component-state-warning-bg-hover
+        /// @requires {variable} $text-color
+        /// @requires {variable} $elem-hover-bg-darken-amount-default
+        /// ---
+        /// @prop {Color} bg                [#ffffff] - Background color of `.panel-warning`
+        /// @prop {Color} bd-color          [#f69864] - Border color of `.panel-warning`
+        /// @prop {Color} bd-color-focus    [#f69864] - Border color of a `.panel-warning .panel-focus` variation when focused, or a `.panel-warning .panel-hover` variation when hovered. _Added via `@extend`_
+        ///
+        /// @prop {Color} header-bd-color   [#f69864] - Border color of `.panel-warning .panel-heading`. _Added via `@extend`_
+        /// @prop {Color} header-text-color [#595959] - Color of the text within `.panel-warning .panel-heading`
+        /// @prop {Color} header-bg         [#fffaf1] - Background color of `.panel-warning .panel-heading`
+        /// @prop {Color} header-bg-hover   [#fff5e3] - Background color of a hovered, clickable `.panel-warning .panel-heading[data-toggle]`
+        ///
+        /// @prop {Color} footer-bg         [#fafafa] - Background color of `.panel-footer`
+        ///
+        $panel-colors-warning: (
+            'bg': get($panel-colors-default, 'bg'),
+            'bd-color': $component-state-warning-bd,
+            'bd-color-focus': null, // actual calculated value inserted via @extend
+            //
+            'header-bd-color': null, // actual calculated value inserted via @extend
+            'header-text-color': $text-color,
+            'header-bg': $component-state-warning-bg,
+            'header-bg-hover': $component-state-warning-bg-hover,
+            'footer-bg': get($panel-colors-default, 'footer-bg')
+        ) !default;
+
+
+        // ----------------------------------------------------
+        //   CALCULATED VALUES
+        //   -> based on $panel-colors-warning
+        //
+        //   -> cannot be included in initial map declaration
+        //      because the calculations depend on values
+        //      within the map, and Sass has no ability to
+        //      reference a key in a map from within that map.
+        //
+        //   -> documented as props of $panel-colors-warning
+        //      because they are added via extend() below.
+        // ----------------------------------------------------
+            $panel-warning-bd-color-focus: get($panel-colors-warning, 'bd-color');
+            $panel-warning-header-bd-color: get($panel-colors-warning, 'bd-color');
+
+            // ----- EXTEND warning colors config with calc'd values ----- //
+            $panel-colors-warning: extend($panel-colors-warning,
+                (
+                    'bd-color-focus': $panel-warning-bd-color-focus,
+                    'header-bd-color': $panel-warning-header-bd-color
+                )
+            );
+
+
+    // ----------------------------------------------------
+    //   DEFAULT CONTRAST / DANGER COLOR CONFIG
+    // ----------------------------------------------------
+        ///
+        /// Colors used by the `.panel` component's `.panel-danger` color variation.
+        /// ---
+        /// @requires {function} get
+        /// @requires {function} extend
+        /// @requires {variable} $panel-colors-default
+        /// @requires {variable} $state-danger-bg
+        /// @requires {variable} $component-state-danger-bd
+        /// @requires {variable} $component-state-danger-bg
+        /// @requires {variable} $component-state-danger-bg-hover
+        /// @requires {variable} $text-color
+        /// @requires {variable} $elem-hover-bg-darken-amount-default
+        /// ---
+        /// @prop {Color} bg                [#ffffff] - Background color of `.panel-danger`
+        /// @prop {Color} bd-color          [#c15f5e] - Border color of `.panel-danger`
+        /// @prop {Color} bd-color-focus    [#c15f5e] - Border color of a `.panel-danger .panel-focus` variation when focused, or a `.panel-danger .panel-hover` variation when hovered. _Added via `@extend`_
+        ///
+        /// @prop {Color} header-bd-color   [#c15f5e] - Border color of `.panel-danger .panel-heading`. _Added via `@extend`_
+        /// @prop {Color} header-text-color [#595959] - Color of the text within `.panel-danger .panel-heading`
+        /// @prop {Color} header-bg         [#fef2f2] - Background color of `.panel-danger .panel-heading`
+        /// @prop {Color} header-bg-hover   [#fde5e5] - Background color of a hovered, clickable `.panel-danger .panel-heading[data-toggle]`
+        ///
+        /// @prop {Color} footer-bg         [#fafafa] - Background color of `.panel-footer`
+        ///
+        $panel-colors-danger: (
+            'bg': get($panel-colors-default, 'bg'),
+            'bd-color': $component-state-danger-bd,
+            'bd-color-focus': null, // actual calculated value inserted via @extend
+            //
+            'header-bd-color': null, // actual calculated value inserted via @extend
+            'header-text-color': $text-color,
+            'header-bg': $component-state-danger-bg,
+            'header-bg-hover': $component-state-danger-bg-hover,
+            'footer-bg': get($panel-colors-default, 'footer-bg')
+        ) !default;
+
+
+        // ----------------------------------------------------
+        //   CALCULATED VALUES
+        //   -> based on $panel-colors-danger
+        //
+        //   -> cannot be included in initial map declaration
+        //      because the calculations depend on values
+        //      within the map, and Sass has no ability to
+        //      reference a key in a map from within that map.
+        //
+        //   -> documented as props of $panel-colors-danger
+        //      because they are added via extend() below.
+        // ----------------------------------------------------
+            $panel-danger-bd-color-focus: get($panel-colors-danger, 'bd-color');
+            $panel-danger-header-bd-color: get($panel-colors-danger, 'bd-color');
+
+            // ----- EXTEND danger colors config with calc'd values ----- //
+            $panel-colors-danger: extend($panel-colors-danger,
+                (
+                    'bd-color-focus': $panel-danger-bd-color-focus,
+                    'header-bd-color': $panel-danger-header-bd-color
+                )
+            );
+
+
+
+// ********************************************************
+//
+//   INVERSE CONTRAST (WHITE TEXT, DARK BG)
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   INVERSE CONTRAST / DEFAULT COLOR CONFIG
+    // ----------------------------------------------------
+        ///
+        /// Colors used by the `.panel` component's `.panel-default.panel-inverse` color variation, used primarily in the "Global Jobs Panel" comopnent.
+        /// ---
+        /// @link http://bit.ly/webskin-panel-colors Panel component color variation spec
+        /// @link http://bit.ly/webskin-global-jobs-panel Global jobs panel component spec
+        /// ---
+        /// @requires {function} get
+        /// @requires {function} extend
+        /// @requires {variable} $panel-colors-default
+        /// @requires {variable} $white
+        /// @requires {variable} $elem-hover-bg-darken-amount-default
+        /// ---
+        /// @prop {Color} bg                [#ffffff] - Background color of `.panel-default.panel-inverse`
+        /// @prop {Color} bd-color          [#cbcbcb] - Border color of `.panel-default.panel-inverse`
+        /// @prop {Color} bd-color-focus    [#0094ff] - Border color of a `.panel-default.panel-inverse .panel-focus` variation when focused, or a `.panel-default.panel-inverse .panel-hover` variation when hovered
+        ///
+        /// @prop {Color} header-bd-color   [#595959] - Border color of `.panel-default.panel-inverse .panel-heading`
+        /// @prop {Color} header-text-color [#ffffff] - Color of the text within `.panel-default.panel-inverse .panel-heading`
+        /// @prop {Color} header-bg         [#595959] - Background color of `.panel-default.panel-inverse .panel-heading`. _Added via `@extend`_
+        /// @prop {Color} header-bg-hover   [#4c4c4c] - Background color of a hovered, clickable `.panel-default.panel-inverse .panel-heading[data-toggle]`. _Added via `@extend`_
+        ///
+        /// @prop {Color} footer-bg         [#fafafa] - Background color of `.panel-footer`
+        ///
+        $panel-colors-default-inverse: (
+            'bg': get($panel-colors-default, 'bg'),
+            'bd-color': get($panel-colors-default, 'bd-color'),
+            'bd-color-focus': get($panel-colors-default, 'bd-color-focus'),
+            //
+            'header-bd-color': get($panel-colors-default, 'header-text-color'),
+            'header-text-color': $white,
+            'header-bg': null, // actual calculated value inserted via @extend
+            'header-bg-hover': null, // actual calculated value inserted via @extend
+            'footer-bg': get($panel-colors-default, 'footer-bg')
+        ) !default;
+
+
+        // ----------------------------------------------------
+        //   CALCULATED VALUES
+        //   -> based on $panel-colors-default-inverse
+        //
+        //   -> cannot be included in initial map declaration
+        //      because the calculations depend on values
+        //      within the map, and Sass has no ability to
+        //      reference a key in a map from within that map.
+        //
+        //   -> documented as props of $panel-colors-default-inverse
+        //      because they are added via extend() below.
+        // ----------------------------------------------------
+            $panel-default-inverse-header-bg: get($panel-colors-default-inverse, 'header-bd-color');
+            $panel-default-inverse-header-bg-hover: darken($panel-default-inverse-header-bg, $elem-hover-bg-darken-amount-default);
+
+            // ----- EXTEND default inverse colors config with calc'd values ----- //
+            $panel-colors-default-inverse: extend($panel-colors-default-inverse,
+                (
+                    'header-bg': $panel-default-inverse-header-bg,
+                    'header-bg-hover': $panel-default-inverse-header-bg-hover
+                )
+            );
+
+
+    // ----------------------------------------------------
+    //   INVERSE CONTRAST / ALTERNATE COLOR CONFIG
+    // ----------------------------------------------------
+        ///
+        /// Colors used by the `.panel` component's `.panel-alt.panel-inverse` color variation, used primarily in the "Global Jobs Panel" comopnent.
+        /// ---
+        /// @link http://bit.ly/webskin-panel-colors Panel component color variation spec
+        /// @link http://bit.ly/webskin-global-jobs-panel Global jobs panel component spec
+        /// ---
+        /// @requires {function} get
+        /// @requires {function} extend
+        /// @requires {variable} $panel-colors-default
+        /// @requires {variable} $zc-blue
+        /// @requires {variable} $white
+        /// @requires {variable} $elem-hover-bg-darken-amount-default
+        /// ---
+        /// @prop {Color} bg                [#ffffff] - Background color of `.panel-alt.panel-inverse`
+        /// @prop {Color} bd-color          [#0094ff] - Border color of `.panel-alt.panel-inverse`
+        /// @prop {Color} bd-color-focus    [#0094ff] - Border color of a `.panel-alt.panel-inverse .panel-focus` variation when focused, or a `.panel-alt.panel-inverse .panel-hover` variation when hovered. _Added via `@extend`_
+        ///
+        /// @prop {Color} header-bd-color   [#0094ff] - Border color of `.panel-alt.panel-inverse .panel-heading`. _Added via `@extend`_
+        /// @prop {Color} header-text-color [#ffffff] - Color of the text within `.panel-alt.panel-inverse .panel-heading`
+        /// @prop {Color} header-bg         [#0094ff] - Background color of `.panel-alt.panel-inverse .panel-heading`. _Added via `@extend`_
+        /// @prop {Color} header-bg-hover   [#0085e6] - Background color of a hovered, clickable `.panel-alt.panel-inverse .panel-heading[data-toggle]`. _Added via `@extend`_
+        ///
+        /// @prop {Color} footer-bg         [#fafafa] - Background color of `.panel-footer`
+        ///
+        $panel-colors-alt-inverse: (
+            'bg': get($panel-colors-default, 'bg'),
+            'bd-color': $zc-blue,
+            'bd-color-focus': null, // actual calculated value inserted via @extend
+            //
+            'header-bd-color': null, // actual calculated value inserted via @extend
+            'header-text-color': $white,
+            'header-bg': null, // actual calculated value inserted via @extend
+            'header-bg-hover': null, // actual calculated value inserted via @extend
+            'footer-bg': get($panel-colors-default, 'footer-bg')
+        ) !default;
+
+
+        // ----------------------------------------------------
+        //   CALCULATED VALUES
+        //   -> based on $panel-colors-alt-inverse
+        //
+        //   -> cannot be included in initial map declaration
+        //      because the calculations depend on values
+        //      within the map, and Sass has no ability to
+        //      reference a key in a map from within that map.
+        //
+        //   -> documented as props of $panel-colors-alt-inverse
+        //      because they are added via extend() below.
+        // ----------------------------------------------------
+            $panel-alt-inverse-bd-color-focus: get($panel-colors-alt-inverse, 'bd-color');
+            $panel-alt-inverse-header-bd-color: get($panel-colors-alt-inverse, 'bd-color');
+            $panel-alt-inverse-header-bg: get($panel-colors-alt-inverse, 'bd-color');
+            $panel-alt-inverse-header-bg-hover: darken($panel-alt-inverse-header-bg, $elem-hover-bg-darken-amount-default);
+
+            // ----- EXTEND alt inverse colors config with calc'd values ----- //
+            $panel-colors-alt-inverse: extend($panel-colors-alt-inverse,
+                (
+                    'bd-color-focus': $panel-alt-inverse-bd-color-focus,
+                    'header-bd-color': $panel-alt-inverse-header-bd-color,
+                    'header-bg': $panel-alt-inverse-header-bg,
+                    'header-bg-hover': $panel-alt-inverse-header-bg-hover
+                )
+            );
+
+
+    // ----------------------------------------------------
+    //   INVERSE CONTRAST / SUCCESS COLOR CONFIG
+    // ----------------------------------------------------
+        ///
+        /// Colors used by the `.panel` component's `.panel-success.panel-inverse` color variation, used primarily in the "Global Jobs Panel" comopnent.
+        /// ---
+        /// @link http://bit.ly/webskin-panel-colors Panel component color variation spec
+        /// @link http://bit.ly/webskin-global-jobs-panel Global jobs panel component spec
+        /// ---
+        /// @requires {function} get
+        /// @requires {function} extend
+        /// @requires {variable} $panel-colors-default
+        /// @requires {variable} $zc-green
+        /// @requires {variable} $white
+        /// @requires {variable} $elem-hover-bg-darken-amount-default
+        /// ---
+        /// @prop {Color} bg                [#ffffff] - Background color of `.panel-success.panel-inverse`
+        /// @prop {Color} bd-color          [#66cc00] - Border color of `.panel-success.panel-inverse`
+        /// @prop {Color} bd-color-focus    [#66cc00] - Border color of a `.panel-success.panel-inverse .panel-focus` variation when focused, or a `.panel-success.panel-inverse .panel-hover` variation when hovered. _Added via `@extend`_
+        ///
+        /// @prop {Color} header-bd-color   [#66cc00] - Border color of `.panel-success.panel-inverse .panel-heading`. _Added via `@extend`_
+        /// @prop {Color} header-text-color [#ffffff] - Color of the text within `.panel-success.panel-inverse .panel-heading`
+        /// @prop {Color} header-bg         [#66cc00] - Background color of `.panel-success.panel-inverse .panel-heading`. _Added via `@extend`_
+        /// @prop {Color} header-bg-hover   [#59b300] - Background color of a hovered, clickable `.panel-success.panel-inverse .panel-heading[data-toggle]`. _Added via `@extend`_
+        ///
+        /// @prop {Color} footer-bg         [#fafafa] - Background color of `.panel-footer`
+        ///
+        $panel-colors-success-inverse: (
+            'bg': get($panel-colors-default, 'bg'),
+            'bd-color': $zc-green,
+            'bd-color-focus': null, // actual calculated value inserted via @extend
+            //
+            'header-bd-color': null, // actual calculated value inserted via @extend
+            'header-text-color': $white,
+            'header-bg': null, // actual calculated value inserted via @extend
+            'header-bg-hover': null, // actual calculated value inserted via @extend
+            'footer-bg': get($panel-colors-default, 'footer-bg')
+        ) !default;
+
+
+        // ----------------------------------------------------
+        //   CALCULATED VALUES
+        //   -> based on $panel-colors-success-inverse
+        //
+        //   -> cannot be included in initial map declaration
+        //      because the calculations depend on values
+        //      within the map, and Sass has no ability to
+        //      reference a key in a map from within that map.
+        //
+        //   -> documented as props of $panel-colors-success-inverse
+        //      because they are added via extend() below.
+        // ----------------------------------------------------
+            $panel-success-inverse-bd-color-focus: get($panel-colors-success-inverse, 'bd-color');
+            $panel-success-inverse-header-bd-color: get($panel-colors-success-inverse, 'bd-color');
+            $panel-success-inverse-header-bg: get($panel-colors-success-inverse, 'bd-color');
+            $panel-success-inverse-header-bg-hover: darken($panel-success-inverse-header-bg, $elem-hover-bg-darken-amount-default);
+
+            // ----- EXTEND success inverse colors config with calc'd values ----- //
+            $panel-colors-success-inverse: extend($panel-colors-success-inverse,
+                (
+                    'bd-color-focus': $panel-success-inverse-bd-color-focus,
+                    'header-bd-color': $panel-success-inverse-header-bd-color,
+                    'header-bg': $panel-success-inverse-header-bg,
+                    'header-bg-hover': $panel-success-inverse-header-bg-hover
+                )
+            );
+
+
+    // ----------------------------------------------------
+    //   INVERSE CONTRAST / WARNING COLOR CONFIG
+    // ----------------------------------------------------
+        ///
+        /// Colors used by the `.panel` component's `.panel-warning.panel-inverse` color variation, used primarily in the "Global Jobs Panel" comopnent.
+        /// ---
+        /// @link http://bit.ly/webskin-panel-colors Panel component color variation spec
+        /// @link http://bit.ly/webskin-global-jobs-panel Global jobs panel component spec
+        /// ---
+        /// @requires {function} get
+        /// @requires {function} extend
+        /// @requires {variable} $panel-colors-default
+        /// @requires {variable} $zc-orange
+        /// @requires {variable} $white
+        /// @requires {variable} $elem-hover-bg-darken-amount-default
+        /// ---
+        /// @prop {Color} bg                [#ffffff] - Background color of `.panel-warning.panel-inverse`
+        /// @prop {Color} bd-color          [#fbad17] - Border color of `.panel-warning.panel-inverse`
+        /// @prop {Color} bd-color-focus    [#fbad17] - Border color of a `.panel-warning.panel-inverse .panel-focus` variation when focused, or a `.panel-warning.panel-inverse .panel-hover` variation when hovered. _Added via `@extend`_
+        ///
+        /// @prop {Color} header-bd-color   [#fbad17] - Border color of `.panel-warning.panel-inverse .panel-heading`. _Added via `@extend`_
+        /// @prop {Color} header-text-color [#ffffff] - Color of the text within `.panel-warning.panel-inverse .panel-heading`
+        /// @prop {Color} header-bg         [#fbad17] - Background color of `.panel-warning.panel-inverse .panel-heading`. _Added via `@extend`_
+        /// @prop {Color} header-bg-hover   [#f4a204] - Background color of a hovered, clickable `.panel-warning.panel-inverse .panel-heading[data-toggle]`. _Added via `@extend`_
+        ///
+        /// @prop {Color} footer-bg         [#fafafa] - Background color of `.panel-footer`
+        ///
+        $panel-colors-warning-inverse: (
+            'bg': get($panel-colors-default, 'bg'),
+            'bd-color': $zc-orange,
+            'bd-color-focus': null, // actual calculated value inserted via @extend
+            //
+            'header-bd-color': null, // actual calculated value inserted via @extend
+            'header-text-color': $white,
+            'header-bg': null, // actual calculated value inserted via @extend
+            'header-bg-hover': null, // actual calculated value inserted via @extend
+            'footer-bg': get($panel-colors-default, 'footer-bg')
+        ) !default;
+
+
+        // ----------------------------------------------------
+        //   CALCULATED VALUES
+        //   -> based on $panel-colors-warning-inverse
+        //
+        //   -> cannot be included in initial map declaration
+        //      because the calculations depend on values
+        //      within the map, and Sass has no ability to
+        //      reference a key in a map from within that map.
+        //
+        //   -> documented as props of $panel-colors-warning-inverse
+        //      because they are added via extend() below.
+        // ----------------------------------------------------
+            $panel-warning-inverse-bd-color-focus: get($panel-colors-warning-inverse, 'bd-color');
+            $panel-warning-inverse-header-bd-color: get($panel-colors-warning-inverse, 'bd-color');
+            $panel-warning-inverse-header-bg: get($panel-colors-warning-inverse, 'bd-color');
+            $panel-warning-inverse-header-bg-hover: darken($panel-warning-inverse-header-bg, $elem-hover-bg-darken-amount-default);
+
+            // ----- EXTEND warning inverse colors config with calc'd values ----- //
+            $panel-colors-warning-inverse: extend($panel-colors-warning-inverse,
+                (
+                    'bd-color-focus': $panel-warning-inverse-bd-color-focus,
+                    'header-bd-color': $panel-warning-inverse-header-bd-color,
+                    'header-bg': $panel-warning-inverse-header-bg,
+                    'header-bg-hover': $panel-warning-inverse-header-bg-hover
+                )
+            );
+
+
+    // ----------------------------------------------------
+    //   INVERSE CONTRAST / DANGER COLOR CONFIG
+    // ----------------------------------------------------
+        ///
+        /// Colors used by the `.panel` component's `.panel-danger.panel-inverse` color variation, used primarily in the "Global Jobs Panel" comopnent.
+        /// ---
+        /// @link http://bit.ly/webskin-panel-colors Panel component color variation spec
+        /// @link http://bit.ly/webskin-global-jobs-panel Global jobs panel component spec
+        /// ---
+        /// @requires {function} get
+        /// @requires {function} extend
+        /// @requires {variable} $panel-colors-default
+        /// @requires {variable} $zc-red
+        /// @requires {variable} $white
+        /// @requires {variable} $elem-hover-bg-darken-amount-default
+        /// ---
+        /// @prop {Color} bg                [#ffffff] - Background color of `.panel-danger.panel-inverse`
+        /// @prop {Color} bd-color          [#ee2724] - Border color of `.panel-danger.panel-inverse`
+        /// @prop {Color} bd-color-focus    [#ee2724] - Border color of a `.panel-danger.panel-inverse .panel-focus` variation when focused, or a `.panel-danger.panel-inverse .panel-hover` variation when hovered. _Added via `@extend`_
+        ///
+        /// @prop {Color} header-bd-color   [#ee2724] - Border color of `.panel-danger.panel-inverse .panel-heading`. _Added via `@extend`_
+        /// @prop {Color} header-text-color [#ffffff] - Color of the text within `.panel-danger.panel-inverse .panel-heading`
+        /// @prop {Color} header-bg         [#ee2724] - Background color of `.panel-danger.panel-inverse .panel-heading`. _Added via `@extend`_
+        /// @prop {Color} header-bg-hover   [#e71512] - Background color of a hovered, clickable `.panel-danger.panel-inverse .panel-heading[data-toggle]`. _Added via `@extend`_
+        ///
+        /// @prop {Color} footer-bg         [#fafafa] - Background color of `.panel-footer`
+        ///
+        $panel-colors-danger-inverse: (
+            'bg': get($panel-colors-default, 'bg'),
+            'bd-color': $zc-red,
+            'bd-color-focus': null, // actual calculated value inserted via @extend
+            //
+            'header-bd-color': null, // actual calculated value inserted via @extend
+            'header-text-color': $white,
+            'header-bg': null, // actual calculated value inserted via @extend
+            'header-bg-hover': null, // actual calculated value inserted via @extend
+            'footer-bg': get($panel-colors-default, 'footer-bg')
+        ) !default;
+
+
+        // ----------------------------------------------------
+        //   CALCULATED VALUES
+        //   -> based on $panel-colors-danger-inverse
+        //
+        //   -> cannot be included in initial map declaration
+        //      because the calculations depend on values
+        //      within the map, and Sass has no ability to
+        //      reference a key in a map from within that map.
+        //
+        //   -> documented as props of $panel-colors-danger-inverse
+        //      because they are added via extend() below.
+        // ----------------------------------------------------
+            $panel-danger-inverse-bd-color-focus: get($panel-colors-danger-inverse, 'bd-color');
+            $panel-danger-inverse-header-bd-color: get($panel-colors-danger-inverse, 'bd-color');
+            $panel-danger-inverse-header-bg: get($panel-colors-danger-inverse, 'bd-color');
+            $panel-danger-inverse-header-bg-hover: darken($panel-danger-inverse-header-bg, $elem-hover-bg-darken-amount-default);
+
+            // ----- EXTEND danger inverse colors config with calc'd values ----- //
+            $panel-colors-danger-inverse: extend($panel-colors-danger-inverse,
+                (
+                    'bd-color-focus': $panel-danger-inverse-bd-color-focus,
+                    'header-bd-color': $panel-danger-inverse-header-bd-color,
+                    'header-bg': $panel-danger-inverse-header-bg,
+                    'header-bg-hover': $panel-danger-inverse-header-bg-hover
+                )
+            );
+
+
+
+// ********************************************************
+//
+//   ALL DEFAULT CONTRAST COLOR VARIATIONS COMBINED
+//
+// ********************************************************
+    ///
+    /// Convenience collection of panel colors for each `.panel` color variation's various default contrast states.
+    /// Great for building dynamic values within loops, etc...
+    /// ---
+    /// @requires {variable} $panel-colors-default
+    /// @requires {variable} $panel-colors-alt
+    /// @requires {variable} $panel-colors-success
+    /// @requires {variable} $panel-colors-warning
+    /// @requires {variable} $panel-colors-danger
+    /// ---
+    /// @prop {Map} default  - Color config map for `.panel-default` components
+    /// @prop {Map} alt      - Color config map for `.panel-alt` components
+    /// @prop {Map} success  - Color config map for `.panel-success` components
+    /// @prop {Map} warning  - Color config map for `.panel-warning` components
+    /// @prop {Map} danger   - Color config map for `.panel-danger` components
+    ///
+    $panel-colors: (
+        'default':  $panel-colors-default,
+        'alt':      $panel-colors-alt,
+        'success':  $panel-colors-success,
+        'warning':  $panel-colors-warning,
+        'danger':   $panel-colors-danger
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   ALL INVERSE CONTRAST COLOR VARIATIONS COMBINED
+//
+// ********************************************************
+    ///
+    /// Convenience collection of panel colors for each `.panel` color variation's various inverse contrast states.
+    /// Great for building dynamic values within loops, etc...
+    /// ---
+    /// @requires {variable} $panel-colors-default-inverse
+    /// @requires {variable} $panel-colors-alt-inverse
+    /// @requires {variable} $panel-colors-success-inverse
+    /// @requires {variable} $panel-colors-warning-inverse
+    /// @requires {variable} $panel-colors-danger-inverse
+    /// ---
+    /// @prop {Map} default  - Color config map for `.panel-default.panel-inverse` components
+    /// @prop {Map} alt      - Color config map for `.panel-alt.panel-inverse` components
+    /// @prop {Map} success  - Color config map for `.panel-success.panel-inverse` components
+    /// @prop {Map} warning  - Color config map for `.panel-warning.panel-inverse` components
+    /// @prop {Map} danger   - Color config map for `.panel-danger.panel-inverse` components
+    ///
+    $panel-colors-inverse: (
+        'default':  $panel-colors-default-inverse,
+        'alt':      $panel-colors-alt-inverse,
+        'success':  $panel-colors-success-inverse,
+        'warning':  $panel-colors-warning-inverse,
+        'danger':   $panel-colors-danger-inverse
+    ) !default;

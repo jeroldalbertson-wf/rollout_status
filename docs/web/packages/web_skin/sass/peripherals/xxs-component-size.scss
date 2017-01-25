@@ -1,0 +1,34 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for "xxs"
+ * component size variations that have
+ * no fixed height, but adapt to the
+ * height of their surroundings assuming
+ * that the "surrounding" is a v2 grid block.
+ *
+ * NOTE: Moved into core web-skin.css
+ *       in 1.4.0, will be removed completely
+ *       in 2.0.0.
+ * ---
+ * MSIE Support: 10+
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ *   web-skin v{{ws_css_version}} Grid v2 CSS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import '../core/api';
+
+
+// ----------------------------------------------------
+//   XXS Component Size Manifest
+// ----------------------------------------------------
+    @import 'xxs-component-size/index';

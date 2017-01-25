@@ -1,0 +1,413 @@
+// ********************************************************
+
+////
+/// Default typographic values that are used to determine
+/// the vertical rhythm of all layouts built using the
+/// Web Skin platform
+/// ---
+/// @access private
+/// @group core.internals.typography
+/// @type Number
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/type-rhythm';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function remove-unit,
+                                                function get);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   GLOBAL DEFAULTS
+//
+// ********************************************************
+    @import './type-rhythm-global';
+
+
+
+// ********************************************************
+//
+//   FONT SIZE / LINE HEIGHT VARIATIONS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   FONT SIZES
+    // ----------------------------------------------------
+        ///
+        /// Value that `$font-size-base` is multiplied by to determine the value of `$font-size-xs`.
+        ///
+        $font-size-xs-modifier: .78571428571429;
+
+        ///
+        /// Value that `$font-size-base` is multiplied by to determine the value of `$font-size-sm`.
+        ///
+        $font-size-sm-modifier: .85714285714286;
+
+        ///
+        /// Value that `$font-size-base` is multiplied by to determine the value of `$font-size-md`.
+        /// ---
+        /// @since 1.0.0
+        ///
+        $font-size-md-modifier: .92857142857143;
+
+        ///
+        /// Value that `$font-size-base` is multiplied by to determine the value of `$font-size-lg`.
+        ///
+        $font-size-lg-modifier: 1.285;
+
+
+        ///
+        /// Base `font-size` value used for `{component}-xs` size variations.
+        /// (`11px`)
+        /// ---
+        /// @requires {variable} $font-size-base
+        /// @requires {variable} $font-size-xs-modifier
+        ///
+        $font-size-xs: floor($font-size-base * $font-size-xs-modifier);
+
+        ///
+        /// Base `font-size` value used for `{component}-sm` size variations.
+        /// (`12px`)
+        /// ---
+        /// @requires {variable} $font-size-base
+        /// @requires {variable} $font-size-sm-modifier
+        ///
+        $font-size-sm: floor($font-size-base * $font-size-sm-modifier);
+
+        ///
+        /// Base `font-size` value used for `{component}-md` size variations.
+        /// (`13px`)
+        /// ---
+        /// @requires {variable} $font-size-base
+        /// @requires {variable} $font-size-md-modifier
+        ///
+        $font-size-md: round($font-size-base * $font-size-md-modifier);
+
+        ///
+        /// Calculated `font-size` value used for `{component}-lg` size variations.
+        /// (`18px`)
+        /// ---
+        /// @requires {variable} $font-size-base
+        /// @requires {variable} $font-size-lg-modifier
+        ///
+        $font-size-lg: ceil($font-size-base * $font-size-lg-modifier);
+
+
+    // ----------------------------------------------------
+    //   LINE HEIGHTS
+    // ----------------------------------------------------
+        ///
+        /// Computed base `line-height` value for components at their base size.
+        /// (`1.428571429`)
+        /// ---
+        /// @requires {function} remove-unit
+        /// @requires {variable} $line-height-base-px
+        /// @requires {variable} $font-size-base
+        ///
+        $line-height-base: remove-unit($line-height-base-px / $font-size-base);
+            ///
+            /// The number representing the "Golden Ratio" that Web Skin uses according to our `$font-size-base` and `$line-height-base-px` values.
+            /// (`1.428571429`)
+            /// ---
+            /// @link http://alistapart.com/article/more-meaningful-typography Meaningful Typography for the Web
+            /// @link http://modularscale.com/scale/?px1=14&px2=20&ra1=1.618&ra2=0 Web Skin Modular Scale Calculations
+            /// ---
+            /// @alias line-height-base
+            ///
+            $golden-ratio: $line-height-base;
+
+
+        ///
+        /// Base `line-height` value used for `{component}-xs` size variations.
+        /// When combined with `$font-size-xs`, this creates a total vertical box model displacement of `16px`.
+        ///
+        $line-height-xs: 1.3;
+
+        ///
+        /// Base `line-height` value used for `{component}-sm` size variations.
+        /// When combined with `$font-size-sm`, this creates a total vertical box model displacement of `18px`.
+        ///
+        $line-height-sm: 1.5;
+
+        ///
+        /// Base `line-height` value used for `{component}-lg` size variations.
+        /// When combined with `$font-size-lg`, this creates a total vertical box model displacement of `24px`.
+        ///
+        $line-height-lg: 1.333333333;
+
+
+
+// ********************************************************
+//
+//   GLOBAL TYPE RHYTHM COLLECTIONS
+//
+// ********************************************************
+    ///
+    /// Convenience collection of `font-size` values, grouped by component size variation name.
+    /// Great for building dynamic values within loops, etc...
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {variable} $font-size-base
+    /// @requires {variable} $font-size-xs
+    /// @requires {variable} $font-size-sm
+    /// @requires {variable} $font-size-md
+    /// @requires {variable} $font-size-lg
+    /// ---
+    /// @prop {Number} base [14px]
+    /// @prop {Number} xs   [11px]
+    /// @prop {Number} sm   [12px]
+    /// @prop {Number} md   [13px]
+    /// @prop {Number} lg   [18px]
+    ///
+    $font-size-variation-config: (
+        'base': $font-size-base,
+        'xs': $font-size-xs,
+        'sm': $font-size-sm,
+        'md': $font-size-md,
+        'lg': $font-size-lg
+    );
+
+    ///
+    /// Convenience collection of `line-height` values, grouped by component size variation name.
+    /// Great for building dynamic values within loops, etc...
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {variable} $line-height-base-px
+    /// @requires {variable} $line-height-base
+    /// @requires {variable} $line-height-xs
+    /// @requires {variable} $line-height-sm
+    /// @requires {variable} $line-height-lg
+    /// ---
+    /// @prop {Number} base-px [20px]
+    /// @prop {Number} base [1.428571429]
+    /// @prop {Number} xs   [1.3]
+    /// @prop {Number} sm   [1.5]
+    /// @prop {Number} md   [1.428571429]
+    /// @prop {Number} lg   [1.333333333]
+    ///
+    $line-height-variation-config: (
+        'base-px': $line-height-base-px,
+        'base': $line-height-base,
+        'xs': $line-height-xs,
+        'sm': $line-height-sm,
+        'md': $line-height-base,
+        'lg': $line-height-lg
+    );
+
+    ///
+    /// Convenience collection of typographic rhythm configuration values, grouped by component size variation name.
+    /// Great for building dynamic values within loops, etc...
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {variable} $font-size-variation-config
+    /// @requires {variable} $line-height-variation-config
+    /// @requires {variable} $font-size-xs-modifier
+    /// @requires {variable} $font-size-sm-modifier
+    /// @requires {variable} $font-size-md-modifier
+    /// @requires {variable} $font-size-lg-modifier
+    /// ---
+    /// @prop {Map} base
+    /// @prop {Number} base.line-height           [1.428571429]   - Computed `line-height` value for components at their base size
+    /// @prop {Number} base.font-size             [14px]          - `font-size` value for components at their base size
+    /// @prop {Number} base.font-size-modifier    [1]
+    ///
+    /// @prop {Map} xs
+    /// @prop {Number} xs.line-height           [1.3]            - `line-height` value for components at their extra small size variation
+    /// @prop {Number} xs.font-size             [11px]            - Computed `font-size` value for components at their extra small size variation
+    /// @prop {Number} xs.font-size-modifier    [.78571428571429] - Value that `$font-size-base` is multiplied by to determine the value of `$font-size-xs`
+    ///
+    /// @prop {Map} sm
+    /// @prop {Number} sm.line-height           [1.5]             - `line-height` value for components at their small size variation
+    /// @prop {Number} sm.font-size             [12px]            - Computed `font-size` value for components at their small size variation
+    /// @prop {Number} sm.font-size-modifier    [.85714285714286] - Value that `$font-size-base` is multiplied by to determine the value of `$font-size-sm`
+    ///
+    /// @prop {Map} md
+    /// @prop {Number} md.line-height           [1.428571429]     - Computed `line-height` value for components at their medium size variation
+    /// @prop {Number} md.font-size             [13px]            - Computed `font-size` value for components at their medium size variation
+    /// @prop {Number} md.font-size-modifier    [.92857142857143] - Value that `$font-size-base` is multiplied by to determine the value of `$font-size-md`
+    ///
+    /// @prop {Map} lg
+    /// @prop {Number} lg.line-height           [1.333333333]     - `line-height` value for components at their large size variation
+    /// @prop {Number} lg.font-size             [18px]            - Computed `font-size` value for components at their large size variation
+    /// @prop {Number} lg.font-size-modifier    [1.285]           - Value that `$font-size-base` is multiplied by to determine the value of `$font-size-lg`
+    ///
+    $type-rhythm-config: (
+        'base': (
+            'line-height': get($line-height-variation-config, 'base'),
+            'font-size': get($font-size-variation-config, 'base'),
+            'font-size-modifier': 1
+        ),
+        'xs': (
+            'line-height': get($line-height-variation-config, 'xs'),
+            'font-size': get($font-size-variation-config, 'xs'),
+            'font-size-modifier': $font-size-xs-modifier
+        ),
+        'sm': (
+            'line-height': get($line-height-variation-config, 'sm'),
+            'font-size': get($font-size-variation-config, 'sm'),
+            'font-size-modifier': $font-size-sm-modifier
+        ),
+        'md': (
+            'line-height': get($line-height-variation-config, 'base'),
+            'font-size': get($font-size-variation-config, 'md'),
+            'font-size-modifier': $font-size-md-modifier
+        ),
+        'lg': (
+            'line-height': get($line-height-variation-config, 'lg'),
+            'font-size': get($font-size-variation-config, 'lg'),
+            'font-size-modifier': $font-size-lg-modifier
+        )
+    );
+
+
+
+// ********************************************************
+//
+//   GLOBAL ELEM SPACING
+//
+// ********************************************************
+    ///
+    /// Amount of margin that will be used to provide negative space between components in a given layout. Modify `$line-height-base-px` so that this value remains proportional according to the Web Skin `$golden-ratio`.
+    /// ---
+    /// @since 1.0.0
+    /// @group core.internals.spacing
+    /// ---
+    /// @see {variable} line-height-base-px
+    /// @see {variable} golden-ratio
+    /// ---
+    /// @example scss
+    ///   // use to space out adjacent elements
+    ///   .list-group {
+    ///       & + & {
+    ///           margin-top: $base-elem-margin-vertical;
+    ///       }
+    ///   }
+    ///
+    ///   // use to add vertical whitespace to typographic elements
+    ///   p {
+    ///       margin-bottom: $base-elem-margin-vertical;
+    ///   }
+    /// ---
+    /// @requires {variable} $line-height-base-px
+    ///
+    $base-elem-margin-vertical: round($line-height-base-px / 2);
+
+    // ----- Key spacing between form elems, button groups, etc ----- //
+    ///
+    /// Typical amount of spacing to use between two components at their default size.
+    /// ---
+    /// @access public
+    /// @group core.utils.spacing
+    /// ---
+    /// @requires {variable} $line-height-base-px
+    ///
+    $spacing-base: round($line-height-base-px / 4) !default;
+    ///
+    /// Typical amount of spacing to use between two components at their extra large size variation.
+    /// ---
+    /// @since 1.9.0
+    /// @access public
+    /// @group core.utils.spacing
+    /// ---
+    /// @requires {variable} $spacing-base
+    ///
+    $spacing-xl: $spacing-base * 2 !default;
+    ///
+    /// Typical amount of spacing to use between two components at their extra extra large size variation.
+    /// ---
+    /// @since 1.9.0
+    /// @access public
+    /// @group core.utils.spacing
+    /// ---
+    /// @requires {variable} $spacing-xl
+    ///
+    $spacing-xxl: $spacing-xl + 2 !default;
+    ///
+    /// Typical amount of spacing to use between two components at their large size variation.
+    /// ---
+    /// @access public
+    /// @group core.utils.spacing
+    /// ---
+    /// @requires {variable} $spacing-base
+    ///
+    $spacing-lg: $spacing-base + 3 !default;
+    ///
+    /// Typical amount of spacing to use between two components at their small size variation.
+    /// ---
+    /// @access public
+    /// @group core.utils.spacing
+    /// ---
+    /// @requires {variable} $spacing-base
+    ///
+    $spacing-sm: $spacing-base - 1 !default;
+    ///
+    /// Typical amount of spacing to use between two components at their xs size variation.
+    /// ---
+    /// @access public
+    /// @group core.utils.spacing
+    /// ---
+    /// @requires {variable} $spacing-base
+    ///
+    $spacing-xs: $spacing-base - 2 !default;
+
+    ///
+    /// Configuration for spacing to use between two adjacent components at a given size variation.
+    /// ---
+    /// @type Map
+    /// @since 1.9.0
+    /// @access public
+    /// @group core.utils.spacing
+    /// @link https://docs.workiva.org/web-skin/latest/css/#helper-classes-spacing Spacing CSS classes demo
+    /// ---
+    /// @requires {variable} $spacing-base
+    /// @requires {variable} $spacing-xxl
+    /// @requires {variable} $spacing-xl
+    /// @requires {variable} $spacing-lg
+    /// @requires {variable} $spacing-sm
+    /// @requires {variable} $spacing-xs
+    /// ---
+    /// @prop {Number} none [0]    - Use when no spacing should exist between two components at any size.
+    /// @prop {Number} base [5px]  - Typical amount of spacing to use between two components at their extra extra large size variation
+    /// @prop {Number} xxl  [12px] - Typical amount of spacing to use between two components at their extra large size variation
+    /// @prop {Number} xl   [10px] - Typical amount of spacing to use between two components at their extra large size variation
+    /// @prop {Number} lg   [8px]  - Typical amount of spacing to use between two components at their large size variation
+    /// @prop {Number} sm   [4px]  - Typical amount of spacing to use between two components at their small size variation
+    /// @prop {Number} xs   [3px]  - Typical amount of spacing to use between two components at their extra small size variation
+    ///
+    /// @prop {Number} grid-block [15px] - Typical amount of spacing between two Web Skin "grid blocks"
+    ///
+    $component-spacing-config: (
+        none: 0,
+        base: $spacing-base,
+        xxl: $spacing-xxl,
+        xl: $spacing-xl,
+        lg: $spacing-lg,
+        sm: $spacing-sm,
+        xs: $spacing-xs,
+        //
+        block-gutter: $spacing-base * 3
+    );
+
+
+// ----------------------------------------------------
+//   Undocumented vars
+// ----------------------------------------------------
+$font-size-lead:   21px !default;
+$font-size-lg-pct: percentage($font-size-lg-modifier) !default;
+$font-size-sm-pct: percentage($font-size-sm-modifier) !default;
+$font-size-xs-pct: percentage($font-size-xs-modifier) !default;

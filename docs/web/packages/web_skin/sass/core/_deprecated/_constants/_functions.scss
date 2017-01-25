@@ -1,0 +1,206 @@
+// ----------------------------------------------------
+
+//+  PARTIAL:  _deprecated/_constants/_functions.scss
+//+  PARENT:   _deprecated/_manifest.scss
+
+// NOTE: DO NOT USE THESE!!! They were deprecated in `1.0.0` will be removed no later than `2.0.0`
+// TODO: Remove no later than `2.0.0`
+
+// ----------------------------------------------------
+
+//
+// DEPRECATIONS
+//
+
+    ///
+    /// Calculates a width for a `.checkbox-switch` element based on its contents
+    /// ---
+    /// @group peripherals.components.form-controls
+    /// @since 0.3.0
+    /// @deprecated since `1.6.0`, text for switch toggles is no longer displayed within the control, which makes this function unnecessary.
+    /// @todo remove completely in 2.0.0
+    /// ---
+    /// @param {String} $property        ['width']   - The CSS property you are setting
+    /// @param {String} $default-text    ['off']     - Default text for the switch in the off position
+    /// @param {String} $checked-text    ['on']      - Default text for the switch in the on position
+    /// @param {String} $size            ['base']    - Size variation alias
+    /// ---
+    /// @returns {Number}                            - value of `$property` requested
+    ///
+    @function checkbox-switch-value($property: 'width', $default-text: 'off', $checked-text: 'on', $size: 'base') {
+        @warn "The checkbox-switch-value() function was deprecated in version 1.6.0, and will be removed completely in 2.0.0.";
+
+        @if not dependencies-met(for checkbox-switch-value,
+                                     is,
+                                     get,
+                                     var cbox-switch-config
+                                )
+        {
+            @return null;
+        }
+
+        $valid-sizes: 'base' 'sm' 'xs';
+
+        @if not is($size, $valid-sizes) {
+            @error "`checkbox-switch-value` function expecting `$size` to be one of the following: `#{$valid-sizes}`. `#{$size}` given.";
+        }
+
+        $text-indent: get-deep($cbox-switch-config, 'text-indent.#{$size}');
+
+        @if $property == 'width' {
+            $font-size: get-deep($cbox-switch-config, 'font-size.#{$size}');
+            $font-weight: if($size == 'base', bold, normal);
+
+            $is-default-text: if($default-text == 'off' and $checked-text == 'on', true, false);
+            $edge-pad: if($is-default-text, $text-indent * 2, $text-indent);
+            $max-chars: max(str-length($default-text), str-length($checked-text));
+            $text-width: calc-text-width($max-chars, $font-size, $font-weight, $char-ratio-adjustment: -1);
+
+            @return $text-width + $edge-pad;
+
+        } @else if $property == 'height' {
+
+            $height: get-deep($cbox-switch-config, 'height.#{$size}');
+
+            @return $height
+
+        } @else if $property == 'text-indent' {
+
+            @return $text-indent;
+
+        } @else {
+            // something went very wrong
+            @warn "Unexpected error: `checkbox-switch-value` @else gate reached unexpectedly.";
+            @return null;
+        }
+    }
+
+    ///
+    /// Normalize vertical padding to account for janky line-height of Gibson webfont.
+    /// ---
+    /// @param {Number | Arglist} $padding - padding value[s] to normalize
+    /// @returns {Arglist} - normalized padding shorthand values
+    /// @deprecated Deprecated in `1.5.0`, will be removed completely in `2.0.0`.
+    ///
+    @function gibson-padding-normalize($padding) {
+        @warn "The gibson-padding-normalize() function was deprecated in version 1.5.0, and will be removed completely in 2.0.0.";
+
+        $right: 0;
+        $left:  0;
+        $top:   0;
+        $bot:   0;
+
+        @if length($padding) > 1 {
+            $right: nth($padding, 2);
+            $left:  $right;
+            $top:   remove-unit(nth($padding, 1)) + $webfont-baseline-offset;
+            $bot:   remove-unit(nth($padding, 1)) - $webfont-baseline-offset;
+
+            @if length($padding) > 2 {
+                $bot: remove-unit(nth($padding, 3)) - $webfont-baseline-offset;
+
+                @if length($padding) > 3 {
+                    $left: nth($padding, 4);
+                }
+            }
+        } @else {
+            $right: $padding;
+            $left:  $right;
+            $top:   $padding + $webfont-baseline-offset;
+            $bot:   $padding - $webfont-baseline-offset;
+        }
+
+        // enforce non-negative result since negative padding
+        // is invalid CSS and would therefore be ignored
+        $top:   if($top < 0, 0, $top);
+        $right: if($right < 0, 0, $right);
+        $bot:   if($bot < 0, 0, $bot);
+        $left:  if($left < 0, 0, $left);
+
+        @return $top $right $bot $left;
+    }
+
+    @function zestyCrayonColor($color, $sequence: main) {
+        @warn "The zestyCrayonColor() function was deprecated in version 1.0.0, and will be removed completely in a future release.  Please use color() instead.";
+
+        // The "main" tone/sequence was @deprecated in `1.0.0`, so let's ensure equivalence with its new name
+        $sequence: if(unquote($sequence) == main, base, $sequence);
+
+        @return color('global.#{$color}.#{$sequence}');
+    }
+    @function pxtorem($px, $base: $remBase) {
+        @warn "The Web Skin `pxtorem` function was deprecated in the `1.0.0` release, and will be removed completely in an upcoming release. Use `to-rem` instead.";
+        @return to-rem($px: $px, $html-font-size: $base);
+    }
+    @function pxtoem($target, $parentFontSize: $fontSizeBase) {
+        @warn "The Web Skin `pxtoem` function was deprecated in the `1.0.0` release, and will be removed completely in an upcoming release. Use `to-em` instead.";
+        @return to-em($px: $target, $parent-font-size: $parentFontSize);
+    }
+    @function emtopx($target, $parentFontSize: $fontSizeBase) {
+        @warn "The Web Skin `emtopx` function was deprecated in the `1.0.0` release, and will be removed completely in an upcoming release. Use `to-px` instead.";
+        @return to-px($number: $target, $parent-font-size: $parentFontSize);
+    }
+    @function gibsonPadOffset($padding) {
+        @warn "The Web Skin `gibsonPadOffset` function was deprecated in the `1.0.0` release, and will be removed completely in an upcoming release. Use `gibson-padding-normalize` instead.";
+        @return gibson-padding-normalize($padding);
+    }
+    @function calcModalTotalHeight($content-height: 250px, $footer: true) {
+        @warn "The Web Skin `calcModalTotalHeight` function was deprecated in the `1.0.0` release, and will be removed completely in an upcoming release. Use `calculate-modal-height` instead.";
+        @return calculate-modal-height($content-height, $footer);
+    }
+    @function disabledColor($color, $alpha: $disabled-alpha-default) {
+        @warn "The Web Skin `disabledColor` function was deprecated in the `1.0.0` release, and will be removed completely in an upcoming release. Use `disabled-color` instead.";
+        @return disabled-color($color, $alpha);
+    }
+    @function _version-support($target: ua, $ua-os: ua, $min-support: 1, $ver: all, $append: true) {
+        @warn "The Web Skin `_version-support` function was deprecated in the `1.0.0` release, and will be removed completely in an upcoming release. Use `generate-target-version-selectors` instead.";
+        @return generate-target-version-selectors($target, $ua-os, $min-support, $ver, $append);
+    }
+    @function bgImageHeight($name, $mime: "png", $dir: "", $valign: false, $halign: false, $vPad: 0, $hPad: 0) {
+        @warn "The Web Skin `bgImageHeight` function was deprecated in the `1.0.0` release, and will be removed completely in an upcoming release. Use `calc-img-retina-height` instead.";
+
+        // do our best to interpolate the parameters from the deprecated function
+        // into the values needed for the new function's parameters to produce an
+        // identical result.
+        $file-1x: '#{$dir}#{$name}.#{$mime}';
+        $container-height: $valign;
+
+        @return calc-img-retina-height($file-1x: $file-1x, $container-height: $container-height, $offset-vertical: $vPad);
+    }
+    @function bgImageWidth($name, $mime: "png", $dir: "", $valign: false, $halign: false, $vPad: 0, $hPad: 0) {
+        @warn "The Web Skin `bgImageWidth` function was deprecated in the `1.0.0` release, and will be removed completely in an upcoming release. Use `calc-img-retina-width` instead.";
+
+        // do our best to interpolate the parameters from the deprecated function
+        // into the values needed for the new function's parameters to produce an
+        // identical result.
+        $file-1x: '#{$dir}#{$name}.#{$mime}';
+        $container-height: $valign;
+
+        @return calc-img-retina-width($file-1x: $file-1x, $container-height: $container-height, $offset-vertical: $vPad);
+    }
+    @function calc-btn-icon-valign($icon-size-name, $btn-size-name) {
+        @warn "The Web Skin `calc-btn-icon-valign` function was deprecated in the `1.1.3` release, and will be removed completely in an upcoming release.  Use `_calc-btn-icon-valign` instead.";
+
+        @return _calc-btn-icon-valign($btn-size-name, $icon-size-name);
+    }
+
+
+//
+// COMPLETE REMOVALS
+//
+    @function rgbaIE($color, $alpha, $bgcolor: $body-bg) {
+        @error "The Web Skin `rgbaIE` function was deprecated in the `0.2.0` release, and was removed completely in the `1.0.0` release.";
+        @return false;
+    }
+    @function darkenOrLighten($color, $type: "", $dark: $contrasted-dark-default, $light: $contrasted-light-default, $threshold: $contrasted-lightness-threshold) {
+        @error "The Web Skin `darkenOrLighten` function was deprecated in the `0.3.0` release, and was removed completely in the `1.0.0` release.";
+        @return false;
+    }
+    @function alertText($bd-color, $darken-mod: 0%, $desat-mod: 0%) {
+        @error "The Web Skin `alertText` function was removed in the `1.0.0` release. Use `state-variation-text({{state-name}})` instead.";
+        @return false;
+    }
+    @function alertHeadingBd($bd-color, $bg-color) {
+        @error "The Web Skin `alertHeadingBd` function was removed in the `1.0.0` release. Use a darkened variation of `state-variation-bd({{state-name}})` instead.";
+        @return false;
+    }

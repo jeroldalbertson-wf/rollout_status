@@ -1,0 +1,310 @@
+// ********************************************************
+
+////
+/// Default component scaffolding / size values based on
+/// the typographic rhythm of the platform.
+/// DO NOT EDIT THESE unless you also plan on modifying
+/// the default `font-size` and `line-height` for the
+/// entire Web Skin platform.
+/// ---
+/// @access private
+/// @group core.internals.size.box-model
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/component-sizes';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function component-padding-horizontal,
+                                                function component-padding-vertical,
+                                                function get,
+                                                function remove-unit);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BORDERS
+//
+// ********************************************************
+    ///
+    /// Typical width of component borders used to calculate the overall height of a component.
+    /// ---
+    /// @access public
+    /// @group core.size.box-model
+    /// @type Number
+    /// @since 1.0.0
+    ///
+    $global-component-bd-width: 1px !default;
+
+
+    ///
+    /// Typical width of component "platform" border width (typically displayed along the left edge).
+    /// ---
+    /// @access public
+    /// @group core.size.box-model
+    /// @type Number
+    /// @since 1.5.0
+    ///
+    $global-component-platform-bd-width: .3rem !default;
+
+
+
+// ********************************************************
+//
+//   PADDING
+//
+// ********************************************************
+    ///
+    /// Collection of component padding configuration values.
+    /// These values can only be modified by changing `$font-size-{size-key}`, `$line-height-{size-key}` or `$global-component-bd-width`.
+    /// ---
+    /// @access public
+    /// @group core.size.box-model
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} component-padding-vertical
+    /// @requires {function} component-padding-horizontal
+    /// ---
+    /// @prop {Map} base
+    /// @prop {Number} base.vertical      [6px]       - Default vertical padding for components at their base size
+    /// @prop {Number} base.horizontal    [12px]      - Default horizontal padding for components at their base size
+    /// @prop {List}   base.all           [6px 12px]  - Default vertical and horizontal padding for components at their base size
+    /// @prop {Map} xs
+    /// @prop {Number} xs.vertical      [4px]         - Default vertical padding for components at their extra small size variation
+    /// @prop {Number} xs.horizontal    [8px]         - Default horizontal padding for components at their extra small size variation
+    /// @prop {List}   xs.all           [4px 8px]     - Default vertical and horizontal padding for components at their extra small size variation
+    /// @prop {Map} sm
+    /// @prop {Number} sm.vertical      [5px]         - Default vertical padding for components at their small size variation
+    /// @prop {Number} sm.horizontal    [10px]        - Default horizontal padding for components at their small size variation
+    /// @prop {List}   sm.all           [5px 10px]    - Default vertical and horizontal padding for components at their small size variation
+    /// @prop {Map} lg
+    /// @prop {Number} lg.vertical      [10px]        - Default vertical padding for components at their large size variation
+    /// @prop {Number} lg.horizontal    [16px]        - Default horizontal padding for components at their large size variation
+    /// @prop {List}   lg.all           [10px 16px]   - Default vertical and horizontal padding for components at their large size variation
+    ///
+    $global-component-padding-config: (
+        'base': (
+            'vertical': component-padding-vertical('base'),
+            'horizontal': component-padding-horizontal('base'),
+            'all': component-padding-vertical('base') component-padding-horizontal('base')
+        ),
+        'xs': (
+            'vertical': component-padding-vertical('xs'),
+            'horizontal': component-padding-horizontal('xs'),
+            'all': component-padding-vertical('xs') component-padding-horizontal('xs')
+        ),
+        'sm': (
+            'vertical': component-padding-vertical('sm'),
+            'horizontal': component-padding-horizontal('sm'),
+            'all': component-padding-vertical('sm') component-padding-horizontal('sm')
+        ),
+        'lg': (
+            'vertical': component-padding-vertical('lg'),
+            'horizontal': component-padding-horizontal('lg'),
+            'all': component-padding-vertical('lg') component-padding-horizontal('lg')
+        )
+    );
+
+    // ----------------------------------------------------
+    //   PRIVATE PADDING ALIASES
+    // ----------------------------------------------------
+
+        // ----- BASE ----- //
+            ///
+            /// Vertical padding for a typical component's base size.
+            /// ---
+            /// @type Number
+            /// @since 0.4.0
+            /// @requires {function} get-deep
+            /// @requires {variable} $global-component-padding-config
+            ///
+            $padding-base-vertical: get-deep($global-component-padding-config, 'base.vertical');
+
+            ///
+            /// Horizontal padding for a typical component's base size.
+            /// ---
+            /// @type Number
+            /// @since 0.4.0
+            /// @requires {function} get-deep
+            /// @requires {variable} $global-component-padding-config
+            ///
+            $padding-base-horizontal: get-deep($global-component-padding-config, 'base.horizontal');
+
+            ///
+            /// Vertical and horizontal padding for a typical component's base size.
+            /// ---
+            /// @type List
+            /// @requires {function} get-deep
+            /// @requires {variable} $global-component-padding-config
+            ///
+            $padding-base: get-deep($global-component-padding-config, 'base.all');
+
+        // ----- EXTRA SMALL (`-xs`) ----- //
+            ///
+            /// Vertical padding for a typical component's extra small size variation.
+            /// ---
+            /// @type Number
+            /// @since 0.4.0
+            /// @requires {function} get-deep
+            /// @requires {variable} $global-component-padding-config
+            ///
+            $padding-xs-vertical: get-deep($global-component-padding-config, 'xs.vertical');
+
+            ///
+            /// Horizontal padding for a typical component's extra small size variation.
+            /// ---
+            /// @type Number
+            /// @since 0.4.0
+            /// @requires {function} get-deep
+            /// @requires {variable} $global-component-padding-config
+            ///
+            $padding-xs-horizontal: get-deep($global-component-padding-config, 'xs.horizontal');
+
+            ///
+            /// Vertical and horizontal padding for a typical component's extra small size variation.
+            /// ---
+            /// @type List
+            /// @requires {function} get-deep
+            /// @requires {variable} $global-component-padding-config
+            ///
+            $padding-xs: get-deep($global-component-padding-config, 'xs.all');
+
+        // ----- SMALL (`-sm`) ----- //
+            ///
+            /// Vertical padding for a typical component's small size variation.
+            /// ---
+            /// @type Number
+            /// @since 0.4.0
+            /// @requires {function} get-deep
+            /// @requires {variable} $global-component-padding-config
+            ///
+            $padding-sm-vertical: get-deep($global-component-padding-config, 'sm.vertical');
+
+            ///
+            /// Horizontal padding for a typical component's small size variation.
+            /// ---
+            /// @type Number
+            /// @since 0.4.0
+            /// @requires {function} get-deep
+            /// @requires {variable} $global-component-padding-config
+            ///
+            $padding-sm-horizontal: get-deep($global-component-padding-config, 'sm.horizontal');
+
+            ///
+            /// Vertical and horizontal padding for a typical component's small size variation.
+            /// ---
+            /// @type List
+            /// @requires {function} get-deep
+            /// @requires {variable} $global-component-padding-config
+            ///
+            $padding-sm: get-deep($global-component-padding-config, 'sm.all');
+
+        // ----- LARGE (`-lg`) ----- //
+            ///
+            /// Vertical padding for a typical component's large size variation.
+            /// ---
+            /// @type Number
+            /// @since 0.4.0
+            /// @requires {function} get-deep
+            /// @requires {variable} $global-component-padding-config
+            ///
+            $padding-lg-vertical: get-deep($global-component-padding-config, 'lg.vertical');
+
+            ///
+            /// Horizontal padding for a typical component's large size variation.
+            /// ---
+            /// @type Number
+            /// @since 0.4.0
+            /// @requires {function} get-deep
+            /// @requires {variable} $global-component-padding-config
+            ///
+            $padding-lg-horizontal: get-deep($global-component-padding-config, 'lg.horizontal');
+
+            ///
+            /// Vertical and horizontal padding for a typical component's large size variation.
+            /// ---
+            /// @type List
+            /// @requires {function} get-deep
+            /// @requires {variable} $global-component-padding-config
+            ///
+            $padding-lg: get-deep($global-component-padding-config, 'lg.all');
+
+
+
+// ********************************************************
+//
+//   HEIGHT
+//
+// ********************************************************
+    ///
+    /// Collection of calculated component height configuration values.
+    /// ---
+    /// @access public
+    /// @group core.size.box-model
+    /// @type Map
+    /// @since 1.0.0
+    /// @todo Write a unit test that asserts these default values
+    /// ---
+    /// @requires {function} component-height
+    /// ---
+    /// @prop {Number} base [34px] - Default height of 'base' components like buttons, form inputs, etc.
+    /// @prop {Number} xs   [24px] - Default height of 'extra small' components like buttons, form inputs, etc.
+    /// @prop {Number} sm   [30px] - Default height of 'small' components like buttons, form inputs, etc.
+    /// @prop {Number} lg   [48px] - Default height of 'large' components like buttons, form inputs, etc.
+    ///
+    $global-component-height-config: (
+        'base': component-height('base'),
+        'xs': component-height('xs'),
+        'sm': component-height('sm'),
+        'lg': component-height('lg')
+    );
+
+    // ----------------------------------------------------
+    //   UNDOCUMENTED HEIGHT ALIASES
+    // ----------------------------------------------------
+        $global-component-height-base: get($global-component-height-config, 'base');
+        $global-component-height-lg: get($global-component-height-config, 'xs');
+        $global-component-height-sm: get($global-component-height-config, 'sm');
+        $global-component-height-xs: get($global-component-height-config, 'lg');
+
+
+
+// ********************************************************
+//
+//   ALL SIZE CONFIGS
+//
+// ********************************************************
+    ///
+    /// Convenience collection of all component size configuration values.
+    /// ---
+    /// @access public
+    /// @group core.size.box-model
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {variable} $font-size-variation-config
+    /// @requires {variable} $line-height-variation-config
+    /// @requires {variable} $global-component-padding-config
+    /// @requires {variable} $global-component-height-config
+    /// @requires {variable} $global-component-bd-radius-config
+    /// ---
+    /// @prop {Map} font-size    - `$font-size-variation-config` map containing `base`, `xs`, `sm`, `md` and `lg` keys with corresponding `font-size` values
+    /// @prop {Map} line-height  - `$line-height-variation-config` map containing `base-px`, `base`, `xs`, `sm`, `md` and `lg` keys with corresponding `line-height` values
+    /// @prop {Map} bd-radius    - `$global-component-bd-radius-config` map containing `base`, `xs`, `sm` and `lg` keys with corresponding `border-radius` values
+    /// @prop {Map} padding      - `$global-component-padding-config` map containing `base`, `xs`, `sm` and `lg` keys with corresponding maps of `vertical`, `horizontal` and `all` `padding` values
+    /// @prop {Map} height       - `$global-component-height-config` map containing `base`, `xs`, `sm` and `lg` keys with corresponding calculated `height` values
+    ///
+    $global-component-size-config: (
+        'font-size': $font-size-variation-config,
+        'line-height': $line-height-variation-config,
+        'bd-radius': $global-component-bd-radius-config,
+        'padding': $global-component-padding-config,
+        'height': $global-component-height-config
+    );

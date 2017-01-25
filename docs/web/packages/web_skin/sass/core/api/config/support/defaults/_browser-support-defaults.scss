@@ -1,0 +1,310 @@
+// ********************************************************
+
+////
+/// Default browser support config values
+/// ---
+/// @access public
+/// @group core.support.browser
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/support/defaults/browser-support-defaults';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function to-number,
+                                                function list-has,
+                                                function is-map,
+                                                function is-list,
+                                                function extend,
+                                                function reject);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BROWSER SUPPORT
+//
+// ********************************************************
+
+    ///
+    /// List of all possible browsers to support
+    /// ---
+    /// @type List
+    /// @since 1.1.0
+    ///
+    $all-browsers: android, android-chrome, android-firefox, blackberry, chrome, firefox, ie, ie-mobile, ios-safari, opera, opera-mini, opera-mobile, safari;
+
+    ///
+    /// List of browsers supported by a Sass module.
+    ///
+    /// __Do not modify these values directly.__ Use the `set-supported-browsers()` mixin to set it.
+    /// ---
+    /// @type List
+    /// @since 1.0.0
+    /// @see {mixin} set-supported-browsers
+    ///
+    $supported-browsers: reject($all-browsers,
+        // browsers we do not support by default
+        opera, opera-mini, opera-mobile, android-firefox, blackberry
+    );
+
+
+    // ----------------------------------------------------
+    //   BROWSER SUPPORT ALIASES
+    // ----------------------------------------------------
+        ///
+        /// Indicates if Google Chrome is supported by a Sass module.
+        ///
+        /// __Do not modify this value directly.__ Use the `set-supported-browsers()` mixin to set it.
+        /// ---
+        /// @type Boolean
+        /// @requires {function} list-has
+        /// @requires {variable} $supported-browsers
+        ///
+        $chrome-support: list-has($supported-browsers, chrome);
+
+        ///
+        /// Indicates if Mozilla Firefox is supported by a Sass module.
+        ///
+        /// __Do not modify this value directly.__ Use the `set-supported-browsers()` mixin to set it.
+        /// ---
+        /// @type Boolean
+        /// @requires {function} list-has
+        /// @requires {variable} $supported-browsers
+        ///
+        $firefox-support: list-has($supported-browsers, firefox);
+
+        ///
+        /// Indicates if Microsoft Internet Explorer is supported by a Sass module.
+        ///
+        /// __Do not modify this value directly.__ Use the `set-supported-browsers()` mixin to set it.
+        /// ---
+        /// @type Boolean
+        /// @requires {function} list-has
+        /// @requires {variable} $supported-browsers
+        ///
+        $ie-support: list-has($supported-browsers, ie);
+
+        ///
+        /// Indicates if Apple Safari is supported by a Sass module.
+        ///
+        /// __Do not modify this value directly.__ Use the `set-supported-browsers()` mixin to set it.
+        /// ---
+        /// @type Boolean
+        /// @requires {function} list-has
+        /// @requires {variable} $supported-browsers
+        ///
+        $safari-support: list-has($supported-browsers, safari);
+
+        ///
+        /// Indicates if Opera is supported by a Sass module.
+        ///
+        /// __Do not modify this value directly.__ Use the `set-supported-browsers()` mixin to set it.
+        /// ---
+        /// @type Boolean
+        /// @requires {function} list-has
+        /// @requires {variable} $supported-browsers
+        ///
+        $opera-support: list-has($supported-browsers, opera);
+
+        ///
+        /// Indicates if any WebKit browsers are supported by a Sass module.
+        ///
+        /// __Do not modify this value directly.__ Use the `set-supported-browsers()` mixin to set it.
+        /// ---
+        /// @type Boolean
+        /// @requires {variable} $chrome-support
+        /// @requires {variable} $safari-support
+        /// @requires {function} is-true
+        ///
+        $webkit-support: if(is-true($chrome-support), true, if(is-true($safari-support), true, false));
+
+
+    // ----------------------------------------------------
+    //   BROWSER SUPPORT HELPERS
+    // ----------------------------------------------------
+        ///
+        /// Update the list of browsers supported by a Sass module.
+        /// ---
+        /// @since 1.0.0
+        /// ---
+        /// @param {List | Arglist | String} $browsers - List of one or more browsers you want to support
+        ///
+        @mixin set-supported-browsers($browsers) {
+            @if not is-list($browsers) and not is-arglist($browsers) and not is-string($browsers) {
+                @error "Mixin `set-supported-browsers` expecting `$browsers` to be a `list` or `string`. Received `#{type-of($browsers)}`.";
+            }
+
+            $supported-browsers: ($browsers) !global;
+
+            // reset browser-support alias values based on new support levels
+            $chrome-support:  list-has($supported-browsers, chrome)    !global;
+            $firefox-support: list-has($supported-browsers, firefox)   !global;
+            $ie-support:      list-has($supported-browsers, ie)        !global;
+            $safari-support:  list-has($supported-browsers, safari)    !global;
+            $opera-support:   list-has($supported-browsers, opera)     !global;
+            $webkit-support:  if(is-true($chrome-support), true, if(is-true($safari-support), true, false)) !global;
+        }
+
+
+
+// ********************************************************
+//
+//   BROWSER VERSION SUPPORT
+//
+// ********************************************************
+    ///
+    /// Map of minimum browser versions supported by a Sass module.
+    ///
+    /// We will do our best to keep the values listed here up-to-date. However - our "policy" on version support is `major-version - 1` for all browsers except Internet Explorer.
+    ///
+    /// __Last Updated 8/2016__
+    ///
+    /// __Do not modify these values directly.__ Use the `set-browser-minimum-versions()` mixin to set it.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @see {mixin} set-browser-minimum-versions
+    /// ---
+    /// @requires {variable} $chrome-support
+    /// @requires {variable} $firefox-support
+    /// @requires {variable} $ie-support
+    /// @requires {variable} $min-ie-supported-platform
+    /// @requires {variable} $safari-support
+    /// @requires {variable} $opera-support
+    /// ---
+    /// @prop {String} chrome   ['54']      - The minimum version of Chrome that Web Skin supports.
+    /// @prop {String} firefox  ['50']      - The minimum version of Firefox that Web Skin supports.
+    /// @prop {String} ie       ['10']      - The minimum version of Internet Explorer that Web Skin supports.
+    /// @prop {String} safari   ['9']       - The minimum version of Safari that Web Skin supports.
+    /// @prop {String} opera    ['9999']    - The minimum version of Opera that Web Skin supports.
+    ///
+    $browser-minimum-versions: (
+        chrome:  if($chrome-support,  '54', '9999'),
+        firefox: if($firefox-support, '50', '9999'),
+        ie:      if($ie-support,      to-string($min-ie-supported-platform), '9999'),
+        safari:  if($safari-support,  '9',  '9999'),
+        opera:   if($opera-support,   '40', '9999')
+    );
+
+
+    // ----------------------------------------------------
+    //   BROWSER VERSION SUPPORT ALIASES
+    // ----------------------------------------------------
+        ///
+        /// Indicates the minimum version of Google Chrome supported by a Sass module.
+        ///
+        /// __Do not modify this value directly.__ Use the `set-browser-minimum-versions()` mixin to set it.
+        /// ---
+        /// @type Number
+        /// @requires {variable} $browser-minimum-versions
+        /// @requires {function} to-number
+        ///
+        $min-chrome-supported: to-number(map-get($browser-minimum-versions, 'chrome'));
+
+        ///
+        /// Indicates the minimum version of Mozilla Firefox supported by a Sass module.
+        ///
+        /// __Do not modify this value directly.__ Use the `set-browser-minimum-versions()` mixin to set it.
+        /// ---
+        /// @type Number
+        /// @requires {variable} $browser-minimum-versions
+        /// @requires {function} to-number
+        ///
+        $min-firefox-supported: to-number(map-get($browser-minimum-versions, 'firefox'));
+
+        ///
+        /// Indicates the minimum version of Microsoft Internet Explorer supported by a Sass module.
+        ///
+        /// __Do not modify this value directly.__ Use the `set-browser-minimum-versions()` mixin to set it.
+        /// ---
+        /// @type Number
+        /// @requires {variable} $browser-minimum-versions
+        /// @requires {function} to-number
+        ///
+        $min-ie-supported: to-number(map-get($browser-minimum-versions, 'ie'));
+
+        ///
+        /// Indicates the minimum version of Apple Safari supported by a Sass module.
+        ///
+        /// __Do not modify this value directly.__ Use the `set-browser-minimum-versions()` mixin to set it.
+        /// ---
+        /// @type Number
+        /// @requires {variable} $browser-minimum-versions
+        /// @requires {function} to-number
+        ///
+        $min-safari-supported: to-number(map-get($browser-minimum-versions, 'safari'));
+
+        ///
+        /// Indicates the minimum version of Opera supported by a Sass module.
+        ///
+        /// __Do not modify this value directly.__ Use the `set-browser-minimum-versions()` mixin to set it.
+        /// ---
+        /// @type Number
+        /// @requires {variable} $browser-minimum-versions
+        /// @requires {function} to-number
+        ///
+        $min-opera-supported: to-number(map-get($browser-minimum-versions, 'opera'));
+
+
+    // ----------------------------------------------------
+    //   BROWSER VERSION SUPPORT HELPERS
+    // ----------------------------------------------------
+        ///
+        /// Update the map of minimum browser versions supported by a Sass module.
+        /// ---
+        /// @since 1.0.0
+        /// ---
+        /// @param {Map} $versions - Map of one or more browsers you want to modify the minimum supported version for
+        /// @param {Bool} $force [false] - Set to true if you REALLY need to support a browser version below the minimum officially supported version in Web Skin
+        ///
+        @mixin set-browser-minimum-versions($versions, $force: false) {
+            @if not is-map($versions) {
+                @error "Mixin `set-browser-minimum-versions` expecting `$versions` to be a `map`. Received `#{type-of($versions)}`.";
+            }
+
+            $formatted-versions: ();
+            @each $browser, $version in $versions {
+                @if not $force {
+                    //
+                    // make sure the MSIE version is >=
+                    // the lowest version the Web Skin
+                    // platform supports.
+                    //
+                    @if not (to-number($version) >= $min-ie-supported-platform) {
+                        @warn "Web Skin does not support MSIE version #{$min-ie-supported-platform - 1} or lower. You tried to support version #{$version} via the `set-browser-minimum-versions` function. You are worse than scum - MSIE apologist.";
+                        $version: $min-ie-supported-platform;
+                    }
+                }
+
+                //
+                // make sure each value is a string
+                // for compatibility with compass
+                // TODO: write a unit test for this
+                //
+                $formatted-version: $version;
+                @if not is-string($version) {
+                    $formatted-version: to-string($version);
+                }
+
+                @if is-map($formatted-versions) {
+                    $formatted-versions: extend($formatted-versions, ('#{$browser}': $formatted-version));
+                } @else {
+                    $formatted-versions: ('#{$browser}': $formatted-version);
+                }
+            }
+
+            $browser-minimum-versions: extend($browser-minimum-versions, $formatted-versions) !global;
+
+            // reset browser-support alias values based on new support levels
+            $min-chrome-supported:  to-number(get($browser-minimum-versions, 'chrome'))   !global;
+            $min-firefox-supported: to-number(get($browser-minimum-versions, 'firefox'))  !global;
+            $min-ie-supported:      to-number(get($browser-minimum-versions, 'ie'))       !global;
+            $min-safari-supported:  to-number(get($browser-minimum-versions, 'safari'))   !global;
+            $min-opera-supported:   to-number(get($browser-minimum-versions, 'opera'))    !global;
+        }

@@ -1,0 +1,183 @@
+// ********************************************************
+
+////
+/// Panel component helpers
+/// ---
+/// @since 1.0.0
+/// @access public
+/// @group core.components.panels
+///
+/// @link http://bit.ly/webskin-panels Panel component spec
+/// @link http://bit.ly/webskin-panel-sizes Panel component size variation spec
+/// @link http://bit.ly/webskin-panel-colors Panel component color variation spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/panels/panels-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function is-true);
+//
+// ********************************************************
+
+
+///
+/// Reusable `.panel` skin color variation styles
+/// ---
+/// @link http://bit.ly/webskin-panel-colors Panel component color variation spec
+/// ---
+/// @requires {variable} $panel-config
+/// ---
+/// @param {String} $skin-name              - Name of skin variation
+/// @param {Map}    $skin-colors            - Map config of colors used for specified skin variation
+/// @param {Boolean} $is-inverse [false]    - Whether or not to use the inverse contrast colors
+///
+@mixin panel-skin($skin-name, $skin-colors, $is-inverse: false) {
+    $skin-variant-class: if($is-inverse, 'panel-#{$skin-name}.panel-inverse', 'panel-#{$skin-name}');
+    $skin-bd-color: get($skin-colors, 'bd-color');
+    $skin-focus-bd-color: get($skin-colors, 'bd-color-focus');
+    $skin-header-text-color: get($skin-colors, 'header-text-color');
+    $skin-header-bg: get($skin-colors, 'header-bg');
+    $skin-header-bg-hover: get($skin-colors, 'header-bg-hover');
+    $skin-header-bd-color: get($skin-colors, 'header-bd-color');
+    $skin-footer-bg: get($skin-colors, 'footer-bg');
+
+    .#{$skin-variant-class} {
+        border-color: $skin-bd-color;
+
+        .panel-heading {
+            background-color: $skin-header-bg;
+            border-color: $skin-header-bd-color;
+            color: $skin-header-text-color;
+
+            .panel-title {
+                color: $skin-header-text-color;
+            }
+
+            + .panel-collapse .panel-body {
+                border-top-color: $skin-bd-color;
+            }
+        }
+
+
+        // --------------------------------------------
+        //   COLLAPSIBLE VARIATION SKINNING
+        // --------------------------------------------
+        .panel-group & {
+            .panel-heading {
+                &[data-toggle] {
+                    #{$link-hover-focus} {
+                        background-color: $skin-header-bg-hover;
+                    }
+                }
+
+                // Place border on element that is hidden when collapsed
+                + .panel-collapse .panel-body,
+                + .panel-collapse .table-responsive {
+                    border-top-color: $skin-bd-color;
+                }
+            }
+
+            .panel-footer {
+                // Place border on element that is hidden when collapsed
+                + .panel-collapse .panel-body,
+                + .panel-collapse .table-responsive {
+                    border-bottom-color: $skin-bd-color;
+                }
+            }
+        }
+
+        // --------------------------------------------
+        //   CARET ("collapse indicator") COLOR
+        //   -> No styles needed for default skin since
+        //      the default color for carets in
+        //      collapsible panels is declared in the
+        //      context of the base `.panel` class to
+        //      ensure that the indicator is visible even
+        //      in un-skinned panel implementations.
+        // --------------------------------------------
+        @if $skin-name != 'default' and not $is-inverse {
+            .panel-heading[data-toggle] {
+                .caret {
+                    border-top-color: $skin-header-text-color;
+                }
+
+                #{$link-hover-focus} {
+                    background-color: $skin-header-bg-hover;
+                }
+
+                // open
+                &.open {
+                    .caret {
+                        border-bottom-color: $skin-header-text-color;
+                    }
+                }
+            }
+        }
+
+
+        .panel-footer {
+            background-color: $skin-footer-bg;
+            border-top-color: $skin-bd-color;
+
+            + .panel-collapse .panel-body {
+                border-bottom-color: $skin-bd-color;
+            }
+        }
+
+        // --------------------------------------------
+        //   "HOVER" / "FOCUS" VARIATION
+        //   -> If the bd color for a "focused" state
+        //      is different than normal state...
+        //      add selector(s) for it
+        // --------------------------------------------
+        @if $skin-bd-color != $skin-focus-bd-color {
+            @include panel-hover-focus-border($skin-focus-bd-color);
+        }
+    }
+}
+
+
+///
+/// Reusable styles to make an entire panel resemble a focused element
+/// ---
+/// @since 1.0.0
+/// @param {Color} $bd-color
+///
+@mixin panel-hover-focus-border($bd-color) {
+    $parent-selector: &;
+    $focus-class: if($parent-selector, '&.panel-focus', '.panel-focus');
+    $hover-class: if($parent-selector, '&.panel-hover', '.panel-hover');
+
+    // ----- APPEAR FOCUSED IN ANY STATE ----- //
+    #{$focus-class} {
+        border-color: $bd-color !important;
+    }
+
+    // ----- APPEAR FOCUSED ON HOVER / FOCUS ONLY ----- //
+    #{$hover-class} {
+        &:hover,
+        &:focus {
+            border-color: $bd-color !important;
+        }
+    }
+}
+
+// @private
+@mixin unskinned-panel-heading {
+    padding-bottom: 0;
+    background-color: transparent;
+    border: 0 none;
+}
+
+// @private
+@mixin unskinned-panel-footer {
+    padding-top: 0;
+    background-color: transparent;
+    border: 0 none;
+}

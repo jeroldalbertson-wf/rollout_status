@@ -1,0 +1,277 @@
+// ********************************************************
+
+////
+/// Alert dialog component skin color variation configuration
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// @access public
+/// @group core.components.alerts
+/// @link http://bit.ly/webskin-alert-color-variations Alert dialog component color variation spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/config/alert-color-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   DEFAULT COLOR CONFIG
+//
+// ********************************************************
+    ///
+    /// Default `.alert` component colors.
+    /// ---
+    /// @requires {variable} $zc-blue-120
+    /// @requires {variable} $component-state-alt-bg-hover
+    /// @requires {variable} $component-state-alt-bd
+    /// @requires {variable} $white
+    /// @requires {variable} $alert-toast-bg-alpha
+    /// ---
+    /// @prop {Color} bg                [#d6eeff] - Background color of an `.alert-default`
+    /// @prop {Color} bd-color          [#0085e6] - Border color of an `.alert-default`
+    ///
+    /// @prop {Map} toast - Colors used for an `.alert-toast.alert-default`
+    /// @prop {Color} toast.bg [rgba(#026dce, .85)] - Background color of an `.alert-toast.alert-default`
+    /// @prop {Color} toast.text-color [#ffffff] - Text color of an `.alert-toast.alert-default`
+    ///
+    $alert-colors-default: (
+        'bg': $component-state-alt-bg-hover,
+        'bd-color': $component-state-alt-bd,
+        'toast': (
+            'bg': rgba($zc-blue-120, $alert-toast-bg-alpha),
+            'text-color': $white
+        )
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   GRAY COLOR CONFIG
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.alert` component's `.alert-gray` color variation.
+    /// ---
+    /// @requires {variable} $zc-gray-90
+    /// @requires {variable} $zc-gray-40
+    /// @requires {variable} $zc-gray
+    /// @requires {variable} $white
+    /// @requires {variable} $alert-toast-bg-alpha
+    /// ---
+    /// @prop {Color} bg                [#e3e3e3] - Background color of an `.alert-gray`
+    /// @prop {Color} bd-color          [#707070] - Border color of an `.alert-gray`
+    ///
+    /// @prop {Map} toast - Colors used for an `.alert-toast.alert-gray`
+    /// @prop {Color} toast.bg [rgba(#595959, .85)] - Background color of an `.alert-toast.alert-gray`
+    /// @prop {Color} toast.text-color [#ffffff] - Text color of an `.alert-toast.alert-gray`
+    ///
+    $alert-colors-gray: (
+        'bg': $zc-gray-40,
+        'bd-color': $zc-gray-90,
+        'toast': (
+            'bg': rgba($zc-gray, $alert-toast-bg-alpha),
+            'text-color': $white
+        )
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   INVERSE COLOR CONFIG
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.alert` component's `.alert-inverse` color variation.
+    /// ---
+    /// @requires {variable} $tooltip-config
+    /// @requires {variable} $black
+    /// @requires {variable} $white
+    /// @requires {variable} $alert-toast-bg-alpha
+    /// ---
+    /// @prop {Color} bg                [#444444] - Background color of an `.alert-inverse`
+    /// @prop {Color} bd-color          [#000000] - Border color of an `.alert-inverse`
+    /// @prop {Color} text-color        [#ffffff] - Text color of an `.alert-inverse`
+    ///
+    /// @prop {Map} toast - Colors used for an `.alert-toast.alert-inverse`
+    /// @prop {Color} toast.bg [rgba(#444444, .85)] - Background color of an `.alert-toast.alert-inverse`
+    /// @prop {Color} toast.text-color [#ffffff] - Text color of an `.alert-toast.alert-inverse`
+    ///
+    $alert-colors-inverse: (
+        'bg': get($tooltip-config, 'bg'),
+        'bd-color': $black,
+        'text-color': get($tooltip-config, 'text-color'),
+        'toast': (
+            'bg': rgba(get($tooltip-config, 'bg'), $alert-toast-bg-alpha),
+            'text-color': $white
+        )
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   SUCCESS COLOR CONFIG
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.alert` component's `.alert-success` color variation.
+    /// ---
+    /// @requires {function} shade-of
+    /// @requires {variable} $zc-green-120
+    /// @requires {variable} $component-state-success-bg-hover
+    /// @requires {variable} $component-state-success-bd
+    /// @requires {variable} $white
+    /// @requires {variable} $alert-toast-bg-alpha
+    /// ---
+    /// @prop {Color} bg                [#e7f3e0] - Background color of an `.alert-success`
+    /// @prop {Color} bd-color          [#70b84d] - Border color of an `.alert-success`
+    ///
+    /// @prop {Map} toast - Colors used for an `.alert-toast.alert-success`
+    /// @prop {Color} toast.bg [rgba(#339900, .85)] - Background color of an `.alert-toast.alert-success`
+    /// @prop {Color} toast.text-color [#ffffff] - Text color of an `.alert-toast.alert-success`
+    ///
+    $alert-colors-success: (
+        'bg': $component-state-success-bg-hover,
+        'bd-color': $component-state-success-bd,
+        'toast': (
+            'bg': rgba($zc-green-120, $alert-toast-bg-alpha),
+            'text-color': $white
+        )
+    ) !default;
+
+        // TODO: should / could this be removed? Is it used anywhere?
+        $alert-colors-primary: $alert-colors-success;
+
+
+
+// ********************************************************
+//
+//   WARNING COLOR CONFIG
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.alert` component's `.alert-warning` color variation.
+    /// ---
+    /// @requires {function} shade-of
+    /// @requires {variable} $zc-orange-120
+    /// @requires {variable} $component-state-warning-bg-hover
+    /// @requires {variable} $component-state-warning-bd
+    /// @requires {variable} $white
+    /// @requires {variable} $alert-toast-bg-alpha
+    /// ---
+    /// @prop {Color} bg                [#fff5e3] - Background color of an `.alert-warning`
+    /// @prop {Color} bd-color          [#f69864] - Border color of an `.alert-warning`
+    ///
+    /// @prop {Map} toast - Colors used for an `.alert-toast.alert-warning`
+    /// @prop {Color} toast.bg [rgba(#f26c21, .85)] - Background color of an `.alert-toast.alert-warning`
+    /// @prop {Color} toast.text-color [#ffffff] - Text color of an `.alert-toast.alert-warning`
+    ///
+    $alert-colors-warning: (
+        'bg': $component-state-warning-bg-hover,
+        'bd-color': $component-state-warning-bd,
+        'toast': (
+            'bg': rgba($zc-orange-120, $alert-toast-bg-alpha),
+            'text-color': $white
+        )
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   DANGER COLOR CONFIG
+//
+// ********************************************************
+    ///
+    /// Colors used by the `.alert` component's `.alert-danger` color variation.
+    /// ---
+    /// @requires {function} shade-of
+    /// @requires {variable} $zc-red-120
+    /// @requires {variable} $component-state-danger-bg-hover
+    /// @requires {variable} $component-state-danger-bd
+    /// @requires {variable} $white
+    /// @requires {variable} $alert-toast-bg-alpha
+    /// ---
+    /// @prop {Color} bg                [#fde5e5] - Background color of an `.alert-danger`
+    /// @prop {Color} bd-color          [#c15f5e] - Border color of an `.alert-danger`
+    ///
+    /// @prop {Map} toast - Colors used for an `.alert-toast.alert-danger`
+    /// @prop {Color} toast.bg [rgba(#a71b19, .85)] - Background color of an `.alert-toast.alert-danger`
+    /// @prop {Color} toast.text-color [#ffffff] - Text color of an `.alert-toast.alert-danger`
+    ///
+    $alert-colors-danger: (
+        'bg': $component-state-danger-bg-hover,
+        'bd-color': $component-state-danger-bd,
+        'toast': (
+            'bg': rgba($zc-red-120, $alert-toast-bg-alpha),
+            'text-color': $white
+        )
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   ALL COLOR VARIATIONS COMBINED
+//
+// ********************************************************
+    ///
+    /// Convenience collection of inline alert color variations.
+    /// Great for building dynamic values within loops, etc...
+    /// ---
+    /// @requires {variable} $alert-colors-default
+    /// @requires {variable} $alert-colors-gray
+    /// @requires {variable} $alert-colors-success
+    /// @requires {variable} $alert-colors-warning
+    /// @requires {variable} $alert-colors-danger
+    /// ---
+    /// @prop {Map} default - Color configuration map for `.alert-default` components
+    /// @prop {Map} gray    - Color configuration map for `.alert-gray` components
+    /// @prop {Map} inverse - Color configuration map for `.alert-inverse` components
+    /// @prop {Map} success - Color configuration map for `.alert-success` components
+    /// @prop {Map} warning - Color configuration map for `.alert-warning` components
+    /// @prop {Map} danger  - Color configuration map for `.alert-danger` components
+    ///
+    $alert-colors: (
+        'default':  $alert-colors-default,
+        'gray':     $alert-colors-gray,
+        'inverse':  $alert-colors-inverse,
+        'success':  $alert-colors-success,
+        'warning':  $alert-colors-warning,
+        'danger':   $alert-colors-danger
+    ) !default;
+
+    ///
+    /// Convenience collection of floating "toast" alert color variations.
+    /// Great for building dynamic values within loops, etc...
+    /// ---
+    /// @requires {variable} $alert-colors-default
+    /// @requires {variable} $alert-colors-gray
+    /// @requires {variable} $alert-colors-inverse
+    /// @requires {variable} $alert-colors-success
+    /// @requires {variable} $alert-colors-warning
+    /// @requires {variable} $alert-colors-danger
+    /// ---
+    /// @prop {Map} default - Color configuration map for `.alert-toast.alert-default` components
+    /// @prop {Map} gray    - Color configuration map for `.alert-toast.alert-gray` components
+    /// @prop {Map} inverse - Color configuration map for `.alert-toast.alert-inverse` components
+    /// @prop {Map} success - Color configuration map for `.alert-toast.alert-success` components
+    /// @prop {Map} warning - Color configuration map for `.alert-toast.alert-warning` components
+    /// @prop {Map} danger  - Color configuration map for `.alert-toast.alert-danger` components
+    ///
+    $alert-toast-colors: (
+        'default':  get($alert-colors-default, 'toast'),
+        'gray':     get($alert-colors-gray, 'toast'),
+        'inverse':  get($alert-colors-inverse, 'toast'),
+        'success':  get($alert-colors-success, 'toast'),
+        'warning':  get($alert-colors-warning, 'toast'),
+        'danger':   get($alert-colors-danger, 'toast')
+    ) !default;

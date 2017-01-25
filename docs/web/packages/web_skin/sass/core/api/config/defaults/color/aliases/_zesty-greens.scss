@@ -1,0 +1,116 @@
+// ********************************************************
+
+////
+/// Zesty Crayon Green Color Aliases
+/// ---
+/// @access public
+/// @type Color
+/// @group core.color.zesty
+/// ---
+/// @requires {variable} $zc-greens
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/aliases/zesty-greens';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+/// Zesty Crayon Green
+/// @color #66cc00
+$zc-green: get($zc-greens, '100');
+
+/// @alias zc-green
+/// @since 1.6.0
+$zc-green-100: $zc-green;
+
+/// Zesty Crayon Green 120
+/// @since 1.6.0
+/// @color #339900
+$zc-green-120: get($zc-greens, '120');
+
+/// Zesty Crayon Green 80
+/// @since 1.6.0
+/// @color #85d633
+$zc-green-80: get($zc-greens, '80');
+
+/// Zesty Crayon Green 60
+/// @since 1.6.0
+/// @color #a3e066
+$zc-green-60: get($zc-greens, '60');
+
+/// Zesty Crayon Green 40
+/// @since 1.6.0
+/// @color #c2eb99
+$zc-green-40: get($zc-greens, '40');
+
+
+    // ----------------------------------------------------
+    //   Variations of Workiva green that are in-gamut
+    //   for most monitors (#812)
+    // ----------------------------------------------------
+        ///
+        /// In-gamut variation of `$zc-green`
+        /// ---
+        /// @requires {variable} $zc-greens-in-gamut
+        /// @see {variable} $zc-green
+        /// @link https://github.com/Workiva/web-skin/issues/812 web-skin/#812
+        /// ---
+        /// @color #6ebe44
+        ///
+        $zc-green-in-gamut:     get($zc-greens-in-gamut, '100');
+
+        ///
+        /// In-gamut variation of `$zc-green-120`
+        /// ---
+        /// @since 1.6.0
+        /// @requires {variable} $zc-greens-in-gamut
+        /// @see {variable} $zc-green-120
+        /// @link https://github.com/Workiva/web-skin/issues/812 web-skin/#812
+        /// ---
+        /// @color #349946
+        ///
+        $zc-green-120-in-gamut: get($zc-greens-in-gamut, '120');
+
+        ///
+        /// In-gamut variation of `$zc-green-80`
+        /// ---
+        /// @since 1.6.0
+        /// @requires {variable} $zc-greens-in-gamut
+        /// @see {variable} $zc-green-80
+        /// @link https://github.com/Workiva/web-skin/issues/812 web-skin/#812
+        /// ---
+        /// @color #9dcc40
+        ///
+        $zc-green-80-in-gamut: get($zc-greens-in-gamut, '80');
+
+        ///
+        /// In-gamut variation of `$zc-green-60`
+        /// ---
+        /// @since 1.6.0
+        /// @requires {variable} $zc-greens-in-gamut
+        /// @see {variable} $zc-green-60
+        /// @link https://github.com/Workiva/web-skin/issues/812 web-skin/#812
+        /// ---
+        /// @color #c0db79
+        ///
+        $zc-green-60-in-gamut: get($zc-greens-in-gamut, '60');
+
+        ///
+        /// In-gamut variation of `$zc-green-40`
+        /// ---
+        /// @since 1.6.0
+        /// @requires {variable} $zc-greens-in-gamut
+        /// @see {variable} $zc-green-40
+        /// @link https://github.com/Workiva/web-skin/issues/812 web-skin/#812
+        /// ---
+        /// @color #dceab6
+        ///
+        $zc-green-40-in-gamut: get($zc-greens-in-gamut, '40');

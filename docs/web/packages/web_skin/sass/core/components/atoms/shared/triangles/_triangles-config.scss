@@ -1,0 +1,254 @@
+// ********************************************************
+
+////
+/// Configuration for Web Skin Triangle Shapes
+/// a.k.a "Arrows" / "Carets"
+/// ---
+/// @since 1.0.0
+/// @group core.components.shared
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/shared/triangles/triangles-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get-deep,
+                                                function extend);
+//
+// ********************************************************
+
+
+///
+/// Confguration for triangular shapes created via CSS border properties. a.k.a "Arrows" / "Carets"
+/// ---
+/// @type Map
+/// ---
+/// @requires {function} get-deep
+/// @requires {function} extend
+/// @requires {variable} $zc-gray-70
+/// ---
+/// @prop {Map} base
+/// @prop {Number} base.bd-width [5px]  - Default border width
+/// @prop {Number} base.width    [10px] - Calculated as 2x border width while pointing downward. _Added via `@extend`_
+/// @prop {Number} base.height   [5px]  - Calculated as 1/2 width while pointing downward. _Added via `@extend`_
+/// @prop {Number} base.half-height         [3px]   - Convenience calculation of half the shape height while pointing downward. Great for vertically aligning triangles within other components. _Added via `@extend`_
+/// @prop {Number} base.size-ratio          [2]     - Calculated width-to-height ratio. _Added via `@extend`_
+/// @prop {Number} base.size-differential   [5px]   - Calculated difference between width and height. _Added via `@extend`_
+/// @prop {Number} base.spacing-horizontal  [3px]   - Calculated amount of horizontal spacing between triangle and adjacent components / component text. _Added via `@extend`_
+///
+/// @prop {Map} lg
+/// @prop {Number} lg.bd-width   [10px] - Border width at large size variation
+/// @prop {Number} lg.width      [20px] - Calculated as 2x border width while pointing downward. _Added via `@extend`_
+/// @prop {Number} lg.height     [10px] - Calculated as 1/2 width while pointing downward. _Added via `@extend`_
+/// @prop {Number} lg.half-height           [5px]   - Convenience calculation of half the shape height while pointing downward. Great for vertically aligning triangles within other components. _Added via `@extend`_
+/// @prop {Number} lg.size-ratio            [2]     - Calculated width-to-height ratio. _Added via `@extend`_
+/// @prop {Number} lg.size-differential     [10px]  - Calculated difference between width and height. _Added via `@extend`_
+/// @prop {Number} lg.spacing-horizontal    [5px]   - Calculated amount of horizontal spacing between triangle and adjacent components / component text. _Added via `@extend`_
+///
+/// @prop {Map} sm
+/// @prop {Number} sm.bd-width   [4px]  - Border width at small size variation
+/// @prop {Number} sm.width      [8px]  - Calculated as 2x border width while pointing downward. _Added via `@extend`_
+/// @prop {Number} sm.height     [4px]  - Calculated as 1/2 width while pointing downward. _Added via `@extend`_
+/// @prop {Number} sm.half-height           [2px]   - Convenience calculation of half the shape height while pointing downward. Great for vertically aligning triangles within other components. _Added via `@extend`_
+/// @prop {Number} sm.size-ratio            [2]     - Calculated width-to-height ratio. _Added via `@extend`_
+/// @prop {Number} sm.size-differential     [4px]   - Calculated difference between width and height. _Added via `@extend`_
+/// @prop {Number} sm.spacing-horizontal    [2px]   - Calculated amount of horizontal spacing between triangle and adjacent components / component text. _Added via `@extend`_
+///
+/// @prop {Map} xs
+/// @prop {Number} xs.bd-width   [3px]  - Border width at extra small size variation
+/// @prop {Number} xs.width      [6px]  - Calculated as 2x border width while pointing downward. _Added via `@extend`_
+/// @prop {Number} xs.height     [3px]  - Calculated as 1/2 width while pointing downward. _Added via `@extend`_
+/// @prop {Number} xs.half-height           [2px]   - Convenience calculation of half the shape height while pointing downward. Great for vertically aligning triangles within other components. _Added via `@extend`_
+/// @prop {Number} xs.size-ratio            [2]     - Calculated width-to-height ratio. _Added via `@extend`_
+/// @prop {Number} xs.size-differential     [3px]   - Calculated difference between width and height. _Added via `@extend`_
+/// @prop {Number} xs.spacing-horizontal    [2px] - Calculated amount of horizontal spacing between triangle and adjacent components / component text. _Added via `@extend`_
+///
+$triangle-config: (
+    'base': (
+        'bd-width': 5px,
+        'width': null, // actual calculated value inserted via @extend
+        'height': null, // actual calculated value inserted via @extend
+        'half-height': null, // actual calculated value inserted via @extend
+        'size-ratio': null, // actual calculated value inserted via @extend
+        'size-differential': null, // actual calculated value inserted via @extend
+        'spacing-horizontal': null // actual calculated value inserted via @extend
+    ),
+    'lg': (
+        'bd-width': 10px,
+        'width': null, // actual calculated value inserted via @extend
+        'height': null, // actual calculated value inserted via @extend
+        'half-height': null, // actual calculated value inserted via @extend
+        'size-ratio': null, // actual calculated value inserted via @extend
+        'size-differential': null, // actual calculated value inserted via @extend
+        'spacing-horizontal': null // actual calculated value inserted via @extend
+    ),
+    'sm': (
+        'bd-width': 4px,
+        'width': null, // actual calculated value inserted via @extend
+        'height': null, // actual calculated value inserted via @extend
+        'half-height': null, // actual calculated value inserted via @extend
+        'size-ratio': null, // actual calculated value inserted via @extend
+        'size-differential': null, // actual calculated value inserted via @extend
+        'spacing-horizontal': null // actual calculated value inserted via @extend
+    ),
+    'xs': (
+        'bd-width': 3px,
+        'width': null, // actual calculated value inserted via @extend
+        'height': null, // actual calculated value inserted via @extend
+        'half-height': null, // actual calculated value inserted via @extend
+        'size-ratio': null, // actual calculated value inserted via @extend
+        'size-differential': null, // actual calculated value inserted via @extend
+        'spacing-horizontal': null // actual calculated value inserted via @extend
+    )
+) !default;
+
+
+// ----------------------------------------------------
+//   CALCULATED VALUES
+//   -> based on $triangle-config
+//
+//   -> cannot be included in initial map declaration
+//      because the calculations depend on values
+//      within the map, and Sass has no ability to
+//      reference a key in a map from within that map.
+//
+//   -> documented as props of $triangle-config
+//      because they are added via extend() below.
+// ----------------------------------------------------
+    $triangle-bd-width: get-deep($triangle-config, 'base.bd-width');
+    $triangle-lg-bd-width: get-deep($triangle-config, 'lg.bd-width');
+    $triangle-sm-bd-width: get-deep($triangle-config, 'sm.bd-width');
+    $triangle-xs-bd-width: get-deep($triangle-config, 'xs.bd-width');
+
+    $triangle-width: $triangle-bd-width * 2;
+    $triangle-height: ceil($triangle-width / 2);
+    $triangle-half-height: ceil($triangle-height / 2);
+    $triangle-size-ratio: $triangle-width / $triangle-height;
+    $triangle-size-differential: $triangle-width - $triangle-height;
+    $triangle-spacing-horizontal: $triangle-half-height;
+
+    $triangle-lg-width: $triangle-lg-bd-width * 2;
+    $triangle-lg-height: ceil($triangle-lg-width / $triangle-size-ratio);
+    $triangle-lg-half-height: ceil($triangle-lg-height / 2);
+    $triangle-lg-size-ratio: $triangle-size-ratio;
+    $triangle-lg-size-differential: $triangle-lg-width - $triangle-lg-height;
+    $triangle-lg-spacing-horizontal: $triangle-lg-half-height;
+
+    $triangle-sm-width: $triangle-sm-bd-width * 2;
+    $triangle-sm-height: ceil($triangle-sm-width / $triangle-size-ratio);
+    $triangle-sm-half-height: ceil($triangle-sm-height / 2);
+    $triangle-sm-size-ratio: $triangle-size-ratio;
+    $triangle-sm-size-differential: $triangle-sm-width - $triangle-sm-height;
+    $triangle-sm-spacing-horizontal: $triangle-sm-half-height;
+
+    $triangle-xs-width: $triangle-xs-bd-width * 2;
+    $triangle-xs-height: ceil($triangle-xs-width / $triangle-size-ratio);
+    $triangle-xs-half-height: ceil($triangle-xs-height / 2);
+    $triangle-xs-size-ratio: $triangle-size-ratio;
+    $triangle-xs-size-differential: $triangle-xs-width - $triangle-xs-height;
+    $triangle-xs-spacing-horizontal: $triangle-xs-half-height;
+
+    // ----- EXTEND triangle config with calc'd values ----- //
+    $triangle-config: extend($triangle-config,
+        (
+            'base': (
+                'width': $triangle-width,
+                'height': $triangle-height,
+                'half-height': $triangle-half-height,
+                'size-ratio': $triangle-size-ratio,
+                'size-differential': $triangle-size-differential,
+                'spacing-horizontal': $triangle-spacing-horizontal
+            ),
+            'lg': (
+                'width': $triangle-lg-width,
+                'height': $triangle-lg-height,
+                'half-height': $triangle-lg-half-height,
+                'size-ratio': $triangle-lg-size-ratio,
+                'size-differential': $triangle-lg-size-differential,
+                'spacing-horizontal': $triangle-lg-spacing-horizontal
+            ),
+            'sm': (
+                'width': $triangle-sm-width,
+                'height': $triangle-sm-height,
+                'half-height': $triangle-sm-half-height,
+                'size-ratio': $triangle-sm-size-ratio,
+                'size-differential': $triangle-sm-size-differential,
+                'spacing-horizontal': $triangle-sm-spacing-horizontal
+            ),
+            'xs': (
+                'width': $triangle-xs-width,
+                'height': $triangle-xs-height,
+                'half-height': $triangle-xs-half-height,
+                'size-ratio': $triangle-xs-size-ratio,
+                'size-differential': $triangle-xs-size-differential,
+                'spacing-horizontal': $triangle-xs-spacing-horizontal
+            )
+        )
+    );
+
+
+
+// ********************************************************
+//
+//   TRIANGLE HELPER CONFIGS
+//
+// ********************************************************
+    ///
+    /// Convenience collection of individual triangle direction configurations used to create triangular shapes pointing in any of the four directions using only borders.
+    /// ---
+    /// @type Map
+    /// ---
+    /// @prop {Map} top - Config values for creating a triangle that points __downward__
+    /// @prop {String} direction     [down]      - "direction" parameter sent to the `triangle-direction` mixin
+    /// @prop {String} color         [top]       - Border side that gets the color applied to it
+    /// @prop {String} remove-width  [bottom]    - Border side that gets it's width set to `none`
+    ///
+    /// @prop {Map} right - Config values for creating a triangle that points __to the right__
+    /// @prop {String} direction     [right]     - "direction" parameter sent to the `triangle-direction` mixin
+    /// @prop {String} color         [top]       - Border side that gets the color applied to it
+    /// @prop {String} remove-width  [bottom]    - Border side that gets it's width set to `none`
+    ///
+    /// @prop {Map} bottom - Config values for creating a triangle that points __upward__
+    /// @prop {String} direction     [up]        - "direction" parameter sent to the `triangle-direction` mixin
+    /// @prop {String} color         [bottom]    - Border side that gets the color applied to it
+    /// @prop {String} remove-width  [top]       - Border side that gets it's width set to `none`
+    ///
+    /// @prop {Map} left - Config values for creating a triangle that points __to the left__
+    /// @prop {String} direction     [left]      - "direction" parameter sent to the `triangle-direction` mixin
+    /// @prop {String} color         [bottom]    - Border side that gets the color applied to it
+    /// @prop {String} remove-width  [top]       - Border side that gets it's width set to `none`
+    ///
+    $triangle-bd-config: (
+        'top': (
+            'direction': down,
+            'color': top,
+            'remove-width': bottom
+        ),
+        'right': (
+            'direction': right,
+            'color': left,
+            'remove-width': right
+        ),
+        'bottom': (
+            'direction': up,
+            'color': bottom,
+            'remove-width': top
+        ),
+        'left': (
+            'direction': left,
+            'color': right,
+            'remove-width': left
+        )
+    );
+
+    ///
+    /// List of directions that Web Skin can point a triangular symbol in.
+    /// ---
+    /// @type List
+    /// @requires {variable} $triangle-bd-config
+    ///
+    $triangle-directions: map-keys($triangle-bd-config);

@@ -1,0 +1,34 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for Global Jobs Panel
+ * ---
+ * MSIE Support: 10+
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ *   web-skin v{{ws_css_version}} Core Plugin JS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import '../core/api';
+
+
+// ----------------------------------------------------
+//   Global Jobs Panel Atoms
+// ----------------------------------------------------
+    @import 'panels-global-jobs/atoms/panels-global-jobs-config';
+
+
+// ----------------------------------------------------
+//   Global Jobs Panel Components
+// ----------------------------------------------------
+    @import 'panels-global-jobs/body-footer';
+    @import 'panels-global-jobs/global-jobs-panel';
+    @import 'panels-global-jobs/global-jobs-list';

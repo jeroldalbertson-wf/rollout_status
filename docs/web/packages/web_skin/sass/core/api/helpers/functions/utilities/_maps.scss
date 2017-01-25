@@ -1,0 +1,249 @@
+// ********************************************************
+
+////
+/// Global functions to help with Sass map traversal / manipulation
+/// ---
+/// @access public
+/// @since 1.0.0
+/// @group core.utils.maps
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/functions/utilities/maps';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function is-map,
+                                                function is-string,
+                                                function is-list,
+                                                function str-index,
+                                                function str-slice,
+                                                function url-encode,
+                                                function map-get-deep,
+                                                function map-get,
+                                                function explode);
+//
+// ********************************************************
+
+
+///
+/// Merge two maps together, combining their key/value pairs into a new map that contains all the values from the first map and all all the values from the second, overwriting the values from the first with the values from the second if they are already present in the first.
+/// This functionality is similar to Sass' built-in `map-merge` function, but allows for more than just additive merging - by recursively setting/overwriting values in the first map parameter.
+/// ---
+/// @todo Write unit tests
+/// ---
+/// @example scss Usage
+///   $base-btn-state-colors: (
+///     'success': $zc-green,
+///     'danger':  $zc-red
+///   );
+///
+///   $my-app-btn-state-colors: extend($base-btn-state-colors,
+///     (
+///       'success': $zc-green-120,
+///       'warning': $zc-orange
+///     )
+///   , $overwrite: false);
+///
+/// @example scss Result
+///   $my-app-btn-state-colors: (
+///     'success': $zc-green,
+///     'danger':  $zc-red,
+///     'warning': $zc-orange
+///   );
+///
+/// @example scss Usage - overwriting existing values
+///   $base-btn-state-colors: (
+///     'success': $zc-green,
+///     'danger':  $zc-red
+///   );
+///
+///   $my-app-btn-state-colors: extend($base-btn-state-colors,
+///     (
+///       'success': $zc-green-120,
+///       'warning': $zc-orange
+///     )
+///   , $overwrite: true);
+///
+/// @example scss Result - overwriting existing values
+///   $my-app-btn-state-colors: (
+///     'success': $zc-green-120,
+///     'danger':  $zc-red,
+///     'warning': $zc-orange
+///   );
+/// ---
+/// @param {Map}  $map1
+/// @param {Map}  $map2
+/// @param {Bool} $overwrite [true] - Set to false if you want only new values from `$map2` to be appended to the existing `$map1` structure.
+/// ---
+/// @returns {Map} - merged map
+///
+@function extend($map1, $map2, $overwrite: true) {
+    // ERROR CHECKING
+    @if not is-map($map1) {
+        @error "`extend` function expecting `$map1` to be a map; #{type-of($map1)} given.";
+    }
+    @if not is-map($map2) {
+        @error "`extend` function expecting `$map2` to be a map; #{type-of($map2)} given.";
+    }
+    // END ERROR CHECKING
+
+    // Iterate through each value of the new map
+    @each $key, $new-value in $map2 {
+        // Check if that value already exists on the old map
+        @if map-has-key($map1, $key) {
+            // There is an existing key
+            $old-value: map-get($map1, $key);
+
+            @if is-map($new-value) and is-map($old-value) {
+                // If both are maps, recurse regardless of $overwrite
+                $merged-value: extend($old-value, $new-value);
+                $map1: map-set($map1, $key, $merged-value);
+            } @else {
+                // Otherwise check $overwrite
+                @if $overwrite {
+                    $map1: map-set($map1, $key, $new-value);
+                } @else {
+                    @warn "@function extend(): `#{$key}` has a pre-existing value that is different in the `$map2` param, but `$overwrite` param is false. If you want to override the value in `$map1`, `$overwrite` must be truthy.";
+                }
+            }
+        } @else {
+            // There is no existing key so add
+            $map1: map-set($map1, $key, $new-value);
+        }
+    }
+
+    @return $map1;
+}
+
+///
+/// Fetch a value in a map with only one level of hierarchy. Short-hand for the core Sass `map-get` function.
+/// ---
+/// @example scss - Fetching map values
+///   // given a map var like:
+///   $config: (
+///     'padding': 10px,
+///     'color': white,
+///     'font-size': 12px
+///   );
+///
+///   // access values like so:
+///   $padding: get($config, 'padding');
+///   $color:   get($config, 'color');
+/// ---
+/// @param {Map}     $map
+/// @param {String}  $key
+/// @param {Boolean} $throw-on-null [true] - Whether or not to throw when a null key value is found
+/// ---
+/// @returns {*} - value of `$key` within `$map`
+///
+@function get($map, $key, $throw-on-null: false) {
+    @if $throw-on-null and map-has-key($map, $key) == false {
+        @error "function `get()` cannot find a key named `#{$key}` in the map.";
+    }
+
+    @return map-get($map, $key);
+}
+
+///
+/// Fetch a deeply nested value in a map with more than one level of hierarchy using object dot-notation string OR a list of keys.
+/// ---
+/// @example scss - Fetching nested map values
+///   // given a map var like:
+///   $config: (
+///     'sub-config': (
+///       'padding': 10px,
+///       'elems': (
+///         'color': white,
+///         'font-size': 12px
+///       )
+///     )
+///   );
+///
+///   // access values like so:
+///   $padding:    get-deep($config, 'sub-config.padding');
+///   $elem-color: get-deep($config, 'sub-config.elems.color');
+/// ---
+/// @requires {external} sassy-maps/map-get-deep <http://bit.ly/sassymaps_map-get-deep>
+/// @requires {function} get
+/// @requires {function} explode
+/// @requires {function} is-map
+/// @requires {function} is-string
+/// @requires {function} is-list
+/// ---
+/// @param {Map}           $map
+/// @param {String | List} $keys             - string formatted using _object dot-notation_ representing the nesting order of the desired key
+/// @param {String}        $delimiter ['.']  - string used to identify the individual keys within the string
+/// ---
+/// @returns {*} - value at nesting level requested via `$keys` param
+///
+@function get-deep($map, $keys, $delimiter: '.') {
+    // ERROR CHECKING
+    $dependencies-met: dependencies-met(for get, is-map, is-string, is-list, explode, map-get-deep);
+    @if not is-map($map) {
+        @error "`get` function expecting a map; #{type-of($map)} given.";
+    }
+    @if not is-string($keys) and not is-list($keys) {
+        @error "`get` function expecting a list or a string; #{type-of($keys)} given.";
+    }
+    // END ERROR-CHECKING
+
+    $value: null;
+
+    //
+    // a single key has been requested - no recursion necessary
+    // (no `$delimiter` found in `$keys`)
+    //
+    @if is-string($keys) and not str-index($keys, $delimiter) {
+        // return early for performance boost
+        @return get($map, $keys);
+    } @else {
+        @if is-list($keys) {
+            //
+            // its already a list, no need to split it
+            //
+            $value: map-get-deep($map, $keys);
+        } @else {
+            //
+            // a `$delimiter` was found in the `$keys` string
+            // lets split it on the delimiter so we can pass a valid list of keys to `map-get-deep()`
+            //
+            $key-list: explode($keys, $delimiter);
+
+            $value: map-get-deep($map, $key-list);
+        }
+
+        @return $value;
+    }
+}
+
+///
+/// Converts a Sass map to a URL-encoded string. Can be used function to encode map values for transferring to JS via a JSON export. _coming soon_.
+/// ---
+/// @todo [#727](https://github.com/Workiva/web-skin/issues/727) Implement JSON import/export for JS
+/// @param {Map} $map - Map to convert
+/// @returns {String} - A string with a map converted to a string like this: `key1=value1&key2=value2`
+///
+@function map-serialize($map) {
+    // ERROR CHECKING
+    $dependencies-met: dependencies-met(for map-serialize, str-slice, url-encode, is-map);
+    @if not is-map($map) {
+        @error "`map-serialize` function expecting a map; #{type-of($map)} given.";
+    }
+
+    $str: '';
+    @each $key, $value in $map {
+        @if is-string($value) {
+            // Escape special chars
+            $value: url-encode($value);
+        }
+
+        $str: $str + $key + '=' + $value + '&';
+    }
+    $str: str-slice($str, 1, -2);
+
+    @return $str;
+}

@@ -1,0 +1,56 @@
+// ********************************************************
+
+////
+/// Manifest for global color configs
+/// ---
+/// @access private
+/// @type Color
+/// @group core.internals.color.base
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/module-color';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   COLOR CONVENIENCE CONFIGS
+//
+//   -> Colors that aren't necessarily part of our app
+//      "palette", but that can be referenced for
+//      dependency tracking
+//
+// ********************************************************
+    ///
+    /// Global shortcut variable for the color `#000`.
+    /// @color #000000
+    ///
+    $black: #000;
+
+    ///
+    /// Global shortcut variable for the color `#fff`.
+    /// @color #ffffff
+    ///
+    $white: #fff;
+
+    ///
+    /// The most subtle shade of gray possible for use in Wdesk applications.
+    /// @color #fafafa
+    ///
+    $almost-white: #fafafa;
+
+
+
+// ********************************************************
+//
+//   MODULE IMPORTS
+//
+// ********************************************************
+    @import 'color/global-colors';
+    @import 'color/contrast';
+    @import 'color/global-color-map-aliases';

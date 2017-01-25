@@ -1,0 +1,91 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/component-demos/demo-progress';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Progress animations control
+//
+//   -> Animated progress elements are
+//   stopped by default (to save CPU)
+//   and are started by docs.js when
+//   the element comes into view via
+//   the addition of .js-play class
+// ----------------------------------------------------
+.ws-example {
+    .progress-spinner,
+    .progress-bar,
+    .panel-title > [class*="title"] .progress-spinner {
+        @include animation-stop();
+
+        &.js-play {
+            @include animation-start();
+        }
+    }
+}
+
+.ws-progress-bar-example {
+    .progress + .progress {
+        margin-top: to-rem($docs-spacing-md);
+    }
+}
+
+
+// ----------------------------------------------------
+//   Progress example headings
+// ----------------------------------------------------
+.progress-spinner-labels {
+    h4 {
+        padding-bottom: to-rem($base-elem-margin-vertical);
+    }
+}
+
+
+// ----------------------------------------------------
+//   Centered progress spinner example
+// ----------------------------------------------------
+.progress-spinner-container-centered {
+    width: auto;
+    margin: 0 auto;
+    float: none;
+    text-align: center;
+}
+
+
+// ----------------------------------------------------
+//   Progress size variation examples
+// ----------------------------------------------------
+.ws-example {
+    &.progress-spinner-sizes {
+        .progress-spinner {
+            display: block;
+            margin: 0 auto;
+            text-align: center;
+        }
+    }
+
+    &.progress-spinner-sizes,
+    &.progress-spinner-labels-sizes {
+        [class*="col-sm-"] {
+            padding-top: to-rem($base-elem-margin-vertical);
+            padding-bottom: to-rem($base-elem-margin-vertical);
+
+            @include respond-to('screen-sm and up') {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+        }
+    }
+
+    &.progress-spinner-labels-sizes {
+        .clearfix + .row h4 {
+            border-top: .1rem solid $zc-gray-70;
+            padding-top: to-rem($line-height-base-px);
+        }
+    }
+}

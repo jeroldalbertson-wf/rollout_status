@@ -1,0 +1,13 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/foundation/module-docs-base';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+@import "base/docs-document";
+@import "base/docs-print";
+@import "base/docs-scaffolding";

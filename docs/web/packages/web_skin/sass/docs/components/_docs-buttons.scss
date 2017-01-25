@@ -1,0 +1,63 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/buttons';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.docs-btn-outline {
+    $outline-color: lighten(get($btn-colors-default, 'text-base'), 20);
+
+    color: $outline-color;
+    background-color: transparent;
+    border: to-rem(get($btn-config, 'bd-width')) solid $outline-color;
+    border-bottom-width: to-rem(get($btn-config, 'bd-width')) !important; // no depth / punchable state
+    box-shadow: none !important;
+
+    #{$link-hover-focus} {
+        &,
+        &:active {
+            color: $white;
+            background-color: $outline-color;
+            background-image: none;
+            border-color: $outline-color;
+            top: 0; // no "depth" shift
+        }
+    }
+}
+
+//
+// Large grid block buttons that contain a header and some body text,
+// e.g. the "categories" listed beneath search on the /api landing page
+//
+.docs-callout-btn {
+    @include grid-content();
+
+    width: 100%;
+    white-space: normal;
+    text-align: left;
+
+    @at-root {
+        .docs-callout-btn-heading {
+            font-size: to-rem($font-size-lg);
+            font-weight: bold;
+            padding: 0;
+            margin: 0 0 $paragraph-margin-bottom 0;
+            color: inherit !important;
+        }
+
+        .docs-callout-btn-content {
+            font-size: to-rem($font-size-md);
+            line-height: $line-height-sm;
+            margin: 0;
+        }
+
+        .docs-callout-btn-grid-up-container {
+            // double the padding to provide appropriate space below search input
+            padding-top: $flex-grid-gutter-width;
+        }
+    }
+}

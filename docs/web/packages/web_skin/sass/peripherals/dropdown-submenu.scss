@@ -1,0 +1,31 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for Dropdown Submenus
+ * ---
+ * MSIE Support: 10+
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import '../core/api';
+
+
+// ----------------------------------------------------
+//   Dropdown Submenu Atoms
+// ----------------------------------------------------
+    @import 'dropdown-submenu/atoms/dropdown-submenu-config';
+
+
+// ----------------------------------------------------
+//   Dropdown Submenu Components
+// ----------------------------------------------------
+    @import 'dropdown-submenu/dropdown-submenu-base';

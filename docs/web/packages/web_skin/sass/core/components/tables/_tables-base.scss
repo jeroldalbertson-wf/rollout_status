@@ -1,0 +1,120 @@
+// ********************************************************
+//
+//   TABLE COMPONENT BASE STYLE MODULE
+//   http://bit.ly/webskin-tables
+//
+//   -> These styles DO NOT need to be re-generated
+//      when creating virtualized table selectors
+//      using CSS classes instead of table elems.
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/tables/base';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $tables-module-config:  'core/components/atoms/tables/tables-config';
+    $tables-module-helpers: 'core/components/atoms/tables/tables-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $tables-module-config,
+                                          $tables-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   ELEMENT RESET
+//
+// ********************************************************
+table {
+    @include table-reset();
+}
+
+
+
+// ********************************************************
+//
+//   BASE TABLE STYLES
+//
+// ********************************************************
+.table {
+    @include table-reset();
+    @include table-component();
+
+    // ----- NESTED TABLES ----- //
+    .table {
+        @include table-nested();
+    }
+
+    // ----- DOUBLE BORDER PREVENTION ----- //
+    @include table-remove-double-borders();
+}
+
+
+
+// ********************************************************
+//
+//   TABLE CHILDREN THAT ARE NOT TABLE ELEMENTS
+//
+// ********************************************************
+    .table {
+        // ------------------------------------------------
+        //   FORM COMPONENTS
+        // ------------------------------------------------
+        input[type="checkbox"],
+        input[type="radio"],
+        .checkbox,
+        .radio {
+            margin: 0;
+        }
+
+        //
+        // Often times, clickable / selectable rows will have a column
+        // just to house a checkbox to indicate selection...
+        //
+        .cbox,
+        .col-cbox {
+            @include table-cell-width(get($cbox-radio-config, 'width-px') + ($table-cell-padding * 2));
+            text-align: center;
+        }
+
+        //
+        // If the cbox is the first column... increase the left padding
+        //
+        tr,
+        .tr {
+            > .cbox,
+            > .col-cbox {
+                &:first-child {
+                    padding-left: to-rem($table-cell-padding + 2);
+                }
+            }
+        }
+
+
+        // ------------------------------------------------
+        //   LABEL COMPONENTS
+        // ------------------------------------------------
+        .label {
+            //
+            // Make sure nested labels share the same
+            // baseline as the rest of the copy in the cell
+            //
+            margin: 0;
+            vertical-align: baseline;
+        }
+    }
+
+
+
+// ********************************************************
+//
+//   MISC TABLE VARIATIONS
+//
+// ********************************************************
+    .table-fixed {
+        table-layout: fixed;
+    }

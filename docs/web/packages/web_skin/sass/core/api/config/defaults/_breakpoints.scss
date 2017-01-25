@@ -1,0 +1,761 @@
+// ********************************************************
+
+////
+/// Default media query breakpoint values
+/// ---
+/// @access private
+/// @group core.internals.breakpoints
+/// @since 1.0.0
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/breakpoints';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function is,
+                                                function comma-list,
+                                                function to-dppx,
+                                                function dpr-to-opera-fraction);
+//
+// ********************************************************
+
+
+///
+/// Global breakpoint configuration containing various media query aliases that can be referenced via the `respond-to()` helper function.
+/// ---
+/// @type Map
+/// @link https://github.com/Team-Sass/breakpoint/wiki/Respond-To Breakpoint Respond-To Function
+/// ---
+/// @example scss - Adding a named breakpoint
+///   @include add-breakpoint('tablet', screen min-width $screen-sm-min);
+///
+/// @example scss - Using the named breakpoint in the `respond-to` fn
+///   .visible-tablet-and-up {
+///       display: none;
+///
+///       @include respond-to('tablet') {
+///           display: block;
+///       }
+///   }
+///
+/// @example css - CSS Result
+///   .visible-tablet-and-up {
+///       display: none;
+///   }
+///
+///   @media screen and (min-width: 768px) {
+///       .visible-tablet-and-up {
+///           display: block;
+///       }
+///   }
+///
+$BREAKPOINTS: () !default;
+
+
+// ********************************************************
+//
+//   DPR Constants
+//
+// ********************************************************
+    ///
+    /// Base device pixel ratio constants.
+    /// ---
+    /// @type Map
+    /// @link http://bit.ly/android-display-metrics  Android Display Metrics
+    /// @link http://bit.ly/ios-retina-docs          Retina Display Media Queries
+    /// ---
+    /// @prop {Number} base      [1]         - Standard resolution
+    /// @prop {Number} ldpi      [1.25]      - [Android `DENSITY_LOW`](http://developer.android.com/reference/android/util/DisplayMetrics.html#DENSITY_LOW)
+    /// @prop {Number} mdpi      [1.5]       - [Android `DENSITY_MEDIUM`](http://developer.android.com/reference/android/util/DisplayMetrics.html#DENSITY_MEDIUM)
+    /// @prop {Number} retina    [2]         - [iOS Retina Density](http://bit.ly/1rnuZSs)
+    /// @prop {Number} hdpi      [2.5]       - [Android `DENSITY_HIGH`](http://developer.android.com/reference/android/util/DisplayMetrics.html#DENSITY_HIGH)
+    /// @prop {Number} xhdpi     [3]         - [Android `DENSITY_XHIGH`](http://developer.android.com/reference/android/util/DisplayMetrics.html#DENSITY_XHIGH)
+    /// @prop {Number} xxhdpi    [5]         - [Android `DENSITY_XXHIGH`](http://developer.android.com/reference/android/util/DisplayMetrics.html#DENSITY_XXHIGH)
+    /// @prop {Number} xxxhdpi   [6.66667]   - [Android `DENSITY_XXXHIGH`](http://developer.android.com/reference/android/util/DisplayMetrics.html#DENSITY_XXXHIGH)
+    ///
+    $dpr: (
+        'base':    1,
+        'ldpi':    1.3,
+        'mdpi':    1.5,
+        'retina':  2,
+        'hdpi':    2.5,
+        'xhdpi':   3,
+        'xxhdpi':  5,
+        'xxxhdpi': 6.66667
+    );
+
+    ///
+    /// Device pixel ratios for Opera CSS media queries.
+    /// ---
+    /// @type Map
+    /// ---
+    /// @requires {variable} $dpr
+    /// @requires {function} dpr-to-opera-fraction
+    ///
+    $dpr-opera: (
+        'base':    dpr-to-opera-fraction(get($dpr, 'base')),
+        'ldpi':    dpr-to-opera-fraction(get($dpr, 'ldpi')),
+        'mdpi':    dpr-to-opera-fraction(get($dpr, 'mdpi')),
+        'retina':  dpr-to-opera-fraction(get($dpr, 'retina')),
+        'hdpi':    dpr-to-opera-fraction(get($dpr, 'hdpi')),
+        'xhdpi':   dpr-to-opera-fraction(get($dpr, 'xhdpi')),
+        'xxhdpi':  dpr-to-opera-fraction(get($dpr, 'xxhdpi')),
+        'xxxhdpi': dpr-to-opera-fraction(get($dpr, 'xxxhdpi'))
+    );
+
+
+// ********************************************************
+//
+//   Resolution Constants
+//
+// ********************************************************
+    ///
+    /// DPI resolutions used by CSS media queries.
+    /// ---
+    /// @type Map
+    /// ---
+    /// @requires {variable} $css-in-to-px-ratio
+    /// @requires {variable} $dpr
+    /// ---
+    /// @prop {Number} base     [96dpi]
+    /// @prop {Number} ldpi     [125dpi]
+    /// @prop {Number} mdpi     [144dpi]
+    /// @prop {Number} retina   [192dpi]
+    /// @prop {Number} hdpi     [240dpi]
+    /// @prop {Number} xhdpi    [288dpi]
+    /// @prop {Number} xxhdpi   [480dpi]
+    /// @prop {Number} xxxhdpi  [640dpi]
+    ///
+    $dpi-resolutions: (
+        'base':    round(get($dpr, 'base')    * $css-in-to-px-ratio) + 0dpi,
+        'ldpi':    round(get($dpr, 'ldpi')    * $css-in-to-px-ratio) + 0dpi,
+        'mdpi':    round(get($dpr, 'mdpi')    * $css-in-to-px-ratio) + 0dpi,
+        'retina':  round(get($dpr, 'retina')  * $css-in-to-px-ratio) + 0dpi,
+        'hdpi':    round(get($dpr, 'hdpi')    * $css-in-to-px-ratio) + 0dpi,
+        'xhdpi':   round(get($dpr, 'xhdpi')   * $css-in-to-px-ratio) + 0dpi,
+        'xxhdpi':  round(get($dpr, 'xxhdpi')  * $css-in-to-px-ratio) + 0dpi,
+        'xxxhdpi': round(get($dpr, 'xxxhdpi') * $css-in-to-px-ratio) + 0dpi
+    );
+
+    ///
+    /// DPPX resolutions used by CSS media queries.
+    /// ---
+    /// @type Map
+    /// ---
+    /// @requires {variable} $dpi-resolutions
+    /// @requires {function} to-dppx
+    /// ---
+    /// @prop {Number} base      [1dppx]
+    /// @prop {Number} ldpi      [1.3dppx]
+    /// @prop {Number} mdpi      [1.5dppx]
+    /// @prop {Number} retina    [2dppx]
+    /// @prop {Number} hdpi      [2.5dppx]
+    /// @prop {Number} xhdpi     [3dppx]
+    /// @prop {Number} xxhdpi    [5dppx]
+    /// @prop {Number} xxxhdpi   [6.66667dppx]
+    ///
+    $dppx-resolutions: (
+        'base':    to-dppx(get($dpi-resolutions, 'base')),
+        'ldpi':    to-dppx(get($dpi-resolutions, 'ldpi')),
+        'mdpi':    to-dppx(get($dpi-resolutions, 'mdpi')),
+        'retina':  to-dppx(get($dpi-resolutions, 'retina')),
+        'hdpi':    to-dppx(get($dpi-resolutions, 'hdpi')),
+        'xhdpi':   to-dppx(get($dpi-resolutions, 'xhdpi')),
+        'xxhdpi':  to-dppx(get($dpi-resolutions, 'xxhdpi')),
+        'xxxhdpi': to-dppx(get($dpi-resolutions, 'xxxhdpi'))
+    );
+
+    ///
+    /// Collection of all resolutions used by CSS media queries.
+    /// ---
+    /// @type Map
+    /// ---
+    /// @requires {variable} $dpi-resolutions
+    /// @requires {variable} $dppx-resolutions
+    /// ---
+    /// @prop {Map} $dpi-resolutions - `$dpi-resolutions` map
+    /// @prop {Map} $dppx-resolutions - `$dppx-resolutions` map
+    ///
+    $all-resolutions: (
+        'dpi':  $dpi-resolutions,
+        'dppx': $dppx-resolutions
+    );
+
+
+    // ----------------------------------------------------
+    //   Aliases For Multiple Resolutions
+    //
+    //   -> Allows for using a single var
+    //      as the param for the
+    //      breakpoint mixin
+    // ----------------------------------------------------
+        $all-hi-res: comma-list();
+        @each $resolution-name, $resolution in $dppx-resolutions {
+            @if $resolution-name != 'base' {
+                ///
+                /// Breakpoint query for all high-resolution screens
+                /// ---
+                /// @type List
+                /// ---
+                /// @example scss
+                ///   .visible-res-high {
+                ///       display: none;
+                ///   }
+                ///
+                ///   @include breakpoint($all-hi-res) {
+                ///       .visible-res-high {
+                ///           display: block;
+                ///       }
+                ///   }
+                /// ---
+                /// @requires {external} SassScript/append <http://bit.ly/sass-append-fn>
+                /// @requires {variable} $dppx-resolutions
+                ///
+                $all-hi-res: append($all-hi-res, min-resolution $resolution, comma) !global;
+            }
+        }
+
+        $all-mdpi: comma-list();
+        @each $resolution-name, $resolution in $dppx-resolutions {
+            @if is($resolution-name, 'ldpi' 'mdpi') {
+                ///
+                /// Breakpoint query for all low to medium resolution screens
+                /// ---
+                /// @type List
+                /// ---
+                /// @example scss
+                ///   .visible-mdpi {
+                ///       display: none;
+                ///   }
+                ///
+                ///   @include breakpoint($all-mdpi) {
+                ///       .visible-mdpi {
+                ///           display: block;
+                ///       }
+                ///   }
+                /// ---
+                /// @requires {external} SassScript/append <http://bit.ly/sass-append-fn>
+                /// @requires {variable} $dppx-resolutions
+                ///
+                $all-mdpi: append($all-mdpi, min-resolution $resolution, comma) !global;
+            }
+        }
+
+        $all-hdpi: comma-list();
+        @each $resolution-name, $resolution in $dppx-resolutions {
+            @if is($resolution-name, 'retina' 'hdpi' 'xhdpi' 'xxhdpi' 'xxxhdpi') {
+                ///
+                /// Breakpoint query for all high / extra-high resolution screens
+                /// ---
+                /// @type List
+                /// ---
+                /// @example scss
+                ///   .visible-hdpi {
+                ///       display: none;
+                ///   }
+                ///
+                ///   @include breakpoint($all-hdpi) {
+                ///       .visible-hdpi {
+                ///           display: block;
+                ///       }
+                ///   }
+                /// ---
+                /// @requires {external} SassScript/append <http://bit.ly/sass-append-fn>
+                /// @requires {variable} $dppx-resolutions
+                ///
+                $all-hdpi: append($all-hdpi, min-resolution $resolution, comma) !global;
+            }
+        }
+
+
+
+// ********************************************************
+//
+//   Device Constants
+//
+// ********************************************************
+    ///
+    /// iPhone device display properties for CSS media queries. Targeting specific devices is NOT recommended except in very rare cases. Use with caution.
+    /// ---
+    /// @type Map
+    /// @link http://cssmediaqueries.com/target/ Mobile Device Media Query Targets
+    /// ---
+    /// @requires {variable} $dpr
+    /// @requires {variable} $dpi-resolutions
+    /// @requires {variable} $dppx-resolutions
+    /// ---
+    /// @prop {Map} base     - Display properties for the [1st / 2nd and 3rd generation iPhone](http://cssmediaqueries.com/target/iPhone+3G.html)
+    /// @prop {Number} base.min-device-width    [320px]
+    /// @prop {Number} base.max-device-width    [480px]
+    /// @prop {Number} base.device-pixel-ratio  [1]
+    /// @prop {Number} base.min-resolution-dpi  [96dpi]
+    /// @prop {Number} base.min-resolution-dppx [1dppx]
+    ///
+    /// @prop {Map} retina-4 - Display properties for the [4th generation iPhone](http://cssmediaqueries.com/target/iPhone+4.html)
+    /// @prop {Number} retina-4.min-device-width    [320px]
+    /// @prop {Number} retina-4.max-device-width    [480px]
+    /// @prop {Number} retina-4.device-pixel-ratio  [2]
+    /// @prop {Number} retina-4.min-resolution-dpi  [192dpi]
+    /// @prop {Number} retina-4.min-resolution-dppx [2dppx]
+    ///
+    /// @prop {Map} retina-5 - Display properties for the [5th generation iPhone](http://cssmediaqueries.com/target/iPhone+5.html)
+    /// @prop {Number} retina-5.min-device-width    [320px]
+    /// @prop {Number} retina-5.max-device-width    [568px]
+    /// @prop {Number} retina-5.device-pixel-ratio  [2]
+    /// @prop {Number} retina-5.min-resolution-dpi  [192dpi]
+    /// @prop {Number} retina-5.min-resolution-dppx [2dppx]
+    ///
+    /// @prop {Map} retina-6 - Display properties for the [6th generation iPhone](http://cssmediaqueries.com/target/iPhone+6.html)
+    /// @prop {Number} retina-6.min-device-width    [375px]
+    /// @prop {Number} retina-6.max-device-width    [667px]
+    /// @prop {Number} retina-6.device-pixel-ratio  [2]
+    /// @prop {Number} retina-6.min-resolution-dpi  [192dpi]
+    /// @prop {Number} retina-6.min-resolution-dppx [2dppx]
+    ///
+    /// @prop {Map} retina-6-plus - Display properties for the [6th generation iPhone plus](http://cssmediaqueries.com/target/iPhone+6+Plus.html)
+    /// @prop {Number} retina-6-plus.min-device-width    [414px]
+    /// @prop {Number} retina-6-plus.max-device-width    [736px]
+    /// @prop {Number} retina-6-plus.device-pixel-ratio  [3]
+    /// @prop {Number} retina-6-plus.min-resolution-dpi  [288dpi]
+    /// @prop {Number} retina-6-plus.min-resolution-dppx [3dppx]
+    ///
+    $iphone-display-config: (
+        'base': (
+            'min-device-width':     320px,
+            'max-device-width':     480px,
+            'device-pixel-ratio':   get($dpr, 'base'),
+            'min-resolution-dpi':   get($dpi-resolutions,  'base'),
+            'min-resolution-dppx':  get($dppx-resolutions, 'base')
+        ),
+        'retina-4': (
+            'min-device-width':     320px,
+            'max-device-width':     480px,
+            'device-pixel-ratio':   get($dpr, 'retina'),
+            'min-resolution-dpi':   get($dpi-resolutions,  'retina'),
+            'min-resolution-dppx':  get($dppx-resolutions, 'retina')
+        ),
+        'retina-5': (
+            'min-device-width':     320px,
+            'max-device-width':     568px,
+            'device-pixel-ratio':   get($dpr, 'retina'),
+            'min-resolution-dpi':   get($dpi-resolutions,  'retina'),
+            'min-resolution-dppx':  get($dppx-resolutions, 'retina')
+        ),
+        'retina-6': (
+            'min-device-width':     375px,
+            'max-device-width':     667px,
+            'device-pixel-ratio':   get($dpr, 'retina'),
+            'min-resolution-dpi':   get($dpi-resolutions,  'retina'),
+            'min-resolution-dppx':  get($dppx-resolutions, 'retina')
+        ),
+        'retina-6-plus': (
+            'min-device-width':     414px,
+            'max-device-width':     736px,
+            'device-pixel-ratio':   get($dpr, 'xhdpi'),
+            'min-resolution-dpi':   get($dpi-resolutions,  'xhdpi'),
+            'min-resolution-dppx':  get($dppx-resolutions, 'xhdpi')
+        )
+    );
+
+    ///
+    /// iPad device display properties for CSS media queries. Targeting specific devices is NOT recommended except in very rare cases. Use with caution.
+    /// ---
+    /// @type Map
+    /// @link http://cssmediaqueries.com/target/ Mobile Device Media Query Targets
+    /// ---
+    /// @requires {variable} $dpr
+    /// @requires {variable} $dpi-resolutions
+    /// @requires {variable} $dppx-resolutions
+    /// ---
+    /// @prop {Map} base     - Display properties for [1st / 2nd generation iPad](http://cssmediaqueries.com/target/iPad+1+and+2.html) and 1st generation iPad Mini
+    /// @prop {Number} base.min-device-width    [768px]
+    /// @prop {Number} base.max-device-width    [1024px]
+    /// @prop {Number} base.device-pixel-ratio  [1]
+    /// @prop {Number} base.min-resolution-dpi  [96dpi]
+    /// @prop {Number} base.min-resolution-dppx [1dppx]
+    ///
+    /// @prop {Map} gen-3-4  - Display properties for [3rd / 4th generation iPad](http://cssmediaqueries.com/target/iPad+3+and+4.html) and iPad Air
+    /// @prop {Number} gen-3-4.min-device-width    [768px]
+    /// @prop {Number} gen-3-4.max-device-width    [1024px]
+    /// @prop {Number} gen-3-4.device-pixel-ratio  [2]
+    /// @prop {Number} gen-3-4.min-resolution-dpi  [192dpi]
+    /// @prop {Number} gen-3-4.min-resolution-dppx [2dppx]
+    ///
+    /// @prop {Map} mini-2   - Display properties for the [2nd generation iPad Mini](http://cssmediaqueries.com/target/iPad+3+and+4.html)
+    /// @prop {Number} mini-2.min-device-width    [768px]
+    /// @prop {Number} mini-2.max-device-width    [1024px]
+    /// @prop {Number} mini-2.device-pixel-ratio  [2]
+    /// @prop {Number} mini-2.min-resolution-dpi  [192dpi]
+    /// @prop {Number} mini-2.min-resolution-dppx [2dppx]
+    ///
+    $ipad-display-config: (
+        'base': (
+            'min-device-width':     768px,
+            'max-device-width':     1024px,
+            'device-pixel-ratio':   get($dpr, 'base'),
+            'min-resolution-dpi':   get($dpi-resolutions,  'base'),
+            'min-resolution-dppx':  get($dppx-resolutions, 'base')
+        ),
+        'gen-3-4': (
+            'min-device-width':     768px,
+            'max-device-width':     1024px,
+            'device-pixel-ratio':   get($dpr, 'retina'),
+            'min-resolution-dpi':   get($dpi-resolutions,  'retina'),
+            'min-resolution-dppx':  get($dppx-resolutions, 'retina')
+        ),
+        'mini-2': (
+            'min-device-width':     768px,
+            'max-device-width':     1024px,
+            'device-pixel-ratio':   get($dpr, 'retina'),
+            'min-resolution-dpi':   get($dpi-resolutions,  'retina'),
+            'min-resolution-dppx':  get($dppx-resolutions, 'retina')
+        )
+    );
+
+    ///
+    /// Android device display properties for CSS media queries. Targeting specific devices is NOT recommended except in very rare cases. Use with caution.
+    /// ---
+    /// @type Map
+    /// @link http://cssmediaqueries.com/target/ Mobile Device Media Query Targets
+    /// ---
+    /// @requires {variable} $dpr
+    /// @requires {variable} $dpi-resolutions
+    /// @requires {variable} $dppx-resolutions
+    /// ---
+    /// @prop {Map} nexus-7      - Display properties for the [Asus Nexus 7](http://cssmediaqueries.com/target/Asus+Nexus+7.html)
+    /// @prop {Number} nexus-7.min-device-width    [601px]
+    /// @prop {Number} nexus-7.max-device-width    [906px]
+    /// @prop {Number} nexus-7.device-pixel-ratio  [1.3]
+    /// @prop {Number} nexus-7.min-resolution-dpi  [125dpi]
+    /// @prop {Number} nexus-7.min-resolution-dppx [1.3dppx]
+    ///
+    /// @prop {Map} nexus-4      - Display properties for the [LG Nexus 4](http://cssmediaqueries.com/target/LG+Nexus+4.html)
+    /// @prop {Number} nexus-4.min-device-width    [384px]
+    /// @prop {Number} nexus-4.max-device-width    [592px]
+    /// @prop {Number} nexus-4.device-pixel-ratio  [2]
+    /// @prop {Number} nexus-4.min-resolution-dpi  [196dpi]
+    /// @prop {Number} nexus-4.min-resolution-dppx [2dppx]
+    ///
+    /// @prop {Map} nexus-5      - Display properties for the [LG Nexus 5](http://cssmediaqueries.com/target/LG+Nexus+5.html)
+    /// @prop {Number} nexus-5.min-device-width    [360px]
+    /// @prop {Number} nexus-5.max-device-width    [592px]
+    /// @prop {Number} nexus-5.device-pixel-ratio  [3]
+    /// @prop {Number} nexus-5.min-resolution-dpi  [288dpi]
+    /// @prop {Number} nexus-5.min-resolution-dppx [3dppx]
+    ///
+    /// @prop {Map} galaxy-s2    - Display properties for the [Samsung Galaxy S2](http://cssmediaqueries.com/target/Samsung+Galaxy+S2.html)
+    /// @prop {Number} galaxy-s2.min-device-width    [320px]
+    /// @prop {Number} galaxy-s2.max-device-width    [534px]
+    /// @prop {Number} galaxy-s2.device-pixel-ratio  [1.5]
+    /// @prop {Number} galaxy-s2.min-resolution-dpi  [144dpi]
+    /// @prop {Number} galaxy-s2.min-resolution-dppx [1.5dppx]
+    ///
+    /// @prop {Map} galaxy-s3    - Display properties for the [Samsung Galaxy S3](http://cssmediaqueries.com/target/Samsung+Galaxy+S3.html)
+    /// @prop {Number} galaxy-s3.min-device-width    [320px]
+    /// @prop {Number} galaxy-s3.max-device-width    [640px]
+    /// @prop {Number} galaxy-s3.device-pixel-ratio  [2]
+    /// @prop {Number} galaxy-s3.min-resolution-dpi  [196dpi]
+    /// @prop {Number} galaxy-s3.min-resolution-dppx [2dppx]
+    ///
+    /// @prop {Map} galaxy-s4    - Display properties for the [Samsung Galaxy S4](http://cssmediaqueries.com/target/Samsung+Galaxy+S4.html)
+    /// @prop {Number} galaxy-s4.min-device-width    [320px]
+    /// @prop {Number} galaxy-s4.max-device-width    [640px]
+    /// @prop {Number} galaxy-s4.device-pixel-ratio  [3]
+    /// @prop {Number} galaxy-s4.min-resolution-dpi  [288dpi]
+    /// @prop {Number} galaxy-s4.min-resolution-dppx [3dppx]
+    ///
+    /// @prop {Map} galaxy-s5    - Display properties for the [Samsung Galaxy S5](http://cssmediaqueries.com/target/Samsung+Galaxy+S5.html)
+    /// @prop {Number} galaxy-s5.min-device-width    [360px]
+    /// @prop {Number} galaxy-s5.max-device-width    [640px]
+    /// @prop {Number} galaxy-s5.device-pixel-ratio  [3]
+    /// @prop {Number} galaxy-s5.min-resolution-dpi  [288dpi]
+    /// @prop {Number} galaxy-s5.min-resolution-dppx [3dppx]
+    ///
+    $android-display-config: (
+        'nexus-7': (
+            'min-device-width':     601px,
+            'max-device-width':     906px,
+            'device-pixel-ratio':   get($dpr, 'ldpi'),
+            'min-resolution-dpi':   get($dpi-resolutions,  'ldpi'),
+            'min-resolution-dppx':  get($dppx-resolutions, 'ldpi')
+        ),
+        'nexus-4': (
+            'min-device-width':     384px,
+            'max-device-width':     592px,
+            'device-pixel-ratio':   get($dpr, 'retina'),
+            'min-resolution-dpi':   get($dpi-resolutions,  'retina'),
+            'min-resolution-dppx':  get($dppx-resolutions, 'retina')
+        ),
+        'nexus-5': (
+            'min-device-width':     360px,
+            'max-device-width':     592px,
+            'device-pixel-ratio':   get($dpr, 'xhdpi'),
+            'min-resolution-dpi':   get($dpi-resolutions,  'xhdpi'),
+            'min-resolution-dppx':  get($dppx-resolutions, 'xhdpi')
+        ),
+        'galaxy-s2': (
+            'min-device-width':     320px,
+            'max-device-width':     534px,
+            'device-pixel-ratio':   get($dpr, 'mdpi'),
+            'min-resolution-dpi':   get($dpi-resolutions,  'mdpi'),
+            'min-resolution-dppx':  get($dppx-resolutions, 'mdpi')
+        ),
+        'galaxy-s3': (
+            'min-device-width':     320px,
+            'max-device-width':     640px,
+            'device-pixel-ratio':   get($dpr, 'retina'),
+            'min-resolution-dpi':   get($dpi-resolutions,  'retina'),
+            'min-resolution-dppx':  get($dppx-resolutions, 'retina')
+        ),
+        'galaxy-s4': (
+            'min-device-width':     320px,
+            'max-device-width':     640px,
+            'device-pixel-ratio':   get($dpr, 'xhdpi'),
+            'min-resolution-dpi':   get($dpi-resolutions,  'xhdpi'),
+            'min-resolution-dppx':  get($dppx-resolutions, 'xhdpi')
+        ),
+        'galaxy-s5': (
+            'min-device-width':     360px,
+            'max-device-width':     640px,
+            'device-pixel-ratio':   get($dpr, 'xhdpi'),
+            'min-resolution-dpi':   get($dpi-resolutions,  'xhdpi'),
+            'min-resolution-dppx':  get($dppx-resolutions, 'xhdpi')
+        )
+    );
+
+    ///
+    /// Collection of all device display properties. Targeting specific devices is NOT recommended except in very rare cases. Use with caution.
+    /// ---
+    /// @type Map
+    /// @link http://cssmediaqueries.com/target/ Mobile Device Media Query Targets
+    /// ---
+    /// @requires {variable} $iphone-display-config
+    /// @requires {variable} $ipad-display-config
+    /// @requires {variable} $android-display-config
+    /// ---
+    /// @prop {Map} $iphone-display-config  - `$iphone-display-config` map
+    /// @prop {Map} $ipad-display-config    - `$ipad-display-config` map
+    /// @prop {Map} $android-display-config - `$android-display-config` map
+    ///
+    $all-devices: (
+        'iphone':  $iphone-display-config,
+        'ipad':    $ipad-display-config,
+        'android': $android-display-config
+    );
+
+
+// ********************************************************
+//
+//   Width Constants
+//
+// ********************************************************
+    ///
+    /// Screen width constants used for CSS media queries.
+    /// ---
+    /// @access public
+    /// @group core.breakpoints
+    /// @type Map
+    /// @todo Write unit test asserting that each `max` key is `1px` less than the next-size-up's `min` key
+    /// ---
+    /// @prop {Map} xs - Width values for "Extra Small" screens __a.k.a Phones__
+    /// @prop {Number} xs.min [480px]
+    /// @prop {Number} xs.max [767px]
+    ///
+    /// @prop {Map} sm - Width values for "Small" screens __a.k.a Tablets__
+    /// @prop {Number} sm.min [768px]
+    /// @prop {Number} sm.max [991px]
+    ///
+    /// @prop {Map} md - Width values for "Medium" screens __a.k.a Desktops__
+    /// @prop {Number} md.min [992px]
+    /// @prop {Number} md.max [1199px]
+    ///
+    /// @prop {Map} lg - Width values for "Large" screens __a.k.a Large Desktops__
+    /// @prop {Number} lg.min [1200px]
+    /// @prop {Number} lg.max [1599px]
+    ///
+    /// @prop {Map} xl - Width values for "Extra Large" screens __a.k.a HD Desktops__
+    /// @prop {Number} xl.min [1600px]
+    /// @prop {Number} xl.max [10000px]
+    ///
+    $screen-widths: (
+        'xs': (
+            'min': 480px,
+            'max': 767px
+        ),
+        'sm': (
+            'min': 768px,
+            'max': 991px
+        ),
+        'md': (
+            'min': 992px,
+            'max': 1199px
+        ),
+        'lg': (
+            'min': 1200px,
+            'max': 1599px
+        ),
+        'xl': (
+            'min': 1600px,
+            'max': 10000px
+        )
+    ) !default;
+
+
+// ********************************************************
+//
+//   All Breakpoint Constants
+//
+//   -> Store these breakpoint values in
+//      a map for easy iteration within
+//      functions and mixins and easy
+//      nesting in other component maps
+//
+// ********************************************************
+    ///
+    /// Collection of all pre-defined breakpoint constants used for CSS media queries.
+    /// ---
+    /// @type Map
+    /// ---
+    /// @requires {variable} $screen-widths
+    /// @requires {variable} $dpr
+    /// @requires {variable} $all-resolutions
+    /// @requires {variable} $all-devices
+    /// ---
+    /// @prop {Map} width        - `$screen-widths` map
+    /// @prop {Map} density      - `$dpr` map
+    /// @prop {Map} resolution   - `$all-resolutions` map
+    /// @prop {Map} device       - `$all-devices` map
+    ///
+    $breakpoint-config: (
+        'width':      $screen-widths,
+        'density':    $dpr,
+        'resolution': $all-resolutions,
+        'device':     $all-devices
+    ) !default;
+
+
+// ********************************************************
+//
+//   PUBLIC SCREEN WIDTH BREAKPOINT CONFIGS
+//
+//   -> Store these breakpoint values
+//      as concise single vars advertised
+//      in the API docs as "public" ways
+//      to access screen width vars.
+//
+//   -> DO NOT CHANGE THESE
+//      (change config map vars instead)
+//
+// ********************************************************
+    ///
+    /// Extra small _(a.k.a "Phone")_ screen width `min-width` value used for CSS media queries.
+    /// ---
+    /// @type Number
+    /// @since 0.1.0
+    /// ---
+    /// @requires {function} get-deep
+    /// @requires {variable} $screen-widths
+    ///
+    $screen-xs-min: get-deep($screen-widths, 'xs.min');
+
+    ///
+    /// Extra small _(a.k.a "Phone")_ screen width `max-width` value used for CSS media queries.
+    /// ---
+    /// @type Number
+    /// ---
+    /// @requires {function} get-deep
+    /// @requires {variable} $screen-widths
+    ///
+    $screen-xs-max: get-deep($screen-widths, 'xs.max');
+
+    ///
+    /// Small _(a.k.a "Tablet")_ screen width `min-width` value used for CSS media queries.
+    /// ---
+    /// @type Number
+    /// @since 0.1.0
+    /// ---
+    /// @requires {function} get-deep
+    /// @requires {variable} $screen-widths
+    ///
+    $screen-sm-min: get-deep($screen-widths, 'sm.min');
+
+    ///
+    /// Small _(a.k.a "Tablet")_ screen width `max-width` value used for CSS media queries.
+    /// ---
+    /// @type Number
+    /// ---
+    /// @requires {function} get-deep
+    /// @requires {variable} $screen-widths
+    ///
+    $screen-sm-max: get-deep($screen-widths, 'sm.max');
+
+    ///
+    /// Medium _(a.k.a "Desktop")_ screen width `min-width` value used for CSS media queries.
+    /// ---
+    /// @type Number
+    /// @since 0.1.0
+    /// ---
+    /// @requires {function} get-deep
+    /// @requires {variable} $screen-widths
+    ///
+    $screen-md-min: get-deep($screen-widths, 'md.min');
+
+    ///
+    /// Medium _(a.k.a "Desktop")_ screen width `max-width` value used for CSS media queries.
+    /// ---
+    /// @type Number
+    /// ---
+    /// @requires {function} get-deep
+    /// @requires {variable} $screen-widths
+    ///
+    $screen-md-max: get-deep($screen-widths, 'md.max');
+
+    ///
+    /// Large _(a.k.a "Large Desktop")_ screen width `min-width` value used for CSS media queries.
+    /// ---
+    /// @type Number
+    /// @since 0.1.0
+    /// ---
+    /// @requires {function} get-deep
+    /// @requires {variable} $screen-widths
+    ///
+    $screen-lg-min: get-deep($screen-widths, 'lg.min');
+
+    ///
+    /// Large _(a.k.a "Large Desktop")_ screen width `max-width` value used for CSS media queries.
+    /// ---
+    /// @type Number
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get-deep
+    /// @requires {variable} $screen-widths
+    ///
+    $screen-lg-max: get-deep($screen-widths, 'lg.max');
+
+    ///
+    /// Extra Large _(a.k.a "HD Desktop")_ screen width `min-width` value used for CSS media queries.
+    /// ---
+    /// @type Number
+    /// @since 0.1.0
+    /// ---
+    /// @requires {function} get-deep
+    /// @requires {variable} $screen-widths
+    ///
+    $screen-xl-min: get-deep($screen-widths, 'xl.min');
+
+    ///
+    /// Extra Large _(a.k.a "HD Desktop")_ screen width `max-width` value used for CSS media queries.
+    /// ---
+    /// @type Number
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get-deep
+    /// @requires {variable} $screen-widths
+    ///
+    $screen-xl-max: get-deep($screen-widths, 'xl.max');

@@ -1,0 +1,144 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/nav-wizards/navbar-wizard';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   NAVBAR WIZARD BASE
+// ----------------------------------------------------
+    #{$navbar-wizard-selector} {
+        position: absolute; // FF / IE
+        right: 0;
+        left: 0;
+        max-height: to-rem($navbar-wizard-link-height);
+        padding: to-rem($navbar-wizard-inset);
+    }
+
+    // ----- FIXED POS VARIATION ----- //
+    .navbar {
+        &.navbar-static-top,
+        &.navbar-fixed-top,
+        &.navbar-fixed-bottom {
+            #{$nav-wizard-selector} {
+                left: 0;
+                right: 0;
+
+                > .nav-item > .hitarea {
+                    border-radius: 0;
+                }
+            }
+        }
+    }
+
+
+
+// ----------------------------------------------------
+//   NAVBAR WIZARD ITEMS / "STEPS"
+// ----------------------------------------------------
+    #{$navbar-wizard-selector} > .nav-item {
+        // override .navbar defaults
+        float: none;
+        // override .nav-wizard defaults
+        max-height: to-rem($navbar-wizard-link-height);
+        height: to-rem($navbar-wizard-link-height);
+
+        > .hitarea {
+            height: to-rem($navbar-wizard-link-height);
+            line-height: to-rem($line-height-base-px - ($navbar-bd-width * 2));
+            color: mix($navbar-link-color, $navbar-wizard-link-bg, 20%); // fallback
+            color: transparentize($navbar-link-color, .2);
+            background-color: $navbar-wizard-link-bg;
+            border-width: 0;
+
+            #{$link-hover-focus},
+            #{$link-pressed} {
+                color: mix($navbar-link-color, $navbar-wizard-link-bg, 20%); // fallback
+                color: transparentize($navbar-link-color, .2);
+                background-color: $navbar-wizard-link-bg;
+            }
+        }
+
+        // override .nav-justified.nav-pills defaults
+        &:first-child {
+            > .hitarea {
+                @include border-left-radius(to-rem($navbar-bd-radius - $navbar-bd-width));
+            }
+        }
+
+        &:last-child {
+            right: to-rem($navbar-wizard-inset * 2);
+
+            > .hitarea {
+                @include border-right-radius(to-rem($navbar-bd-radius - $navbar-bd-width));
+            }
+        }
+
+
+        // ----- ACTIVE STEP ----- //
+        &.active {
+            &,
+            #{$link-pressed} {
+                > .hitarea {
+                    // override .navbar defaults
+                    color: $navbar-bg;
+                    background-color: $navbar-wizard-link-bg-active;
+                    box-shadow: none;
+                }
+            }
+        }
+
+
+        // ----- COMPLETED STEP ----- //
+        &.completed {
+            &,
+            #{$link-pressed} {
+                > .hitarea {
+                    color: mix($navbar-bg, $navbar-wizard-link-bg, 20%); // fallback
+                    // make sure the steps that came before aren't more vibrant than the current step
+                    color: transparentize($navbar-bg, .2);
+                }
+            }
+        }
+    }
+
+
+// ----------------------------------------------------
+//   NAVBAR WIZARD ITEM ARROW SEPERATORS
+// ----------------------------------------------------
+    #{$navbar-wizard-selector} > .nav-item {
+        // arrow container
+        .wizard-inner {
+            top: to-rem($navbar-wizard-link-height) * -1;
+        }
+
+        // arrow itself
+        .wizard-arrow {
+            top: to-rem($navbar-bd-width) * -2;
+            left: to-rem($navbar-bd-width) * -3;
+            border-width: to-rem($navbar-wizard-sep-arrow-width 0 $navbar-wizard-sep-arrow-width $navbar-wizard-sep-arrow-width);
+            // this border color should match the bg of the navbar
+            border-left-color: $navbar-bg;
+
+            &:before {
+                top: to-rem($navbar-wizard-arrow-width) * -1;
+                left: to-rem($navbar-wizard-sep-arrow-width) * -1;
+                border-width: to-rem($navbar-wizard-arrow-width 0 $navbar-wizard-arrow-width $navbar-wizard-arrow-width);
+                // this border color should match the bg of the navbar
+                border-left-color: $navbar-wizard-link-bg;
+            }
+        }
+
+
+        // ----- ACTIVE STEP ----- //
+        &.active {
+            .wizard-arrow:before,
+            + .nav-item .wizard-arrow:before {
+                border-left-color: $navbar-wizard-link-bg-active;
+            }
+        }
+    }

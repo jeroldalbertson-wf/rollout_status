@@ -1,0 +1,52 @@
+// ********************************************************
+
+////
+/// Zesty Crayon Green "B" Color Aliases
+/// ---
+/// @access public
+/// @type Color
+/// @group core.color.zesty
+/// ---
+/// @requires {variable} $zc-greens-b
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/aliases/zesty-greens-alt';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+/// Zesty Crayon Green "B"
+/// @since 1.6.0
+/// @color #42ad48
+$zc-green-b: get($zc-greens-b, '100');
+
+/// @alias zc-green-b
+/// @since 1.6.0
+$zc-green-b-100: $zc-green-b;
+
+/// Zesty Crayon Green "B" 120
+/// @since 1.6.0
+/// @color #2b7237
+$zc-green-b-120: get($zc-greens-b, '120');
+
+/// Zesty Crayon Green "B" 80
+/// @since 1.6.0
+/// @color #68bd6d
+$zc-green-b-80: get($zc-greens-b, '80');
+
+/// Zesty Crayon Green "B" 60
+/// @color #8ece91
+$zc-green-b-60: get($zc-greens-b, '60');
+
+/// Zesty Crayon Green "B" 40
+/// @since 1.6.0
+/// @color #b3deb6
+$zc-green-b-40: get($zc-greens-b, '40');

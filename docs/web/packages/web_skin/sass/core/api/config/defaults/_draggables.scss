@@ -1,0 +1,103 @@
+// ********************************************************
+
+////
+/// Configuration for draggable element styles.
+/// ---
+/// @type Map
+/// @access public
+/// @group core.draggables
+/// @since 1.6.0
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/draggables';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+///
+/// Configuration for an element that is being dragged (`.is-dragging`).
+/// ---
+/// @requires {function} to-rem
+/// @requires {variable} $border-radius-base
+/// @requires {variable} $zc-blue-80
+/// @requires {variable} $white
+/// ---
+/// @prop {Number} outline-radius   [.4rem]
+/// @prop {Number} outline-width    [.2rem]
+/// @prop {Color}  outline-color    [#33a9ff]
+/// @prop {Color}  bg-color         [#ffffff]
+///
+/// @prop {Number} min-width [20rem]
+/// @prop {Number} max-width [38.4rem]
+///
+$dragging-element-config: (
+    'outline-radius': to-rem($border-radius-base),
+    'outline-width': .2rem,
+    'outline-color': $zc-blue-80,
+    'bg-color': $white,
+    'min-width': 20rem,
+    'max-width': 38.4rem
+) !default;
+
+///
+/// Configuration for an element that is being dragged, and indicates that 2 or more elements are actually being dragged "under the covers" (`.is-dragging--multi`).
+/// ---
+/// @requires {variable} $dragging-element-config
+/// ---
+/// @prop {Number} clone-shadow-offset-x [.6rem] - Amount of x-offset for the box-shadow that will mimic a "clone" of the top element's border style appear beneath the element that shows how many elements are being dragged.
+/// @prop {Number} clone-shadow-offset-x [.6rem] - Amount of y-offset for the box-shadow that will mimic a "clone" of the top element's border style appear beneath the element that shows how many elements are being dragged.
+///
+$dragging-multi-element-config: (
+    'clone-shadow-offset-x': get($dragging-element-config, 'outline-width') * 3,
+    'clone-shadow-offset-y': get($dragging-element-config, 'outline-width') * 3
+) !default;
+
+///
+/// Configuration for a drop target element (`.is-drop-target`) where files can be dropped.
+/// ---
+/// @requires {variable} $zc-gray-20
+/// @requires {variable} $zc-gray-60
+/// @requires {variable} $zc-gray-80
+/// @requires {variable} $ws-selection-bg-active
+/// @requires {variable} $ws-selection-text-active
+/// @requires {variable} $zc-blue
+/// @requires {variable} $white
+/// ---
+/// @prop {Color}   text-color      [#595959]
+/// @prop {Color}   bg-color        [#f9f9f9]
+/// @prop {Color}   bd-color        [#d5d5d5]
+/// @prop {Number}  bd-width        [.1rem]
+/// @prop {String}  bd-style        [dashed]
+///
+/// @prop {Color}   text-color-over     [#474747]   - Text color when a file is being dragged over the drop target (`.is-drop-target--dragover`)
+/// @prop {Color}   bg-color-over       [#d6eeff]   - Background color when a file is being dragged over the drop target (`.is-drop-target--dragover`)
+/// @prop {Color}   bd-color-over       [#0094ff]   - Border color when a file is being dragged over the drop target (`.is-drop-target--dragover`)
+///
+$drop-target-config: (
+    'text-color': $zc-gray-100,
+    'bg-color': mix($zc-gray-20, $white, 50%),
+    'bd-color': mix($zc-gray-60, $white, 80%),
+    'bd-width': .1rem,
+    'bd-style': dashed,
+    // ondragover
+    'text-color-over': $ws-selection-text-active,
+    'bg-color-over': $ws-selection-bg-active,
+    'bd-color-over': $zc-blue
+) !default;
+
+
+// ********************************************************
+//
+//  UNDOCUMENTED CONVENIENCE ALIASES
+//
+// ********************************************************
+    $drop-target-border: get($drop-target-config, 'bd-width') get($drop-target-config, 'bd-style') get($drop-target-config, 'bd-color');

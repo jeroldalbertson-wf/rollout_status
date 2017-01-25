@@ -1,0 +1,312 @@
+// ********************************************************
+//
+//   Not quite alerts, but custom and
+//   helpful notes for folks reading the docs.
+//   Requires a base and modifier class.
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/callouts';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Base styles
+// ----------------------------------------------------
+    .ws-callout {
+        clear: both;
+        position: relative;
+        margin: get($callout-config, 'margin') 0;
+        padding: get($callout-config, 'margin');
+        border-radius: get($callout-config, 'bd-radius');
+        border: get($callout-config, 'bd-width') solid get($callout-config, 'bd-color');
+        border-left-width: get($callout-config, 'platform-bd-width');
+        border-left-color: get($callout-config, 'platform-bd-color');
+        background-color: get($callout-config, 'bg');
+        font-size: get($callout-config, 'font-size');
+        line-height: get($callout-config, 'line-height');
+
+        @include transition((height background-color border-color) .3s ease-in-out);
+    }
+
+
+// ----------------------------------------------------
+//   Elements
+//
+//   -> Extra specificity of .ws-section
+//      required for callout headers as
+//      a result of the `:not` styling in
+//      docs/components/type/sections module
+// ----------------------------------------------------
+
+    // ----- Headings ----- //
+    .ws-section .ws-callout {
+        // Primary headings (match color variation)
+        > h2,
+        > h3,
+        > h4,
+        .ws-callout-heading {
+            @include docs-callout-heading();
+
+            margin-top: 0 !important;
+        }
+
+        // Secondary headings (gray)
+        > h5,
+        > h6,
+        .ws-callout-heading-secondary {
+            font-weight: 500 !important;
+            font-size: 1.6rem !important;
+        }
+    }
+
+    // ----- Body Elements ----- //
+    .ws-callout {
+        > p,
+        > ul,
+        > ol {
+            &:last-of-type {
+                margin-bottom: 0;
+
+                + .highlight-wrapper {
+                    margin-top: to-rem($docs-spacing-md);
+                }
+            }
+        }
+
+        //
+        // Icons within callout body elements
+        // Adjust vertical spacing since the font-size
+        // is `15px` instead of WS default `14px`
+        //
+        p > .icon,
+        li > .icon,
+        .ws-callout-footer .icon  {
+            top: -.1rem;
+        }
+
+        //
+        // Icons for callout headings
+        // align with inline headings like
+        // .ws-callout-heading-secondary
+        //
+        > .icon {
+            vertical-align: bottom;
+            margin-left: -1.2rem;
+            margin-right: .2rem;
+        }
+
+        // Code examples within callouts
+        .highlight-wrapper {
+            float: none;
+        }
+
+        .highlight-wrapper + .highlight-wrapper {
+            margin-top: to-rem($docs-spacing-md);
+        }
+
+        .highlight,
+        .prettyprint {
+            margin-bottom: 0;
+        }
+
+        .highlight-wrapper,
+        .prettyprint {
+            // Paragraph following a code example within a callout
+            + p {
+                margin-top: to-rem($docs-spacing-base);
+            }
+        }
+
+        // Callouts within tables
+        .table & {
+            margin: to-rem($docs-spacing-md) 0 0 0;
+
+            // .highlight following a callout paragraph
+            p + & {
+                margin-top: 0;
+            }
+
+            // Callout paragraph following .highlight
+            & + p {
+                margin-top: to-rem($docs-spacing-md);
+            }
+        }
+    }
+
+
+    // ----- Footer ----- //
+    // Sits flush to the bottom / left / right edges of a callout
+    // Great for things like a "learn more" link
+    .ws-callout-footer {
+        $_callout-margin: get($callout-config, 'margin');
+
+        position: relative;
+        bottom: $_callout-margin * -1;
+        left: $_callout-margin * -1;
+        margin-right: $_callout-margin * -2;
+        padding: to-rem($_callout-margin * .75) to-rem($_callout-margin);
+        border-top: get($callout-config, 'bd-width') solid get($callout-config, 'bd-color');
+    }
+
+    .ws-callout-footer-link {
+        @include header-link();
+    }
+
+    //
+    // "Footnote" reference links that link to the ID of a docs callout
+    //
+    // Via application.js, when hovered, the CSS class of the docs callout
+    // it targets will be modified to make it appear highlighted.
+    //
+    .ws-footnote-reference-link {
+        @include transition((background-color color) .3s ease-in-out);
+
+        #{$link-hover-focus} {
+            cursor: help;
+            background-color: get-deep($callout-color-config, 'reference.bd-color');
+        }
+    }
+
+    //
+    // Within the callout that a ws-footnote-reference-link elem references,
+    // the <sup> that is used to represent the footnote needs to be unindented
+    // so that lines of text that break past the first line are indented with
+    // the description text - not the footnote <sup> reference.
+    //
+    .ws-callout-footnote-sup {
+        margin-left: -1rem;
+    }
+
+
+// ----------------------------------------------------
+//   Color Variations
+//
+//   -> Extra specificity of .ws-section
+//      required for callout headers as
+//      a result of the `:not` styling in
+//      docs/components/type/sections module
+// ----------------------------------------------------
+    @each $variation in $callout-variations {
+        .ws-section .ws-callout-#{$variation} {
+            @include docs-callout-variation($variation);
+        }
+    }
+
+
+// ----------------------------------------------------
+//   IDE Snippet Callout Variation
+//
+//   -> These have the same colors as the
+//      .ws-callout-dev variation, but
+//      sit flush beneath code examples.
+// ----------------------------------------------------
+    .ide-snippet-callout {
+        display: none; // hidden until > 481px
+        z-index: 1; // keep beneath highlight
+        margin: to-rem(($ide-snippet-top-margin * -1) ($docs-spacing-base * -1) $docs-spacing-base);
+        padding-top: to-rem($docs-spacing-base + $code-bd-radius);
+        border-width: .1rem;
+        border-style: solid;
+        border-top-width: 0;
+        @include border-bottom-radius(to-rem($code-bd-radius));
+
+        @include respond-to('screen-sm and up') {
+            display: none; // Hidden completely because these are no longer used. TODO: Remove completely
+            margin-right: 0;
+            margin-left: 0;
+        }
+
+        // ----- Adjust .text-muted within ide-snippet-callouts ----- //
+        .text-muted {
+            color: get-deep($callout-color-config, 'dev.text-color');
+            @include opacity(1);
+        }
+
+        // ----- Allow users to easily select the snippet text itself ----- //
+        &,
+        * {
+            @include disable-user-select();
+        }
+
+        .ide-snippet-shortkey {
+            @include enable-user-select(text);
+        }
+
+
+        // ----- Snippets within tabbed markup ----- //
+        //
+        // when a code example and is nested within .tabbed-markup
+        // and the ide-snippet-callout is nested within .tabbed-markup
+        //
+        .tabbed-markup & {
+            margin-top: to-rem($border-radius-base) * -1;
+            margin-right: to-rem($vertical-tab-height);
+            margin-bottom: 0;
+        }
+        //
+        // when a code example and is nested within .tabbed-markup
+        // and the ide-snippet-callout is nested within one of the
+        // tabs within .tabbed-markup
+        //
+        .tabbed-markup .tab-pane & {
+            margin-right: 0;
+        }
+    }
+
+    // ----- IDE Snippet Footnote ----- //
+    .ws-callout-ide-snippet-footnote {
+        display: inline;
+        position: absolute;
+        bottom: 0;
+        right: to-rem($code-bd-radius);
+        text-align: right;
+        font-style: italic;
+        color: $text-color;
+        @include opacity(.5);
+
+        &:hover,
+        &:focus {
+            cursor: default;
+            @include opacity(1);
+        }
+
+        .text-muted {
+            @include opacity(.5);
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Collapsible callout variation
+//
+//   -> Often used when callouts are shown
+//      inline within tables / other highly
+//      congested areas of the docs
+// ----------------------------------------------------
+    .ws-callout {
+        // ----- Primary heading used as toggle ----- //
+        h3[data-toggle="collapse"],
+        h4[data-toggle="collapse"] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            margin-bottom: 0;
+            line-height: 3.8rem;
+
+            .icon {
+                vertical-align: middle;
+                margin-top: -.2rem;
+                margin-right: .6rem;
+                margin-left: .8rem;
+            }
+        }
+
+        .callout-content {
+            margin-top: to-rem($line-height-base-px);
+        }
+    }

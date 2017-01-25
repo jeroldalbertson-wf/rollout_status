@@ -1,0 +1,288 @@
+// ********************************************************
+//
+//   DATEPICKER POPOVER DIALOG COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-datepickers
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/dialogs/popovers-datepicker';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $dialogs-popovers-datepicker-module-config:  'core/components/atoms/dialogs/popovers-datepicker-config';
+    $dialogs-popovers-datepicker-module-helpers: 'core/components/atoms/dialogs/dialogs-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $dialogs-popovers-datepicker-module-config,
+                                          $dialogs-popovers-datepicker-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE DATEPICKER CLASS
+//
+// ********************************************************
+.datepicker {
+    border-radius: to-rem(get($datepicker-config, 'bd-radius'));
+    direction: ltr;
+}
+
+
+// ********************************************************
+//
+//   DATEPICKER CONTENT WRAPPER
+//
+// ********************************************************
+.datepicker .inner {
+    padding: 0;
+    min-width: to-rem(get($datepicker-config, 'min-width'));
+}
+
+
+// ********************************************************
+//
+//   DATEPICKER CONTENT
+//
+// ********************************************************
+.datepicker .content {
+    // the padding can't be quite even because of the way we add table borders to one edge and not the other
+    $dp-content-extra-padding: get($datepicker-config, 'content-padding') + get($datepicker-config, 'bd-spacing');
+    padding: to-rem(get($datepicker-config, 'content-padding') $dp-content-extra-padding $dp-content-extra-padding get($datepicker-config, 'content-padding'));
+}
+
+
+// ********************************************************
+//
+//   CALENDAR TABLE LAYOUT
+//
+// ********************************************************
+.datepicker {
+    // ----------------------------------------------------
+    //   BASE CALENDAR TABLE
+    // ----------------------------------------------------
+    .table {
+        margin: 0;
+        border: 0 none;
+        border-collapse: separate;
+        border-spacing: to-rem(get($datepicker-config, 'bd-spacing'));
+        @include disable-user-select();
+    }
+
+    // ----------------------------------------------------
+    //   CALENDAR TABLE CELLS
+    // ----------------------------------------------------
+    .table {
+        // ----- BASE CELL STYLES ----- //
+        td,
+        th {
+            height: to-rem(get($datepicker-config, 'day-cell-width') - get($datepicker-config, 'bd-spacing'));
+            width: to-rem(get($datepicker-config, 'day-cell-width') - get($datepicker-config, 'bd-spacing'));
+            padding: 0;
+            border: 0 none;
+            border-radius: to-rem(get($datepicker-config, 'bd-radius'));
+
+            font-size: to-rem(get($datepicker-config, 'cell-font-size'));
+            text-align: center;
+            line-height: 1;
+            vertical-align: middle;
+
+            // Global cell icon alignment
+            .icon {
+                top: -.2rem; // center vertically within the cell
+            }
+        }
+
+
+        // ----- CELL STATES ----- //
+        .day,
+        #{get($datepicker-config, 'mo-yr-cell-elem')} {
+            // universal hover (no :focus styles because they cannot be focused)
+            #{$hover} {
+                color: get($datepicker-config, 'cell-text-color-hover');
+                cursor: pointer;
+                background-color: get($datepicker-config, 'cell-bg-hover');
+            }
+
+            // universal press
+            #{$link-pressed} {
+                color: get($datepicker-config, 'cell-text-color-press');
+                background-color: get($datepicker-config, 'cell-bg-press');
+            }
+
+            // universal active
+            &.active {
+                font-weight: bold !important;
+                color: get($datepicker-config, 'cell-text-color-active') !important;
+                background-color: get($datepicker-config, 'cell-bg-press') !important;
+            }
+
+            // universal disabled
+            &.disabled {
+                color: get($datepicker-config, 'cell-text-color-disabled') !important;
+                background-color: get($datepicker-config, 'cell-bg-disabled') !important;
+            }
+        }
+
+        // ----- YEAR / DECADE VIEW GRID CELLS ----- //
+        td #{get($datepicker-config, 'mo-yr-cell-elem')} {
+            display: block;
+            float: left;
+            margin: to-rem(get($datepicker-config, 'content-padding')) 0;
+            width: get($datepicker-config, 'mo-yr-cell-width');
+            height: to-rem(get($datepicker-config, 'mo-yr-cell-width-px'));
+            line-height: to-rem(get($datepicker-config, 'mo-yr-cell-width-px'));
+            cursor: pointer;
+            border-radius: to-rem(get($datepicker-config, 'bd-radius'));
+            @include disable-user-select();
+        }
+
+        // ----- "OUT-OF-RANGE" CELL APPEARANCE ----- //
+        .old,
+        .new {
+            background-color: get($datepicker-config, 'cell-bg-past');
+            color: get($datepicker-config, 'cell-text-color-past');
+        }
+
+        // ----- CURRENT DAY HIGHLIGHT ----- //
+        .today {
+            color: get($datepicker-config, 'cell-text-color-today');
+            box-shadow: inset 0 0 0 to-rem(get($datepicker-config, 'bd-spacing')) get($datepicker-config, 'cell-bg-today');
+        }
+
+        // ----- CALENDAR WEEK CELLS ----- //
+        .cw {
+            width: to-rem(round(get($datepicker-config, 'day-cell-width') / 2));
+            font-size: to-rem(get($datepicker-config, 'cal-week-cell-font-size'));
+            text-align: right;
+            cursor: default !important;
+        }
+    }
+
+    // ----------------------------------------------------
+    //   CALENDAR VIEW SCOPE SWITCH CELL
+    // ----------------------------------------------------
+    .table .datepicker-switch {
+        width: to-rem(get($datepicker-config, 'switch-width'));
+    }
+
+    // ----------------------------------------------------
+    //   CALENDAR CLICKABLE HEADERS / FOOTERS
+    // ----------------------------------------------------
+    // clickable headers and footers
+    .table thead tr:first-child th,
+    .table tfoot th {
+        @include disable-user-select();
+        cursor: pointer !important;
+
+        #{$link-hover-focus} {
+            color: get($datepicker-config, 'cell-text-color-hover');
+            background-color: get($datepicker-config, 'cell-bg-hover');
+        }
+
+        #{$link-pressed} {
+            color: get($datepicker-config, 'cell-text-color-press');
+            background-color: get($datepicker-config, 'cell-bg-press');
+        }
+    }
+
+    // ----------------------------------------------------
+    //   CALENDAR DAY-OF-WEEK CELL HEADERS
+    // ----------------------------------------------------
+    .table thead .dow,
+    .table tfoot th {
+        cursor: default; // not clickable
+    }
+}
+
+
+// ********************************************************
+//
+//   DATEPICKER VARIATIONS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   INLINE
+    // ----------------------------------------------------
+    .datepicker-inline {
+        @include opacity(1, !important); // override .fade opacity
+
+        display: block; // override .popover display: none;
+        position: relative;
+        width: to-rem(get($datepicker-config, 'min-width') + ($dialog-bd-width * 2) + (get($dialog-config, 'padding') * 2));
+        box-shadow: none;
+
+        // since this will never be "floating" above content
+        // we will follow our style-guide pattern of squaring
+        // corners of all "inlined" containers (e.g. panels, list-groups)
+        border-radius: 0;
+        // and we will make the bd color match that of a panel,
+        // since it will not be floating over other content in a popover
+        border-color: get($panel-colors-default, 'bd-color');
+    }
+
+    // ----------------------------------------------------
+    //   DROPDOWN
+    // ----------------------------------------------------
+    .datepicker-dropdown {
+        top: 0;
+        left: 0;
+
+        //
+        // Supplemental Arrow Positioning
+        //
+        // Inherits mostly from _dialogs.scss
+        //
+        .arrow {
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+        }
+        &.orient-left {
+            .arrow {
+                left: to-rem(get($datepicker-config, 'bd-radius') * 2);
+            }
+        }
+        &.orient-right {
+            .arrow {
+                right: to-rem(get($datepicker-config, 'bd-radius') * 2);
+                left: auto;
+            }
+        }
+    }
+
+
+// ********************************************************
+//
+//   INPUT GROUP ELEMS THAT LAUNCH DATEPICKERS
+//
+// ********************************************************
+.input-daterange {
+    .form-control:first-child {
+        @include border-right-radius(0);
+    }
+
+    .form-control:last-child {
+        @include border-left-radius(0);
+    }
+
+    .input-group-addon {
+        @include disable-user-select();
+
+        // zero out the borders on the addon instead of the form-control
+        // so that the :focus border of the inputs show on all four sides
+        border-right-width: 0;
+        border-left-width: 0;
+    }
+}
+
+
+// ********************************************************
+//
+//   CLICKABLE INPUT GROUP ELEM THAT LAUNCHES DATEPICKER
+//
+// ********************************************************
+.date .input-group-addon {
+    cursor: pointer;
+}

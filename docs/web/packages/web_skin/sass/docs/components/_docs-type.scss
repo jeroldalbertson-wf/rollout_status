@@ -1,0 +1,378 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/type';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Make the documentation sections
+//   easier to read by overriding the
+//   defaults set in the
+//   core/foundation/base/type module
+// ----------------------------------------------------
+    .ws-section {
+        clear: both;
+        font-size: to-rem($docs-section-font-size);
+        line-height: $docs-section-line-height;
+
+        > p:not(.lead),
+        > ul,
+        > ol,
+        > dl,
+        > blockquote,
+        > address {
+            margin-bottom: to-rem($docs-section-type-margin-bottom);
+
+            &.flush {
+                margin-bottom: 0;
+            }
+        }
+
+        > ul,
+        > ol {
+            li {
+                line-height: $docs-section-line-height;
+                margin-bottom: to-rem(round($docs-section-type-margin-bottom / 2));
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+
+            &.list-wordy li {
+                margin-bottom: to-rem($docs-section-type-margin-bottom);
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        > dl {
+            dt,
+            dd {
+                line-height: $docs-section-line-height;
+            }
+        }
+
+        > blockquote {
+            padding: to-rem(($docs-section-type-margin-bottom / 2)) to-rem($docs-section-type-margin-bottom);
+        }
+
+        > address {
+            line-height: $docs-section-line-height;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Tweak inline <code> color / size
+// ----------------------------------------------------
+    code {
+        // The bg of ws-section is not white... so darken the bg of inline code to add some contrast
+        .ws-section & {
+            background-color: darken($code-bg, 1);
+            font-size: .95em;
+        }
+
+        // The bg of these parent elems is white, so use standard code color
+        .ws-callout &,
+        .ws-example & {
+            background-color: $code-bg;
+        }
+
+        // When <code> is used within a heading, inherit the color / size from the heading,
+        // and zero-out the padding since we're going to use a transparent bg.
+        .ws-heading & {
+            color: inherit;
+            background-color: transparent;
+            padding: 0;
+            font-size: inherit;
+        }
+
+        a & {
+            color: inherit !important;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Reset back to core Web Skin sizes
+//   for certain areas in the sections
+// ----------------------------------------------------
+    .ws-section {
+        //
+        // reset font size for examples so it is representative of Wdesk apps
+        //
+        .ws-example {
+            font-size: to-rem($font-size-base);
+            line-height: $line-height-base;
+        }
+
+        //
+        // reset font size for dialogs that pop up in the dom inside or outside the scope of .ws-section
+        //
+        .popover,
+        .tooltip,
+        .modal,
+        .alert {
+            font-size: to-rem($font-size-base);
+            line-height: $line-height-base;
+        }
+
+        .alert-xs {
+            font-size: to-rem(get($alert-config, 'font-size-xs'));
+            line-height: to-rem(get($alert-config, 'line-height-xs'));
+        }
+
+        .tooltip {
+            font-size: to-rem(get($tooltip-config, 'font-size'));
+            line-height: to-rem(get($tooltip-config, 'line-height'));
+        }
+
+        //
+        // adjust size of code text within .lead
+        //
+        .lead code {
+            font-size: 80%;
+        }
+    }
+
+
+// ----------------------------------------------------
+//   Section Heading Text
+// ----------------------------------------------------
+    .ws-section {
+        //
+        // Tweak appearance of documentation headings
+        // to be not quite the same as Wdesk app
+        //
+        .ws-lead {
+            font-size: $docs-lead-font-size;
+            line-height: 3rem;
+        }
+
+        > .page-header {
+            position: relative;
+            z-index: 1; // so we can keep the adjacent <h2> below it if we remove whitespace via negative top margin
+            margin-top: 0;
+
+            > .lead:last-child {
+                margin-bottom: 0;
+            }
+
+            > .ws-heading {
+                font-size: get($docs-heading-font-sizes, 'h1');
+                font-weight: 700;
+                letter-spacing: -.1rem;
+                line-height: 1.2; // TODO: Remove me in 2.0.0
+
+                // Permalink-able heading styles
+                margin-top: 0;
+                margin-bottom: 0;
+                @include docs-headings-permalink-base(.2rem);
+            }
+
+            // if there is no .lead immediately after the .page-header
+            // then fix the enormous amount of spacing between the h1 and the h2
+            + .ws-heading[id],
+            + .ws-section > .ws-heading[id]:first-child,
+            + .sassdoc-section__group > .page-header > .ws-heading[id] {
+                margin-top: (to-rem($permalink-heading-padding-top) - $docs-section-type-margin-bottom) * -1;
+                z-index: 0; // keep beneath predecessor
+            }
+        }
+
+        .ws-heading {
+            @include docs-heading-base();
+        }
+
+        h2.ws-heading,
+        .h2.ws-heading {
+            font-size: get($docs-heading-font-sizes, 'h2');
+            font-weight: 700;
+            letter-spacing: normal;
+            line-height: 1.2; // TODO: Remove me in 2.0.0
+
+            // Permalink-able heading styles
+            &[id] {
+                @include docs-headings-permalink-base(.2rem);
+
+                // adjust spacing of permalink headings that are
+                // directly adjacent to one-another to prevent
+                // a dis-proportionate amount of whitespace
+                + h3[id].ws-heading {
+                    margin-top: (to-rem($permalink-heading-padding-top) - $docs-section-type-margin-bottom) * -1;
+                    z-index: 0; // keep beneath predecessor
+                }
+
+                + .sassdoc-section__item {
+                    margin-top: (to-rem($permalink-heading-padding-top) - $docs-section-type-margin-bottom) * -1;
+                    z-index: 0; // keep beneath predecessor
+
+                    .sassdoc-heading__item {
+                        margin-top: 0;
+                        z-index: 0; // keep beneath predecessor
+                    }
+                }
+            }
+        }
+
+        h3.ws-heading,
+        .h3.ws-heading {
+            font-size: get($docs-heading-font-sizes, 'h3');
+            font-weight: 700;
+            margin-top: 3.4rem;
+            line-height: 1.2; // TODO: Remove me in 2.0.0
+
+            // Permalink-able heading styles
+            &[id] {
+                @include docs-headings-permalink-base();
+
+                // adjust spacing of permalink headings that are
+                // directly adjacent to one-another to prevent
+                // a dis-proportionate amount of whitespace
+                + h4[id].ws-heading {
+                    margin-top: -(to-rem($permalink-heading-padding-top) - $docs-section-type-margin-bottom);
+                    z-index: 0; // keep beneath predecessor
+                }
+            }
+        }
+
+        h4.ws-heading,
+        .h4.ws-heading {
+            font-size: get($docs-heading-font-sizes, 'h4');
+            font-weight: 700;
+            margin-top: 3.1rem;
+            line-height: 1.2; // TODO: Remove me in 2.0.0
+
+            // Permalink-able heading styles
+            &[id] {
+                @include docs-headings-permalink-base();
+            }
+        }
+
+        h5.ws-heading,
+        .h5.ws-heading {
+            font-size: get($docs-heading-font-sizes, 'h5');
+            font-weight: 700;
+            margin-top: 2.8rem;
+            line-height: $line-height-base; // TODO: Remove me in 2.0.0
+        }
+
+        h6.ws-heading,
+        .h6.ws-heading {
+            font-size: get($docs-heading-font-sizes, 'h6');
+            font-weight: 700;
+            margin-top: to-rem(round(16px * $line-height-base));
+            line-height: $line-height-base; // TODO: Remove me in 2.0.0
+        }
+
+        .h1.ws-heading {
+            font-size: get($docs-heading-font-sizes, 'h1') !important;
+            font-weight: 700 !important;
+            letter-spacing: normal !important;
+            line-height: 1.2 !important; // TODO: Remove me in 2.0.0
+        }
+    }
+
+    //
+    // Adjust spacing of permalink headers that
+    // immediately follow a paragraph
+    //
+    .ws-section p:not(.ws-lead) {
+        + h3[id].ws-heading,
+        + h4[id].ws-heading {
+            margin-top: $docs-section-type-margin-bottom * -1;
+        }
+    }
+
+    // Fix scrollspy example adversely affected by the negative top margin above.
+    .ws-section .scrollspy-example p:not(.ws-lead) {
+        + h3[id].ws-heading,
+        + h4[id].ws-heading {
+            margin-top: $headings-margin-top !important;
+        }
+    }
+
+    //
+    // adjust .lead text bottom margin since its
+    // always followed by a <h2>,
+    // which creates an unnecessarily large gap
+    //
+    .ws-section > .page-header + .ws-lead {
+        margin-bottom: $docs-section-type-margin-bottom * -1;
+        position: relative;
+        z-index: 2; // keep above any adjacent permalinked headers
+
+        + .ws-heading:not([id]),
+        + .tabbable,
+        + p, + ul, + ol,
+        + .page-header-hero-img,
+        + .ws-lead {
+            margin-top: $docs-section-type-margin-bottom * 2;
+        }
+
+        + .ws-example,
+        + .ws-callout,
+        + .ws-callout + .tabbable,
+        + .highlight-wrapper {
+            margin-top: $docs-section-type-margin-bottom * 2;
+            // margin-bottom: $docs-section-type-margin-bottom * -1;
+        }
+    }
+
+    .highlight-wrapper + p {
+        margin-top: $docs-section-type-margin-bottom;
+    }
+
+
+
+// ----------------------------------------------------
+//   Example Sub-headings
+//
+//   Tweak headings when using columns / sub-headings
+//   inside an example to label the example
+// ----------------------------------------------------
+    .ws-example {
+        .row > [class*=col-] > .ws-heading,
+        > .ws-heading:first-child {
+            // mobile first defaults
+            margin: to-rem($line-height-base-px) 0 !important;
+            padding: 0 !important;
+
+            @include respond-to('screen-sm and up') {
+                margin-top: 0 !important;
+            }
+        }
+
+        //
+        // sub-heading font size nested within examples
+        // should be slightly smaller than section headings
+        //
+        h2.ws-heading { font-size: get($docs-heading-font-sizes, 'h2') - .9rem; }
+        h3.ws-heading { font-size: get($docs-heading-font-sizes, 'h3') - .6rem; }
+        h4.ws-heading { font-size: get($docs-heading-font-sizes, 'h4') - .5rem; }
+        h5.ws-heading { font-size: get($docs-heading-font-sizes, 'h5') - .1rem; }
+        h6.ws-heading { font-size: get($docs-heading-font-sizes, 'h6') - .1rem; }
+    }
+
+
+
+// ----------------------------------------------------
+//   Enable user selection for text that is part of
+//   the docs - not component demos.
+//
+//   Temporary solution for this scenario:
+//   https://github.com/Workiva/w-dev-blog/issues/220
+//   until we can implement #1296 in Web Skin `2.0.0`
+// ----------------------------------------------------
+div:not(.ws-example) {
+    * {
+        @include enable-user-select();
+    }
+}

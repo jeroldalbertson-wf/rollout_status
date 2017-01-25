@@ -1,0 +1,108 @@
+// ********************************************************
+//
+//   WDESK "GEN 2" SHELL TOOLBAR STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/shell/toolbar';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+$shell-navbar-height: get($nav-tabs-sm-tab-config, 'height');
+$shell-ribbon-height: to-rem(get($nav-ribbon-base-config, 'height'));
+// In truss, the top padding of the `.ribbon-nav-container` element is overridden from `.3rem` to `.7rem`
+$shell-hidden-navbar-ribbon-height: $shell-ribbon-height + .4rem;
+
+// Within a "navbar", the actual "navbar" portion that holds the links is just the direct `.container` child.
+// These two selectors are adjacent siblings in the following markup:
+//
+//   <div class="navbar">
+//     <div class="container"><!-- the tab nav --></div>
+//     <div class="ribbon-nav-container"><!-- the tab contents --></div>
+//   </div>
+$shell-tab-nav-selector: '.container:not(.ribbon-nav-container)';
+$shell-tabs-container-selector: '.ribbon-nav-container';
+
+
+// ********************************************************
+//
+//  CORE WEB SKIN NAVBAR OVERRIDES
+//
+//  [1] The Gen 2 tabbed toolbar navbar should have no
+//      border beneath it separating the contents of
+//      the tabs themselves.
+//
+//  [2] The Gen 2 tabbed toolbar navbar should have no
+//      margin applied since it is nested within a
+//      flexbox `.grid-block` element.
+//
+//  [3] The Gen 2 tabbed toolbar navbar nav height
+//      should only be as tall as the "condensed"
+//      `.nav-tabs--sm` hitareas.
+//
+//  [4] Match the `1.6rem` horizontal padding requested
+//      in the spec from UIP-1447 instead of the `2.4rem`
+//      default applied to `.container-wide` elements by
+//      default.
+//
+//  [5] Get rid of the absolute positioning so that we
+//      can just use a "grid-shrink" effect on the
+//      `.shell-toolbar-container`
+//      (See: TRUSS SHELL STYLING OVERRIDES)
+//
+// ********************************************************
+.shell-toolbar-container {
+    .navbar {
+        border: none; // [1]
+        margin: 0; // [2]
+        width: 100%;
+        height: auto !important;
+        min-height: 100% !important;
+
+        #{$shell-tab-nav-selector} {
+            height: $shell-navbar-height; // [3]
+            min-height: $shell-navbar-height; // [3]
+            padding-right: to-rem(get($nav-ribbon-base-config, 'padding-horizontal')); // [4]
+            padding-left: to-rem(get($nav-ribbon-base-config, 'padding-horizontal')); // [4]
+        }
+    }
+
+    .navbar-nav {
+        border-color: transparent; // [1]
+        height: $shell-navbar-height; // [3]
+    }
+
+    // ----- [5] ----- //
+    #{$shell-tabs-container-selector} {
+        position: relative;
+    }
+}
+
+
+// ********************************************************
+//
+//  TRUSS SHELL STYLING OVERRIDES
+//
+//  [1] The Gen 2 tabbed toolbar fixed height is unnecessary
+//      since we can (and should) just use `..shrink = true`
+//      since we have removed the absolutely positioned
+//      mess in the above "CORE WEB SKIN NAVBAR OVERRIDES"
+//      section.
+//
+//      For now, we'll just add the styles equivalent to
+//      setting the shrink prop to true.
+//
+//  [2] The truss styles hide the `.navbar-nav` element,
+//      which seems to work - but really the intent of
+//      the `hide-toolbar-nav` class is to hide the entire
+//      piece that sits above the "tab content".
+//
+// ********************************************************
+.shell-toolbar-container {
+    @include flex(0 0 auto, !important); // [1]
+
+    &.hide-toolbar-nav .navbar #{$shell-tab-nav-selector} {
+        display: none; // [2]
+    }
+}

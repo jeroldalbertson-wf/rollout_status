@@ -1,0 +1,304 @@
+// ********************************************************
+//
+    $module: 'docs/api/helpers/docs-variables';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+$zindex-fixed-navbar-docs: z('fixed-navbar') + 5;
+
+$docs-body-bg: #f9f9f9;
+$docs-body-padding-horizontal: to-rem($grid-gutter-width); // mobile-first
+$docs-body-padding-horizontal-sm: $docs-body-padding-horizontal * 2; // screen-sm and up
+
+
+
+// ----------------------------------------------------
+//   CUSTOM DOCS NAVBAR CONFIGS
+// ----------------------------------------------------
+$docs-navbar-base-config: extend($navbar-base-config,
+    (
+        'bg': darken(desaturate($zc-green, 30), 3),
+        'text-color': $white,
+        'bd-color': null, // actual value added via @extend
+        'bd-width': get($nav-base-config, 'bd-width'),
+        'bd-radius': get($nav-base-config, 'bd-radius'),
+        'font-size': $font-size-base,
+        'height': 50px,
+        'height-inner': 50px,
+        'height-inner-fixed': 50px
+    )
+);
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $docs-navbar-base-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $docs-navbar-base-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $docs-navbar-bg: get($docs-navbar-base-config, 'bg');
+        $docs-navbar-bd-color: darken($docs-navbar-bg, 5);
+
+        // ----- EXTEND base config with calc'd values ----- //
+        $docs-navbar-base-config: extend($docs-navbar-base-config,
+            (
+                'bd-color': $docs-navbar-bd-color
+            )
+        );
+
+
+//
+//
+//
+$docs-navbar-link-config: (
+    'bg': transparent,
+    'bg-hover': transparentize(get($docs-navbar-base-config, 'bd-color'), .5),
+    'bg-press': get($docs-navbar-base-config, 'bd-color'),
+    'bg-active': get($docs-navbar-base-config, 'bd-color'),
+    'bg-disabled': transparent,
+    //
+    'text-color': #e5efd9,
+    'text-color-hover': $white,
+    'text-color-press': $white,
+    'text-color-active': $white,
+    'text-color-disabled': #e5efd9,
+    //
+    'padding-vertical': 0,
+    'padding-horizontal': get-deep($global-component-size-config, 'padding.sm.horizontal'),
+    'padding-stacked': get-deep($list-group-item-config, 'padding.base.top') get-deep($list-group-item-config, 'padding.base.horizontal'),
+    //
+    'height': get($navbar-base-config, 'height'),
+    'height-fixed': get($navbar-base-config, 'height'),
+    //
+    'caret-color': mix(get($nav-link-config, 'text-color'), $white, percentage(get($caret-config, 'alpha')))
+);
+
+
+//
+//
+//
+$docs-navbar-block-link-config: (
+    'bg': get($docs-navbar-link-config, 'bg'),
+    'bg-hover': get($docs-navbar-link-config, 'bg-hover'),
+    'bg-press': get($docs-navbar-link-config, 'bg-press'),
+    'bg-active': get($docs-navbar-link-config, 'bg-active'),
+    'bg-disabled': get($docs-navbar-link-config, 'bg-disabled'),
+    //
+    'bg-alpha-hover': 1,
+    //
+    'text-color': get($docs-navbar-link-config, 'text-color'),
+    'text-color-hover': get($docs-navbar-link-config, 'text-color-hover'),
+    'text-color-press': get($docs-navbar-link-config, 'text-color-press'),
+    'text-color-active': get($docs-navbar-link-config, 'text-color-active'),
+    'text-color-disabled': get($docs-navbar-link-config, 'text-color-disabled')
+);
+
+
+$docs-navbar-link-color:        get($docs-navbar-link-config, 'text-color');
+$docs-navbar-link-color-active: get($docs-navbar-link-config, 'text-color-active');
+
+$docs-navbar-link-bg-hover:     get($docs-navbar-link-config, 'bg-hover');
+$docs-navbar-link-bg-active:    get($docs-navbar-link-config, 'bg-active');
+
+$docs-navbar-collapsing-menu-link-color: get($docs-navbar-link-config, 'text-color-hover');
+$docs-navbar-collapsing-menu-link-bg-hover: mix(get($docs-navbar-base-config, 'bd-color'), $docs-navbar-collapsing-menu-link-color, 90%);
+
+$docs-navbar-collapsing-menu-link-color-active: get($docs-navbar-base-config, 'bd-color');
+$docs-navbar-collapsing-menu-link-bg-active: $docs-navbar-collapsing-menu-link-color;
+
+$docs-navbar-collapsing-menu-secondary-link-color: mix(get($docs-navbar-base-config, 'bd-color'), $docs-navbar-collapsing-menu-link-color, 25%);
+$docs-navbar-collapsing-menu-secondary-link-bg-hover: mix(get($docs-navbar-base-config, 'bd-color'), $docs-navbar-collapsing-menu-link-color, 75%);
+
+$docs-navbar-collapsing-menu-secondary-link-color-active: get($docs-navbar-base-config, 'bd-color');
+$docs-navbar-collapsing-menu-secondary-link-bg-active: $docs-navbar-collapsing-menu-secondary-link-color;
+
+
+$docs-navbar-logo-name:         'w-symbol_white';
+$docs-navbar-logo-url:          '#{$wdesk-logo-dir}#{$docs-navbar-logo-name}.#{$wdesk-logo-mime}';
+$docs-navbar-height:            get($docs-navbar-base-config, 'height');
+$docs-navbar-collapsed-block-nav-right-offset: ($grid-gutter-width / 2);
+$docs-navbar-block-nav-btn-width: $docs-navbar-height;
+$docs-nav-ribbon-min-height:    0; // for testing
+
+$scrollspy-offset: $docs-navbar-height;
+
+
+
+// ----------------------------------------------------
+//   NAVBAR SEARCH
+// ----------------------------------------------------
+    $docs-navbar-search-results-viewport-offset: 5px; // how far from the edge of the viewport should the results be?
+
+
+    // ------------------------------------------------
+    //   NAVBAR IS COLLAPSED
+    //
+    //   -> options AND hamburger block buttons are visible
+    // ------------------------------------------------
+        $docs-navbar-collapsed-search-width: 172px; // result of `width: auto;` for whatever reason
+        //
+        $docs-navbar-collapsed-search-right-offset: $docs-navbar-collapsed-block-nav-right-offset + ($docs-navbar-block-nav-btn-width * 2);
+        $docs-navbar-collapsed-search-results-width: $docs-navbar-collapsed-search-width + $docs-navbar-collapsed-search-right-offset - $docs-navbar-search-results-viewport-offset;
+
+
+    // ------------------------------------------------
+    //   NAVBAR IS NOT COLLAPSED
+    //
+    //   -> only options block button is visible
+    // ------------------------------------------------
+        $docs-navbar-uncollapsed-search-width-sm: 120px; // hard-coded width for `screen-sm`
+        $docs-navbar-uncollapsed-search-width-md: $docs-navbar-collapsed-search-width; // hard-coded width for `screen-md` and up
+        //
+        $docs-navbar-uncollapsed-search-right-offset: $docs-navbar-collapsed-block-nav-right-offset + $docs-navbar-block-nav-btn-width;
+        $docs-navbar-uncollapsed-search-results-width-sm: $docs-navbar-uncollapsed-search-width-sm + $docs-navbar-uncollapsed-search-right-offset - $docs-navbar-search-results-viewport-offset;
+        $docs-navbar-uncollapsed-search-results-width-md: $docs-navbar-uncollapsed-search-width-md + $docs-navbar-uncollapsed-search-right-offset - $docs-navbar-search-results-viewport-offset;
+
+
+
+// ----------------------------------------------------
+
+//
+// All the spacing in the docs should be
+// based on the amount of spacing we put
+// in our base grid
+//
+$docs-spacing-base:             round($container-gutter-default / 2); // 15px
+$docs-spacing-sm:               round($docs-spacing-base / 3); // 5px
+$docs-spacing-md:               round($docs-spacing-base - $docs-spacing-sm); // 10px
+
+$sidenav-group-indents: (
+    'child-nav':                $container-gutter-default + $docs-spacing-sm,
+    'grandchild-nav':           $container-gutter-default + $line-height-base-px,
+    'great-grandchild-nav':     $container-gutter-default + ($line-height-base-px * 2),
+    'great2-grandchild-nav':    $container-gutter-default + ($line-height-base-px * 3),
+    'great3-grandchild-nav':    $container-gutter-default + ($line-height-base-px * 4)
+);
+
+$sidenav-color-basis:           #e5efd9;
+$sidenav-color-mixed:           mix($zc-gray, $sidenav-color-basis, 15%);
+$sidenav-bg:                    lighten($sidenav-color-mixed, 14);
+$sidenav-link-color:            mix($zc-gray, $sidenav-bg, 75%);
+$sidenav-link-bg-hover:         mix($zc-gray, $sidenav-bg, 10%);
+$sidenav-link-color-active:     darken($zc-green-120, 4);
+
+$sidenav-link-bd-width:         2px;
+$sidenav-link-bd-color:         darken($sidenav-link-bg-hover, 5);
+
+$docs-code-bg:    #f2f2f5;
+$docs-code-bd:    $docs-code-bg;
+$docs-code-bd-radius: $code-bd-radius;
+
+
+$example-modal-vertical-offset: 0;
+
+$permalink-heading-padding-top: $scrollspy-offset + $line-height-base-px;
+
+
+$docs-example-bd-color: $docs-code-bd;
+$docs-example-bd-width: .2rem;
+$docs-example-bd-radius: to-rem($code-bd-radius);
+$docs-example-margin-bottom: to-rem(component-height('base') + $docs-spacing-md); // 3.4rem (height of `.code-toggle` elem) + some wiggle
+$docs-example-padding: 1.5rem; // mobile-first
+$docs-example-padding-sm: 2.4rem; // screen-sm and up
+$docs-example-bg: #fff;
+$docs-example-label-color: #bbb;
+$docs-example-label-font-size: 1.2rem;
+
+$docs-code-horizontal-padding: $docs-example-padding;
+$docs-code-horizontal-padding-sm: $docs-example-padding-sm;
+
+
+$docs-section-font-size: 1.6rem;
+$docs-section-line-height: 1.6;
+$docs-section-type-margin-bottom: 2rem;
+$docs-lead-font-size: 2.3rem;
+
+$docs-heading-font-sizes: (
+    'h1': 4.2rem,
+    'h2': 3.2rem,
+    'h3': 2.8rem,
+    'h4': 2.4rem,
+    'h5': 2rem,
+    'h6': 1.6rem
+);
+
+
+// ----------------------------------------------------
+//   Icon Glyph Examples
+// ----------------------------------------------------
+$glyph-trans-effect-speed: .2s;
+$glyph-trans-effect-fn:    linear;
+$glyph-trans: $glyph-trans-effect-speed $glyph-trans-effect-fn;
+
+$glyph-height: to-rem(146px);
+$glyph-height-col-lg: to-rem(130px); // when the col-lg breakpoint kicks in
+$glyph-padding: to-rem($grid-gutter-width / 2);
+
+$glyph-inner-spacing: to-rem(6px); // how far apart should the glyphs "appear"
+$glyph-inner-bd-radius: to-rem($border-radius-sm);
+
+$glyph-inner-bd-color: $docs-example-bd-color;
+$glyph-inner-bg: $docs-example-bg;
+$glyph-inner-bg-hover: $glyph-inner-bd-color;
+$glyph-meta-color: $zc-gray-70;
+$glyph-popover-meta-color: $zc-gray-80;
+$glyph-meta-color-hover: $link-color-hover;
+
+
+// ----------------------------------------------------
+//   Callouts
+// ----------------------------------------------------
+
+    // Base callout config
+    $callout-config: (
+        'font-size': $docs-section-font-size - .1rem,
+        'line-height': $line-height-base,
+        'margin': $docs-section-type-margin-bottom,
+        'bg': rgba($white, .5),
+        'bd-radius': .3rem,
+        'bd-width': .1rem,
+        'bd-color': #eee,
+        'platform-bd-width': $global-component-platform-bd-width,
+        'platform-bd-color': #ccc
+    );
+
+    // Callout color variations
+    $callout-color-config: (
+        'danger': (
+            'bg-color':   inherit,
+            'bd-color':   #d9534f,
+            'text-color': #d9534f
+        ),
+        'warning': (
+            'bg-color':   inherit,
+            'bd-color':   #f0ad4e,
+            'text-color': #f0ad4e
+        ),
+        'info': (
+            'bg-color':   inherit,
+            'bd-color':   #5bc0de,
+            'text-color': #5bc0de
+        ),
+        'dev': (
+            'bg-color':   inherit,
+            'bd-color':   #d0efef,
+            'text-color': #3ba89d
+        ),
+        // Highlighter yellow colors - mainly used when a footnote
+        // reference link is hovered to call attention to the footnote description.
+        'reference': (
+            'bg-color':   shade-of(get($colors-global-highlight, 'yellow'), 20%),
+            'bd-color':   get($colors-global-highlight, 'yellow'),
+            'text-color': get($zc-oranges, '80')
+        )
+    );
+
+    $callout-variations: map-keys($callout-color-config);
+    $ide-snippet-top-margin: $docs-spacing-base + $code-bd-radius;

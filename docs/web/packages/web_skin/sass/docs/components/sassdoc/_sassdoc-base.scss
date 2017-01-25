@@ -1,0 +1,139 @@
+// ********************************************************
+//
+//   Base styles for sassdoc layout(s)
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/sassdoc/sassdoc-base';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Adjust adjacent header spacing
+// ----------------------------------------------------
+    .sassdoc-section__group > .page-header + .sassdoc-section__type {
+        // first section after a group heading
+        margin-top: to-rem($line-height-base-px) * -1;
+    }
+
+    .sassdoc-section__type > .sassdoc-heading__type + .main__item {
+        // first section after a type heading
+        margin-top: to-rem($line-height-base-px) * -1;
+    }
+
+
+// ----------------------------------------------------
+//   Sassdoc wrapper around .highlight
+// ----------------------------------------------------
+.item__code__container pre {
+    // increase vertical padding of code examples for api items
+    padding-top: to-rem($docs-spacing-md + 5);
+    padding-bottom: to-rem($docs-spacing-md + 5);
+    //
+    // use larger 14px font-size no matter the viewport size
+    // instead of only making it 14px at desktop size
+    // like the rest of the docs
+    //
+    font-size: to-rem($font-size-base);
+}
+
+
+// ----------------------------------------------------
+//   Sassdoc `<code>`
+//   -> (not code examples)
+// ----------------------------------------------------
+.page-api {
+    :not(pre) > code {
+        font-size: 93%;
+        padding: .15em .3em;
+        background-color: transparent;
+
+        // ----- <code> VARIATIONS ----- //
+
+        // links to code sources outside our api
+        &.code-external {
+            color: $code-color-external;
+        }
+    }
+
+    // ----- muted <code> ----- //
+    :not(pre) > code .text-muted,
+    .text-muted :not(pre) > code {
+        color: $code-color-muted !important;
+    }
+
+    // ----- <code> within a paragraph ----- //
+    p {
+        code {
+            padding: 0;
+            background-color: transparent;
+            border: none;
+        }
+        a {
+            #{$link-hover-focus} {
+                code {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}
+
+// ----------------------------------------------------
+//   Make sure any `<code>` elem wrapped
+//   in an `<a>` has this class
+// ----------------------------------------------------
+.code-link {
+    code {
+        // add some space when a code item is a hyperlink
+        padding: .2em .5em;
+        text-shadow: none !important;
+    }
+
+    #{$link-hover-focus} {
+        text-decoration: none;
+
+        code {
+            color: darken($code-color, $link-color-hover-darken-amount);
+
+            .text-muted {
+                color: $code-color-muted-hover !important;
+            }
+        }
+
+        .code-external {
+            color: darken($code-color-external, $link-color-hover-darken-amount);
+        }
+    }
+}
+
+// code within a <p> or header for instance
+// prevents the blue underline of the <a> from showing through the <code>
+.code-link-inline {
+    #{$link-hover-focus} {
+        code {
+            text-decoration: underline;
+        }
+    }
+}
+
+
+// Color preview styles displayed in parameter / property table cells
+.color-preview--inline {
+    padding: .2em .4em !important;
+    border: .1rem solid rgba(black, .1);
+    text-shadow: none !important;
+}
+
+.color-preview--block {
+    width: 2em;
+    height: 2em;
+    border: .1rem solid rgba(black, .1);
+    text-shadow: none !important;
+}
+
+.sassdoc-section-pager {
+    margin-top: 14rem;
+}

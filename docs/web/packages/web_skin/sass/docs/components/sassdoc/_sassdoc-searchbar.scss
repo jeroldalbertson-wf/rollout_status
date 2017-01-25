@@ -1,0 +1,74 @@
+// ********************************************************
+//
+//   Sass API search field / typeahead
+//   results styling
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/sassdoc/sassdoc-searchbar';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.sassdoc__searchbar {
+    // Mobile-first defaults
+    position: absolute;
+    z-index: 1002; // keep above the docs options button and collapsed navbar nav items
+    width: auto;
+    right: to-rem($docs-navbar-collapsed-search-right-offset); // options AND hamburger block buttons are visible
+    top: to-rem(round(($docs-navbar-height - get-deep($form-control-config, 'height.base')) / 2));
+
+    // Search results list
+    .dropdown-menu {
+        $search-results-width: to-rem($docs-navbar-collapsed-search-results-width);
+        @include set-dropdown-menu-max-width($search-results-width);
+        width: $search-results-width;
+        min-width: $search-results-width;
+    }
+
+
+    // Adjust width / offset based on available viewport width
+    @include uncollapsed-navbar-mq {
+        right: to-rem($docs-navbar-uncollapsed-search-right-offset); // only options block button is visible
+        width: to-rem($docs-navbar-uncollapsed-search-width-sm);
+
+        // Search results list
+        .dropdown-menu {
+            $search-results-width-sm: to-rem($docs-navbar-uncollapsed-search-width-sm);
+
+            @include set-dropdown-menu-max-width($search-results-width-sm);
+            width: $search-results-width-sm;
+            min-width: $search-results-width-sm;
+        }
+    }
+
+    @include respond-to('screen-md and up') {
+        width: to-rem($docs-navbar-uncollapsed-search-width-md);
+
+        // Search results list
+        .dropdown-menu {
+            $search-results-width-md: to-rem($docs-navbar-uncollapsed-search-width-md);
+
+            @include set-dropdown-menu-max-width($search-results-width-md);
+            width: $search-results-width-md;
+            min-width: $search-results-width-md;
+        }
+    }
+}
+
+.input-group-search-autocomplete {
+    .grid-block > & {
+        max-width: none;
+        width: 100%;
+        float: none;
+    }
+
+    > li > .hitarea#{$focus-class} {
+        @include secondary-nav-link-hover();
+    }
+
+    code {
+        margin-right: .5em;
+    }
+}

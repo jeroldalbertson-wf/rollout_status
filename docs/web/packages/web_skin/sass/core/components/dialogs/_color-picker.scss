@@ -1,0 +1,282 @@
+// ********************************************************
+//
+//   COLOR PICKER COMPONENT STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/dialogs/color-picker';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $dialogs-color-picker-module-config:  'core/components/atoms/dialogs/color-picker-config';
+    $dialogs-color-picker-module-helpers: 'core/components/atoms/dialogs/color-picker-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $dialogs-color-picker-module-config);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   BASE CLASS
+// ----------------------------------------------------
+.color-picker {
+    position: relative;
+    overflow: hidden;
+    width: get($cp-pane-config, 'width');
+}
+
+
+// ----------------------------------------------------
+//   COLOR PICKERS IN DROPDOWNS (PRIMARY USE CASE)
+//
+//   -> Class should be applied directly to an existing
+//      `.dropdown` element.
+//
+//   -> The `.dropdown-menu` element should be a `<div>`
+//      since the child will be the base
+//      `<div class="color-picker">` element, not
+//      `<li class="menu-item">`s.
+//
+//   [1] Override `.dropdown-menu` defaults.
+// ----------------------------------------------------
+.dropdown--color-picker {
+    > .dropdown-menu {
+        box-sizing: border-box; // [1]
+        padding: 0; // [1]
+        min-width: 0; // [1]
+        max-width: none; // [1]
+    }
+}
+
+
+// ----------------------------------------------------
+//   INDIVIDUAL PANES
+//
+//   [1] A fixed height is only applied to a
+//       `.cp__pane` element when the root `.color-picker`
+//       elem has the `color-picker--with-custom-colors`
+//       class applied.
+// ----------------------------------------------------
+.cp__pane {
+    position: relative;
+    width: get($cp-pane-config, 'width'); // [1]
+    padding: get($cp-pane-config, 'padding');
+    outline: 0 !important;
+}
+
+
+// ----------------------------------------------------
+//   PICKER WITH CUSTOM COLORS (2 PANE SYSTEM)
+// ----------------------------------------------------
+.color-picker--with-custom-colors {
+    @include color-picker-two-pane-layout();
+}
+
+
+// ----------------------------------------------------
+//   COLOR SWATCH MENU / SWATCHES
+// ----------------------------------------------------
+    .cp__swatch-menu {
+        @include color-picker-swatch-menu();
+    }
+
+    // Clickable swatch hitarea
+    .cp__swatch {
+        @include color-picker-swatch();
+    }
+
+    // "No Color" button at the top of the picker menu
+    .cp__swatch-menu__btn {
+        display: block;
+        width: get($cp-swatch-menu-config, 'width');
+        margin-bottom: get($cp-swatch-menu-config, 'divided-row-spacing-vertical');
+    }
+
+    @include generate-default-color-picker-swatches();
+
+
+
+// ********************************************************
+//
+//   CUSTOM SWATCH SELECTION / PANE STYLES
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   SHARED CUSTOM SWATCHES CONTAINER
+    //
+    //   -> Displays as the "footer" when the `.cp__pane--swatches`
+    //      pane is active, and as the "header" when the
+    //      `.cp__pane--custom` pane is active.
+    //
+    //      To pull this off its height is subtracted from
+    //      how much Y-axis transform we apply when the
+    //      `cp__panes--lift` CSS class is applied to the
+    //      base `.cp__panes` element.
+    // ----------------------------------------------------
+        .cp__custom-swatches {
+            height: get($cp-pane-config, 'custom-color-footer-height');
+            padding-top: get($cp-pane-config, 'padding');
+
+            .cp__swatch {
+                margin-bottom: 0;
+            }
+        }
+
+        .cp__custom-swatches__toggle-btn {
+            text-align: left;
+            padding-left: 0;
+
+            > .icon,
+            > .cp__custom-swatches__label {
+                #{$focus} {
+                    outline: 0;
+                }
+            }
+        }
+
+
+    // ----------------------------------------------------
+    //   CUSTOM COLOR SELECTION TOOL LAYOUT / STYLES
+    //
+    //   -> Shown beneath the custom color swatches when the
+    //      `cp__panes--lift` class is present on the
+    //      `.cp__panes` element.
+    // ----------------------------------------------------
+        .cp__custom-color-selector {
+            &,
+            .grid-block {
+                @include force-overflow(visible);
+            }
+        }
+
+        .cp__custom-color-selector__compare-colors,
+        .cp__custom-color-selector__hex-input,
+        .cp__custom-color-selector__tint {
+            &.grid-block {
+                display: block; // Content blocks
+            }
+        }
+
+
+        // ----------------------------------------------------
+        //   ROW 1: Color wheel / "new" + "current" boxes
+        // ----------------------------------------------------
+        .cp__custom-color-selector__viewer {
+            // ----------------------------------------------------
+            //   COLOR SELECTOR WHEEL CONTAINER
+            //
+            //   [1] Need a container that is slightly larger than
+            //       the outer edge of the place where the conical
+            //       gradient bg will be displayed within
+            //       the inner `.cp__custom-color-wheel` element so
+            //       that the active selectable area in a dynamic
+            //       picker allows for colors along the absolute
+            //       edge of the diameter. (better user experience)
+            //
+            //       NOTE: The implementation must provide this
+            //             background gradient, we provide a
+            //             placeholder SVG only for the docs demo.
+            // ----------------------------------------------------
+            @at-root {
+                .cp__custom-color-selector__wheel-outer.grid-block {
+                    @include grid-size(get($cp-selection-tools-config, 'wheel-outer-width'));
+                    height: get($cp-selection-tools-config, 'wheel-outer-height');
+                    padding: get($cp-selection-tools-config, 'wheel-outer-padding'); // [1]
+                    cursor: crosshair;
+                }
+            }
+
+
+            // ----------------------------------------------------
+            //   COLOR BOXES (Indicate new / current colors)
+            // ----------------------------------------------------
+            @at-root {
+                .cp__custom-color-selector__compare-colors.grid-block {
+                    $right-side-width: get($cp-swatch-menu-config, 'width') - get($cp-selection-tools-config, 'wheel-outer-width');
+
+                    @include grid-size($right-side-width);
+                    padding-top: get($cp-pane-config, 'padding');
+                    padding-left: $right-side-width - get($cp-selection-tools-config, 'color-box-width'); // Right align
+
+                    @at-root {
+                        .cp__compare-colors__label {
+                            display: block;
+                            width: get($cp-selection-tools-config, 'color-box-width');
+                            margin: 0;
+                            font-weight: normal;
+                            font-size: get($cp-selection-tools-config, 'color-box-label-font-size');
+                        }
+
+                        // Note that bg color must be applied using an inline style using
+                        // app logic based on user color selections.
+                        .cp__compare-colors__box {
+                            display: block;
+                            width: get($cp-selection-tools-config, 'color-box-width');
+                            height: get($cp-selection-tools-config, 'color-box-height');
+                            font-size: 0;
+                            line-height: 1;
+                            border: 0;
+                            outline: 0;
+                            cursor: default; // No text cursor
+                        }
+
+                        .cp__compare-colors__box--new {
+                            @include border-top-radius(get($cp-selection-tools-config, 'color-box-bd-radius'));
+                        }
+
+                        .cp__compare-colors__box--current {
+                            @include border-bottom-radius(get($cp-selection-tools-config, 'color-box-bd-radius'));
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // ----------------------------------------------------
+        //   ROW 2: Color hex input
+        // ----------------------------------------------------
+        .cp__custom-color-selector__hex-input {
+            padding-top: get($cp-selection-tools-config, 'hex-input-spacing-top') - get($cp-selection-tools-config, 'wheel-outer-padding');
+
+            > .form-control {
+                width: get($cp-selection-tools-config, 'hex-input-width');
+                margin: 0 auto;
+            }
+        }
+
+        // ----------------------------------------------------
+        //   ROW 3: Color tint slider
+        // ----------------------------------------------------
+        .cp__custom-color-selector__tint {
+            padding-top: get($cp-pane-config, 'padding') / 2;
+            padding-bottom: get($cp-pane-config, 'padding');
+
+            input[type="range"] {
+                @include range-input-slider-track() {
+                    background: $black;
+                    @include gradient-horizontal($white, $black 100%);
+                }
+            }
+        }
+
+        // ----------------------------------------------------
+        //   ROW 4: Actions (Cancel / Save)
+        // ----------------------------------------------------
+        .cp__custom-color-selector__actions {
+            .btn {
+                @include grid-block(
+                    $size: grow,
+                    $orientation: false,
+                    $wrap: false,
+                    $align: false,
+                    $order: false,
+                    $allow-nested-vblocks: false
+                );
+
+                display: block;
+                @include force-overflow(visible);
+            }
+        }

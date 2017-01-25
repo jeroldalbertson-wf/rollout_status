@@ -1,0 +1,64 @@
+// ********************************************************
+
+////
+/// Selected Elem Blue Color Aliases
+/// ---
+/// @access private
+/// @type Color
+/// @group core.internals.color.base
+/// ---
+/// @requires {variable} $colors-global-selection
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/aliases/selection-blues';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   SELECTED BLUE BACKGROUND COLORS
+//
+// ********************************************************
+    /// Selected Elem Blue Background Color Alias
+    /// @color #bfe4ff
+    $ws-selection-bg-base: get($colors-global-selection, 'bg-base');
+
+    /// Selected Elem Blue Background Hover Color Alias
+    /// @color #ebf6ff
+    $ws-selection-bg-hover: get($colors-global-selection, 'bg-hover');
+
+    /// Selected Elem Blue Background Press Color Alias
+    /// @color #e0f2ff
+    $ws-selection-bg-press: get($colors-global-selection, 'bg-press');
+
+    /// Selected Elem Blue Background Active Color Alias
+    /// @color #d6eeff
+    $ws-selection-bg-active: get($colors-global-selection, 'bg-active');
+
+
+
+// ********************************************************
+//
+//   SELECTED BLUE TEXT COLORS
+//
+// ********************************************************
+    /// Selected Elem Blue Text Hover Color Alias
+    /// @color #505050
+    $ws-selection-text-hover: get($colors-global-selection, 'text-hover');
+
+    /// Selected Elem Blue Text Press Color Alias
+    /// @color #4b4b4b
+    $ws-selection-text-press: get($colors-global-selection, 'text-press');
+
+    /// Selected Elem Blue Text Active Color Alias
+    /// @color #474747
+    $ws-selection-text-active: get($colors-global-selection, 'text-active');

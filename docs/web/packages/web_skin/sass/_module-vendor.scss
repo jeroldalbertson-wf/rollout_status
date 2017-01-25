@@ -1,0 +1,45 @@
+// ********************************************************
+//
+    $module: 'vendor';
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Module Imports
+// ----------------------------------------------------
+    @import "vendor/sassy-maps"; // Sass map helpers
+    @import "vendor/breakpoint"; // Sass media query helpers
+
+
+// ----------------------------------------------------
+//   Breakpoint Configuration
+// ----------------------------------------------------
+    ///
+    /// Various default values to be used within our breakpoint system.
+    /// ---
+    /// @type Map
+    /// @access private
+    /// @since 1.6.0
+    /// @group core.internals.breakpoints
+    /// ---
+    /// @link https://github.com/Team-Sass/breakpoint/wiki/No-Query-Fallbacks Breakpoint No Query Fallbacks
+    /// @link https://github.com/Team-Sass/breakpoint/wiki/Basic-Media-Queries#em-based-media-queries Em Based Media Queries
+    /// @link https://github.com/snugug/respond-to#breakpoint-options Breakpoint Options
+    /// ---
+    /// @prop {Bool}    no-query-fallbacks  [true] - [Breakpoint No Query Fallbacks Option](https://github.com/Team-Sass/breakpoint/wiki/No-Query-Fallbacks)
+    /// @prop {Bool}    to-ems              [true] - [Em Based Media Queries](https://github.com/Team-Sass/breakpoint/wiki/Basic-Media-Queries#em-based-media-queries)
+    /// @prop {Number}  base-font-size      [16px] - Base font-size of the `<html>` element
+    ///
+    $ws-breakpoint-defaults: (
+        'no-query-fallbacks': true,
+        'to-ems': true,
+        'base-font-size': 16px
+    ) !default;
+
+    // Set the defaults according to our local config
+    @include breakpoint-set('no query fallbacks', map-get($ws-breakpoint-defaults, 'no-query-fallbacks'));
+    @include breakpoint-set('base font size', map-get($ws-breakpoint-defaults, 'base-font-size'));
+    @include breakpoint-set('to ems', map-get($ws-breakpoint-defaults, 'to-ems'));
+
+

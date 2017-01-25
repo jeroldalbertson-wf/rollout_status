@@ -1,0 +1,67 @@
+// ********************************************************
+
+////
+/// File browser component configuration
+/// ---
+/// @type Map
+/// @since 1.4.0
+/// @access public
+/// @group core.components.form-controls
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/forms/config/form-file-browser-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// File browser component configuration.
+/// ---
+/// @prop {Number} file-custom-zindex [5] - `z-index` property value of the `.form-control-file__custom-input` element within the `.form-control-file` component
+/// @prop {String} default-placeholder-text ['Choose file...'] - The text to display within the "input" of the `.form-control-file` component
+/// @prop {String} default-button-text ['Browse'] - The text to display within the "button" of the `.form-control-file` component
+/// @prop {String} button-selector [':before'] - CSS selector used to target the "button" of the file browser
+/// @prop {String} input-display-selector [':after'] - CSS selector used to target the visible input text within the file browser
+/// ---
+/// @prop {Map} min-width
+/// @prop {Number} min-width.xs   [20rem] - The `min-width` of the hidden `<input>` nested within the `.form-control-file-xs` component size variation
+/// @prop {Number} min-width.sm   [25rem] - The `min-width` of the hidden `<input>` nested within the `.form-control-file-sm` component size variation
+/// @prop {Number} min-width.base [30rem] - The `min-width` of the hidden `<input>` nested within the base `.form-control-file` component size
+/// @prop {Number} min-width.lg   [40rem] - The `min-width` of the hidden `<input>` nested within the `.form-control-file-lg` component size variation
+/// ---
+/// @prop {Map} default-button-width - Width values for the button, which assume the `default-button-text` is being used.
+/// @prop {Number} default-button-width.xs   [5.4rem] - The `width` of the "button" nested within the `.form-control-file-xs` component size variation
+/// @prop {Number} default-button-width.sm   [6.2rem] - The `width` of the "button" nested within the `.form-control-file-sm` component size variation
+/// @prop {Number} default-button-width.base [7.2rem] - The `width` of the "button" nested within the base `.form-control-file` component size
+/// @prop {Number} default-button-width.lg   [9.4rem] - The `width` of the "button" nested within the `.form-control-file-lg` component size variation
+///
+$file-browser-config: (
+    'file-custom-zindex': 5,
+    'default-placeholder-text': 'Choose file...',
+    'default-button-text': 'Browse',
+    'button-selector': ':before',
+    'input-display-selector': ':after',
+    'min-width': (
+        'xs':   20rem,
+        'sm':   25rem,
+        'base': 30rem,
+        'lg':   40rem
+    ),
+    'default-button-width': (
+        'xs':   5.4rem,
+        'sm':   6.2rem,
+        'base': 7.2rem,
+        'lg':   9.4rem
+    )
+) !default;
+
+
+// ----------------------------------------------------
+//   UNDOCUMENTED ALIAS VARS
+// ----------------------------------------------------
+$file-browser-btn-selector: get($file-browser-config, 'button-selector');
+$file-browser-input-text-selector: get($file-browser-config, 'input-display-selector');

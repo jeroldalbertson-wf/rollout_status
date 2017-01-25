@@ -1,0 +1,803 @@
+// ********************************************************
+//
+//   A sassdoc "item" is a documented
+//   element within our Sass API in a
+//   sassdoc layout(s)
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/sassdoc/sassdoc-item';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Item Section
+// ----------------------------------------------------
+.sassdoc-section__item {
+
+    // ----- Adjacent Item Sections ----- //
+    & + & {
+        // since we already place significant padding
+        // on each .sassdoc-heading__item within
+        // these sections, cancel-out the padding
+        // inherited from .ws-section + .ws-section
+        padding-top: 0;
+    }
+}
+
+
+// ----------------------------------------------------
+//   Category Heading
+// ----------------------------------------------------
+.sassdoc-heading__category {
+    font-size: 4.2rem !important;
+}
+
+// ----------------------------------------------------
+//   Item Heading
+//   -> Heading is permalinkable via click
+// ----------------------------------------------------
+.sassdoc-heading__item {
+    position: relative;
+    margin: 0 0 .5em 0;
+    color: $zc-gray-120;
+    font-weight: normal;
+    @include truncate-text();
+
+
+    // ----- Item name (`<code>`) within item heading ----- //
+    .item__name {
+        background-color: transparent;
+        padding: 0;
+        font-size: 110%;
+        letter-spacing: -.1ex;
+        color: $zc-gray-120;
+    }
+
+    #{$link-hover-focus} {
+        .item__since {
+            text-shadow: none !important;
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   Item Description
+//   -> Sits beneath Item Heading
+// ----------------------------------------------------
+.item__description__row {
+    position: relative;
+    // slightly lighter color than the heading
+    // for appropriate contrast
+    color: $zc-gray-90;
+
+    // ----- description (left column) ----- //
+    .item__description {
+        font-size: to-rem($item-description-font-size);
+    }
+
+    // ----- @since annotation (right column) ----- //
+    .item__since__col {
+        // Vertically align bottom.
+        @include align-items(flex-end);
+        @include align-content(flex-end);
+
+        font-size: to-rem($item-description-font-size);
+    }
+
+    .item__since {
+        color: $zc-gray-90;
+    }
+
+    // when side-by-side, the since column should align bottom right
+    // no matter if there is a description or not
+    @include respond-to('screen-#{$grid-float-breakpoint} and up') {
+        .item__since {
+            padding-bottom: to-rem($base-elem-margin-vertical);
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   Item Annotations Container
+//   -> Area below the item heading
+//   -> Contains the code block
+//      and item annotations
+// ----------------------------------------------------
+.item__annotations-container {
+    background-color: $item-annotations-container-bg;
+    border: $docs-example-bd-width solid $docs-example-bd-color;
+    border-radius: $docs-example-bd-radius;
+    // Mobile-first
+    margin-right: to-rem($docs-body-padding-horizontal * -1) !important;
+    margin-left: to-rem($docs-body-padding-horizontal * -1) !important;
+
+    .highlight-wrapper {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    @include respond-to('screen-sm and up') {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+
+    // both item__code__container and item__example__code__container
+    .highlight-container .highlight {
+        // we'll deal with spacing underneath code blocks (both item code and example code)
+        // using padding inside of .item-annotations and .item__annotation-section instead
+        margin-bottom: 0;
+    }
+
+    // create some spacing between adjacent code blocks
+    .item__example {
+        float: left;
+        width: 100%;
+        clear: both;
+    }
+
+    .item__example + .item__example,
+    .highlight-container + .highlight-container {
+        margin-top: to-rem(round($item-annotation-section-padding / 2));
+    }
+
+    // not examples - only item code
+    // when nested within an annotations container
+    // remove the double-borders
+    .item__code__container .highlight {
+        border-width: 0 0 .1rem 0;
+        @include border-top-radius(to-rem($docs-code-bd-radius - 1));
+        @include border-bottom-radius(0);
+    }
+}
+
+// ----------------------------------------------------
+//   Container below the collapsing code block
+// ----------------------------------------------------
+.item__annotations {
+    clear: both; // clear code highlight floats
+    padding-top: to-rem($item-annotation-section-padding);
+    min-height: 4.6rem; // in case there are not annotations listed other than the item example code itself
+
+    // ----------------------------------------------------
+    //   Each type of annotation has a
+    //   .item__annotation-section wrapping
+    //   around it.
+    // ----------------------------------------------------
+    > .item__annotation-section {
+        @include clearfix();
+
+        padding-left: to-rem($item-annotation-section-padding);
+        padding-right: to-rem($item-annotation-section-padding);
+
+        // ----- Inner Item Spacing Control ----- //
+
+        &:last-child {
+            padding-bottom: to-rem($item-annotation-section-padding);
+        }
+
+        // remove default margins
+        > p:last-child,
+        > ul:last-child,
+        > ol:last-child,
+        > .table:last-child {
+            margin-bottom: 0;
+        }
+
+        //
+        // prevent double-padding when the item
+        // description is not the first item below
+        // the code block, but rather a .item__sub-heading
+        // directly below the code block
+        //
+        &:first-child > .item__sub-heading {
+            margin-top: 0 !important;
+        }
+    }
+
+    // ----------------------------------------------------
+    //   Emphasize the description
+    // ----------------------------------------------------
+    .item__description-section {
+        // slightly larger than all other annotations
+        font-size: $docs-section-font-size + .2rem;
+        // space apart from the view source link
+        padding-top: to-rem(round($item-annotation-section-padding / 2));
+    }
+
+    // ----------------------------------------------------
+    //   Separate the properties / parameters table
+    //   and example code block section from adjacent
+    //   siblings using a border
+    // ----------------------------------------------------
+    .item__parameters-group,
+    .item__prop-group,
+    .item__example-group,
+    .item__dependencies-group {
+        margin-top: to-rem($item-annotation-section-padding);
+        border-top: $docs-example-bd-width solid $docs-example-bd-color;
+    }
+
+    // ----------------------------------------------------
+    //   Move the variable type annotation
+    //   to appear as the beginning of the
+    //   description paragraph by manipulating
+    //   the display of adjacent paragraphs
+    //   and their margins
+    // ----------------------------------------------------
+    .item__description-section {
+        .item__description-type {
+            display: inline-block;
+            //
+            // zero-out the default bottom margin
+            // since the description paragraph
+            // will be moving inline to essentially
+            // become part of this paragraph
+            // (prevent unwanted second-line sapcing)
+            //
+            margin-bottom: 0;
+            // add a little space after they type to create
+            // some visual separation between the type and
+            // the rest of the description
+            margin-right: to-rem($spacing-base);
+        }
+        .item__description-type + p {
+            // move the first description paragraph
+            // in-line right next to type annotation
+            display: inline;
+        }
+        .item__description-type + p + p {
+            // sine the first paragraph has been converted
+            // to inline display, re-create the margin between
+            // the first paragraph and it's next sibling
+            // by adding top margin to the sibling
+            margin-top: $paragraph-margin-bottom;
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   Requires / UsedBy Grouping
+    // ----------------------------------------------------
+    .item__dependencies-group .row {
+        // Remove default row negative margin and column padding
+        // since they are sitting inside an element that already has padding
+        margin-left: 0;
+        margin-right: 0;
+
+        [class*="col-"] {
+            padding: 0;
+        }
+    }
+
+    // ----------------------------------------------------
+    //   Requires / UsedBy Scrolling
+    //
+    //   If there are an insane number of dependencies
+    //   make them scroll independent of the rest of the layout
+    // ----------------------------------------------------
+    .item__dependencies-group .list-annotations {
+        position: relative;
+        margin: 0;
+    }
+
+    .item__dependencies-group .is-overflowing {
+        .list-annotations {
+            max-height: 40rem; // 20 items at 20px height each
+            overflow: auto;
+            padding-top: to-rem(round($line-height-base-px / 2));
+            margin-top: to-rem(round($line-height-base-px / -2));
+        }
+
+        &:after,
+        &:before {
+            content: "";
+            display: block;
+            width: 100%;
+            height: to-rem($line-height-base-px);
+            position: absolute;
+            left: 0;
+        }
+
+        &:after {
+            bottom: 0;
+            @include gradient-vertical(rgba($docs-body-bg, 0), $docs-body-bg 35%, $docs-body-bg);
+        }
+
+        &:before {
+            top: 4.5rem;
+            z-index: 2;
+            @include gradient-vertical($docs-body-bg, $docs-body-bg 40%, rgba($docs-body-bg, 0));
+        }
+    }
+
+    // This special group also has a border on bottom to help with
+    // "clipping" long, overflowing lists of dependencies
+    > .item__dependencies-group.is-overflowed {
+        padding-bottom: 0 !important;
+
+        &:not(:last-child) {
+            border-bottom: .1rem solid mix($item-annotations-container-bg, $docs-code-bd, 65%);
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   Item Sub-Headings
+//   -> Within Annotations Container
+// ----------------------------------------------------
+%item__sub-heading--base {
+    // Make sure the scrolling isn't jumpy in chrome since
+    // this is all nested within a flexbox layout
+    position: static;
+    // Need the !important flag because of the crazy
+    // specificity for docs-section headings in
+    // the Web Skin docs module
+    margin-top: $item-subheading-margin-top !important;
+    margin-bottom: $item-subheading-margin-bottom !important;
+    font-size: to-rem($h4-font-size);
+    color: $zc-gray-90 !important;
+    text-shadow: 0 .1rem 0 $white;
+}
+
+.item__sub-heading {
+    @extend %item__sub-heading--base;
+
+    text-transform: uppercase !important;
+
+
+    // used for dependency counts
+    .badge {
+        font-size: to-rem($font-size-base);
+        vertical-align: middle;
+        margin-top: -.4rem;
+        background-color: $zc-gray-70;
+        text-shadow: none;
+    }
+}
+
+    // ----- Example Description ----- //
+    .example__description {
+        @extend %item__sub-heading--base;
+    }
+
+    .item__example > .example__description:first-child {
+        margin-top: $item-subheading-margin-top - $item-subheading-margin-bottom !important;
+    }
+
+
+
+// ********************************************************
+//
+//   Expandable Item Code Blocks
+//
+// ********************************************************
+.item__code__container {
+    position: relative;
+    float: left;
+    clear: both;
+    width: 100%;
+
+    // ----------------------------------------------------
+    //   If expandable... and its collapsed
+    //   make room for the toggle button
+    // ----------------------------------------------------
+    &.item__code__container--expandable[data-showing-preview="true"] pre {
+        padding-right: $code-control-toggle-width;
+    }
+
+    // ----------------------------------------------------
+    //   CONTROLS CONTAINER
+    //   -> view-source / expand/collapse links
+    // ----------------------------------------------------
+    .item__code__controls {
+        font-size: $code-control-item-font-size;
+    }
+
+
+    // ----------------------------------------------------
+    //   ITEM CODE VISIBILITY
+    // ----------------------------------------------------
+    .item__code {
+        &[aria-hidden="true"] {
+            display: none;
+        }
+        &[aria-hidden="false"] {
+            display: block;
+        }
+    }
+
+
+    // ----------------------------------------------------
+    //   CONTROLS WITHIN CONTROLS CONTAINER
+    // ----------------------------------------------------
+
+    // ----- VIEW SOURCE LINK ----- //
+        .item__view-source-link {
+            position: absolute;
+            top: 100%;
+            right: to-rem($code-control-toggle-offset-right);
+            padding: $code-control-link-padding;
+            padding-right: 0;
+            padding-left: 0;
+            color: $zc-gray-80;
+            line-height: $line-height-sm;
+            text-transform: uppercase;
+
+            .item__code__controls-link__icon {
+                @include opacity($code-control-icon-alpha);
+                display: inline-block;
+                top: -.1rem;
+            }
+
+            .item__code__controls-link__text {
+                @include opacity($code-control-text-alpha);
+                display: inline-block;
+            }
+
+            #{$link-hover-focus} {
+                color: $link-color-hover;
+                text-decoration: none;
+
+                * {
+                    @include opacity(1);
+                }
+
+                // make sure the underline doesn't
+                // include the white-space between
+                // the icon and the text by only
+                // underlining the text.
+                .item__code__controls-link__text {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+
+    // ----- OUTER COLLAPSE CONTROL CONTAINER ----- //
+        // by default, span the entire area
+        // of .highlight for a clickable area
+        .item__code-collapse-toggle {
+            position: absolute;
+            z-index: 3; // keep above .highlight
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            // Hiding code details for now for increased performance
+            display: none !important;
+        }
+
+        // when expanded, restrict the clickable toggle hitarea
+        // to the visible "block" created by the collapse control
+        // button, so that the code within the block can be
+        // selected by the users's cursor
+        &[data-showing-preview="false"] {
+            .item__code-collapse-toggle {
+                right: 0;
+                bottom: auto;
+                left: auto;
+                height: to-rem($item-code-block-preview-height);
+            }
+        }
+
+    // ----- COLLAPSE CONTROL BUTTON ----- //
+        // make the button portion of this hitarea
+        // appear to be a button inset within the code
+        // example block
+        .item__code-collapse-toggle-link {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: $code-control-toggle-width;
+            padding: 0;
+            background-color: $item-annotations-container-bg;
+            border-left: .1rem solid $docs-code-bd;
+            border-bottom: .1rem solid $docs-code-bd;
+            @include border-top-right-radius(to-rem($docs-code-bd-radius - 1));
+            line-height: to-rem($item-code-block-preview-height);
+            color: $item-code-block-inset-text-color;
+        }
+
+        // Make actual link look hovered
+        // when outer collapse toggle is hovered
+        .item__code-collapse-toggle {
+            #{$link-hover-focus} {
+                .item__code-collapse-toggle-link {
+                    color: darken($item-code-block-inset-text-color, 10);
+                }
+            }
+        }
+}
+
+
+// ----------------------------------------------------
+//   Example Annotations
+// ----------------------------------------------------
+
+    // ----- Example Code Blocks ----- //
+    .item__example__code__container pre {
+        // add code language labels for these since they aren't automatically assumed to be scss
+        code[data-lang]::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            content: attr(data-lang);
+            background-color: $white;
+            padding: .1em .4em;
+            @include border-top-right-radius(to-rem($docs-code-bd-radius - 1));
+            font-size: to-rem($font-size-sm);
+            color: $item-code-block-inset-text-color;
+            text-indent: 0;
+        }
+    }
+
+
+//
+// Deprecated flag
+//
+.item__deprecated strong {
+    color: $zc-red-120;
+    text-transform: uppercase;
+}
+
+//
+// Type
+//
+.item__type {
+    font-size: .75em;
+    color: $zc-gray-90;
+    text-transform: capitalize;
+}
+
+//
+// Aliases
+//
+.item__alias,
+.item__aliased {
+    color: $zc-gray-90;
+    font-size: .8em;
+}
+// when nested within item header
+.sassdoc-heading__item .item__aliased {
+    margin-top: .4em;
+    font-weight: normal;
+}
+
+//
+// Tables
+//
+.table {
+    td > code,
+    th > code,
+    td > a > code,
+    th > a > code {
+        background-color: transparent;
+        font-size: 100%;
+        padding: 0;
+    }
+}
+
+//
+// Parameters table
+//
+.item__parameters-container {
+    // Make table horizontal borders extend all the way to the edge of the container
+    margin-right: to-rem($item-annotation-section-padding) * -1;
+    margin-left:  to-rem($item-annotation-section-padding) * -1;
+}
+
+.item__parameters-table {
+    background-color: transparent;
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: collapse;
+    border-color: $docs-body-bg;
+
+    > thead > tr > th {
+        font-family: $font-family-sans-serif;
+        white-space: nowrap;
+        border-color: $docs-body-bg;
+        padding-top: $docs-example-padding;
+        padding-bottom: $docs-example-padding;
+
+        &:first-child {
+            // Make first column text left align with param / prop section title text
+            padding-left: to-rem($item-annotation-section-padding);
+        }
+    }
+
+    // row scoped headers are parameter names... so let's beef 'em up
+    th[scope="row"] code {
+        font-weight: bold;
+    }
+
+    // param name
+    tbody th {
+        text-align: left;
+        // Make first column text left align with param / prop section title text
+        padding-left: to-rem($item-annotation-section-padding);
+    }
+
+    .item__prop th {
+        cursor: help; // contains a title attribute with instructions for accessing
+    }
+
+    td,
+    th {
+        padding-top: 1em;
+        padding-bottom: 1em;
+        vertical-align: top;
+        border-color: $docs-body-bg !important;
+
+        > p:last-child {
+            margin-bottom: 0;
+        }
+
+        // wrap annotation label text with markdown _ _ or * *
+        // to decrease the emphasis
+        // (for things like mentioning that something is a computed value added via @extend)
+        em {
+            font-style: normal;
+            opacity: .6;
+        }
+    }
+
+    .hex-value-col {
+        min-width: 9rem;
+    }
+
+    //
+    // Ensure that default value `<code>` blocks don't wrap
+    // since space-separated values may not be interpreted that
+    // way if they break onto two lines
+    //
+    // [data-label="default"] code .List {
+    //     white-space: nowrap;
+    // }
+
+    //
+    // Do not allow the description of a
+    // parameter dominate the available width
+    // at smaller screen sizes
+    //
+    [data-label="desc"] {
+        width: 30%;
+
+        @include respond-to('screen-sm and up') {
+            width: 35%;
+        }
+
+        @include respond-to('screen-lg and up') {
+            width: 40%;
+        }
+    }
+}
+
+
+//
+// Nested @prop annotations
+//
+.item__parameter--nested {
+    background-color: $item-annotations-nested-prop-row-bg;
+
+    td,
+    th {
+        font-size: .9em;
+        padding-top: .5em;
+        padding-bottom: .5em;
+    }
+
+    // nested @prop name
+    th:first-child {
+        padding-left: 2em;
+
+        &:before {
+            position: relative;
+            left: -.75em;
+            color: rgba($black, to-decimal(darkness($zc-gray-60)));
+            content: ">";
+        }
+    }
+
+    // adjacent nested props
+    & + & {
+        td,
+        th {
+            border-top-color: darken($item-annotations-nested-prop-row-bg, 15);
+        }
+    }
+}
+
+
+//
+// Annotation list items
+//
+.list-annotations > li {
+    margin: .3em 0 !important;
+    line-height: normal;
+    vertical-align: middle;
+
+    &:last-child {
+        margin-bottom: 0 !important;
+    }
+}
+
+//
+// When annotation list items are separated into two columns
+// make sure the first column has some room to breathe on the right side
+//
+.row > [class*="col-"]:not(:last-of-type):not(:only-of-type) .item__annotation-section {
+    padding-right: .8rem;
+}
+
+// ----- `<code>` elems within annotation lists ----- //
+
+// clickable code elems have to be inline block
+// or else the height of the <ul> they are within
+// will not adapt based on the padding of the <code>
+.list-annotations .code-link code {
+    display: inline-block;
+    white-space: pre-wrap;
+    padding: 0;
+}
+
+
+//
+// Scope/access
+//
+.sassdoc-heading__item > .label {
+    font-size: .6em;
+
+    &:first-of-type,
+    &:only-of-type {
+        margin-left: .6em;
+    }
+
+    &[data-toggle="tooltip"] {
+        cursor: help;
+    }
+}
+
+
+.item__required__external {
+    .label {
+        display: inline-block;
+        font-size: .6em;
+        font-weight: normal;
+        letter-spacing: .1ex;
+    }
+}
+
+// ----------------------------------------------------
+//   Descriptions that sit inline
+//   adjacent to something like
+//   a requires or returns annotation
+// ----------------------------------------------------
+.item__description--inline {
+    &,
+    * {
+        display: inline-block;
+    }
+
+    p {
+        padding-left: 1em;
+        margin: 0;
+
+        &:before {
+            content: '(';
+            margin-right: .2em;
+        }
+        &:after {
+            content: ')';
+            margin-left: .2em;
+        }
+    }
+}

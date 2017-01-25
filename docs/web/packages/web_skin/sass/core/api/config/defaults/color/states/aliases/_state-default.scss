@@ -1,0 +1,81 @@
+// ********************************************************
+
+////
+/// Default Elem State Color Aliases
+/// ---
+/// @access private
+/// @type Color
+/// @group core.internals.color.state
+/// ---
+/// @requires {variable} $colors-state-default
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/states/aliases/state-default';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+/// Default Elem State Color Alias
+/// @color #b2b2b2
+$state-default: get($colors-state-default, 'base');
+
+/// Default Elem State Text Color Alias
+/// @color #7f7f7f
+$state-default-text: get($colors-state-default, 'text');
+
+/// Default Elem State Background Color Alias
+/// @color #fafafa
+$state-default-bg: get($colors-state-default, 'bg');
+
+/// Default Elem State Border Color Alias
+/// @color #d4d4d4
+$state-default-bd: get($colors-state-default, 'bd');
+
+
+// ----------------------------------------------------
+//   SHARED COMPONENT STATE VARIATION COLORS
+// ----------------------------------------------------
+    ///
+    /// Default Elem State background variation used by alerts, panels, list-groups and table rows.
+    /// ---
+    /// @alias state-default-bg
+    /// @color #fafafa
+    ///
+    $component-state-default-bg: $state-default-bg;
+
+    ///
+    /// Default Elem State background variation used by alerts, panels, list-groups and table rows when hovered.
+    /// ---
+    /// @color #ededed
+    /// @requires {variable} $elem-hover-bg-darken-amount-default
+    /// @requires {variable} $component-state-default-bg
+    ///
+    $component-state-default-bg-hover: darken($component-state-default-bg, $elem-hover-bg-darken-amount-default);
+
+    ///
+    /// Default Elem State background variation used by alerts, panels, list-groups and table rows when pressed.
+    /// ---
+    /// @since 1.4.0
+    /// @color #e0e0e0
+    /// @requires {variable} $component-state-default-bg-hover
+    /// @requires {variable} $elem-pressed-text-darken-amount-default
+    ///
+    $component-state-default-bg-press: darken($component-state-default-bg-hover, $elem-pressed-text-darken-amount-default);
+
+    ///
+    /// Default Elem State border variation used by alerts, panels, list-groups and table rows.
+    /// ---
+    /// @color #dbdbdb
+    /// @requires {variable} $state-default-text
+    /// @requires {variable} $component-state-default-bg
+    /// @requires {variable} $component-state-bd-mix-amount
+    ///
+    $component-state-default-bd: mix($state-default-text, $component-state-default-bg, $component-state-bd-mix-amount);

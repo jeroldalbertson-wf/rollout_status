@@ -1,0 +1,36 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/foundation/base/document';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// Fixes strange horizontal scrolling bug in MSIE
+html.ua-ie {
+    overflow-x: hidden;
+}
+
+body {
+    background-color: $docs-body-bg;
+    // For scrollspy
+    position: relative;
+    height: 100%;
+    overflow: auto;
+    overflow-x: hidden; // for MSIE
+}
+
+.ws-main [role="main"] {
+    // Removes outline style from main content in MSIE
+    outline: 0;
+    padding-bottom: to-rem($docs-spacing-md * 10);
+
+    @include respond-to('screen-sm and up') {
+        // Prevents content that exceeds allowable width
+        // within the parent of [role=main] from causing
+        // horizontal scrolling on that parent.
+        overflow: hidden;
+    }
+}

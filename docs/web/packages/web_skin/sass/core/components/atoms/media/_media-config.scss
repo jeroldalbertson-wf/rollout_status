@@ -1,0 +1,35 @@
+// ********************************************************
+
+////
+/// Media Object component configuration
+/// ---
+/// @since 1.0.0
+/// @group core.components.media
+/// @link http://bit.ly/webskin-media-object Media object component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/media/media-config';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// Configuration for `.media` components.
+/// ---
+/// @type Map
+/// ---
+/// @requires {variable} $spacing-base
+/// ---
+/// @prop {Number} spacing-vertical         [15px] - Vertical spacing around `.media` component
+/// @prop {Number} float-spacing-horizontal [10px] - Horizontal spacing between floated elements within a `.media` component
+/// @prop {Number} heading-margin-bottom    [5px]  - Margin beneath `.media-heading` elems
+///
+$media-config: (
+    'spacing-vertical': $spacing-base * 3,
+    'float-spacing-horizontal': $spacing-base * 2,
+    'heading-margin-bottom': $spacing-base
+) !default;

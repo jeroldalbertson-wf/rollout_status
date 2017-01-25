@@ -1,0 +1,193 @@
+// ********************************************************
+
+////
+/// Caret component configuration
+/// ---
+/// @type Number
+/// @group core.components.carets
+/// @link http://bit.ly/webskin-carets Caret component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/carets/carets-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function component-height,
+                                                function component-text-height);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE CONFIGS
+//
+// ********************************************************
+    ///
+    /// Color configuration for `.caret` components.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {variable} $zc-gray-70
+    /// ---
+    /// @prop {Color}   color        [#b2b2b2] - Default color
+    /// @prop {Number}  alpha        [.8]      - Default transparency
+    /// @prop {Number}  alpha-hover  [1]       - Transparency when hovered
+    /// @prop {Number}  alpha-press  [1]       - Transparency when pressed
+    /// @prop {Number}  alpha-active [.8]      - Transparency when active
+    ///
+    $caret-config: (
+        'color': $zc-gray-70,
+        'alpha': .8,
+        'alpha-hover': 1,
+        'alpha-press': 1,
+        'alpha-active': .8
+    ) !default;
+
+    ///
+    /// Size configuration for `.caret` components. Extends `$triangle-config`
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {variable} $triangle-config
+    /// ---
+    /// @prop {Map} base - Default caret size config map
+    /// @prop {Map} sm   - Small caret size config map
+    /// @prop {Map} xs   - Extra small caret size config map
+    /// @prop {Map} lg   - Large caret size config map. Currently has no `.caret-lg` selector baked into WS.
+    ///
+    $caret-size-config: (
+        'base': get($triangle-config, 'base'),
+        'sm': get($triangle-config, 'sm'),
+        'xs': get($triangle-config, 'xs'),
+        'lg': get($triangle-config, 'lg')
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   ALIGNMENT WITHIN OTHER COMPONENTS
+//
+// ********************************************************
+    ///
+    /// Collection of calculated horizontal margin values that will keep a `.caret` elem within component size variations from being flush with the component's label text.
+    /// ---
+    /// @type Map
+    /// @since 1.1.2
+    /// ---
+    /// @requires {function} get-deep
+    /// @requires {variable} $triangle-config
+    /// ---
+    /// @prop {Number} base  [3px]
+    /// @prop {Number} xs    [2px]
+    /// @prop {Number} sm    [2px]
+    /// @prop {Number} lg    [5px]
+    ///
+    $caret-component-halign-margins: (
+        'base': get-deep($triangle-config, 'base.spacing-horizontal'),
+        'xs':   get-deep($triangle-config, 'xs.spacing-horizontal'),
+        'sm':   get-deep($triangle-config, 'sm.spacing-horizontal'),
+        'lg':   get-deep($triangle-config, 'lg.spacing-horizontal'),
+    );
+
+    ///
+    /// Collection of calculated `margin-top` values that will vertically center a `.caret` elem within component size variations.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} component-text-height
+    /// @requires {function} get-deep
+    /// @requires {variable} $caret-size-config
+    /// ---
+    /// @prop {Number} base  [8px]   - Value that will vertically center a `.caret` elem within another component at its base size.
+    /// @prop {Number} xs    [6px]   - Value that will vertically center a `.caret` elem within another component at its extra small size. Calculation assumes that a `.caret-sm` elem will be nested within the `xs` variation of the component.
+    /// @prop {Number} sm    [7px]   - Value that will vertically center a `.caret` elem within another component at its small size.
+    /// @prop {Number} lg    [10px]  - Value that will vertically center a `.caret` elem within another component at its large size.
+    ///
+    $caret-component-valign-margins: (
+        'base': ceil((component-text-height('base') - get-deep($caret-size-config, 'base.height')) / 2),
+        'xs':   ceil((component-text-height('xs')   - get-deep($caret-size-config, 'xs.height')) / 2),
+        'sm':   ceil((component-text-height('sm')   - get-deep($caret-size-config, 'base.height')) / 2),
+        'lg':   ceil((component-text-height('lg')   - get-deep($caret-size-config, 'base.height')) / 2)
+    );
+
+    ///
+    /// Collection of calculated `top` values that will vertically center a `.caret` elem __via absolute positioning__ within component size variations.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @see {variable} caret-component-valign-margins
+    /// ---
+    /// @requires {function} component-text-height
+    /// @requires {function} get-deep
+    /// @requires {variable} $caret-size-config
+    /// ---
+    /// @prop {Number} base  [6px]   - Value that will vertically center a `.caret` elem within another component __via absolute positioning__ at its base size.
+    /// @prop {Number} xs    [4px]   - Value that will vertically center a `.caret` elem within another component __via absolute positioning__ at its extra small size. Calculation assumes that a `.caret-sm` elem will be nested within the `xs` variation of the component.
+    /// @prop {Number} sm    [5px]   - Value that will vertically center a `.caret` elem within another component __via absolute positioning__ at its small size.
+    /// @prop {Number} lg    [11px]   - Value that will vertically center a `.caret` elem within another component __via absolute positioning__ at its large size.
+    ///
+    $caret-component-valign-offsets: (
+        'base': floor((component-text-height('base') - get-deep($caret-size-config, 'base.height')) / 2) - 1,
+        'xs':   floor((component-text-height('xs')   - get-deep($caret-size-config, 'xs.height')) / 2) - 1,
+        'sm':   floor((component-text-height('sm')   - get-deep($caret-size-config, 'base.height')) / 2) - 1,
+        'lg':   floor((component-text-height('lg')   - get-deep($caret-size-config, 'base.height')) / 2) + 2
+    );
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED CONFIG ALIASES
+//
+//   -> DO NOT MODIFY THESE! (Modify the config map value)
+//
+// ********************************************************
+    $caret-color: get($caret-config, 'color');
+    $caret-alpha: get($caret-config, 'alpha');
+    $caret-alpha-hover: get($caret-config, 'alpha-hover');
+    $caret-alpha-press: get($caret-config, 'alpha-press');
+    $caret-alpha-active: get($caret-config, 'alpha-active');
+
+    $caret-bd-width: get-deep($caret-size-config, 'base.bd-width');
+    $caret-width: get-deep($caret-size-config, 'base.width');
+    $caret-height: get-deep($caret-size-config, 'base.height');
+    $caret-half-height: get-deep($caret-size-config, 'base.half-height');
+    $caret-size-ratio: get-deep($caret-size-config, 'base.size-ratio');
+    $caret-size-differential: get-deep($caret-size-config, 'base.size-differential');
+    $caret-spacing-horizontal: get($caret-component-halign-margins, 'base');
+
+    $caret-sm-bd-width: get-deep($caret-size-config, 'sm.bd-width');
+    $caret-sm-width: get-deep($caret-size-config, 'sm.width');
+    $caret-sm-height: get-deep($caret-size-config, 'sm.height');
+    $caret-sm-half-height: get-deep($caret-size-config, 'sm.half-height');
+    $caret-sm-size-ratio: get-deep($caret-size-config, 'sm.size-ratio');
+    $caret-sm-size-differential: get-deep($caret-size-config, 'sm.size-differential');
+    $caret-sm-spacing-horizontal: get($caret-component-halign-margins, 'sm');
+
+    $caret-xs-bd-width: get-deep($caret-size-config, 'xs.bd-width');
+    $caret-xs-width: get-deep($caret-size-config, 'xs.width');
+    $caret-xs-height: get-deep($caret-size-config, 'xs.height');
+    $caret-xs-half-height: get-deep($caret-size-config, 'xs.half-height');
+    $caret-xs-size-ratio: get-deep($caret-size-config, 'xs.size-ratio');
+    $caret-xs-size-differential: get-deep($caret-size-config, 'xs.size-differential');
+    $caret-xs-spacing-horizontal: get($caret-component-halign-margins, 'xs');
+
+    $caret-margin-top:    get($caret-component-valign-margins, 'base');
+    $caret-margin-top-xs: get($caret-component-valign-margins, 'xs');
+    $caret-margin-top-sm: get($caret-component-valign-margins, 'sm');
+    $caret-margin-top-lg: get($caret-component-valign-margins, 'lg');
+
+    $caret-offset-top:    get($caret-component-valign-offsets, 'base');
+    $caret-offset-top-xs: get($caret-component-valign-offsets, 'xs');
+    $caret-offset-top-sm: get($caret-component-valign-offsets, 'sm');
+    $caret-offset-top-lg: get($caret-component-valign-offsets, 'lg');

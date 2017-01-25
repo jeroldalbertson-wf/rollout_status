@@ -1,0 +1,124 @@
+// ********************************************************
+//
+//   PROGRESS SPINNER COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-progress-spinners
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/progress/progress-spinners';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $progress-spinners-module-config:  'core/components/atoms/progress/progress-config';
+    $progress-spinners-module-helpers: 'core/components/atoms/progress/progress-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $progress-spinners-module-config,
+                                          $progress-spinners-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   PROGRESS SPINNER CONTAINER
+//   -> Used to contain both the spinner
+//      and the optional label
+//
+// ********************************************************
+.progress-spinner-container {
+    position: relative;
+}
+
+
+// ********************************************************
+//
+//   BASE PROGRESS SPINNER CLASS
+//
+// ********************************************************
+.progress-spinner {
+    @include spin-animation($speed: get($progress-spinner-config, 'rotate-speed'));
+    @include animation-visibility-control();
+    @include progress-spinner-bd-color();
+
+    position: relative;
+    display: inline-block;
+    width:  to-rem($progress-spinner-size-base);
+    height: to-rem($progress-spinner-size-base);
+    border-width: to-rem(spinner-bd-width($progress-spinner-size-base));
+    border-style: solid;
+    border-radius: 100%;
+}
+
+
+// ********************************************************
+//
+//   PROGRESS SPINNER LABELS
+//   -> Horizontally adjacent with spinner by default
+//
+// ********************************************************
+.progress-label {
+    display: inline-block;
+    font-size: to-rem(get-deep($progress-spinner-config, 'label-font-size.base'));
+    font-style: italic;
+    color: get($progress-spinner-config, 'label-text-color');
+    text-align: left;
+    vertical-align: top;
+    margin-top: to-rem(progress-spinner-label-spacing());
+    margin-left: to-rem(progress-spinner-label-spacing());
+}
+
+
+// ********************************************************
+//
+//   STACKED VARIATION
+//
+// ********************************************************
+.progress-spinner-stacked {
+    .progress-spinner,
+    .progress-label {
+        display: block;
+        margin-right: auto;
+        margin-left: auto !important; // override + .progress-label style declared in progress-spinner-size()
+        text-align: center;
+    }
+}
+
+
+// ********************************************************
+//
+//   INVERSE SKIN VARIATION
+//
+// ********************************************************
+.progress-spinner.progress-spinner-inverse {
+    @include progress-spinner-bd-color($color: $white);
+}
+
+
+// ********************************************************
+//
+//   SIZE VARIATIONS
+//
+// ********************************************************
+@each $size-suffix in $progress-spinner-sizes {
+    @include progress-spinner-size($size-suffix);
+}
+
+
+// ********************************************************
+//
+//   SPINNERS NESTED IN BUTTONS
+//
+// ********************************************************
+.btn {
+    .progress-spinner {
+        position: absolute;
+    }
+
+    &.no-text {
+        .progress-spinner {
+            position: relative;
+        }
+    }
+}

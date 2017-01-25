@@ -1,0 +1,25 @@
+// ********************************************************
+//
+//   Wdesk Login Page Form Controls
+//
+    $module: 'peripherals/wdesk-login/wdesk-login-form-controls';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+.login-form-rug {
+    .form-control,
+    .btn {
+        font-size: to-em($fontSizeBase, $login-container-font-size);
+    }
+
+    .btn-sm {
+        font-size: to-em($fontSizeSmall, $login-container-font-size);
+    }
+
+    .btn-xs {
+        font-size: to-em($fontSizeXsmall, $login-container-font-size);
+    }
+}
+

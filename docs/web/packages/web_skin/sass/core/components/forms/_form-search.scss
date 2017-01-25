@@ -1,0 +1,375 @@
+// ********************************************************
+//
+//   FORM SEARCH INPUT GROUP COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-forms-input-group-search
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/forms/form-search';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $forms-search-module-config:  'core/components/atoms/forms/config/form-input-group-search-config';
+    $forms-search-module-helpers: 'core/components/atoms/forms/forms-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $forms-search-module-config,
+                                          $forms-search-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   LOCAL CONFIG ALIASES
+//
+// ********************************************************
+    $active-search-class:                   get($input-group-search-config, 'active-search-class');
+    $search-icon-size:                      to-rem(get($input-group-search-config, 'search-icon-size'));
+    $search-field-height:                   to-rem(get-deep($form-control-config, 'height.base'));
+    $search-field-padding-left:             to-rem(get-deep($input-group-search-config, 'search-field-padding-left.base'));
+    $search-icon-offset-vertical:           to-rem(get-deep($input-group-search-config, 'search-icon-offset-vertical.base'));
+    $search-icon-addon-padding-horizontal:  to-rem(get-deep($input-group-search-config, 'search-icon-addon-padding-horizontal.base'));
+    $search-icon-addon-width:               to-rem(get-deep($input-group-search-config, 'search-icon-addon-width.base'));
+
+
+
+// ********************************************************
+//
+//   WRAPPER STYLES
+//
+//  -> Wraps around the <label> and the `.input-group-search`.
+//
+//     Necessary for compatibility with horizontal layouts,
+//     and for nesting search inputs within "outer" input
+//     groups.
+//
+// ********************************************************
+.search-form-control-wrapper {
+    @include grid-size(grow);
+}
+
+
+// ********************************************************
+//
+//   BASE STYLES
+//
+//  [1] Global styles for the search field no matter if an
+//      active search is in progress or not.
+//
+//  [2] So the icon can be nested before OR after the
+//      form-control.
+//
+//  [3] Override ua-ltie10 width: 1% from input-group styles.
+//
+//  [4] Make room on the right side of the input for the
+//      "clear search" btn
+//
+//  [5] TODO: Remove in `2.0.0` since we can use the
+//            `form-control-has-icon--before` class instead.
+//
+//  [6] Override corner rounding since the "addons" within
+//      a search input don't have any visual styling - to
+//      appear "nested" within the input itself.
+//
+//  [7] The web_skin_dart `SearchInput` component places
+//      this wrapper around the input in horizontal layout +
+//      help text situations, so we need to mimic the 100%
+//      width that an un-wrapped `.form-control` has.
+//
+//  [8] Search icon glyph to the left of the search text.
+//
+//      DEPRECATED in `1.8.0` via UIP-1326.
+//
+//      TODO: Remove in the `2.0.0` release since we can
+//            use `.form-control-icon.form-control-icon--before`
+//            instead.
+//
+//  [9] Override `.icon` default.
+//
+// ********************************************************
+.input-group-search {
+    display: block;
+    position: relative;
+    min-height: $search-field-height;
+
+    // ----- [1] ----- //
+    .form-control {
+        display: inline-block;
+        z-index: 1; // [2]
+        width: 100% !important; // [3]
+        padding-right: $search-field-height; // [4]
+        border-radius: to-rem(get-deep($form-control-config, 'bd-radius.base')) !important; // [6]
+    }
+
+    // ----- [5] ----- //
+    .form-control:not(.form-control--has-icon-before) {
+        padding-left: $search-field-padding-left; // [5]
+    }
+
+    // ----- [7] ----- //
+    .form-control-wrapper {
+        display: inline-block;
+        width: 100%;
+    }
+
+    // ----- [8] ----- //
+    .input-group-search-addon-search {
+        display: inline-block;
+        position: absolute;
+        left: 0;
+        z-index: 2; // [1]
+        height: $search-field-height;
+        width: $search-icon-addon-width;
+        padding-left: $search-icon-addon-padding-horizontal;
+        padding-right: 0;
+        background-color: transparent;
+        border-width: 0;
+
+        .icon {
+            color: get-deep($form-control-config, 'colors.placeholder-text-base');
+            top: $search-icon-offset-vertical;
+            right: 0;
+            left: auto;
+            vertical-align: middle; // [9]
+        }
+    }
+
+    .input-group-search-btn-clear {
+        display: inline-block;
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: $search-field-height;
+        width: $search-field-height; // override .input-group-btn 1% width
+
+        > .btn {
+            @include close-button-base($set-opacity: false, $set-cursor: false);
+            display: block;
+            position: absolute;
+            right: 0;
+            padding-right: to-rem(get-deep($btn-config, 'padding.base.horizontal')) !important;
+            padding-left: to-rem(get-deep($btn-config, 'padding.base.horizontal')) !important;
+            height: 100%;
+            font-size: to-rem(get($close-btn-config, 'font-size'));
+            cursor: text;
+            z-index: 2; // keep in-front of .form-control
+            @include transition(opacity $default-fade-speed linear);
+            @include opacity(0);
+            @include remove-focus-outline();
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//  NESTED WITHIN PARENT INPUT GROUP
+//
+//  -> Allows a `.input-group-search` to serve as the
+//     input portion of a parent `.input-group`.
+//
+//  [1] Deprecated in `1.8.0` via UIP-823.
+//      TODO: Remove in `2.0.0`.
+//
+// ********************************************************
+.input-group {
+    > .input-group-search, // [1]
+    .search-form-control-wrapper {
+        &:first-child .form-control {
+            // Has only an addon after
+            @include border-right-radius(0 !important);
+        }
+
+        &:last-child .form-control {
+            // Has only an addon before
+            @include border-left-radius(0 !important);
+        }
+
+        &:not(:first-child):not(:last-child) .form-control {
+            // Has addons on both sides
+            border-radius: 0 !important;
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   ACTIVE SEARCH-IN-PROGRESS STYLES
+//
+//  [1] Reveal clear-search button now that there is some
+//      search criteria in the input.
+//
+//  [2] Adjust width / alignment of form control icon on
+//      the right side of a search input so that it doesn't
+//      overlap the clear button when visible.
+//
+//  [3] Deprecated in `1.8.0` via UIP-1326.
+//      TODO: Remove in `2.0.0`
+//
+//  [4] Match the opacity fade of the clear search button
+//      that it sometimes has to move to avoid overlapping.
+//
+//  [5] Show potential auto-complete results in a .dropdown-menu
+//
+//      TODO: Remove in `2.0.0`. This is a VERY old workaround
+//            for Home v1 (Angular).
+//
+//  [10] Make room for a form validation icon when a search
+//       is active (clear search button is visible).
+//
+//       See: UIP-1536
+//
+// ********************************************************
+.input-group-search.#{$active-search-class} {
+    .input-group-search-btn-clear .btn {
+        @include opacity(get($input-group-search-config, 'clear-search-btn-alpha')); // [1]
+
+        cursor: pointer;
+
+        #{$link-hover-focus} {
+            @include close-button-hover();
+        }
+
+        #{$link-pressed} {
+            @include close-button-press();
+        }
+    }
+
+    // ----- [2] ----- //
+    .form-control-feedback, // [3]
+    .form-control-icon--after {
+        @include transition((right, width) $default-fade-speed linear); // [4]
+
+        right: $search-field-height;
+        width: to-rem(icon-size-base-16());
+    }
+
+    // ----- [5] ----- //
+    .input-group-search-autocomplete {
+        display: block;
+        width: 100%;
+    }
+
+    // ----- [6] ----- //
+    .has-warning &,
+    .has-error &,
+    .has-success & {
+        .form-control {
+            $control-horizontal-padding: to-rem(get-deep($form-control-config, 'padding.base.horizontal'));
+            $clear-search-btn-width: $search-field-height;
+            $validation-icon-width: to-rem(icon-size-base-16());
+
+            padding-right: $control-horizontal-padding + $clear-search-btn-width + $validation-icon-width;
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   SIZE VARIATIONS
+//
+//  [1] Child selectors that need two separate selectors
+//      to target both a top-level `.input-group-search`,
+//      and one that is nested within a parent `.input-group`
+//
+//  [2] Child selectors that need only parent selectors
+//      representing an `.input-group` wrapping around an
+//      `.input-group-search`.
+//
+//  [3] Child selectors that need only a single parent selector
+//      that could represent a nested `.input-group-search`, OR
+//      a top-level `.input-group-search`.
+//
+//  [4] TODO: Add a namespaced CSS class to search-input form
+//            controls in the `2.0.0` release so that we can
+//            move these child selectors into selector group [3].
+//
+//  [5] TODO: Remove in 2.0.0 since we can use the
+//            `.form-control-has-icon--before` instead.
+//
+//  [6] TODO: Remove in 2.0.0 since we can use the
+//            `.form-control-has-icon--before` instead.
+//
+//  [7] Make room on the right side of the input for the
+//      "clear search" button.
+//
+//  [8] Override `.input-group-btn` 1% width.
+//
+//  [9] Deprecated `input-group-{size}` markup.
+//
+//      TODO: Remove in the `2.0.0` release.
+//
+// ********************************************************
+@each $size-name in $form-control-size-variation-names {
+    // ----- LOCAL SIZE VARIATION CONFIG ALIASES ----- //
+    $search-field-height:                   to-rem(get-deep($form-control-config, 'height.#{$size-name}'));
+    $search-field-padding-left:             to-rem(get-deep($input-group-search-config, 'search-field-padding-left.#{$size-name}'));
+    $search-icon-offset-vertical:           to-rem(get-deep($input-group-search-config, 'search-icon-offset-vertical.#{$size-name}'));
+    $search-icon-addon-padding-horizontal:  to-rem(get-deep($input-group-search-config, 'search-icon-addon-padding-horizontal.#{$size-name}'));
+    $search-icon-addon-width:               to-rem(get-deep($input-group-search-config, 'search-icon-addon-width.#{$size-name}'));
+
+
+    // ----- [1] ----- //
+    .input-group-#{$size-name} .input-group-search, // [9]
+    .input-group-search.input-group-#{$size-name},  // [9]
+    .form-group-#{$size-name} .input-group-search {
+        min-height: $search-field-height;
+
+        // ----- [4] ----- //
+        .form-control {
+            padding-left: $search-field-padding-left; // [5]
+            padding-right: $search-field-height; // [7]
+            border-radius: to-rem(get-deep($form-control-config, 'bd-radius.#{$size-name}')) !important;
+        }
+    }
+
+    // ----- [2] ----- //
+    .input-group-#{$size-name} > .input-group-search, // [9]
+    .form-group-#{$size-name} .input-group .search-form-control-wrapper {
+        &:first-child .form-control {
+            // Has only an addon after
+            @include border-right-radius(0 !important);
+        }
+
+        &:last-child .form-control {
+            // Has only an addon before
+            @include border-left-radius(0 !important);
+        }
+
+        &:not(:first-child):not(:last-child) .form-control {
+            // Has addons on both sides
+            border-radius: 0 !important;
+        }
+    }
+
+    // ----- [3] ----- //
+    .input-group-#{$size-name}, // [9]
+    .form-group-#{$size-name} {
+        // ----- [6] ----- //
+        .input-group-search-addon-search {
+            height: $search-field-height;
+            width: $search-icon-addon-width;
+            padding-left: $search-icon-addon-padding-horizontal;
+            padding-right: 0;
+
+            .icon {
+                top: $search-icon-offset-vertical;
+            }
+        }
+
+        .input-group-search-btn-clear {
+            height: $search-field-height;
+            width: $search-field-height; // [8]
+
+            > .btn {
+                padding-right: 0 !important;
+                padding-left: 0 !important;
+                width: $search-field-height;
+            }
+        }
+    }
+}

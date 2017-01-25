@@ -1,0 +1,238 @@
+// ********************************************************
+//
+//   FORM INPUT GROUP COMPONENT STYLE MODULE
+//   http://bit.ly/form-input-groups
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/forms/input-groups';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $forms-input-groups-module-config:  'core/components/atoms/forms/forms-config';
+    $forms-input-groups-module-helpers: 'core/components/atoms/forms/forms-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $forms-input-groups-module-config,
+                                          $forms-input-groups-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE STYLES
+//
+// ********************************************************
+.input-group {
+    position: relative; // for dropdowns
+    @include display-flex();
+    // Make input-groups play nice within WSD horizontal layouts
+    // @see UIP-1309
+    @include grid-size(grow);
+
+    // Undo padding and float of grid classes
+    &[class*="col-"] {
+        float: none;
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+
+// ********************************************************
+//
+//   INPUT GROUP ELEMENTS
+//
+// ********************************************************
+    // ----------------------------------------------------
+    //   FORM CONTROLS
+    // ----------------------------------------------------
+    .input-group {
+        .form-control {
+            @include input-group-cell();
+
+            //
+            // Ensure that the input is always above the
+            // _appended_ addon button for proper border colors.
+            //
+            z-index: get($form-control-config, 'z-index-within-input-group');
+            width: 100%;
+            margin-bottom: 0;
+        }
+
+        // TODO: (2.0.0) Remove support for input group controls that are not
+        // rendered within a `.form-control-inner-wrapper` element.
+        > .form-control {
+            &:first-child:not(.no-adjacent-groups) {
+                @include border-right-radius(0);
+            }
+
+            &:last-child:not(.no-adjacent-groups) {
+                @include border-left-radius(0);
+            }
+        }
+
+        .form-control-inner-wrapper {
+            &:first-child:not(.no-adjacent-groups) .form-control {
+                @include border-right-radius(0);
+            }
+
+            &:last-child:not(.no-adjacent-groups) .form-control {
+                @include border-left-radius(0);
+            }
+
+            &:not(:first-child):not(:last-child):not(.no-adjacent-groups) .form-control {
+                border-radius: 0;
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    //   INPUT GROUP TEXT ADDONS
+    // ----------------------------------------------------
+    .input-group-addon {
+        @include input-group-addon();
+
+        padding: to-rem($padding-base-vertical $padding-base-horizontal);
+        height: to-rem(component-height('base')); // so that nested radios / checkboxes don't make it taller than the input
+        font-size: to-rem($font-size-base);
+        font-weight: normal;
+        text-align: center;
+        background-color: get($btn-colors-default, 'bg-base');
+        border: to-rem(get($form-control-config, 'bd-width')) solid get-deep($form-control-config, 'colors.bd-fallback');
+        border-radius: to-rem($border-radius-base);
+
+        //
+        // Within a disabled form-group
+        //
+        .disabled & {
+            @include opacity(get($btn-config, 'disabled-alpha'), !important);
+
+            background-color: get($btn-colors-default, 'bg-base') !important;
+            border-color: get-deep($form-control-config, 'colors.bd-fallback') !important;
+        }
+
+        //
+        // Nuke default margins from checkboxes and
+        // radios to vertically center within.
+        //
+        .radio,
+        .checkbox {
+            margin: 0;
+            padding: 0; // Override top padding of `.form-horizontal .checkbox`
+            display: inline-block;
+            vertical-align: middle; // necessary for MSIE
+            //
+            // Make the parent .input-group-addon table-cell styling
+            // respect the box-model of these elems to determine width
+            //
+            width: 1.1em;
+            height: #{$line-height-base}em;
+        }
+    }
+
+    // ----------------------------------------------------
+    //   INPUT GROUP BUTTON ADDONS
+    // ----------------------------------------------------
+    .input-group-btn {
+        @include input-group-btn();
+
+        // ----- When button is to the left of the control ----- //
+        + .form-control {
+            margin-left: to-rem(get($btn-config, 'bd-width')) * -1;
+        }
+
+        // ----- Single Buttons ----- //
+        .btn {
+            position: relative;
+            @include remove-btn-punch-effect();
+
+            // Bring the "active" button to the front
+            #{$link-hover-focus},
+            #{$link-pressed},
+            &.active {
+                top: 0 !important; // no "depth" shift
+            }
+        }
+
+        // ----- Button Groups ----- //
+        .btn-group {
+            // Horizontal
+            &:not(.btn-group-vertical) .btn + .btn {
+                // Jankily prevent input button groups from wrapping
+                margin-left: to-rem(get($btn-config, 'bd-width')) * -1;
+                border-left-width: to-rem(get($btn-config, 'bd-width')) !important; // reset border width
+            }
+
+            // Vertical
+            &.btn-group-vertical .btn + .btn {
+                // Jankily prevent input button groups from wrapping
+                margin-top: to-rem(get($btn-config, 'bd-width')) * -1;
+                border-top-width: to-rem(get($btn-config, 'bd-width')) !important; // reset border width
+            }
+        }
+
+        // ----- Dropdown Buttons ----- //
+        &.open,
+        .open {
+            .btn.dropdown-toggle {
+                top: 0; // no "depth" shift
+            }
+        }
+    }
+
+
+// ********************************************************
+//
+//   SIZE VARIATIONS
+//   -> Remix the default form control sizing classes
+//      into new ones for easier manipulation.
+//
+// ********************************************************
+    @include input-group-size(xs);
+    @include input-group-size(sm);
+    @include input-group-size(lg);
+
+
+// ********************************************************
+//
+//   DOUBLE BORDER / ROUNDED CORNER STYLES
+//   -> Must add the extra `.input-group` class as part
+//      of the selector to over-rule bd-width / rounding
+//      declared for input-group size variations.
+//
+// ********************************************************
+.input-group {
+    .input-group-addon:first-child,
+    .input-group-btn:first-child .btn,
+    .input-group-btn:first-child .dropdown-toggle,
+    .input-group-btn:last-child :not(.btn-group-vertical) .btn:not(:last-child):not(.dropdown-toggle) {
+        @include border-right-radius(0);
+        border-right-width: 0;
+    }
+
+    .input-group-addon:last-child,
+    .input-group-btn:last-child .btn,
+    .input-group-btn:last-child .dropdown-toggle,
+    .input-group-btn:first-child :not(.btn-group-vertical) .btn:not(:first-child) {
+        @include border-left-radius(0);
+        border-left-width: 0;
+    }
+
+    //
+    // Restore left border for Dart "split button" dropdown component
+    // markup which nests a button group within the input group,
+    // instead of making the input group represent the dropdown itself.
+    //
+    // @see https://github.com/Workiva/web-skin/issues/1071
+    // @see http://jsfiddle.net/greglittlefieldwf/o9ycsc6n/
+    //
+    .input-group-btn .btn-group-split {
+        .btn:not(:first-child),
+        .btn-group .btn:first-child {
+            border-left-width: to-rem(get($btn-config, 'bd-width'));
+        }
+    }
+}

@@ -1,0 +1,331 @@
+// ********************************************************
+
+////
+/// Global functions to evaluate truthiness or
+/// compare type(s) and value(s)
+/// ---
+/// @access public
+/// @since 1.0.0
+/// @group core.utils.eval
+/// ---
+/// @param {*} $value
+/// ---
+/// @returns {Boolean}
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/functions/utilities/eval';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function to-list,
+                                                function _quote);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   SINGLE VALUE TYPE EVALS
+//
+// ********************************************************
+///
+/// Checks truthiness of a single value of any type.
+///
+@function is-true($value) {
+    @return if($value == null, false, $value and $value != null and $value != "" and $value != ());
+}
+
+///
+/// Checks if value is a `Bool` type.
+///
+@function is-bool($value) {
+    @return type-of($value) == 'bool';
+}
+
+///
+/// Checks if value is a `Map` type.
+///
+@function is-map($value) {
+    @return type-of($value) == 'map';
+}
+
+///
+/// Checks if value is a `List` type.
+///
+@function is-list($value) {
+    @return type-of($value) == 'list';
+}
+
+///
+/// Checks if value is an `Arglist` type.
+///
+@function is-arglist($value) {
+    @return type-of($value) == 'arglist';
+}
+
+///
+/// Checks if value is a `Number` type.
+///
+@function is-number($value) {
+    @return type-of($value) == 'number';
+}
+
+///
+/// Checks if `$value` is a `Number`, and if not zero, if the number has a unit.
+/// @since 1.3.4
+///
+@function is-number-with-valid-unit($value) {
+    $_is-valid: false;
+
+    @if is-number($value) {
+        @if remove-unit($value) == 0 and unitless($value) {
+            $_is-valid: true;
+        }
+
+        @if remove-unit($value) != 0 and not unitless($value) {
+            $_is-valid: true;
+        }
+    }
+
+    @return $_is-valid;
+}
+
+///
+/// Checks if `$value` is a `Number`, and if it lacks a unit.
+/// @since 1.3.4
+///
+@function is-unitless-number($value) {
+    @return is-number($value) and unitless($value);
+}
+
+///
+/// Checks if value is a unit of time.
+///
+@function is-time($value) {
+    // Ensure time doesn't get mistaken as a string
+    @if str-has(_quote($value), s ms) and str-has(_quote($value), 1 2 3 4 5 6 7 8 9 0) {
+        @if is-string($value) {
+            $value: to-number($value);
+        }
+    }
+
+    @return if(is-number($value), not not index(s ms, unit($value)), false);
+}
+
+///
+/// Checks if value is a `String` type.
+///
+@function is-string($value) {
+    @return type-of($value) == 'string';
+}
+
+///
+/// Checks if value is a `Color` type.
+///
+@function is-color($value) {
+    @return type-of($value) == 'color';
+}
+
+
+
+// ********************************************************
+//
+//   SINGLE NUMBER UNIT EVALS
+//
+// ********************************************************
+///
+/// Checks if number is a percentage.
+///
+@function is-percentage($value, $warn: true) {
+    @if not is-number($value) {
+        @if $warn {
+            @warn "`is-percentage` function expecting a number; #{type-of($value)} given. A non-number value cannot be a percentage; Returning false.";
+        }
+        @return false;
+    }
+
+    @return unit($value) == '%';
+}
+
+///
+/// Checks if a number's unit is `px` (pixels).
+///
+@function is-pixels($value, $warn: true) {
+    @if not is-number($value) {
+        @if $warn {
+            @warn "`is-pixels` function expecting a number; #{type-of($value)} given. A non-number value cannot have its units evaluated; Returning false.";
+        }
+        @return false;
+    }
+
+    @return unit($value) == 'px';
+}
+
+/// @alias is-pixels
+@function is-px($value, $warn: true) {
+    @return is-pixels($value, $warn);
+}
+
+///
+/// Checks if a number's unit is `rem` (relative ems).
+///
+@function is-rem($value, $warn: true) {
+    @if not is-number($value) {
+        @if $warn {
+            @warn "`is-rem` function expecting a number; #{type-of($value)} given. A non-number value cannot have its units evaluated; Returning false.";
+        }
+        @return false;
+    }
+
+    @return unit($value) == 'rem';
+}
+
+///
+/// Checks if a number's unit is `em`.
+///
+@function is-em($value, $warn: true) {
+    @if not is-number($value) {
+        @if $warn {
+            @warn "`is-em` function expecting a number; #{type-of($value)} given. A non-number value cannot have its units evaluated; Returning false.";
+        }
+        @return false;
+    }
+
+    @return unit($value) == 'em';
+}
+
+
+
+// ********************************************************
+//
+//   VALUE COMPARISON / SEARCHING
+//
+// ********************************************************
+///
+/// Shorthand method for checking equality of a single left-hand operand value with multiple right-hand operands.
+/// ---
+/// @example scss - Shorthand method to replace this:
+///   @if $value == 'initial' or $value == 'inherit' or $value == 'auto' { ... }
+///
+/// @example scss - Using a `List`:
+///   @if is($value, 'initial' 'inherit' 'auto') { ... }
+///
+/// @example scss - Using an `Arglist`:
+///   @if is($value, initial inherit auto) { ... }
+/// ---
+/// @param {*}              $value  - value to look for
+/// @param {List | Arglist} $values - list to search in for existence of `$value`
+///
+@function is($value, $values, $warn: true) {
+    @if not dependencies-met(for is,
+                             is-arglist, is-list, to-list, is-true) {
+        @return false;
+    }
+    @if is-arglist($values) {
+        // Use arglists-to-list instead of to-list to deal
+        // with Libsass compiler bug involving conversion of arglists
+        $values: arglists-to-list('#{$values}');
+    }
+    @if not is-list($values) {
+        @if $warn {
+            @warn "`is` function expecting a list; #{type-of($values)} given.";
+        }
+        @return false;
+    }
+
+    @return is-true(index($values, $value));
+}
+
+///
+/// Evaluates two numbers and determines if they divide evenly (modulus).
+/// ---
+/// @param {Number} $numerator
+/// @param {Number} $denominator
+///
+@function mod($numerator, $denominator, $warn: true) {
+    @if not dependencies-met(for mod, is-number) {
+        @return false;
+    }
+    @if not is-number($numerator) {
+        @if $warn {
+            @warn "`mod` function expecting a number for the `$numerator`; #{type-of($numerator)} given.";
+        }
+        @return false;
+    }
+    @if not is-number($denominator) {
+        @if $warn {
+            @warn "`mod` function expecting a number for the `$denominator`; #{type-of($denominator)} given.";
+        }
+        @return false;
+    }
+
+    $numerator: remove-unit($numerator);
+    $denominator: remove-unit($denominator);
+
+    @return $numerator % $denominator == 0;
+}
+
+///
+/// Returns if a value is an even number.
+/// ---
+/// @since 0.2.0
+/// @param {Number} $number
+///
+@function is-even-number($number) {
+    @if not dependencies-met(for is-even-number, mod) {
+        @return false;
+    }
+
+    @return mod($number, 2);
+}
+
+///
+/// Returns whether a string contains a given value.
+/// ---
+/// @example scss - Usage
+///   str-has(rotateY, rotateX rotateY); // true
+///   str-has(rotateY, rotate rotateX);  // true
+///   str-has(rotate, rotateY rotateX);  // false
+/// ---
+/// @param {String}         $value  - string to look for
+/// @param {List | Arglist} $values - list to search in for existence of `$value`
+///
+@function str-has($value, $values, $warn: true) {
+    @if not dependencies-met(for str-has,
+                             is-arglist, is-true, to-string, to-list) {
+        @return false;
+    }
+    @if is-arglist($values) {
+        $values: to-list($values);
+    }
+    @if not is-list($values) {
+        @if $warn {
+            @warn "`str-has` function expecting a list; #{type-of($values)} given.";
+        }
+        @return false;
+    }
+
+    $value: to-string($value);
+    $matches: 0;
+    @each $potential-match in $values {
+        @if is-true(str-index($value, to-string($potential-match))) {
+            $matches: $matches + 1;
+        }
+    }
+
+    @return if($matches > 0, true, false);
+}
+
+///
+/// Returns whether a list contains a given value.
+/// ---
+/// @param {List | Arglist} $values - list to search in for existence of `$value`
+/// @param {*}              $value  - value to look for
+///
+@function list-has($values, $value) {
+    @return not not index($values, $value);
+}

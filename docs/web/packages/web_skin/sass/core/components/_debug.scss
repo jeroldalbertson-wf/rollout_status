@@ -1,0 +1,11 @@
+@if $debug-component-module-imports {
+    @if $dupe-component-modules > 0 {
+        @debug "";
+        @debug "";
+        @debug "";
+        @warn "#{$dupe-component-modules} duplicate component modules found.";
+        @debug "";
+        @debug "";
+        @debug "";
+    }
+}

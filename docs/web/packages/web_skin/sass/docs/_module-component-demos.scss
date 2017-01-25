@@ -1,0 +1,31 @@
+// ********************************************************
+//
+//   Styles to help demonstrate
+//   Web Skin components in the docs
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/module-component-demos';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+@import "component-demos/demo-grid";
+@import "component-demos/demo-cards";
+@import "component-demos/demo-responsive-utilities";
+@import "component-demos/demo-typography";
+@import "component-demos/demo-tables";
+@import "component-demos/demo-buttons";
+@import "component-demos/demo-forms";
+@import "component-demos/demo-navs";
+@import "component-demos/demo-navbars";
+@import "component-demos/demo-modals";
+@import "component-demos/demo-carousel";
+@import "component-demos/demo-dropdowns";
+@import "component-demos/demo-tooltips";
+@import "component-demos/demo-popovers";
+@import "component-demos/demo-alerts";
+@import "component-demos/demo-progress";
+@import "component-demos/demo-icon-glyphs.scss"; // TODO: this should probably be in its own file / inlined on the CSS page
+@import "component-demos/demo-misc";

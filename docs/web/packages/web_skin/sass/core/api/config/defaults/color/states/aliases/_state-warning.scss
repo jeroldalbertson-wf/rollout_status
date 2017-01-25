@@ -1,0 +1,81 @@
+// ********************************************************
+
+////
+/// Warning Elem State Color Aliases
+/// ---
+/// @access private
+/// @type Color
+/// @group core.internals.color.state
+/// ---
+/// @requires {variable} $colors-state-warning
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/color/states/aliases/state-warning';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get);
+//
+// ********************************************************
+
+
+/// Warning Elem State Color Alias
+/// @color #fbad17
+$state-warning: get($colors-state-warning, 'base');
+
+/// Warning Elem State Text Color Alias
+/// @color #d08e0f
+$state-warning-text: get($colors-state-warning, 'text');
+
+/// Warning Elem State Background Color Alias
+/// @color #fffbf5
+$state-warning-bg: get($colors-state-warning, 'bg');
+
+/// Warning Elem State Border Color Alias
+/// @color #facf94
+$state-warning-bd: get($colors-state-warning, 'bd');
+
+
+// ----------------------------------------------------
+//   SHARED COMPONENT STATE VARIATION COLORS
+// ----------------------------------------------------
+    ///
+    /// Warning Elem State background variation used by "inline" alerts. Cards, panels, list-group items and table rows use this color when hovered.
+    /// ---
+    /// @color #fff5e3
+    /// @requires {function} shade-of
+    /// @requires {variable} $zc-orange
+    ///
+    $component-state-warning-bg-hover: shade-of($zc-orange, 12%);
+
+    ///
+    /// Warning Elem State background variation used by cards, panels, list-group items and table rows.
+    /// ---
+    /// @color #fffaf1
+    /// @requires {function} shade-of
+    /// @requires {variable} $component-state-warning-bg-hover
+    ///
+    $component-state-warning-bg: shade-of($component-state-warning-bg-hover, 50%);
+
+    ///
+    /// Warning Elem State background variation used by cards, panels, list-group items and table rows when pressed.
+    /// ---
+    /// @since 1.4.0
+    /// @color #ffecc9
+    /// @requires {variable} $component-state-warning-bg-hover
+    /// @requires {variable} $elem-pressed-text-darken-amount-default
+    ///
+    $component-state-warning-bg-press: darken($component-state-warning-bg-hover, $elem-pressed-text-darken-amount-default);
+
+    ///
+    /// Warning Elem State border variation used by alerts, cards, panels, list-group items and table rows.
+    /// ---
+    /// @color #f69864
+    /// @requires {function} shade-of
+    /// @requires {variable} $zc-orange-120
+    ///
+    $component-state-warning-bd: shade-of($zc-orange-120, 70%);

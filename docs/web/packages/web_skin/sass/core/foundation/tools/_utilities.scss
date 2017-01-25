@@ -1,0 +1,547 @@
+// ********************************************************
+//
+    $module: 'core/foundation/tools/utilities';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+//
+// Misc Utilities
+//
+    .inline-block {
+        display: inline-block;
+    }
+
+    .is-clickable {
+        cursor: pointer;
+    }
+
+    .clip-text {
+        @include truncate-text();
+
+        display: block;
+    }
+
+    .clip-text-inline {
+        @include truncate-text();
+
+        display: inline-block;
+    }
+
+    .enable-text-selection {
+        @include enable-user-select(text !important);
+    }
+
+    .disable-text-selection {
+        @include disable-user-select(!important);
+    }
+
+    .affix {
+        position: fixed;
+    }
+
+    .cursor-disabled {
+        @include disabled-cursor();
+    }
+
+    .cursor-text {
+        cursor: text;
+    }
+
+    .cursor-help {
+        cursor: help;
+    }
+
+    .cursor-move {
+        cursor: move;
+    }
+
+    .cursor-default {
+        cursor: default;
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .cursor-grab {
+        @include grab-cursor(!important);
+
+        // When a mousedown event occurs on a grabbable item,
+        // mimic `.cursor-grabbing`.
+        &:active {
+            @include grabbing-cursor(!important);
+        }
+    }
+
+    .cursor-grabbing {
+        @include grabbing-cursor(!important);
+    }
+
+    .cursor-selectable-row {
+        @include select-data-row-cursor(!important);
+    }
+
+    .cursor-selectable-column {
+        @include select-data-column-cursor(!important);
+    }
+
+    // Globally set cursor styling for disabled elems and their children
+    .disabled,
+    [disabled],
+    [aria-disabled="true"] {
+        &,
+        * {
+            @include disabled-cursor(!important);
+        }
+    }
+
+    .block-center {
+        @include block-center();
+    }
+
+    .flex-center-children {
+        @include flex-center-children();
+    }
+
+    .text-left   {
+        text-align: left !important;
+    }
+
+    .text-right  {
+        text-align: right !important;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-uppercase  {
+        text-transform: uppercase !important;
+    }
+
+    .text-lowercase  {
+        text-transform: lowercase !important;
+    }
+
+    .text-capitalize {
+        text-transform: capitalize !important;
+    }
+
+    .text-strike {
+        // CSS class to simulate the appearance of an HTML `<s>` element
+        text-decoration: line-through !important;
+    }
+
+
+//
+// Element / pseudo-element mimicing
+//
+
+// Mimics text nodes as they would appear when
+// rendered within an HTML `<textarea>` element.
+.mimic-textarea {
+    @include mimic-textarea();
+}
+
+// Mimics an <input> placeholder pseudo-element.
+.mimic-form-control-placeholder {
+    @include form-control-placeholder-styles();
+}
+
+//
+// Floats
+//
+@include component-floats();
+
+
+//
+// Horizontal alignment used to arrange
+// symbols / text labels within components
+//
+@include component-symbol-alignment();
+
+
+//
+// Spacing utilities
+//
+@include component-spacing-utility-classes();
+
+
+//
+// Toggling content
+//
+    //
+    // Only display content to screen readers
+    //
+    // @see http://a11yproject.com/posts/how-to-hide-content/
+    //
+    .sr-only {
+        @include sr-only();
+    }
+
+    //
+    // Only display content to screen readers
+    // Use in conjunction with `sr-only` mixin
+    // to only display content when it's focused
+    // Useful for "Skip to main content" links
+    //
+    // @see http://www.w3.org/TR/2013/NOTE-WCAG20-TECHS-20130905/G1
+    //
+    .sr-only-focusable {
+        @include sr-only-focusable();
+    }
+
+    .hide {
+        display: none !important;
+        // if an element has .hide - don't show the pseudo classes either
+        &:before,
+        &:after {
+            display: none !important;
+        }
+    }
+
+    .show {
+        display: block !important;
+        // if an element has .hide - don't show the pseudo classes either
+        &:before,
+        &:after {
+            display: block !important;
+        }
+    }
+
+    .invisible,
+    .hidden {
+        visibility: hidden;
+    }
+
+    html.hidden {
+        visibility: visible;
+    }
+
+    // image replacement
+    .text-hide {
+        @include hide-text();
+    }
+
+    // angular cloaking
+    [ng-cloak],
+    [data-ng-cloak],
+    .ng-cloak {
+        display: none;
+
+        &.show {
+            display: block !important;
+        }
+    }
+
+    // hide empty angular elems
+    span.ng-scope,
+    div.ng-scope {
+        &:empty {
+            display: none !important;
+        }
+    }
+
+
+//
+// Toggling animations
+//
+    .play,
+    .play * {
+        @include animation-start();
+    }
+
+    .pause,
+    .pause *
+    .stop,
+    .stop * {
+        @include animation-stop();
+    }
+
+
+//
+// Overflow for scrolling elements
+//
+    // normalize
+    @mixin normalize-scroll { overflow: none; }
+
+    // AUTO (show scrollbars on-demand)
+    .scroll-x {
+        @include normalize-scroll();
+        overflow-x: auto;
+        @include scroll-inertia();
+    }
+
+    .scroll-y {
+        @include normalize-scroll();
+        overflow-y: auto;
+        @include scroll-inertia();
+    }
+
+    .scroll {
+        @include normalize-scroll();
+        overflow: auto;
+        @include scroll-inertia();
+    }
+
+    // SCROLL (always show scrollbars)
+    .scroll-x-force {
+        @include normalize-scroll();
+        overflow-x: scroll;
+        @include scroll-inertia();
+    }
+
+    .scroll-y-force {
+        @include normalize-scroll();
+        overflow-y: scroll;
+        @include scroll-inertia();
+    }
+
+    .scroll-force {
+        @include normalize-scroll();
+        overflow: scroll;
+        @include scroll-inertia();
+    }
+
+    // HIDDEN (disable scrolling)
+    .no-scroll-x {
+        overflow-x: hidden;
+    }
+
+    .no-scroll-y {
+        overflow-y: hidden;
+    }
+
+    .no-scroll {
+        @include force-overflow(hidden);
+    }
+
+    // ALLOW overflow with no scrolling
+    .overflow-visible {
+        @include force-overflow(visible);
+    }
+
+    .overflow-x-visible {
+        overflow-x: visible;
+    }
+
+    .overflow-y-visible {
+        overflow-y: visible;
+    }
+
+    // ----- scrolling (word-wrap) for code-blocks ----- //
+    .pre-word-wrap-disabled {
+        @include disable-pre-word-wrap($important: true);
+    }
+
+    .pre-word-wrap-enabled {
+        @include enable-pre-word-wrap($important: true);
+    }
+
+
+//
+// Muted text modifiers
+//
+// .text-muted will "mute" any color its applied to
+// based on the color the text already has
+//
+    .text-muted {
+        @include text-muted();
+    }
+
+
+//
+// Utility Color Classes for Background / Text
+//
+    .bg-white {
+        background-color: $white !important;
+    }
+
+    .text-white {
+        color: $white !important;
+    }
+
+    .text-highlighted {
+        @include text-highlighted();
+    }
+
+    strong.text-highlighted {
+        font-weight: normal;
+    }
+
+    em.text-highlighted {
+        font-style: normal;
+    }
+
+
+//
+// Palette / State Color Classes
+//
+    @each $state, $palette in $default-states {
+        // not actually a bg/text color... just the base color for a given state
+        $state-color-base: get($palette, base);
+        $state-color-text: get($palette, text);
+        $state-color-hover: darken($state-color-base, $elem-hover-bg-darken-amount-default);
+        $state-color-press: darken($state-color-hover, $elem-pressed-bg-darken-amount-default);
+
+        // Background Colors
+        .bg-#{$state} {
+            background-color: $state-color-base !important;
+            color: $white !important;
+
+            // if its a clickable/actionable elem... add a hover/press effect
+            &.hitarea {
+                #{$link-hover-focus} {
+                    background-color: $state-color-hover !important;
+                }
+                #{$link-pressed} {
+                    background-color: $state-color-press !important;
+                }
+            }
+        }
+
+        // Border colors
+        .bd-#{$state} {
+            border-color: $state-color-base !important;
+
+            // if its a clickable/actionable elem... add a hover/press effect
+            &.hitarea {
+                #{$link-hover-focus} {
+                    border-color: $state-color-hover !important;
+                }
+                #{$link-pressed} {
+                    border-color: $state-color-press !important;
+                }
+            }
+        }
+
+        // Text Colors
+        .text-#{$state} {
+            color: $state-color-text !important;
+        }
+    }
+
+    // "base" color palette classes for text
+    $global-color-palettes: get($colors, 'global');
+    @each $palette, $color in $global-color-palettes {
+        $color-base: get($color, '100'); // get base color for this palette
+        $color-hover: lighten($color-base, $elem-hover-bg-darken-amount-default);
+        $color-press: darken($color-base, $elem-pressed-bg-darken-amount-default);
+
+        .bg-#{$palette} {
+            background-color: $color-base !important;
+            color: contrast-color($color-base) !important; // ensure appropriate contrast for text
+
+            // if its a clickable/actionable elem... add a hover/press effect
+            &.hitarea {
+                #{$link-hover-focus} {
+                    background-color: $color-hover !important;
+                }
+                #{$link-pressed} {
+                    background-color: $color-press !important;
+                }
+            }
+        }
+
+        .bd-#{$palette} {
+            border-color: $color-base !important;
+
+            // if its a clickable/actionable elem... add a hover/press effect
+            &.hitarea {
+                #{$link-hover-focus} {
+                    border-color: $color-hover !important;
+                }
+                #{$link-pressed} {
+                    border-color: $color-press !important;
+                }
+            }
+        }
+
+        .text-#{$palette} {
+            color: $color-base !important;
+
+            &.hitarea {
+                #{$link-hover-focus} {
+                    color: $color-hover !important;
+                }
+                #{$link-pressed} {
+                    color: $color-press !important;
+                }
+            }
+        }
+    }
+
+    //
+    // WFML doctype classification bg/text colors (primarily used for labels)
+    //
+    @each $palette, $color in get($colors-global-doctypes, 'wfml-doc') {
+        $color-base:  get($color, 'base');
+        $color-hover: get($color, 'hover');
+        $color-press: darken($color-hover, $elem-pressed-bg-darken-amount-default);
+
+        .bg-doctype-#{$palette} {
+            background-color: $color-base !important;
+
+            // if its a clickable/actionable elem... add a hover/press effect
+            &.hitarea {
+                #{$link-hover-focus} {
+                    background-color: $color-hover !important;
+                }
+                #{$link-pressed} {
+                    background-color: $color-press !important;
+                }
+            }
+        }
+
+        .text-doctype-#{$palette} {
+            color: $color-base !important;
+        }
+    }
+
+
+//
+// BROWSER FEATURE SUPPORT UTILITIES
+//
+// *** These Require Modernizr.js ***
+//
+    // fix the ios orientation change
+    // bug that shifts the html elem
+    // to the left
+    .touch html {
+        position: fixed;
+        width: 100%;
+    }
+
+    // don't display this since the
+    // fallback text within the <video>
+    // tag will show instead.
+    .novideo {
+        .video-help { display: none; }
+    }
+
+
+//
+// BROWSER/OS SUPPORT UTILITIES
+//
+// *** These Require ua-sniffer.js ***
+//
+    // not a mobile device
+    .desktop_laptop {
+        // don't highlight links that the device cannot execute
+        [href^="tel"] {
+            cursor: default;
+            text-decoration: none;
+            color: inherit !important;
+        }
+    }
+
+
+//
+// Element that can be used to measure
+// scrollbar width of any element
+//
+.scrollbar-measure {
+    @include scrollbar-measure();
+}

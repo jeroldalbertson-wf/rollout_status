@@ -1,0 +1,247 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for XBRL Icons
+ * ---
+ * MSIE Support: 10+
+ * Touch UI Support: false
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ *   XBRL webfont (static/fonts/icons/Wdesk_Icons_Xbrl.*)
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import "../core/api";
+
+
+
+// ----------------------------------------------------
+//   XBRL Icon Webfont
+// ----------------------------------------------------
+    @include ws-font-face($icon-font-name-xbrl, $icon-font-path-xbrl);
+
+    .icon {
+        &[class*="icon-xbrl"],
+        &[class*="icon-twfr-xbrl"] {
+            @include icon-set-xbrl();
+        }
+    }
+
+
+
+// ----------------------------------------------------
+//   PUA DECLARATIONS (16px)
+// ----------------------------------------------------
+    @include ws-icon-glyph("e900",  $selector: '.icon-xbrl-ixbrl',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e901",  $selector: '.icon-xbrl-hypercube',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e902",  $selector: '.icon-xbrl-axis-defaults',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e903",  $selector: '.icon-xbrl-data-quality-error',
+                                    $first-color: $zc-red);
+
+    @include ws-icon-glyph("e904",  $selector: '.icon-xbrl-error',
+                                    $first-color: $zc-red);
+
+    @include ws-icon-glyph("e905",  $selector: '.icon-xbrl-data-quality-informational',
+                                    $first-color: $zc-blue-120);
+
+    @include ws-icon-glyph("e907",  $selector: '.icon-xbrl-informational',
+                                    $first-color: $zc-blue-120);
+
+    @include ws-icon-glyph("e908",  $selector: '.icon-xbrl-data-quality-warning',
+                                    $first-color: $zc-orange);
+
+    @include ws-icon-glyph("e909",  $selector: '.icon-xbrl-warning',
+                                    $first-color: $zc-orange);
+
+    @include ws-icon-glyph("e90a",  $selector: '.icon-xbrl-concept-removal',
+                                    $second-color: $zc-orange-120);
+
+    @include ws-icon-glyph("e90b",  $selector: '.icon-xbrl-export-taxonomy',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e90c",  $selector: '.icon-xbrl-validate-outline',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e90d",  $selector: '.icon-xbrl-filter',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e910",  $selector: '.icon-xbrl-tooltip');
+
+    @include ws-icon-glyph("e911",  $selector: '.icon-xbrl-doc-setting',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e906",  $selector: '.icon-xbrl-project-refresh',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e6c9",  $selector: '.icon-xbrl-flagged-sign');
+
+    @include ws-icon-glyph("e628",  $selector: '.icon-xbrl-replace-extension',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e6ca",  $selector: '.icon-xbrl-mixed-sign');
+
+    @include ws-icon-glyph("e70c",  $selector: '.icon-xbrl-concept-extension',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-orange,
+                                    $second-color-fn: 'icon-xbrl-global-extension-after');
+
+    @include ws-icon-glyph("e70d",  $selector: '.icon-xbrl-concept',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e70e",  $selector: '.icon-xbrl-member-extension',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-orange,
+                                    $second-color-fn: 'icon-xbrl-global-extension-after');
+
+    @include ws-icon-glyph("e70f",  $selector: '.icon-xbrl-member',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e710",  $selector: '.icon-xbrl-outline-abstract-extension',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-orange,
+                                    $second-color-fn: 'icon-xbrl-global-extension-after');
+
+    @include ws-icon-glyph("e711",  $selector: '.icon-xbrl-outline-abstract',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e712",  $selector: '.icon-xbrl-outline-axis-extension',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-orange,
+                                    $second-color-fn: 'icon-xbrl-global-extension-after');
+
+    @include ws-icon-glyph("e713",  $selector: '.icon-xbrl-outline-axis',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e714",  $selector: '.icon-xbrl-outline-domain-extension',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-orange,
+                                    $second-color-fn: 'icon-xbrl-global-extension-after');
+
+    @include ws-icon-glyph("e715",  $selector: '.icon-xbrl-outline-domain',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e716",  $selector: '.icon-xbrl-outline-table-extension',
+                                    $first-color: $zc-blue,
+                                    $second-color: $zc-orange,
+                                    $second-color-fn: 'icon-xbrl-global-extension-after');
+
+    @include ws-icon-glyph("e717",  $selector: '.icon-xbrl-outline-table',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e720",  $selector: '.icon-xbrl-blacklines-tab');
+
+    @include ws-icon-glyph("e721",  $selector: '.icon-xbrl-compare',
+                                    $first-color: $zc-gray-80,
+                                    $second-color: $zc-gray-40);
+
+    @include ws-icon-glyph("e722",  $selector: '.icon-xbrl-severity-tab',
+                                    $top: -.05rem);
+
+    @include ws-icon-glyph("e723",  $selector: '.icon-xbrl',
+                                    $first-color: $zc-gray,
+                                    $second-color: shade-of($zc-gray, 50%));
+
+    @include ws-icon-glyph("e90e",  $selector: '.icon-xbrl-concept-deprecated',
+                                    $second-color: $white);
+
+    @include ws-icon-glyph("e90f",  $selector: '.icon-xbrl-concept-new',
+                                    $first-color: $link-color-hover,
+                                    $second-color: $white);
+
+
+
+// ----------------------------------------------------
+//   PUA DECLARATIONS (24px)
+// ----------------------------------------------------
+    @include ws-icon-glyph("e914",  $selector: '.icon-twfr-xbrl-concept',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e915",  $selector: '.icon-twfr-xbrl-member',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e916",  $selector: '.icon-twfr-xbrl-outline-axis',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e917",  $selector: '.icon-twfr-xbrl-outline-domain',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e918",  $selector: '.icon-twfr-xbrl-outline-table',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e919",  $selector: '.icon-twfr-xbrl-severity-tab');
+
+    @include ws-icon-glyph("e91a",  $selector: '.icon-twfr-xbrl-filter',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e912",  $selector: '.icon-twfr-xbrl',
+                                    $first-color: shade-of($zc-gray, 50%),
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e997",  $selector: '.icon-twfr-xbrl-blocktag-add',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e998",  $selector: '.icon-twfr-xbrl-detect',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e999",  $selector: '.icon-twfr-xbrl-label-sync',
+                                    $first-color: $zc-blue);
+
+    @include ws-icon-glyph("e99a",  $selector: '.icon-twfr-xbrl-locate',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e99b",  $selector: '.icon-twfr-xbrl-settings-advanced',
+                                    $second-color: $zc-blue);
+
+    @include ws-icon-glyph("e913",  $selector: '.icon-twfr-xbrl-project-refresh',
+                                    $second-color: $zc-green);
+
+
+// ----------------------------------------------------
+//   DEPRECATED PUA DECLARATIONS / FONT SELECTORS
+//
+//   TODO: REMOVE IN THE 2.0.0 RELEASE
+// ----------------------------------------------------
+    .icon {
+        &.icon-project-refresh-xbrl,
+        &.icon-twfr-project-refresh-xbrl,
+        &.icon-tab-xbrl-blacklines,
+        &.icon-tab-xbrl-severity {
+            @include icon-set-xbrl();
+        }
+    }
+
+    @include ws-icon-glyph("e906",  $selector: '.icon-project-refresh-xbrl',
+                                    $second-color-fn: 'icon-xbrl-project-refresh-after',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e720",  $selector: '.icon-tab-xbrl-blacklines');
+
+    @include ws-icon-glyph("e722",  $selector: '.icon-tab-xbrl-severity',
+                                    $top: -.05rem);
+
+    @include ws-icon-glyph("e913",  $selector: '.icon-twfr-project-refresh-xbrl',
+                                    $second-color-fn: 'icon-twfr-xbrl-project-refresh-after',
+                                    $second-color: $zc-green);
+
+    @include ws-icon-glyph("e900",  $selector: '.icon-xbrl-analyzer-taxonomy-off',
+                                    $second-color: $zc-orange-120,
+                                    $first-color-font: $icon-font-name-main,
+                                    $second-color-fn: 'icon-connection-lost-after');
+
+    @include ws-icon-glyph("e901",  $selector: '.icon-xbrl-analyzer-taxonomy-on',
+                                    $second-color: $zc-green,
+                                    $first-color-font: $icon-font-name-main,
+                                    $second-color-fn: 'icon-connection-made-after');

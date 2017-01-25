@@ -1,0 +1,257 @@
+// ********************************************************
+//
+//   POPOVER DIALOG COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-popovers
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/dialogs/popovers';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $dialogs-popovers-module-config:      'core/components/atoms/dialogs/popovers-shared-config';
+    $dialogs-popover-tour-module-config:  'core/components/atoms/dialogs/popovers-tour-config';
+    $dialogs-popovers-module-helpers:     'core/components/atoms/dialogs/dialogs-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $dialogs-popovers-module-config,
+                                          $dialogs-popover-tour-module-config,
+                                          $dialogs-popovers-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE POPOVER CLASS
+//
+// ********************************************************
+.popover {
+    position: absolute;
+    z-index: z('popover');
+    display: none; // js will reveal
+    padding: to-rem($popover-padding);
+    overflow: visible;
+    background-color: $popover-bg;
+    border: to-rem($popover-bd-width) solid $popover-bd-color;
+    border-radius: to-rem($popover-bd-radius);
+    color: $popover-text-color;
+    @include opacity(0); // js will reveal by adding the `in` CSS class
+    @include background-clip(padding-box);
+}
+
+
+// ********************************************************
+//
+//   POPOVER CONTENT WRAPPER
+//   -> Wraps around `.title` and `.content`
+//
+// ********************************************************
+.popover .inner {
+    position: relative;
+    z-index: 2; // reset for tooltip content layering / keep above .arrow
+    width: 100%;
+    min-width: to-rem($popover-min-width);
+    max-width: to-rem($popover-max-width);
+    padding: to-rem($popover-content-padding);
+    border-radius: to-rem($popover-bd-radius);
+    overflow: auto;
+    text-align: left;
+    white-space: normal;
+}
+
+
+// ********************************************************
+//
+//   POPOVER TITLE
+//
+// ********************************************************
+.popover .title {
+    margin: to-rem($popover-title-margin);
+    padding: to-rem($popover-title-padding);
+    font-size: to-rem($popover-title-font-size);
+    font-weight: $popover-title-font-weight;
+    line-height: to-rem($popover-title-line-height);
+    @include border-top-radius(to-rem($popover-bd-radius - $popover-bd-width));
+    @include disable-user-select();
+
+    * { @include disable-user-select(); }
+
+    &:empty { display: none; }
+}
+
+
+// ********************************************************
+//
+//   DISMISSIBLE VARIATION
+//   -> Expands the right padding to account for the
+//      `.close` button's positioning
+//
+// ********************************************************
+.popover--dismissible {
+    .title,
+    .content {
+        padding-right: $popover-close-btn-width - to-rem($popover-content-padding);
+    }
+
+    // If there is a title AND content, there's no need to
+    // adjust the right padding of the content.
+    .title + .content {
+        padding-right: 0;
+    }
+
+    // Adjust close button position
+    .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        text-align: right;
+        font-size: to-rem(get($close-btn-config, 'font-size-lg'));
+        padding-top: to-rem($popover-title-padding-top);
+        padding-right: to-rem($popover-content-padding);
+        line-height: $popover-close-btn-height / 2;
+        width: $popover-close-btn-width;
+        height: $popover-close-btn-height;
+    }
+}
+
+
+// ********************************************************
+//
+//   POPOVER CONTENT
+//
+// ********************************************************
+.popover .content {
+    // prevent double spacing
+    // at the bottom of popovers
+    > *:last-child {
+        margin-bottom: 0;
+    }
+}
+
+
+// ********************************************************
+//
+//   POPOVER ARROWS IN ALL DIRECTIONS
+//
+//   [1] Use non-negative margins for v2 overlays to enable
+//       proper margin measuring.
+//
+//   [2] Override default `display: none`; v2 overlay
+//       popovers will always be shown if in the DOM.
+// ********************************************************
+.popover {
+    @include triangles($triangle-width: $popover-arrow-width,
+                       $triangle-bg: $popover-arrow-color,
+                       $outer-bd-width: $popover-bd-width,
+                       $outer-bd-color: $popover-arrow-outer-color,
+                       $align-center: true);
+
+    .overlay-target--v2 & {
+        @include triangle-margin($triangle-width: $popover-arrow-width, $use-negative-margins: false); // [1]
+
+        display: block; // [2]
+    }
+}
+
+
+//
+// Popover Backdrop
+//
+.popover-backdrop {
+    @include dialog-backdrop-default();
+    // never want a popover backdrop to overlap the navbar it was spawned from.
+    z-index: z('fixed-navbar') - 1;
+}
+
+
+// ********************************************************
+//
+//   POPOVER VARIATIONS
+//
+// ********************************************************
+.popover {
+    // ----------------------------------------------------
+    //   POPOVER LIST-GROUP / DD MENU NAVIGATION
+    // ----------------------------------------------------
+    &.popover-menu {
+        // make bd color match dropdown-menu
+        border-color: get($dropdown-menu-color-config, 'bd-color');
+
+        // adjust triangle colors
+        @include triangles($outer-bd-color: get($dropdown-menu-color-config, 'bd-color'));
+
+        .overlay-target--v2 & {
+            // Size child `.inner` vertically using flexbox so that it scrolls when
+            // the `.dropdown` can't fit within the `.popover-menu`'s max-height,
+            // but matches the height otherwise.
+            @include display-flex(flex);
+            @include flex-direction(column);
+        }
+
+        .inner {
+            padding: 0;
+            min-width: 0;
+            max-width: none;
+        }
+
+        .title {
+            margin-top: 0;
+            padding-left: to-rem(get($dropdown-menu-base-size-config, 'link-padding-horizontal'));
+            padding-right: to-rem(get($dropdown-menu-base-size-config, 'link-padding-horizontal'));
+        }
+
+        // can nest list-group or dropdown-menu
+        .dropdown-menu,
+        .list-group {
+            position: relative;
+            display: block;
+            width: 100%;
+            min-width: 0; // Parent determines width
+            max-width: none; // Parent determines width
+            padding: 0;
+            margin-top: to-rem($popover-bd-radius - $popover-padding);
+            margin-right: to-rem($popover-padding) * -1;
+            margin-bottom: to-rem($popover-bd-radius - $popover-padding);
+            margin-left: to-rem($popover-padding) * -1;
+            border-width: 0;
+            box-shadow: none;
+            background-color: transparent;
+            // Fix for "clipped" info panel shown in https://github.com/Workiva/web-skin/issues/1153
+            overflow: visible;
+        }
+
+        .dropdown-menu--outer {
+            margin: 0;
+
+            > .dropdown-menu--inner:not(:first-child) {
+                margin-top: 0;
+            }
+
+            > .dropdown-menu--inner:not(:last-child) {
+                margin-top: 0;
+            }
+        }
+
+        .dropdown-menu--inner {
+            @include dropdown-menu-nested();
+
+            margin-top: to-rem($popover-bd-radius - $popover-padding);
+            margin-bottom: to-rem($popover-bd-radius - $popover-padding);
+        }
+
+        .list-group-item {
+            border-top-color: get($dropdown-menu-color-config, 'divider-bd-color');
+        }
+    }
+
+    // ----------------------------------------------------
+    //   CONTAINED MODAL IS OPEN WITHIN A POPOVER
+    // ----------------------------------------------------
+    &.modal-container {
+        // match transition of the modal backdrop
+        @include transition(opacity $default-fade-speed linear 0s);
+        @include activate-gpu();
+    }
+}

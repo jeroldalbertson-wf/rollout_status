@@ -1,0 +1,65 @@
+// ********************************************************
+
+////
+/// Global functions relating to displaying components / elements
+/// ---
+/// @since 1.0.0
+/// @access public
+/// @group core.display
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/functions/display';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function list-has);
+//
+// ********************************************************
+
+
+///
+/// Returns z-index value by key.
+/// ---
+/// @param {String} $key
+/// @returns {Number}
+///
+@function z($key) {
+    $index: get-deep($z-index, quote($key));
+    @if $index == null {
+        @error "No key `#{$key}` found in the global `$z-index` map variable.";
+    }
+
+    @return $index;
+}
+
+
+///
+/// Returns list of HTML elements based on display type.
+/// ---
+/// @requires {external} SassScript/map-keys    <http://bit.ly/sass_map-keys>
+/// ---
+/// @param {String} $type
+/// @param {Map} $element-types [$global-element-types]
+/// ---
+/// @returns {List | String} - selector or list of selectors
+///
+@function elements-of-type($type, $element-types: $global-element-types) {
+    @if not list-has(map-keys($element-types), $type) {
+        @error "`elements-of-type` function could not find #{$type} key within provided `$element-types` map.";
+    }
+
+    $elements: get($element-types, $type);
+    $clean-elements: ();
+
+    @each $element in $elements {
+        $clean-elements: append($clean-elements, _unquote($element), comma);
+    }
+
+    @return $clean-elements;
+}

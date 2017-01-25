@@ -1,0 +1,26 @@
+// ********************************************************
+//
+//   Helper functions used to calculate config values for
+//   Web Skin nav components
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/helpers/nav-config-helpers';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+///
+/// Calculate the margin values for a `.divider` component nested within a vertically-stacked navigation structure.
+/// ---
+/// @since 1.0.0
+/// @group core.components.navs
+/// ---
+/// @param {Number} $key-spacing - Spacing amount in nav structure that should be used to ensure the margin around the divider is proportional
+/// @param {Number} $divider-bd-width - Width of divider border
+/// ---
+/// @returns {List} - Shorthand list of margin values
+///
+@function calc-nav-divider-margin($key-spacing, $divider-bd-width) {
+    @return $key-spacing 0 ($key-spacing - $divider-bd-width) 0;
+}

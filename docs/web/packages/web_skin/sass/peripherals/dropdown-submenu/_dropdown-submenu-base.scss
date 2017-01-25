@@ -1,0 +1,146 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/dropdown-submenu/atoms/dropdown-submenu-base';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE DROPDOWN MENU WITH SUBMENUS
+//   -> .has-submenu class must be added to parent
+//      .dropdown-menu to ensure the submenus can appear
+//      outside the bounding box of the parent menu
+//
+// ********************************************************
+.dropdown-menu.has-submenu {
+    overflow: visible;
+}
+
+
+// ********************************************************
+//
+//   BASE DROPDOWN SUBMENU CONTAINER
+//   -> `<li>` within another `.dropdown-menu`
+//   -> Extra specificity required to override .dropdown
+//
+// ********************************************************
+.dropdown.has-submenu {
+    display: block;
+    overflow: visible;
+    position: relative;
+}
+
+
+// ********************************************************
+//
+//   BASE DROPDOWN SUBMENU (`<ul>`)
+//
+// ********************************************************
+.has-submenu {
+    > .dropdown-menu {
+        top: 0;
+        left: 100%;
+        margin-top: to-rem(get($dd-submenu-size-config, 'padding-vertical') + $dropdown-menu-bd-width) * -1;
+        margin-left: 0;
+    }
+
+    // ----------------------------------------------------
+    //   DROPUP VARIATION
+    // ----------------------------------------------------
+    &.dropup > .dropdown-menu {
+        top: auto;
+        bottom: 0;
+        margin-top: 0;
+        margin-bottom: to-rem($dropdown-menu-bd-width * -2);
+    }
+}
+
+
+// ********************************************************
+//
+//   DROPDOWN SUBMENU ITEMS / ITEM HITAREAS
+//
+// ********************************************************
+.has-submenu {
+    // ----------------------------------------------------
+    //   ITEM THAT IS USED TO REVEAL THE SUBMENU ITSELF
+    // ----------------------------------------------------
+    > .hitarea {
+        // Ensure we can position the caret using `:after`
+        position: relative;
+        // Ensure caret doesn't overlap the menu item text
+        // !important necessary to override over-qualified workspaces menu selector
+        // TODO: Address specificity when we pull workspaces out of Truss.
+        padding-right: to-rem($dd-submenu-caret-align-right + $caret-width) !important;
+
+        // Caret to indicate there is a submenu
+        &:after {
+            position: absolute;
+            top: to-rem($dd-submenu-caret-align-top);
+            right: to-rem($dd-submenu-caret-align-right);
+            display: block;
+            width: 0;
+            height: 0;
+            margin: 0;
+            content: " ";
+            @include triangle-direction($direction: 'right',
+                                        $width: $caret-width,
+                                        $color: get($nav-secondary-link-config, 'text-color')
+                                       );
+            @include opacity(get($caret-config, 'alpha'));
+        }
+    }
+
+    // ----------------------------------------------------
+    //   REVEAL SUBMENU ON HOVER / FOCUS
+    // ----------------------------------------------------
+    #{$link-hover-focus} {
+        > .dropdown-menu {
+            display: block;
+        }
+
+        // Indicate that the submenu is active
+        > .hitarea {
+            @include dropdown-menu-item-hover();
+
+            // Caret
+            &:after {
+                @include opacity(1);
+                @include triangle-direction('right', get($nav-secondary-link-config, 'text-color-hover'));
+            }
+        }
+    }
+
+    // Override `.active` bg / cursor styles
+    &.active {
+        #{$link-hover-focus} {
+            > .hitarea {
+                @include dropdown-menu-item-hover();
+                cursor: pointer !important;
+            }
+        }
+    }
+}
+
+// ********************************************************
+//
+//   SUBMENU AS AN OVERLAY
+//
+//   [3] Ensure that submenus triggered from popover menus
+//       appear on top of the menu and its native scrollbar.
+// ********************************************************
+.dropdown-overlay > .dropdown-menu--submenu {
+  margin-top: to-rem(-(get($dropdown-menu-base-size-config, 'padding-vertical') + $dropdown-menu-bd-width));
+
+  &.dropdown-menu-lg {
+    margin-top: to-rem(-(get($dropdown-menu-lg-size-config, 'padding-vertical') + $dropdown-menu-bd-width));
+  }
+}
+
+.popover-menu__submenu {
+    z-index: get($z-index, 'popover'); // [3]
+}

@@ -1,0 +1,296 @@
+// ********************************************************
+
+////
+/// Global functions to help with size/box-model related needs
+/// ---
+/// @access public
+/// @since 1.0.0
+/// @group core.size.box-model
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/helpers/functions/size';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function is,
+                                                function mod,
+                                                function to-px,
+                                                function to-decimal,
+                                                function is-pixels,
+                                                function is-rem,
+                                                function is-em,
+                                                function is-percentage);
+//
+// ********************************************************
+
+
+///
+/// Normalizes the map config key for use in `get()`, `get-deep()` or `map-get()`, etc., when the size requested is `xxs`. If at some point we actually add
+/// an `xxs` key to each component size variation map, this can be removed.
+/// ---
+/// @since 1.3.0
+/// @returns {String}
+///
+@function normalize-xxs-map-key($size) {
+    $size: unquote($size);
+
+    @if $size == xxs {
+        @return xs;
+    }
+
+    @return $size;
+}
+
+
+///
+/// Approximate the width taken up by a certain number of characters based on their font size and weight.
+///
+/// _Assumes Arial / Helvetica font-family._
+/// ---
+/// @since 1.4.0
+/// ---
+/// @param {Number} $char-count
+/// @param {Number} $font-size - Must be provided in pixels.
+/// @param {String} $font-weight [normal]
+/// @param {Number} $char-ratio-adjustment [0] - Do not use this unless you know what you're doing.
+/// ---
+/// @returns {Number} - Width (in pixels)
+///
+@function calc-text-width($char-count, $font-size, $font-weight: normal, $char-ratio-adjustment: 0) {
+    @if not is-pixels($font-size) {
+        @error "Function `calc-text-width` expecting the `$font-size` argument value to have a unit of `px`. Was: `#{unit($font-size)}`";
+    }
+
+    $is-bold: if($font-weight == normal, false, true);
+    $char-ratio: if($is-bold, 1.95, 2);
+
+    @if $font-size < get($font-size-variation-config, 'md') {
+        $char-ratio: 1.9;
+    }
+
+    @if $font-size < get($font-size-variation-config, 'sm') {
+        $char-ratio: 2.03;
+    }
+
+    $char-ratio: $char-ratio + $char-ratio-adjustment;
+    $average-char-width: round($font-size / $char-ratio);
+
+    @return round($char-count * $average-char-width);
+}
+
+
+///
+/// Calculates height of any element based on it's `font-size`, `line-height`, vertical `padding` and `border-width` values.
+/// ---
+/// @param {Number} $font-size        [$font-size-base]
+/// @param {Number} $line-height      [$line-height-base]
+/// @param {Number} $padding-vertical [$padding-base-vertical]
+/// @param {Number} $bd-width         [0]
+/// ---
+/// @returns {Number} - calculated height value
+///
+@function box-model-height($font-size: $font-size-base,
+                           $line-height: $line-height-base,
+                           $padding-vertical: $padding-base-vertical,
+                           $bd-width: 0) {
+
+    @if not is-pixels($font-size) {
+        @if is-rem($font-size) {
+            $font-size: to-px($font-size);
+        } @else {
+            @error "Function `box-model-height` expecting `$font-size` to be a pixel or rem value. Was #{unit($font-size)}.";
+        }
+    }
+    @if not is-pixels($padding-vertical) {
+        @if is-rem($padding-vertical) {
+            $padding-vertical: to-px($padding-vertical);
+        } @else {
+            @error "Function `box-model-height` expecting `$padding-vertical` to be a pixel or rem value. Was #{unit($padding-vertical)}.";
+        }
+    }
+    @if is-em($line-height) or is-rem($line-height) {
+        @error "Function `box-model-height` expecting `$line-height` to be a unitless, percent or pixel value. Was #{unit($line-height)}.";
+    }
+    @if is-em($bd-width) {
+        @error "Function `box-model-height` expecting `$bd-width` to be a unitless, percent, pixel or rem value. Was #{unit($bd-width)}.";
+    }
+
+    @if is-rem($bd-width) {
+        $bd-width: to-px($bd-width);
+    }
+
+    $inner-height: null;
+    @if unitless($line-height) {
+        $inner-height: round($font-size * $line-height);
+    } @else if is-percentage($line-height) {
+        $inner-height: round($font-size * to-decimal($line-height));
+    } @else {
+        $inner-height: max($line-height, $font-size);
+    }
+    $padding-height: $padding-vertical * 2;
+    $border-height: $bd-width * 2;
+
+    $elem-height: ceil($inner-height + $padding-height + $border-height);
+
+    @return $elem-height;
+}
+
+
+///
+/// Calculates height of a component based on it's `font-size`, `line-height`, `padding` and `border-width` values.
+/// ---
+/// @requires {variable} $global-component-bd-width
+/// ---
+/// @param {String} $size ['base'] - Name of component size variation [`base`, `xs`, `sm`, `lg`]
+/// @param {Number} $bd-width [1px] - Border width of component
+/// ---
+/// @returns {Number} - calculated component height value
+///
+@function component-height($size: 'base', $bd-width: $global-component-bd-width) {
+    @if not is($size, 'base' 'xs' 'sm' 'lg') {
+        @error "Function `component-height` expecting `$size` to be one of the following: [`base`, `xs`, `sm`, `lg`]. Was `#{$size}`.";
+    }
+
+    $size-type-rhythm-config: get($type-rhythm-config, '#{$size}');
+
+    $font-size:   get($size-type-rhythm-config, 'font-size');
+    $line-height: get($size-type-rhythm-config, 'line-height');
+    $padding-vertical: get-deep($global-component-padding-config, '#{$size}.vertical');
+
+    @return box-model-height($font-size, $line-height, $padding-vertical, $bd-width);
+}
+
+
+///
+/// Calculates "text" height _(no padding or border)_ of a component based on it's `font-size` and `line-height` values.
+/// ---
+/// @requires {variable} $global-component-bd-width
+/// ---
+/// @param {String} $size ['base'] - Name of component size variation [`base`, `xs`, `sm`, `lg`]
+/// @param {Number} $bd-width [1px] - Border width of component
+/// ---
+/// @returns {Number} - calculated component "text" height
+///
+@function component-text-height($size: 'base', $bd-width: $global-component-bd-width) {
+    @if not is($size, 'base' 'xs' 'sm' 'lg') {
+        @error "Function `component-text-height` expecting `$size` to be one of the following: [`base`, `xs`, `sm`, `lg`]. Was `#{$size}`.";
+    }
+
+    $height: component-height($size);
+    $padding-vertical: get-deep($global-component-padding-config, '#{$size}.vertical');
+
+    @return $height - ($padding-vertical * 2) - ($bd-width * 2);
+}
+
+
+///
+/// Calculates total width of a component based on a given "inner width".
+/// ---
+/// @param {String} $size ['base'] - Name of component size variation [`base`, `xs`, `sm`, `lg`]
+/// @returns {Number} - calculated component width
+///
+@function component-width($inner-width, $size: 'base') {
+    @if not is($size, 'base' 'xs' 'sm' 'lg') {
+        @error "Function `component-width` expecting `$size` to be one of the following: [`base`, `xs`, `sm`, `lg`]. Was `#{$size}`.";
+    }
+
+    $padding-horizontal: get-deep($global-component-padding-config, '#{$size}.horizontal');
+    $padding-width: $padding-horizontal * 2;
+    $border-width: $global-component-bd-width * 2;
+    $component-width: ceil($inner-width + $padding-width + $border-width);
+
+    @return $component-width;
+}
+
+
+///
+/// Calculates proportional horizontal padding for a component's box-model sizing based on it's `font-size`.
+/// ---
+/// @param {String} $size ['base'] - Name of component size variation [`base`, `xs`, `sm`, `lg`]
+/// @returns {Number} - calculated horizontal padding
+///
+@function component-padding-horizontal($size: 'base') {
+    @if not is($size, 'base' 'xs' 'sm' 'lg') {
+        @error "Function `component-padding-horizontal` expecting `$size` to be one of the following: [`base`, `xs`, `sm`, `lg`]. Was `#{$size}`.";
+    }
+
+    $size-type-rhythm-config: get($type-rhythm-config, '#{$size}');
+    $font-size: get($size-type-rhythm-config, 'font-size');
+    $font-size-modifier: get($size-type-rhythm-config, 'font-size-modifier');
+
+    // only modify the horizontal padding value if the font size is smaller than base font size
+    $padding-horizontal-modifer: if($font-size-modifier < 1, $font-size-modifier, 1);
+    // calculate rough horizontal padding
+    $padding-horizontal-rough: ceil(($font-size - $global-component-bd-width) * $padding-horizontal-modifer);
+    // check to see if it divides evenly by 2, if it doesn't - make it so.
+    $padding-horizontal: if(
+                            mod($padding-horizontal-rough, 2),
+                            $padding-horizontal-rough,
+                            $padding-horizontal-rough - 1
+                           );
+
+    @return $padding-horizontal;
+}
+
+
+///
+/// Calculates proportional vertical padding for a component's box-model sizing based on it's `font-size`.
+/// ---
+/// @param {String} $size ['base'] - Name of component size variation [`base`, `xs`, `sm`, `lg`]
+/// @returns {Number} - calculated vertical padding
+///
+@function component-padding-vertical($size: 'base') {
+    @if not is($size, 'base' 'xs' 'sm' 'lg') {
+        @error "Function `component-padding-vertical` expecting `$size` to be one of the following: [`base`, `xs`, `sm`, `lg`]. Was `#{$size}`.";
+    }
+
+    $size-type-rhythm-config: get($type-rhythm-config, '#{$size}');
+    $font-size: get($size-type-rhythm-config, 'font-size');
+    $font-size-modifier: get($size-type-rhythm-config, 'font-size-modifier');
+
+    @return ceil((round($font-size / 2) - $global-component-bd-width) * $font-size-modifier);
+}
+
+
+///
+/// Utility fn that does nothing but return the bottom padding value for the `.close` button component.
+/// @todo This is here because sharing of component configs across all components is somewhat problematic with libsass, any way around it?
+/// ---
+/// @access private
+/// @group core.internals.size.box-model
+/// @returns {Number}
+///
+@function close-button-padding-bottom() {
+    @return 4px;
+}
+
+
+///
+/// Utility fn that does nothing but return the default base16 icon size.
+/// @todo This is here because sharing of component configs across all components is somewhat problematic with libsass, any way around it?
+/// ---
+/// @access private
+/// @group core.internals.size.box-model
+/// @returns {Number}
+///
+@function icon-size-base-16() {
+    @return 16px;
+}
+
+///
+/// Utility fn that does nothing but return the default base24 icon size.
+/// @todo This is here because sharing of component configs across all components is somewhat problematic with libsass, any way around it?
+/// ---
+/// @access private
+/// @group core.internals.size.box-model
+/// @returns {Number}
+///
+@function icon-size-base-24() {
+    @return 24px;
+}

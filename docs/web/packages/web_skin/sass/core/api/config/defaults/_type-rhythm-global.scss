@@ -1,0 +1,64 @@
+// ********************************************************
+
+////
+/// Default global typographic values that are used to
+/// determine relative unit conversions within the
+/// Web Skin platform.
+/// ---
+/// @access public
+/// @group core.typography
+/// @type Number
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/api/config/defaults/type-rhythm-global';
+    $module: add-api-module($module);
+//
+// ********************************************************
+
+
+///
+/// Default `font-size` that browsers apply to the `<html>` element.
+/// ---
+/// @access private
+/// @group core.internals.typography
+///
+$browser-default-font-size: 16px;
+
+///
+/// Base `font-size` applied to the `<html>` element, which ensures that the basis for `rem` units is easy to compute.
+///
+/// (This makes the document's base computed font size `10px`).
+///
+$html-font-size: 62.5% !default;
+
+///
+/// Computed `font-size` for the `<html>` element.
+/// ---
+/// @access private
+/// @group core.internals.typography
+/// ---
+/// @requires {variable} $browser-default-font-size
+/// @requires {variable} $html-font-size
+///
+$html-font-size-px: $browser-default-font-size * ($html-font-size / 100%);
+
+///
+/// Base `font-size` value (in `px`) used across Web Skin as the basis for many other dimensions / sizes.
+///
+/// Modifying this value will alter the spacing and sizes of every base element and component across the platform.
+///
+/// _Proceed with caution_
+///
+$font-size-base: 14px !default;
+
+///
+/// Base `line-height` value (in `px`) used across Web Skin as the basis for many other dimensions / sizes.
+///
+/// Modifying this value will alter the spacing and sizes of every base element and component across the platform.
+///
+/// _Proceed with caution_
+///
+$line-height-base-px: 20px !default;

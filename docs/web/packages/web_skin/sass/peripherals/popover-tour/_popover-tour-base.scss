@@ -1,0 +1,67 @@
+// ********************************************************
+//
+//   BASE STYLING / SELECTORS FOR WDESK "TOUR" POPOVERS
+//
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/popover-tour/popover-tour-base';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   POPOVER "TOUR" SKINNING
+// ----------------------------------------------------
+.popover-tour {
+    @include popover-tooltip-skin(
+        $bg-color: get($popover-tour-config, 'bg'),
+        $text-color: get($popover-tour-config, 'text-color'),
+        $title-color: get($popover-tour-config, 'title-color'),
+        $force-arrow-bg: true,
+        $new-max-width: get($popover-tour-config, 'max-width')
+    );
+
+    // ----- Custom `.btn-outline` skin ----- //
+    .btn-outline {
+        @include btn-outline-skin($parent-bg: $zc-blue-120);
+    }
+
+    .close {
+        color: get($popover-tour-config, 'title-color');
+        text-shadow: none;
+
+        #{$link-hover-focus},
+        #{$link-pressed} {
+            color: get($popover-tour-config, 'title-color');
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   POPOVER "TOUR" PAGE INDICATOR SPACING
+// ----------------------------------------------------
+.popover-tour {
+    $offset-top: get-deep($popover-tour-config, 'page-indicator-offsets.top');
+    $offset-bottom: get-deep($popover-tour-config, 'page-indicator-offsets.bottom');
+
+    .page-indicators {
+        margin: to-rem($offset-top) auto to-rem($offset-bottom) auto;
+    }
+
+    // Avoid double spacing between text and indicators
+    p + .page-indicators {
+        margin-top: to-rem($offset-top - to-px($paragraph-margin-bottom, $font-size-base));
+    }
+}
+
+
+// ----------------------------------------------------
+//   POPOVER "TOUR" ACTIONS CONTAINER (`.btn-toolbar`)
+// ----------------------------------------------------
+.popover-tour-actions {
+    float: left;
+    width: 100%;
+}

@@ -1,0 +1,1379 @@
+// ********************************************************
+//
+////
+/// Form component helpers
+/// ---
+/// @access public
+/// @group core.components.form-controls
+/// @link http://bit.ly/webskin-form-controls Form component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/forms/forms-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function to-em,
+                                                function to-rem,
+                                                function is-px,
+                                                function normalize-xxs-map-key,
+                                                function icon-size-base-16);
+//
+// ********************************************************
+
+
+///
+/// Outputs the CSS styles used for HTML `<input>` placeholder pseudo-elements.
+///
+/// Does not generate any CSS selectors - must be included within one or more.
+/// ---
+/// @since 1.12.0
+/// ---
+/// @requires {function} get
+/// @requires {variable} $form-control-colors
+/// ---
+/// @param {Color}   $color     [#b2b2b2]
+///
+@mixin form-control-placeholder-styles($color: get($form-control-colors, 'placeholder-text-base'), $important: false) {
+    color: $color;
+}
+
+///
+/// Cross-browser reusable styles for placeholder text within form inputs
+/// ---
+/// @link http://bit.ly/webskin-form-control-text-input DOCS: Form input placeholder spec
+/// ---
+/// @requires {function} get
+/// @requires {mixin}    form-control-placeholder
+/// @requires {variable} $form-control-colors
+/// ---
+/// @param {Color}   $color     [#b2b2b2]
+/// @param {Boolean} $important [false]
+///
+@mixin form-control-placeholder-text($color: get($form-control-colors, 'placeholder-text-base'), $important: false) {
+    $important: if($important == false, '', '!important');
+
+    @include form-control-placeholder {
+        // !important used to override form validation colors
+        color: $color #{$important};
+    }
+}
+
+///
+/// Reusable base styles for `.form-inline` components
+/// ---
+/// @since 1.0.0
+/// @requires {variable} $form-inline-breakpoint-name
+/// @param {String} $breakpoint ['screen-sm and up'] - The viewport width breakpoint name after which the form will display inline
+///
+@mixin form-inline($breakpoint: $form-inline-breakpoint-name) {
+    $inline-checkbox-margin-top: get($cbox-radio-config, 'inline-margin-top');
+
+    //
+    // Kick in the inline
+    // e.g. Inline-block all the things!
+    //
+    @include respond-to($breakpoint) {
+        .form-group,
+        .form-group-controls-wrapper  {
+            display: inline-block;
+            margin-bottom: 0;
+            vertical-align: middle;
+        }
+
+        // Adjust top margin to center based on size of control
+        //
+        // Can't use `vertical-align: middle` because we can't assume that all
+        // adjacent controls within the inline form have the same height, and things
+        // like help text (.help-block) can throw it off as well.
+        @each $size-name in compact(base, $form-control-size-variation-names) {
+            $label-selector: if($size-name == base, '.control-label', '.form-group-#{$size-name} .control-label');
+            $label-height: to-rem(get($form-config, 'label-line-height-px'));
+            $input-height: to-rem(get-deep($form-control-config, 'height.#{$size-name}'));
+
+            #{$label-selector} {
+                @if $size-name == base {
+                    vertical-align: top;
+                    margin-bottom: 0;
+                }
+
+                margin-top: ($input-height - $label-height) / 2;
+            }
+        }
+
+        //
+        // In navbar-form, allow folks to *not* use `.form-group`
+        //
+        .form-control,
+        .form-control-wrapper,
+        .form-control-inner-wrapper {
+            display: inline-block;
+            width: auto; // Prevent labels from stacking above inputs in `.form-group`
+            vertical-align: middle;
+        }
+
+        // When an inner-wrapper is nested within an outer wrapper,
+        // we need those children to span the full width.
+        //
+        // E.g. when help text is displayed in an inline form layout
+        .form-control-wrapper .form-control-inner-wrapper {
+            width: 100%;
+
+            .form-control {
+                width: 100%;
+            }
+        }
+
+        .input-group {
+            vertical-align: middle;
+
+            .input-group-addon,
+            .input-group-btn,
+            .form-control {
+                width: auto;
+            }
+
+            > .form-control,
+            > .form-control-inner-wrapper .form-control {
+                width: 100%;
+            }
+        }
+
+        //
+        // Remove default margin on radios/checkboxes that were used for stacking, and
+        // then undo the floating of radios and checkboxes to match (which also avoids
+        // a bug in WebKit: https://github.com/twbs/bootstrap/issues/1969).
+        //
+        .radio,
+        .checkbox {
+            display: inline-block;
+            margin-top: 0;
+            margin-bottom: 0;
+            vertical-align: middle;
+
+            label {
+                padding-left: 0;
+            }
+        }
+
+        [class*="col-"] {
+            .radio,
+            .checkbox {
+                margin-top: to-rem($inline-checkbox-margin-top);
+            }
+        }
+
+        //
+        // Re-override the feedback icon
+        //
+        .form-control-feedback {
+            top: 0;
+        }
+    }
+}
+
+///
+/// Reusable base styles for `.form-control` elems
+/// ---
+/// @link http://bit.ly/webskin-form-controls Form control component spec
+/// ---
+/// @param {Boolean} $include-placeholder-styles [true]
+///
+@mixin form-control-base($include-placeholder-styles: true) {
+    display: block;
+    width: 100%;
+    height: to-rem(get-deep($form-control-config, 'height.base'));
+    padding: to-rem(get-deep($form-control-config, 'padding.base.all'));
+    font-family: get($form-control-config, 'font-family');
+    font-size: to-rem(get-deep($form-control-config, 'font-size.base'));
+    color: get-deep($form-control-config, 'colors.text-base');
+    background-color: get-deep($form-control-config, 'colors.bg');
+    // Reset unusual default style Firefox-on-Android;
+    // @see https://github.com/necolas/normalize.css/issues/214
+    background-image: none;
+    border-width: to-rem(get($form-control-config, 'bd-width'));
+    border-style: solid;
+    border-color: get-deep($form-control-config, 'colors.bd-fallback'); // fallback for browsers that don't support rgba
+    border-color: rgba(get-deep($form-control-config, 'colors.bd-rgba-color'), get-deep($form-control-config, 'colors.bd-rgba-alpha'));
+    border-radius: to-rem(get-deep($form-control-config, 'bd-radius.base'));
+    @include transition(border-color ease-in-out $default-fade-speed);
+    @include background-clip(padding-box);
+    @if $include-placeholder-styles {
+        @include form-control-placeholder-text();
+    }
+}
+
+///
+/// Reusable base styles for `textarea.form-control` elements (multi-line text inputs).
+///
+/// This will only work as a standalone solution on a `<textarea>` element.  If you need
+/// to force a different element (like a `<div>` or a `<span>`) to _mimic_ a `<textarea>`,
+/// use `mimic-textarea()` instead.
+/// ---
+/// @since 1.12.0
+/// @see {mixin} mimic-textarea
+///
+@mixin textarea-base() {
+    overflow: auto; // Remove default vertical scrollbar in MSIE 10/11
+    vertical-align: top;
+    height: auto;
+    padding-right: 0; // Override right padding added by `.form-control`
+
+    // Normalize the box-model height of a `<textarea>` rendered as a result of the value
+    // of the `rows` attribute.
+    //
+    // This is a fix for a disgusting Firefox bug.
+    //
+    // See: https://bugzilla.mozilla.org/show_bug.cgi?id=33654
+    // See: UIP-1686
+    overflow-x: hidden;
+}
+
+///
+/// Reusable styles that can make any HTML element have the same multi-line
+/// text input behavior as a `<textarea>`.
+///
+/// @example html
+///   <div role="textbox" contenteditable="true" class="form-control">
+///     ...
+///   </div>
+/// ---
+/// @since 1.12.0
+///
+@mixin mimic-textarea() {
+    @include textarea-base();
+
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+///
+/// Reusable styles for focused `.form-control` elems
+/// ---
+/// @link http://bit.ly/webskin-form-control-focused Focused form control component spec
+/// ---
+/// @requires {function} get
+/// @requires {mixin}    focus-border
+/// @requires {variable} $form-control-colors
+/// ---
+/// @param {Color} $bd-color   [#33a9ff]
+/// @param {Color} $text-color [#595959]
+///
+@mixin form-control-focus($bd-color: get($form-control-colors, 'bd-focus'), $text-color: get($form-control-colors, 'text-focus')) {
+    color: $text-color;
+    @include focus-border($color: $bd-color, $global: true);
+}
+
+///
+/// Reusable styles for disabled `.form-control` elems
+/// ---
+/// @link http://bit.ly/webskin-form-control-disabled Disabled form control component spec
+/// ---
+/// @param {Boolean} $disable-text-selection     [true] - When set to true, the `disable-user-select()` mixin is called, disabling text selection for the user.
+/// @param {Boolean} $set-text-color             [true] - Whether the `color` property should be set
+/// @param {Boolean} $include-placeholder-styles [true]
+///
+@mixin form-control-disabled($disable-text-selection: true, $set-text-color: true, $include-placeholder-styles: true) {
+    @if $include-placeholder-styles {
+        @include form-control-placeholder-text(get($form-control-colors, 'placeholder-text-disabled'), !important);
+    }
+
+    @if $disable-text-selection {
+        @include disable-user-select();
+    }
+
+    @if $set-text-color {
+        color: get($form-control-colors, 'text-disabled') !important;
+    }
+
+    background-color: get($form-control-colors, 'bg-disabled') !important;
+    border-color: get($form-control-colors, 'bd-disabled') !important;
+    resize: none;
+    box-shadow: none !important;
+}
+
+///
+/// Reusable styles for text content within a `<div class="form-group disabled">` element.
+/// ---
+/// @since 1.4.0
+///
+@mixin form-control-label-disabled() {
+    @include opacity($disabled-alpha-default);
+}
+
+///
+/// Reusable form-validation state variation styles for `<input>` and `<textarea>` elems
+/// ---
+/// @link http://bit.ly/webskin-form-validation Form control validation states spec
+/// @param {String} $state-name - CSS class suffix for state variation
+///
+@mixin input-variant($state-name, $is-select: false) {
+    $color-config: get($form-group-states, $state-name);
+    $control-text-color: get($color-config, 'control-text-base');
+    $control-bg-color: get($color-config, 'control-bg-base');
+    $control-bd-color: get($color-config, 'control-bd-base');
+
+    @if $control-text-color != inherit {
+        color: $control-text-color;
+    }
+    @if not $is-select and $control-bg-color != inherit {
+        background-color: $control-bg-color;
+    }
+    @if $control-bd-color != inherit {
+        // !important necessary to ensure a bd color is shown on `.form-control-static` elements
+        // TODO: 2.0.0 see if we can get rid of this !important.
+        border-color: $control-bd-color !important;
+    }
+
+    @if $control-text-color != get($color-config, 'control-text-focus') or $control-bd-color != get($color-config, 'control-bd-focus') {
+        $control-text-color-focus: get($color-config, 'control-text-focus');
+        $control-bd-color-focus: get($color-config, 'control-bd-focus');
+
+        #{$input-focus},
+        &#{$focus-class} {
+            @if $control-text-color-focus != inherit {
+                color: get($color-config, 'control-text-focus');
+            }
+            @if $control-bd-color-focus != inherit {
+                border-color: get($color-config, 'control-bd-focus');
+            }
+        }
+    }
+}
+
+///
+/// Reusable form-validation state variation styles for `.btn` elems that are used as form controls that can have their values validated (e.g. `DropdownSelect` triggers)
+///
+/// This should only be used on button skins that DO NOT use reverse contrast (white text on a dark background).
+/// ---
+/// @since 1.5.0
+/// ---
+/// @param {String} $form-group-state-name - CSS class suffix for `.form-group` state variation
+///
+@mixin btn-form-control-variant($form-group-state-name) {
+    // `!important` used to override btn-{skin}:hover / :focus selectors.
+    border-color: get-deep($form-group-states, '#{$form-group-state-name}.control-bd-base') !important;
+}
+
+///
+/// Reusable styles for elements nested within `.form-group` component's validation state variations
+/// ---
+/// @link http://bit.ly/webskin-form-validation Form control validation states spec
+/// @param {String} $state-name - CSS class suffix for state variation
+///
+@mixin form-group-variant($state-name) {
+    $color-config: get($form-group-states, $state-name);
+
+    @if get($color-config, 'control-text-base') != inherit {
+        label,
+        .control-label,
+        .help-block,
+        .help-inline {
+            color: get($color-config, 'control-text-base');
+        }
+    }
+
+    .form-control {
+        @include input-variant($state-name);
+    }
+
+    select:not([multiple]).form-control {
+        @include input-variant($state-name, $is-select: true);
+    }
+
+    // Only the btn skins that do not use reverse contrast (white text on dark background) can be combined
+    // with the `.has-{validation-state}` class on the parent `.form-group`.
+    @each $btn-skin-name in ('default', 'white', 'light', 'link') {
+        .btn-#{$btn-skin-name} {
+            @include btn-form-control-variant($state-name);
+        }
+    }
+
+    .input-group-addon {
+        border-color: get-deep($form-group-states, '#{$state-name}.control-bd-base');
+    }
+
+    // ----- VALIDATION FEEDBACK ICON ----- //
+    .form-control-feedback {
+        color: get($color-config, 'icon-color');
+    }
+}
+
+///
+/// Reusable styles for size variations of `<input>` elems
+/// ---
+/// @link http://bit.ly/webskin-form-control-sizing Form control component size variation spec
+/// ---
+/// @param {String} $size - CSS class suffix for size variation
+/// @param {Bool} $set-height [true] - Whether to set the `height` property
+///
+@mixin input-size($size, $set-height: true) {
+    $cfg: $form-control-config;
+    $size: unquote($size);
+    $map-size: normalize-xxs-map-key($size);
+
+    $height:      to-rem(get-deep($cfg, 'height.#{$map-size}'));
+    $padding-h:   to-rem(get-deep($cfg, 'padding.#{$map-size}.horizontal'));
+    $padding-v:   to-rem(get-deep($cfg, 'padding.#{$map-size}.vertical'));
+    $font-size:   to-rem(get-deep($cfg, 'font-size.#{$map-size}'));
+    $line-height: to-rem(get-deep($cfg, 'line-height.#{$map-size}'));
+    $bd-radius:   to-rem(get-deep($cfg, 'bd-radius.#{$map-size}'));
+
+    @if $size == xxs {
+        $padding-h: $padding-h / 2;
+        $padding-v: .1rem; // just enough to ensure that text doesn't intersect with vertical edges
+        $line-height: normal;
+        $height: auto;
+
+        $set-height: true; // no matter what
+    }
+
+
+    @if $set-height {
+        height:      $height;
+        line-height: $line-height;
+    }
+    padding:        $padding-v $padding-h;
+    font-size:      $font-size;
+    border-radius:  $bd-radius;
+
+    @if $map-size == xs {
+        // override "punchable" effect
+        // must use !important to over-rule
+        // the :not([multiple]) specficity
+        box-shadow: none !important;
+    }
+}
+
+///
+/// Reusable styles for size variations of `.form-control` elems
+/// _Styles both global .input-{{size}} AND override those settings for
+/// special cases like selects, textarea, etc.. This cannot be called
+/// from within a selector's style declaration (use the `input-size` mixin for that)_
+/// ---
+/// @link http://bit.ly/webskin-form-control-sizing Form control component size variation spec
+/// ---
+/// @param {String} $size - CSS class suffix for size variation
+/// @param {Boolean} $group [false] - When set to true, the size variation suffix will be appended to `.form-group` instad of `.form-control`
+///
+@mixin form-control-size($size, $group: false) {
+    $cfg: $form-control-config;
+    $size: unquote($size);
+    $map-size: normalize-xxs-map-key($size);
+
+    // Sizes
+    $height:      to-rem(get-deep($cfg, 'height.#{$map-size}'));
+    $line-height: to-rem(get-deep($cfg, 'line-height.#{$map-size}'));
+    $font-size:   to-rem(get-deep($cfg, 'font-size.#{$map-size}'));
+
+    // Selectors
+    $group-selector:   if($group, '.form-group-#{$size}', '');
+    $control-selector: if($group, '.form-control', '.input-#{$size}');
+
+    // Styles
+    #{$group-selector} #{$control-selector} {
+        @include input-size($size);
+    }
+
+    //
+    //  Dropdown Typeahead Select Top Level Control Padding
+    //
+    //  [1] Zero out the padding and reset the height for
+    //      `.form-control.dd-typeahead` elements since the actual editable form
+    //      control in that component is nested, and the `.dd-typeahead` is what
+    //      wraps around the pillbox and the actual "search input" control.
+    //
+    //      See: `_forms-dropdown-select.scss` (ref "2.1" / "2.2")
+    //
+    //      If we don't do this here - for every size variation - we'd have to
+    //      utilize `!important` on the base `.dd-typeahead` selector - and
+    //      we need to avoid that so that CSS classes like
+    //      `.form-control--has-inset-cancel-btn` can apply right side padding.
+    //
+    //  [2] We don't support sizing of dropdown select components via the
+    //      deprecated `input-{size}` CSS class - so only generate selectors
+    //      when this mixin is invoked within a `.form-group-{size}` parent
+    //      selector context.
+    //
+    @if $group-selector != '' { // [2]
+        #{$group-selector} .dd-typeahead {
+            padding: 0; // [1]
+            height: auto; // [1]
+        }
+    }
+
+    //
+    //  [1] Make things like `.control-label`, `.checkbox` and `.radio`
+    //      have an inheritable `font-size` value that matches the size variation.
+    //
+    //  [2] Make the margin beneath `.form-group` elements be proportional to
+    //      the height of their form-control / label children.
+    //
+    //  [3] Prevent labels from rendering with a font-size of 0 as a result of being
+    //      nested within something like a `.btn-group`.
+    //      @see UIP-1441
+    //
+    @if $group-selector != '' {
+        #{$group-selector} {
+            font-size: $font-size;
+            margin-bottom: to-rem(get($form-config, 'group-margin-bottom-#{$map-size}'));
+        }
+
+        #{$group-selector} label, // [3]
+        #{$group-selector} .control-label {
+            font-size: $font-size;
+        }
+
+        // When a parent `.form-group` element has a size variation
+        // class applied, the dropdown select's button trigger should
+        // resize itself just like it would if it had the `form-control`
+        // class like most other form control components do.
+        #{$group-selector} .dropdown-select > .btn {
+            @include btn-size($size, $global: true);
+
+            @if is($size, xs xxs) {
+                top: 0 !important; // Remove punch effect
+            }
+        }
+    }
+
+    #{$group-selector} select#{$control-selector} {
+        padding-right: to-rem(get-deep($cfg, 'padding.#{$map-size}.vertical'));
+        height: if($size == xxs, auto, $height);
+        line-height: if($size == xxs, normal, $height);
+
+        @if $map-size == xs {
+            // override "punchable" effect
+            // must use !important to over-rule
+            // the :not([multiple]) specficity
+            box-shadow: none !important;
+        }
+    }
+
+    #{$group-selector} select[multiple]#{$control-selector} {
+        height: auto;
+    }
+
+    #{$group-selector} textarea#{$control-selector} {
+        height: auto;
+        line-height: if($size == xxs, normal, $line-height);
+        padding-right: 0;
+    }
+
+    #{$group-selector} #{$control-selector}[type="range"] {
+        @include range-input-slider-track() {
+            @include range-input-slider-track-height(get($range-control-config, 'track-height'), to-rem(get-deep($form-control-config, 'height.#{$map-size}')));
+        }
+    }
+
+    @include form-control-icon-size($map-size, $group);
+}
+
+///
+/// Size / placement variations for `.form-control-icon` elements that appear "within" a `.form-control` component.
+/// ---
+/// @since 1.8.0
+/// ---
+/// @param {String} $size - CSS class suffix for size variation
+/// @param {Boolean} $group [false] - When set to true, the size variation suffix will be appended to `.form-group` instead of `.form-control`
+///
+@mixin form-control-icon-size($size, $group: false) {
+    $control-cfg: $form-control-config;
+    $size: unquote($size);
+
+    // Vars
+    $height: to-rem(get-deep($control-cfg, 'height.#{$size}'));
+    $line-height: to-rem(get-deep($control-cfg, 'line-height.#{$size}'));
+    $font-size:   to-rem(get-deep($control-cfg, 'font-size.#{$size}'));
+
+    $_ctrl-icon-before: 'form-control--has-icon-before';
+    $_ctrl-icon-after:  'form-control--has-icon-after';
+    $_ctrl-icon: 'form-control-icon';
+
+    // Selectors
+    $group-selector:   if($group, '.form-group-#{$size}', '');
+    $control-selector: if($group, '.form-control', '.input-#{$size}');
+
+    $control-with-icon-before-selector: if($group, '.#{$_ctrl-icon-before}', '.input-#{$size}.#{$_ctrl-icon-before}');
+    $control-with-icon-after-selector: if($group, '.#{$_ctrl-icon-after}', '.input-#{$size}.#{$_ctrl-icon-after}');
+    $control-icon-selector: if($group, '.#{$_ctrl-icon}', '.input-#{$size} + .#{$_ctrl-icon}');
+
+
+    // -----------------------------------------------------------------------
+    //  Styles - Form Control Addon Icons
+    //
+    //   -> Can be used for validation / feedback icons, search input icons, or
+    //      any other use-case that involves icons that appear to "float" atop
+    //      the control itself.
+    // -----------------------------------------------------------------------
+        #{$group-selector} #{$control-with-icon-before-selector} {
+            padding-left: get($form-control-icon-addon-config, 'width-#{$size}');
+        }
+
+        #{$group-selector} #{$control-with-icon-after-selector} {
+            padding-right: get($form-control-icon-addon-config, 'width-#{$size}');
+        }
+
+        #{$group-selector} #{$control-icon-selector} {
+            width: get($form-control-icon-addon-config, 'width-#{$size}');
+            height: get($form-control-icon-addon-config, 'height-#{$size}');
+
+            &:before,
+            &:after {
+                // Has to be `em` instead of `rem` because MSIE 10
+                // doesn't support `rem` units on `line-height` or `font-size` properties.
+                line-height: to-em(get($form-control-icon-addon-config, 'height-#{$size}'), icon-size-base-16());
+            }
+        }
+
+
+    // -----------------------------------------------------------------------
+    //  Styles - Form Validation "Feedback" Icons
+    //
+    //  @deprecated in `1.8.0` via UIP-1326.
+    //  @todo remove in `2.0.0`.
+    //
+    //  The markup used by the new "Form Control Addon Icons" -
+    //  (which requires the use of a `.form-control-inner-wrapper` element) -
+    //  can be used to render the feedback icons as well,
+    //  which is why all the selectors below should be removed in `2.0.0`.
+    // -----------------------------------------------------------------------
+        $feedback-icon-selector: null;
+        $feedback-icon-alignment-by-label-selector: null;
+        $feedback-icon-alignment-by-hidden-label-selector: null;
+        $feedback-icon-alignment-by-non-vertical-label-selector: null;
+        $form-control-with-validation-selectors: comma-list();
+        $form-control-active-search-with-validation-selectors: comma-list();
+        $form-control-icon-active-search-with-validation-selectors: comma-list();
+
+        @if $group-selector != '' {
+            $feedback-icon-selector: '#{$group-selector} .form-control-feedback';
+            $feedback-icon-alignment-by-label-selector: '#{$group-selector} label ~ .form-control-feedback';
+            $feedback-icon-alignment-by-hidden-label-selector: '#{$group-selector} label.sr-only ~ .form-control-feedback';
+            $feedback-icon-alignment-by-non-vertical-label-selector: '#{$group-selector} label ~ .form-control-feedback';
+
+            @each $state, $color-config in $form-group-states {
+                $form-control-with-validation-selectors: append(
+                    $form-control-with-validation-selectors,
+                    '#{$group-selector}.has-#{$state} .form-control'
+                );
+                $form-control-active-search-with-validation-selectors: append(
+                    $form-control-active-search-with-validation-selectors,
+                    '#{$group-selector}.has-#{$state} .input-group.js-searching .form-control'
+                );
+                $form-control-icon-active-search-with-validation-selectors: append(
+                    $form-control-icon-active-search-with-validation-selectors,
+                    '#{$group-selector}.has-#{$state} .input-group.js-searching .form-control-feedback'
+                );
+            }
+        } @else {
+            $feedback-icon-selector: '#{$control-selector} + .form-control-feedback';
+            $feedback-icon-alignment-by-label-selector: 'label + #{$control-selector} ~ .form-control-feedback';
+            $feedback-icon-alignment-by-hidden-label-selector: 'label.sr-only + #{$control-selector} ~ .form-control-feedback';
+            $feedback-icon-alignment-by-non-vertical-label-selector: 'label + #{$control-selector} ~ .form-control-feedback';
+
+            @each $state, $color-config in $form-group-states {
+                $form-control-with-validation-selectors: append(
+                    $form-control-with-validation-selectors,
+                    '#{$group-selector}.has-#{$state} #{$control-selector}'
+                );
+                $form-control-active-search-with-validation-selectors: append(
+                    $form-control-active-search-with-validation-selectors,
+                    '#{$group-selector}.has-#{$state} .input-group.js-searching #{$control-selector}'
+                );
+            }
+        }
+
+        $feedback-icon-width: to-rem(icon-size-base-16());
+        $control-padding-horizontal: to-rem(get-deep($control-cfg, 'padding.#{$size}.horizontal'));
+        $clear-search-btn-width: $height;
+
+        #{$feedback-icon-selector} {
+            width: $feedback-icon-width + ($control-padding-horizontal * 2);
+            height: $height;
+            line-height: $height;
+
+            &:before,
+            &:after {
+                // Has to be `em` instead of `rem` because MSIE 10
+                // doesn't support `rem` units on `line-height` or `font-size` properties.
+                line-height: to-em($height, icon-size-base-16());
+            }
+        }
+
+        // Make room for validation feedback icons
+        #{$form-control-with-validation-selectors} {
+            // Ensure icons don't overlap text
+            padding-right: $feedback-icon-width + $control-padding-horizontal;
+        }
+
+        // Make room for validation feedback icons + clear search button
+        #{$form-control-active-search-with-validation-selectors} {
+            padding-right: $feedback-icon-width + $control-padding-horizontal + $clear-search-btn-width;
+        }
+
+        @if $group-selector != '' {
+            // Adjust alignment of validation feedback icon so that it doesn't overlap the clear search button.
+            #{$form-control-icon-active-search-with-validation-selectors} {
+                right: $clear-search-btn-width;
+                width: $feedback-icon-width;
+            }
+        }
+
+        // Reposition feedback icon if input has visible label above
+        #{$feedback-icon-alignment-by-label-selector} {
+            $total-label-height: ($font-size * $line-height) + to-rem(get($form-config, 'label-margin-bottom'));
+            top: $total-label-height;
+        }
+
+        // Reset if the label is hidden
+        #{$feedback-icon-alignment-by-hidden-label-selector} {
+            top: 0;
+        }
+
+        // Reset if the label is not stacked above the control vertically
+        .form-inline,
+        .form-horizontal {
+            #{$feedback-icon-alignment-by-non-vertical-label-selector} {
+                top: 0;
+            }
+        }
+}
+
+// @private
+@mixin dropdown-select-size($size-name, $size-config) {
+    .dropdown-toggle__display-value + .caret {
+        top: to-rem(get($caret-component-valign-offsets, $size-name)) !important;
+    }
+
+    .dd-typeahead__search {
+        @include typeahead-search-size($size-name, $size-config);
+    }
+}
+
+// @private
+@mixin typeahead-pill-base() {
+    // These two properties are required to make the `z-index: -1` "hack" work on the `:before` pseudo element.
+    @include backface-visibility(hidden);
+    @include translateZ(0);
+
+
+    $chsn-search-choice-spacing-rem: to-rem($chsn-search-choice-spacing);
+    $chsn-search-choice-btn-height-rem: to-rem($chsn-search-choice-btn-height);
+
+    position: relative;
+    margin-top: $chsn-search-choice-spacing-rem;
+    margin-left: $chsn-search-choice-spacing-rem;
+    padding-top: 0; // UIP-1231
+    padding-bottom: 0; // UIP-1231
+    max-width: 97%; // UIP-1242 (MSIE 10 fallback)
+    max-width: calc(100% - #{$chsn-search-choice-spacing-rem * 2}); // UIP-1242
+    min-height: $chsn-search-choice-btn-height-rem; // UIP-1242
+    border-width: 0;
+    font-size: to-rem(get-deep($form-control-config, 'font-size.base')); // UIP-1231
+    line-height: $chsn-search-choice-btn-height-rem; // UIP-1231
+    vertical-align: top;
+    cursor: default;
+
+    @at-root .dd-typeahead__pill__text {
+        @include disable-user-select();
+        @include truncate-text(); // UIP-1242
+
+        display: inline-block; // UIP-1242
+        width: 100%; // UIP-1242
+        vertical-align: text-top;
+        line-height: normal;
+    }
+}
+
+// @private
+@mixin typeahead-pill-dismissible-base() {
+    padding-right: to-rem($chsn-search-choice-btn-padding-right);
+
+    .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: block;
+        width: to-rem($chsn-search-choice-close-width);
+        height: 100%;
+        line-height: 1;
+        // Vertically and horizontally align the text using flexbox
+        @include display-flex();
+        @include align-items(center);
+        @include justify-content(center);
+
+        // I hate MSIE.
+        @include windows-support {
+            padding-bottom: 0 !important;
+        }
+    }
+}
+
+// @private
+@mixin typeahead-pill-platform-base() {
+    z-index: -1; // Ensure that the text within .dd-typeahead__pill__text to appear above this.
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $chsn-search-choice-bd-right-color-hover;
+}
+
+// @private
+// This is the platform that slides to the left when the pill is selected
+@mixin typeahead-pill-selected-platform-base() {
+    @include typeahead-pill-platform-base();
+
+    // Set initial duration to 0s so that it doesn't "slide" when becoming de-selected, only selected.
+    @include transition(transform 0s ease-out);
+    @include transform-origin($origin-x: 100%, $origin-y: 100%);
+    @include scaleX(0);
+
+    left: 0;
+    border-radius: $chsn-search-choice-bd-radius;
+    content: ""; // "Show" it all the time since we're scaling it to 0 by default
+}
+
+// @private
+// This is the platform that appears / disappears on hover
+@mixin typeahead-pill-hover-platform-base() {
+    @include typeahead-pill-platform-base();
+    @include border-right-radius($chsn-search-choice-bd-radius);
+
+    width: $chsn-search-choice-bd-right-width-hover;
+}
+
+// @private
+@mixin typeahead-pill-skin-base() {
+    background-color: $chsn-search-choice-bg;   // Override `.btn-default`
+    border-color: $chsn-search-choice-bd-color; // Override `.btn-default`
+}
+
+// @private
+@mixin typeahead-pill-skin-hover() {
+    background-color: $chsn-search-choice-bg-hover;   // Override `.btn-default`
+    border-color: $chsn-search-choice-bd-color-hover; // Override `.btn-default`
+
+    &#{$chsn-search-choice-hover-platform} {
+        content: ""; // Reveal it only on hover
+    }
+}
+
+// @private
+@mixin typeahead-pill-skin-selected() {
+    // Override default .btn:focus "outline" added using box-shadow
+    @include remove-focus-outline(!important);
+
+    &#{$chsn-search-choice-selected-platform} {
+        @include scaleX(1);
+        // Only slide when it becomes selected
+        @include transition-duration($default-slide-speed);
+    }
+}
+
+// @private
+@mixin typeahead-pill-skin-staged() {
+    color: $chsn-search-choice-text-color-staged;
+}
+
+// @private
+@mixin typeahead-pill-skin-disabled() {
+    // Colors are changed via opacity change inherited from the `.btn` class
+    background-color: $chsn-search-choice-bg-disabled !important;
+    border-color: $chsn-search-choice-bd-color-disabled !important;
+}
+
+// @private
+@mixin typeahead-pill-size($size-name, $size-config) {
+    $chsn-search-choice-spacing-rem: to-rem(get($size-config, 'choice-spacing'));
+    $chsn-search-choice-btn-height-rem: to-rem(get($size-config, 'choice-btn-height'));
+    $btn-size-variation-name: get($size-config, 'choice-btn-size-name');
+    $chsn-search-choice-bd-radius: 0;
+
+    @if $btn-size-variation-name != xxs {
+        $chsn-search-choice-bd-radius: to-rem(get-deep($btn-config, 'bd-radius.#{$btn-size-variation-name}'));
+    }
+
+    @include btn-size($btn-size-variation-name);
+
+    padding-top: 0; // UIP-1231
+    padding-bottom: 0; // UIP-1231
+    margin-top: $chsn-search-choice-spacing-rem;
+    margin-left: $chsn-search-choice-spacing-rem;
+    max-width: 97%; // UIP-1242 (MSIE 10 fallback)
+    max-width: calc(100% - #{$chsn-search-choice-spacing-rem * 2}); // UIP-1242
+    min-height: $chsn-search-choice-btn-height-rem; // UIP-1242
+    font-size: to-rem(get-deep($form-control-config, 'font-size.#{$size-name}')); // UIP-1231
+    line-height: $chsn-search-choice-btn-height-rem; // UIP-1231
+
+    &#{$chsn-search-choice-selected-platform} {
+        border-radius: $chsn-search-choice-bd-radius;
+    }
+    &#{$chsn-search-choice-hover-platform} {
+        @include border-right-radius($chsn-search-choice-bd-radius);
+
+        // Only adjust the width if its not the same as the base width
+        $platform-width-variation: get($size-config, 'choice-btn-right-width-hover');
+        @if $platform-width-variation != $chsn-search-choice-bd-right-width-hover {
+            width: $platform-width-variation;
+        }
+    }
+}
+
+// @private
+@mixin typeahead-pill-dismissible-size($size-name, $size-config) {
+    padding-right: to-rem(get($size-config, 'choice-btn-padding-right'));
+
+    //
+    // Reset the line height since we are manually changing
+    // the height of the button via btn-size() mixin
+    //
+    .close {
+        $close-font-size-rem: to-rem(get($size-config, 'choice-close-font-size'));
+        $close-padding-bottom-calc: (to-rem($chsn-search-choice-btn-height) - $close-font-size-rem) / 2;
+        $close-padding-bottom-default-rem: to-rem(get($close-btn-config, 'padding-bottom'));
+
+        font-size: $close-font-size-rem;
+        width: to-rem(get($size-config, 'choice-close-width')); // its a square
+
+        padding-bottom: max($close-padding-bottom-calc, $close-padding-bottom-default-rem);
+    }
+}
+
+// @private
+@mixin typeahead-search-size($size-name, $size-config) {
+    $search-min-width: get($size-config, 'field-min-width');
+
+    @include flex-basis($search-min-width);
+}
+
+// @private
+@mixin input-group-cell($with-flex: true) {
+    // declare global styles here and include as necessary
+    // to cut down on css selector count
+
+    @include flex(1 1 auto);
+    vertical-align: middle;
+    position: relative;
+    // remove flexbox context for children within the cell
+    display: inline-block;
+
+    &:not(:first-child):not(:last-child):not(.no-adjacent-groups) {
+        border-radius: 0;
+    }
+}
+
+// @private
+@mixin input-group-addon {
+    // declare global styles here and include as necessary
+    // to cut down on css selector count
+    @include input-group-cell($with-flex: false);
+    @include flex(0 0 auto);
+}
+
+// @private
+@mixin input-group-btn {
+    @include input-group-addon();
+
+    //
+    // Jankily prevent input button groups from
+    // wrapping with `white-space` and `font-size` in
+    // combination with `inline-block` on buttons.
+    //
+    font-size: 0;
+    white-space: nowrap;
+}
+
+///
+/// Reusable styles for size variations of `.input-group` elems.
+///
+/// _Alter the size of form-control elems nested within input-group elems
+/// via a `.input-group-{{size}}` or `.form-group-{{size}}` class instead of adding size
+/// modifier classes to all elems within the group_
+/// ---
+/// @since 0.3.2
+/// @link https://api.atl.workiva.net/WebSkin/docs/build/html/components/#input-groups-sizes DOCS: Input group size variation spec
+/// @param {String} $size - CSS class suffix for size variation
+///
+@mixin input-group-size($size) {
+    .form-group-#{$size},
+    .input-group-#{$size} {
+        .input-group-addon {
+            @include input-size($size);
+        }
+
+        .input-group-btn .btn {
+            @include btn-size($size, $global: true);
+        }
+    }
+
+    .input-group-#{$size} .form-control {
+        @include input-size($size);
+    }
+}
+
+
+// TODO: document params
+@function input-number-caret-margin ($input-height: get-deep($form-control-config, 'height.base'), $_caret-bd-width: $caret-bd-width) {
+    @return floor((($input-height / 2) - $_caret-bd-width) / 2);
+}
+
+// TODO: document params
+@mixin input-number-size ($size) {
+    $size-class: ".input-#{$size}";
+    $group-size-class: ".form-group-#{$size}";
+
+    $form-control-height: get-deep($form-control-config, 'height.#{$size}');
+    $form-control-radius: get-deep($form-control-config, 'bd-radius.#{$size}');
+
+    #{$size-class} + .number-spin-btn-container,
+    #{$group-size-class} .number-spin-btn-container {
+        width: to-rem($form-control-height);
+        height: to-rem($form-control-height);
+
+        .number-spin-btn {
+            &.number-spin-btn-up {
+                // Match the radius of the input, not the xs button
+                @include border-top-right-radius(to-rem($form-control-radius) !important);
+
+                @if $size == xs {
+                    .caret {
+                        @include triangle-direction('up', $color: false, $width: $caret-xs-width);
+                    }
+                }
+            }
+
+            &.number-spin-btn-down {
+                // Match the radius of the input, not the xs button
+                @include border-bottom-right-radius(to-rem($form-control-radius) !important);
+
+                @if $size == xs {
+                    .caret {
+                        @include triangle-direction('down', $color: false, $width: $caret-xs-width);
+                    }
+                }
+            }
+
+            .caret {
+                margin-top: to-rem(input-number-caret-margin($form-control-height, $_caret-bd-width: if($size == xs, $caret-xs-bd-width, $caret-bd-width))) !important;
+            }
+        }
+    }
+}
+
+///
+/// Normalize / remove browser-specific styling for `<input type="range">` elements.
+/// @since 1.4.0
+///
+@mixin normalize-range-input {
+    // ----------------------------------------------------
+    //   The input itself
+    //
+    //   [1] Hides the slider so that custom slider can be made
+    //
+    //   [2] Specific width is required for Firefox
+    //
+    //   [3] Removes the blue outline added by default.
+    //
+    //   [4] Removes the dotted outline around the input
+    //       in firefox.
+    // ----------------------------------------------------
+    input[type="range"] {
+        -webkit-appearance: none; // [1]
+        display: block;
+        width: 100%; // [2]
+    }
+
+    input[type="range"]:focus {
+        outline: none; // [3]
+    }
+
+    input[type="range"]::-moz-focus-outer {
+        border: 0; // [4]
+    }
+
+    // ----------------------------------------------------
+    //   Shadow Dom Pseudo Elements
+    //
+    //   [1] Hide the thumb so that custom thumb can be made
+    //
+    //   [2] Normalize box-sizing across all browsers.
+    //       MSIE / Firefox apply `content-box` by default.
+    //
+    //   [3] Hide the slider so that custom slider can be made
+    //
+    //   [4] Remove default "tick marks"
+    // ----------------------------------------------------
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none; // [1]
+        box-sizing: border-box; // [2]
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        box-sizing: border-box; // [2]
+    }
+
+    input[type="range"]::-ms-thumb {
+        box-sizing: border-box; // [2]
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+        box-sizing: border-box; // [2]
+    }
+
+    input[type="range"]::-moz-range-track {
+        box-sizing: border-box; // [2]
+    }
+
+    input[type="range"]::-ms-track {
+        width: 100%;
+        cursor: pointer;
+        background: transparent; // [3]
+        border-color: transparent;
+        color: transparent; // [4]
+        box-sizing: border-box; // [2]
+    }
+}
+
+@mixin range-input() {
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+
+    @include range-input-slider-thumb() {
+        height: get($range-control-config, 'thumb-size');
+        width: get($range-control-config, 'thumb-size');
+        margin-top: get($range-control-config, 'thumb-size') * -.375; // no idea why this isn't just 1/2 the height
+        border-width: to-rem(get($form-control-config, 'bd-width'));
+        border-style: solid;
+        border-color: get($range-control-config, 'thumb-bd-color');
+        border-color: get($range-control-config, 'thumb-bd-color-rgba');
+        border-radius: 50%;
+        background-color: get($range-control-config, 'thumb-bg-color');
+        cursor: pointer;
+    }
+
+    @include range-input-slider-track() {
+        @include range-input-slider-track-height(get($range-control-config, 'track-height'), to-rem(get-deep($form-control-config, 'height.base')));
+
+        width: 100%;
+        color: transparent;
+        background-color: get($range-control-config, 'track-bg-color');
+        background-color: get($range-control-config, 'track-bg-color-rgba');
+        cursor: pointer;
+    }
+
+    // ----------------------------------------------------
+    //   MSIE IS SPECIAL
+    // ----------------------------------------------------
+        &::-ms-track {
+            border-color: transparent;
+            height: get($range-control-config, 'track-height');
+            background-color: transparent !important;
+        }
+
+        &::-ms-fill-lower,
+        &::-ms-fill-upper {
+            height: get($range-control-config, 'track-height');
+            background-color: get($range-control-config, 'track-bg-color');
+            background-color: get($range-control-config, 'track-bg-color-rgba');
+        }
+
+        &::-ms-thumb {
+            margin-top: 0;
+        }
+
+    // ----- HOVER / FOCUSED STATE ----- //
+    &:hover,
+    &:focus,
+    &#{$focus-class} {
+        @include range-input-slider-track() {
+            background-color: get($range-control-config, 'track-bg-color-focus');
+            background-color: get($range-control-config, 'track-bg-color-rgba-focus');
+        }
+
+        @include range-input-slider-thumb() {
+            border-color: get($range-control-config, 'thumb-bd-color-focus');
+        }
+
+        // ----------------------------------------------------
+        //   MSIE IS SPECIAL
+        // ----------------------------------------------------
+            &::-ms-fill-lower,
+            &::-ms-fill-upper {
+                background-color: get($range-control-config, 'track-bg-color-focus');
+                background-color: get($range-control-config, 'track-bg-color-rgba-focus');
+            }
+    }
+}
+
+
+// ----------------------------------------------------
+//   CHECKBOX / RADIO BUTTON HELPERS
+// ----------------------------------------------------
+    @mixin form-radio-base {
+        top: get($cbox-radio-config, 'radio-indicator-offset-top');
+        left: get($cbox-radio-config, 'radio-indicator-offset-left');
+        width: get($cbox-radio-config, 'radio-indicator-size');
+        height: get($cbox-radio-config, 'radio-indicator-size');
+    }
+
+    @mixin form-checkbox-base {
+        top: get($cbox-radio-config, 'radio-indicator-offset-top') - to-em(get($form-control-config, 'bd-width'), $font-size-base);
+        left: get($cbox-radio-config, 'radio-indicator-offset-left') - to-em(get($form-control-config, 'bd-width'), $font-size-base);
+        width: get($cbox-radio-config, 'radio-indicator-size') + to-em((get($form-control-config, 'bd-width') * 2), $font-size-base);
+        height: get($cbox-radio-config, 'radio-indicator-size') + to-em((get($form-control-config, 'bd-width') * 2), $font-size-base);
+    }
+
+    @mixin form-checkbox-radio-base {
+        position: absolute;
+        z-index: 3; // keep above everything else so it is the target on click events
+        float: none;
+        cursor: pointer;
+
+        // must hide this to prevent mozilla suckage:
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=605985
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        // use opacity instead of visibility: hidden; in order to allow the inputs to gain :focus
+        @include opacity(0);
+
+        .no-touch & {
+            // do not use clip() on touch devices because it causes (https://github.com/WebFilings/web-skin/issues/611)
+            // but we do need to use it on devices that use a mouse/hover HCI pattern in order to only have
+            // to declare our :hover style on the parent .radio/.checkbox
+            clip: rect(0,0,0,0);
+        }
+    }
+
+    @mixin form-checkbox-radio-shared-screen-styles($type: checkbox) {
+        position: relative;
+        min-height: get($cbox-radio-config, 'height');
+        min-width: get($cbox-radio-config, 'width');
+        font-family: $font-family-base;
+        vertical-align: middle;
+        cursor: pointer;
+
+        label {
+            position: relative;
+            display: block;
+            margin: 0;
+            text-indent: to-em(get($cbox-radio-config, 'width-px') + $spacing-base, $font-size-base);
+            cursor: pointer; // if they click the label, the control is activated / de-activated.
+
+            // the square / circle mimicing the checkbox/radio
+            &:before {
+                box-sizing: border-box;
+                position: absolute;
+                top: get($cbox-radio-config, 'indicator-offset-top'); // center on line-height of the label
+                left: 0;
+                z-index: 1;
+                width: get($cbox-radio-config, 'width');
+                height: get($cbox-radio-config, 'height');
+                background-color: $body-bg;
+                border: to-rem(get($form-control-config, 'bd-width')) solid get($cbox-radio-config, 'bd-color');
+                content: "";
+
+                @if unquote($type) == radio {
+                    // the circle mimicking the radio
+                    @include make-circle();
+                } @else {
+                    // the rounded box mimicking the checkbox
+                    @include border-radius(to-em($border-radius-base, $font-size-base));
+                }
+            }
+
+            // the "indicator" (checkmark or circle)
+            &:after {
+                box-sizing: border-box;
+                @include opacity(0);
+                position: absolute;
+                z-index: 2; // keep above bg
+                line-height: 1;
+                content: "";
+
+                @if unquote($type) == radio {
+                    // The indicator "dot"
+                    @include make-circle();
+                    @include form-radio-base();
+                } @else {
+                    // The indicator "checkmark"
+                    top: get($cbox-radio-config, 'indicator-offset-top');
+                    left: 0;
+                    font-family: $icon-font-name-main;
+                    font-size: get($cbox-radio-config, 'height');
+                    color: get($cbox-radio-config, 'bg-checked');
+                    text-indent: 0;
+                    content: to-unicode(get-deep($icon-shared-pua-codes, 'main.checkmark')); // mimics .icon-checkmark
+                }
+            }
+
+            // ----- HOVER STATE ----- //
+            #{$hover} {
+                &:after {
+                    @include opacity(.3);
+                }
+            }
+
+            // ----- PRESSED STATE ----- //
+            #{$link-pressed} {
+                &:before {
+                    border-color: get($cbox-radio-config, 'bd-color-focus');
+                }
+                &:after {
+                    @include opacity(1);
+                }
+            }
+        }
+
+        //
+        // :checked/:indeterminate styles have to be their own
+        // statement not-to-be combined with any other selectors
+        // you expect older browsers to read / process.
+        //
+        input:checked,
+        input:indeterminate {
+            + label:after {
+                @include opacity(1);
+            }
+        }
+
+        // ----- FOCUSED STATE ----- //
+        input:focus,
+        input#{$focus-class} {
+            outline: 0; // we're indicating focus using border color
+
+            + label:before {
+                border-color: get($cbox-radio-config, 'bd-color-focus');
+            }
+        }
+
+        // ----- DISABLED STATE ----- //
+        &.disabled {
+            label {
+                @include opacity($disabled-alpha-default);
+
+                &,
+                #{$link-pressed} {
+                    &:before {
+                        border-color: get($cbox-radio-config, 'bd-color');
+                    }
+
+                    &:after {
+                        @include opacity(0);
+                    }
+                }
+            }
+        }
+    }
+
+
+
+@import './form-file-browser-helpers';

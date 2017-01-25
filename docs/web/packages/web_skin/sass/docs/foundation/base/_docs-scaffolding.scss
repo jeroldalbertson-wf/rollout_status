@@ -1,0 +1,93 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/foundation/base/scaffolding';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+//
+// TODO: move this into core Web Skin styles as table variation?
+//
+.table-vanilla {
+    border: 0 none transparent !important;
+    background-color: transparent !important;
+
+    td,
+    th {
+        border: 0 none transparent !important;
+        background-color: transparent;
+    }
+}
+
+.table.text-center {
+    td,
+    th {
+        text-align: center;
+
+        &.text-left {
+            text-align: left;
+        }
+        &.text-right {
+            text-align: right;
+        }
+    }
+}
+
+// Keep code small in tables on account of limited space
+.table code {
+    font-size: .9em; // roughly 13px if table uses $font-size-base
+    font-weight: normal;
+    white-space: normal;
+}
+
+.table .highlight .code {
+    white-space: pre;
+}
+
+.ws-list {
+    li li { font-size: to-rem($font-size-base); }
+    li li li { color: inherit; }
+}
+
+
+.column-padded-vertical {
+    padding-top: to-rem($docs-spacing-md);
+    padding-bottom: to-rem($docs-spacing-md);
+}
+
+
+//
+// Style the "skip to content" link
+//
+body > .sr-only-focusable {
+    $sr-focusable-link-padding: 3px;
+    $sr-focusable-link-height: $line-height-base-px + ($sr-focusable-link-padding * 2);
+    //
+    position: absolute !important;
+    z-index: 1051;
+    top: to-rem($docs-navbar-height + 13);
+    left: 1.3rem;
+    padding: to-rem($sr-focusable-link-padding ($sr-focusable-link-padding * 2));
+    background-color: $docs-navbar-link-bg-hover;
+    border-radius: to-rem($border-radius-base);
+    color: $docs-navbar-link-color-active;
+    text-decoration: none !important;
+    font-weight: bold !important;
+    outline: 0 !important; // the fact that it magically appears is a pretty good indicator that focus has occurred.
+}
+
+// Fix content clipping / improve fps as the docs scroll
+// Potentially related to the following Chrome bug:
+//
+// http://stackoverflow.com/a/11847892
+// http://stackoverflow.com/a/8818535
+//
+// @see UIP-1351
+.ws-body-block,
+.ws-below-header-block,
+.ws-main {
+    z-index: 1;
+}

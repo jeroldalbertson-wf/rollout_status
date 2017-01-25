@@ -1,0 +1,507 @@
+// ********************************************************
+
+////
+/// Configuration for Web Skin Navbar Component
+/// ---
+/// @access public
+/// @group core.components.navbars
+/// @link http://bit.ly/webskin-navbars Navbar component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/navbars-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend,
+                                                function image-height,
+                                                function build-box-shadow,
+                                                function component-height);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE NAVBAR
+//
+// ********************************************************
+    ///
+    /// Base configuration for `.navbar` components.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {function} component-height
+    /// @requires {variable} $body-bg
+    /// @requires {variable} $text-color
+    /// @requires {variable} $zc-gray-40
+    /// @requires {variable} $nav-base-config
+    /// @requires {variable} $font-size-base
+    /// @requires {variable} $base-elem-margin-vertical
+    /// @requires {variable} $grid-config
+    /// @requires {variable} $padding-base-vertical
+    /// ---
+    /// @prop {Color}  bg          [#ffffff]           - Default background color
+    /// @prop {Color}  text-color  [#595959]           - Default text color
+    /// @prop {Color}  bd-color    [#e3e3e3]           - Default border color
+    /// @prop {Number} bd-width    [1px]               - Default border width
+    /// @prop {Number} bd-radius   [4px]               - Default border radius
+    /// @prop {Number} font-size   [$font-size-base]   - Default font size
+    ///
+    /// @prop {Number} margin-bottom   [20px]  - Default amount of negative space to preserve below a navbar
+    /// @prop {Number} padding-top     [6px]   - Default top padding
+    /// @prop {Number} padding-right   [15px]  - Default right padding
+    /// @prop {Number} padding-bottom  [6px]   - Default bottom padding
+    /// @prop {Number} padding-left    [15px]  - Default left padding
+    /// @prop {List}   padding         [6px 15px 6px 15px] - Combination of all the individual padding values. _Added via `@extend`_
+    ///
+    /// @prop {Number} padding-right-wide   [24px]  - Right padding when using the `.container-wide` container variation within a navbar
+    /// @prop {Number} padding-left-wide    [24px]  - Left padding when using the `.container-wide` container variation within a navbar
+    /// @prop {List}   padding-wide         [6px 24px 6px 24px] - Combination of all the individual padding values when using the `.container-wide` container variation within a navbar. _Added via `@extend`_
+    ///
+    /// @prop {Number} header-logo-offset-left [12px] - Distance from the left edge of the navbar that the Wdesk logo should be
+    ///
+    /// @prop {Number} height               [34px]  - Calculated height
+    /// @prop {Number} height-inner         [32px]  - Calculated "inner" height. _Added via `@extend`_
+    /// @prop {Number} height-inner-fixed   [33px]  - Calculated "inner" height of a `.navbar-fixed` variation. _Added via `@extend`_
+    ///
+    /// @prop {Number} min-edge-offset      [4px]   - Default minimum edge offset to ensure that any nested `.nav` components do not intersect with rounded corners. _Added via `@extend`_
+    ///
+    /// @prop {String} collapse-screen-size-name ['screen-sm']          - Alias of screen width where the collapse breakpoint occurs
+    /// @prop {String} collapse-breakpoint       ['screen-sm and up']   - `min-width ` media query used by `respond-to()` that represents the condition in which the navbar is no longer collapsed
+    /// @prop {String} collapse-breakpoint-max   ['below screen-sm']    - `max-width` media query used by `respond-to()` that represents the condition in which the navbar is collapsed
+    /// @prop {Number} collapse-max-height       [400px]                - Maximum height for the `.navbar-collapse` elem when appearing out of a `.navbar-fixed-top` or `.navbar-fixed-bottom` variation
+    ///
+    $navbar-base-config: (
+        'bg': $body-bg,
+        'text-color': $text-color,
+        'bd-color': $zc-gray-40,
+        'bd-width': get($nav-base-config, 'bd-width'),
+        'bd-radius': get($nav-base-config, 'bd-radius'),
+        'font-size': $font-size-base,
+        'margin-bottom': $base-elem-margin-vertical * 2,
+        // default padding when using `.container`
+        'padding-top': $padding-base-vertical,
+        'padding-right': round(get($grid-config, 'gutter-width') / 2),
+        'padding-bottom': $padding-base-vertical,
+        'padding-left': round(get($grid-config, 'gutter-width') / 2),
+        'padding': null, // actual calculated value inserted via @extend
+        // padding when using `.container.container-wide`
+        'padding-right-wide': round(get($grid-config, 'gutter-width-wide') / 2),
+        'padding-left-wide': round(get($grid-config, 'gutter-width-wide') / 2),
+        'padding-wide': null, // actual calculated value inserted via @extend
+        //
+        'header-logo-offset-left': 12px, // https://github.com/Workiva/web-skin/issues/471
+        //
+        'height': component-height($size: 'base'),
+        'height-inner': null, // actual calculated value inserted via @extend
+        'height-inner-fixed': null, // actual calculated value inserted via @extend
+        //
+        'min-edge-offset': null, // actual calculated value inserted via @extend
+        //
+        'collapse-screen-size-name': 'screen-#{get($grid-config, 'float-breakpoint')}',
+        'collapse-breakpoint': 'screen-#{get($grid-config, 'float-breakpoint')} and up',
+        'collapse-breakpoint-max': 'below screen-#{get($grid-config, 'float-breakpoint')}',
+        'collapse-max-height': 400px
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $navbar-base-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $navbar-base-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $navbar-padding: get($navbar-base-config, 'padding-top') get($navbar-base-config, 'padding-right') get($navbar-base-config, 'padding-bottom') get($navbar-base-config, 'padding-left');
+        $navbar-padding-wide: get($navbar-base-config, 'padding-top') get($navbar-base-config, 'padding-right-wide') get($navbar-base-config, 'padding-bottom') get($navbar-base-config, 'padding-left-wide');
+        $navbar-height-inner: get($navbar-base-config, 'height') - (get($navbar-base-config, 'bd-width') * 2);
+        $navbar-height-inner-fixed: get($navbar-base-config, 'height') - get($navbar-base-config, 'bd-width');
+        $navbar-min-edge-offset: get($navbar-base-config, 'bd-radius');
+
+        // ----- EXTEND base config with calc'd values ----- //
+        $navbar-base-config: extend($navbar-base-config,
+            (
+                'padding': $navbar-padding,
+                'padding-wide': $navbar-padding-wide,
+                'height-inner': $navbar-height-inner,
+                'height-inner-fixed': $navbar-height-inner-fixed,
+                'min-edge-offset': $navbar-min-edge-offset
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   NAVBAR LINKS
+//
+// ********************************************************
+    ///
+    /// Configuration for `.navbar-nav .hitarea` elems within `.navbar` components.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// @todo add unit tests to assert the calculated values shown in this config map
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} get-deep
+    /// @requires {function} extend
+    ///
+    /// @requires {variable} $global-component-size-config
+    /// @requires {variable} $navbar-base-config
+    /// @requires {variable} $nav-link-config
+    /// @requires {variable} $list-group-item-config
+    /// @requires {variable} $line-height-base
+    /// @requires {variable} $line-height-base-px
+    /// ---
+    /// @prop {Color}  bg          [transparent]   - Default background color
+    /// @prop {Color}  bg-hover    [transparent]   - Hovered background color
+    /// @prop {Color}  bg-press    [transparent]   - Pressed background color
+    /// @prop {Color}  bg-active   [#ffffff]       - Active background color
+    /// @prop {Color}  bg-disabled [transparent]   - Disabled background color
+    ///
+    /// @prop {Color}  text-color           [#595959]   - Default text color
+    /// @prop {Color}  text-color-hover     [#66cc00]   - Hovered text color
+    /// @prop {Color}  text-color-press     [#339900]   - Pressed text color
+    /// @prop {Color}  text-color-active    [#444444]   - Active text color
+    /// @prop {Color}  text-color-disabled  [#cecece]   - Disabled text color
+    ///
+    /// @prop {Number} padding-vertical     [7px]       - Calculated vertical padding. _Added via `@extend`_
+    /// @prop {Number} padding-horizontal   [10px]      - Default horizontal padding
+    /// @prop {List}   padding              [7px 10px]  - Combination of vertical and horizontal padding when links are displayed horizontally. _Added via `@extend`_
+    /// @prop {List}   padding-stacked      [7px 15px]  - Combination of vertical and horizontal padding when links are displayed vertically in a collapsed dropdown menu scenario. _Added via `@extend`_
+    ///
+    /// @prop {Number} height               [34px]          - Calculated height to match the base height of the `.navbar`
+    /// @prop {Number} line-height          [1.428571429]   - Default line-height
+    /// @prop {Number} line-height-px       [20px]          - Calculated line-height in `px`
+    ///
+    /// @prop {Color}  caret-color          [#7a7a7a]       - Color of `.caret` elems in `.navbar-nav` links in their default state
+    ///
+    $navbar-link-config: (
+        'bg': get($nav-link-config, 'bg'),
+        'bg-hover': get($nav-link-config, 'bg-hover'),
+        'bg-press': get($nav-link-config, 'bg-press'),
+        'bg-active': get($nav-link-config, 'bg-active'),
+        'bg-disabled': get($nav-link-config, 'bg-disabled'),
+        //
+        'text-color': get($nav-link-config, 'text-color'),
+        'text-color-hover': get($nav-link-config, 'text-color-hover'),
+        'text-color-press': get($nav-link-config, 'text-color-press'),
+        'text-color-active': get($nav-link-config, 'text-color-active'),
+        'text-color-disabled': get($nav-link-config, 'text-color-disabled'),
+        //
+        'padding-vertical': null, // actual calculated value inserted via @extend
+        'padding-horizontal': get-deep($global-component-size-config, 'padding.sm.horizontal'),
+        'padding': null, // actual calculated value inserted via @extend
+        'padding-stacked': null, // actual calculated value inserted via @extend
+        //
+        'height': get($navbar-base-config, 'height'),
+        'line-height': $line-height-base,
+        'line-height-px': $line-height-base-px,
+        //
+        'caret-color': mix(get($nav-link-config, 'text-color'), $white, percentage(get($caret-config, 'alpha')))
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $navbar-link-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $navbar-link-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $navbar-link-padding-horizontal: get($navbar-link-config, 'padding-horizontal');
+        $navbar-link-padding-vertical: round((get($navbar-link-config, 'height') - get($navbar-link-config, 'line-height-px')) / 2);
+        $navbar-link-padding-stacked: $navbar-link-padding-vertical get($navbar-base-config, 'padding-right');
+
+        // ----- EXTEND link config with calc'd values ----- //
+        $navbar-link-config: extend($navbar-link-config,
+            (
+                'padding-vertical': $navbar-link-padding-vertical,
+                'padding': $navbar-link-padding-vertical $navbar-link-padding-horizontal,
+                'padding-stacked': $navbar-link-padding-stacked
+            )
+        );
+
+
+
+    ///
+    /// Configuration for `.hitarea` elems within `.nav-block` components.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $nav-link-config
+    /// @requires {variable} $nav-block-link-config
+    /// ---
+    /// @prop {Color}  bg          [transparent]     - Default background color
+    /// @prop {Color}  bg-hover    [transparent]     - Hovered `rgba()` background color
+    /// @prop {Color}  bg-press    [transparent]     - Pressed background color
+    /// @prop {Color}  bg-active   [transparent]     - Active background color
+    /// @prop {Color}  bg-disabled [transparent]     - Disabled background color
+    ///
+    /// @prop {Number} bg-alpha-hover    [1]         - Amount of transparency for the hovered background color
+    ///
+    /// @prop {Color}  text-color          [#595959] - Default text color
+    /// @prop {Color}  text-color-hover    [#66cc00] - Calculated hovered text color
+    /// @prop {Color}  text-color-press    [#339900] - Pressed text color
+    /// @prop {Color}  text-color-active   [#66cc00] - Active text color
+    /// @prop {Color}  text-color-disabled [#cecece] - Disabled text color
+    ///
+    $navbar-block-link-config: extend($nav-block-link-config,
+        (
+            'bg': get($nav-link-config, 'bg'),
+            'bg-hover': get($nav-link-config, 'bg-hover'),
+            'bg-press': get($nav-link-config, 'bg-press'),
+            'bg-active': get($nav-link-config, 'bg-press'),
+            'bg-disabled': get($nav-link-config, 'bg-disabled'),
+            //
+            'bg-alpha-hover': 1,
+            //
+            'text-color': get($nav-link-config, 'text-color'),
+            'text-color-hover': get($nav-link-config, 'text-color-hover'),
+            'text-color-press': get($nav-link-config, 'text-color-press'),
+            'text-color-active': get($nav-link-config, 'platform-bd-color'),
+            'text-color-disabled': get($nav-link-config, 'text-color-disabled')
+        )
+    ) !default;
+
+
+
+// ********************************************************
+//
+//   NAVBAR BRAND LABEL
+//
+// ********************************************************
+    ///
+    /// Maximum height of `.navbar-brand .brand-logo` elems within a `.navbar` component.
+    /// ---
+    /// @access private
+    /// @group core.internals.components.navbars
+    /// @type Number
+    /// ---
+    /// @requires {function} image-height
+    /// @requires {variable} $wdesk-logo-url
+    ///
+    $navbar-brand-logo-max-height: image-height($wdesk-logo-url);
+
+    ///
+    /// Configuration for `.navbar-brand` elems within `.navbar` components.
+    /// ---
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $navbar-base-config
+    /// @requires {variable} $navbar-link-config
+    /// @requires {variable} $navbar-brand-logo-max-height
+    /// ---
+    /// @prop {Number} height - Calculated height of `.navbar-brand`
+    /// @prop {Number} link-padding-right - Right padding of `.navbar-brand .brand-link`
+    /// @prop {Number} logo-offset-top - Calculated top offset of `.navbar-brand .brand-logo`
+    ///
+    /// @prop {Number} solution-lowercase-offset - Offset used to ensure that line height of `.navbar-brand .solution-name` elems results in its baseline aligning with the baseline of the Wdesk logo. _Added via `@extend`_
+    ///
+    /// @prop {Color} solution-color       [#595959]       - Default text color of `.navbar-brand .solution-name`
+    /// @prop {Color} solution-color-hover [#66cc00]       - Text color of hovered `.navbar-brand .solution-name`
+    /// @prop {Color} solution-bg-hover    [transparent]   - Background color of hovered `.navbar-brand .solution-name`
+    ///
+    $navbar-brand-config: (
+        'height': get($navbar-base-config, 'height') - (get($navbar-base-config, 'padding-top') + get($navbar-base-config, 'padding-bottom')),
+        'link-padding-right': get($navbar-base-config, 'padding-left') * 2,
+        'logo-offset-top': round((get($navbar-base-config, 'height') - $navbar-brand-logo-max-height) / 2) - 1,
+        //
+        'solution-lowercase-offset': null, // actual calculated value inserted via @extend
+        //
+        'solution-color': get($navbar-link-config, 'text-color'),
+        'solution-color-hover': get($navbar-link-config, 'text-color-hover'),
+        'solution-bg-hover': get($navbar-link-config, 'bg-hover')
+    ) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $navbar-brand-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $navbar-brand-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        $navbar-brand-solution-lowercase-offset: get($navbar-base-config, 'height') - ($navbar-brand-logo-max-height + get($navbar-brand-config, 'logo-offset-top'));
+
+        // ----- EXTEND brand config with calc'd values ----- //
+        $navbar-brand-config: extend($navbar-brand-config,
+            (
+                'solution-lowercase-offset': $navbar-brand-solution-lowercase-offset
+            )
+        );
+
+
+
+// ********************************************************
+//
+//   NAVBAR DROPDOWN MENUS
+//
+//   -> Almost always within `.nav-tabs`
+//
+// ********************************************************
+    ///
+    /// Use a `box-shadow` on open `.dropdown-menu` elems originating from `.navbar` components to ensure that any adjacent `.active > .hitarea` green borders are overlapped by the same color as the background of the `.navbar`.
+    /// ---
+    /// @access private
+    /// @group core.internals.components.navbars
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {variable} $nav-link-config
+    /// @requires {variable} $navbar-base-config
+    /// ---
+    /// @prop {Bool}    inset       [false]
+    /// @prop {Number}  offset-x    [0]
+    /// @prop {Number}  offset-y    [-3px]
+    /// @prop {Number}  blur        [0]
+    /// @prop {Number}  spread      [0]
+    /// @prop {Color}   color       [#ffffff]
+    /// @prop {Number}  alpha       [1]
+    ///
+    $navbar-dropdown-menu-overlap-shadow-config: (
+        'inset': false,
+        'offset-x': 0,
+        'offset-y': get($nav-link-config, 'platform-bd-width') * -1,
+        'blur': 0,
+        'spread': 0,
+        'color': get($navbar-base-config, 'bg'),
+        'alpha': 1
+    );
+        ///
+        /// `box-shadow` value used to overlap adjacent `.active > .hitarea` green borders when `.dropdown-menu` elems originate from a `.navbar` component.
+        /// ---
+        /// @access private
+        /// @group core.internals.components.navbars
+        /// @type List
+        /// @since 1.0.0
+        /// ---
+        /// @requires {function} build-box-shadow
+        /// @requires {variable} $navbar-dropdown-menu-overlap-shadow-config
+        ///
+        $navbar-dropdown-menu-overlap-shadow: build-box-shadow($navbar-dropdown-menu-overlap-shadow-config);
+
+
+    ///
+    /// Use a `box-shadow` on open `.dropup .dropdown-menu` elems originating from `.navbar-fixed-bottom` components to ensure that any adjacent `.active > .hitarea` green borders are overlapped by the same color as the background of the `.navbar`.
+    /// ---
+    /// @access private
+    /// @group core.internals.components.navbars
+    /// @type Map
+    /// @since 1.0.0
+    /// ---
+    /// @requires {function} get
+    /// @requires {function} extend
+    /// @requires {variable} $nav-link-config
+    /// @requires {variable} $navbar-dropdown-menu-overlap-shadow-config
+    /// ---
+    /// @prop {Number} offset-y [3px]
+    ///
+    $navbar-dropup-menu-overlap-shadow-config: extend($navbar-dropdown-menu-overlap-shadow-config,
+        (
+            'offset-y': get($nav-link-config, 'platform-bd-width')
+        )
+    );
+        ///
+        /// `box-shadow` value used to overlap adjacent `.active > .hitarea` green borders when `.dropup .dropdown-menu` elems originate from a `.navbar-fixed-bottom` component.
+        /// ---
+        /// @access private
+        /// @group core.internals.components.navbars
+        /// @type List
+        /// @since 1.0.0
+        /// ---
+        /// @requires {function} build-box-shadow
+        /// @requires {variable} $navbar-dropup-menu-overlap-shadow-config
+        ///
+        $navbar-dropup-menu-overlap-shadow: build-box-shadow($navbar-dropup-menu-overlap-shadow-config);
+
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED CONFIG ALIASES
+//
+// ********************************************************
+    $navbar-bg: get($navbar-base-config, 'bg');
+
+    $navbar-bd-width: get($navbar-base-config, 'bd-width');
+    $navbar-bd-width-rem: to-rem($navbar-bd-width);
+    $navbar-bd-color: get($navbar-base-config, 'bd-color');
+
+    $navbar-height: get($navbar-base-config, 'height');
+    $navbar-height-inner: get($navbar-base-config, 'height-inner');
+    $navbar-fixed-height-inner: get($navbar-base-config, 'height-inner-fixed');
+
+    $navbar-margin-bottom: get($navbar-base-config, 'margin-bottom');
+    $navbar-padding-top: get($navbar-base-config, 'padding-top');
+    $navbar-padding-right: get($navbar-base-config, 'padding-right');
+    $navbar-padding-bottom: get($navbar-base-config, 'padding-bottom');
+    $navbar-padding-left: get($navbar-base-config, 'padding-left');
+
+    $navbar-padding-right-wide: get($navbar-base-config, 'padding-right-wide');
+    $navbar-padding-left-wide: get($navbar-base-config, 'padding-left-wide');
+
+    $navbar-logo-offset-left: get($navbar-base-config, 'header-logo-offset-left');
+    $navbar-container-padding-horizontal:       $navbar-padding-right;
+    $navbar-container-padding-horizontal-wide:  $navbar-padding-right-wide;
+    // Adjust placement of logo so it appears with the correct left offset according to spec
+    // See: https://github.com/Workiva/web-skin/issues/471
+    $navbar-logo-offset-adjustment:      ($navbar-container-padding-horizontal      - $navbar-logo-offset-left) * -1;
+    $navbar-logo-offset-adjustment-wide: ($navbar-container-padding-horizontal-wide - $navbar-logo-offset-left) * -1;
+
+    $navbar-collapse-mq: get($navbar-base-config, 'collapse-breakpoint');
+    $navbar-collapse-max-mq: get($navbar-base-config, 'collapse-breakpoint-max');
+    $navbar-collapse-screen-size-name: 'screen-sm';
+    $navbar-phone-landscape-mq: 'only screen' (max-device-width $screen-xs-min) (orientation landscape);
+
+
+    // ----------------------------------------------------
+    //   RESPONSIVE COLLAPSING NAVBAR
+    // ----------------------------------------------------
+    // when a responsive navbar nav is open... it drops a shadow
+    $nav-collapse-drop-shadow: 0 3px 5px 0 rgba($shadow-default-color, .25);
+
+    // where does the collapsed navbar appear?
+    $navbar-collapse-width: $screen-sm-min !global !default;
+
+
+    // ----------------------------------------------------
+    //   "Global Help" Menu
+    //
+    //   TODO: this should be defined in iconography glyph colors partial
+    // ----------------------------------------------------
+    $navbar-global-help-icon-color: $zc-purple-80;
+    $navbar-global-help-icon-color-hover: $zc-purple;

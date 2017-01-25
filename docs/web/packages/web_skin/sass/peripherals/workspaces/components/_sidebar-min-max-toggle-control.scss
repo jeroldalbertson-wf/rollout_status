@@ -1,0 +1,90 @@
+// ********************************************************
+//
+//   SIDEBAR "MIN-MAX" TOGGLE CONTROL COMPONENT STYLE MODULE
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/workspaces/components/sidebar-min-max-toggle';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $wksp-module-config:  'peripherals/workspaces/atoms/workspaces-config';
+    $wksp-module-helpers: 'peripherals/workspaces/atoms/workspaces-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $wksp-module-config,
+                                          $wksp-module-helpers);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   MASTHEAD "MIN-MAX" CONTROLS
+//
+//   [1] Shared styling for both the wrapper and the
+//       enclosed `.sidebar-toggle` button element,
+//       mainly to  ensure that the clickable area is
+//       large enough to provide a good experience for
+//       mobile / touch users.
+//
+//   [2] When the sidebar is maximizing, we want to
+//       transition the toggle button opacity / direction
+//       AFTER the width of the sidebar is done changing.
+//
+//   [3] Align the top edge of the toggle button icons
+//       with the top edge of the "k" in the Wdesk logo
+//       as shown in the spec.
+//
+//   [4] When the left sidebar is minimizing, we want to
+//       transition the toggle button opacity IMMEDIATELY
+//       so it never overlaps / intersects with the brand
+//       logo stuff.
+//
+// ----------------------------------------------------
+.wksp-sidebar-min-max-control-wrapper {
+    @include wksp-sidebar-min-max-control-base('wrapper'); // [1]
+    @include wksp-sidebar-min-max-control-wrapper-transitions('min-to-max'); // [2]
+
+    .sidebar-toggle {
+        @include wksp-sidebar-min-max-control-base('button'); // [1]
+
+        color: get($close-btn-config, 'text-color');
+        opacity: get($close-btn-config, 'alpha');
+        box-shadow: none; // override default :focus style
+
+        // ----- HOVER / FOCUS STATES ----- //
+        #{$link-hover-focus} {
+            opacity: get($close-btn-config, 'alpha-hover');
+        }
+
+        // ----- PRESS (DOWN) STATE ----- //
+        #{$link-pressed} {
+            opacity: get($close-btn-config, 'alpha-press');
+        }
+    }
+
+    .sidebar-toggle .icon {
+        margin-top: to-rem(9px); // [3]
+    }
+
+
+    // ----- MINIMIZED SIDEBAR ----- //
+    .wksp-sidebar-minimized & {
+        @include wksp-sidebar-min-max-control-wrapper-transitions('max-to-min'); // [3]
+    }
+
+
+    // ----- (LEFT) MINIMIZED SIDEBAR ----- //
+    .wksp-sidebar-left.wksp-sidebar-minimized & {
+        opacity: 0;
+    }
+}
+
+
+// ----------------------------------------------------
+//   "FLIP" ANIMATION BASED ON MIN/MAX SIDEBAR STATE
+// ----------------------------------------------------
+.sidebar-toggle .flip-container {
+    @include wksp-sidebar-min-max-control-flip-animation();
+}

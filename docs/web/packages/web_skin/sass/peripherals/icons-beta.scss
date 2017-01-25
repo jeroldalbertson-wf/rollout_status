@@ -1,0 +1,40 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for Beta Icons
+ * ---
+ * MSIE Support: 10+
+ * Touch UI Support: false
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import "../core/api";
+
+
+// ----------------------------------------------------
+//   PUA DECLARATIONS
+// ----------------------------------------------------
+    // BASE 16
+    @include ws-icon-glyph("e603",  $selector: '.icon-file-dc-beta',
+                                    $first-color: color('doctypes.wfml-wb.base'));
+
+    // BASE 24
+    @include ws-icon-glyph("e605",  $selector: '.icon-twfr-file-dc-frozen-beta',
+                                    $first-color: color('doctypes.wfml-wb.base'),
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e606",  $selector: '.icon-twfr-file-dc-draft-beta',
+                                    $first-color: color('doctypes.wfml-wb.base'),
+                                    $second-color: $zc-gray);
+
+    @include ws-icon-glyph("e607",  $selector: '.icon-twfr-file-dc-beta',
+                                    $first-color: color('doctypes.wfml-wb.base'));

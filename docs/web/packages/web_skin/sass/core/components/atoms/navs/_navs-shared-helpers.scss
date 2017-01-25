@@ -1,0 +1,777 @@
+// ********************************************************
+
+////
+/// Nav component helpers
+/// ---
+/// @since 1.0.0
+/// @group core.components.navs
+/// @link http://bit.ly/webskin-navs Nav components spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/navs/navs-shared-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function to-rem);
+//
+// ********************************************************
+
+
+///
+/// Display a horizontal divider between to `.nav` elements.
+/// ---
+/// @since 1.0.0
+///
+@mixin nav-divider-horizontal {
+    @include divider-horizontal($bg: get($nav-base-config, 'bg'),
+                                $margin: get($nav-base-config, 'vertical-divider-margin')
+                               );
+
+    // make sure the very next nav item doesn't have a top border
+    + .nav-item {
+        &,
+        > .hitarea { border-top: 0 none; }
+    }
+}
+
+
+///
+/// Reusable styles for adding horizontal spacing between icons and adjacent elems within navigation structures.
+///
+@mixin nav-link-icon-spacing {
+    margin-right: to-rem($nav-link-icon-margin-horizontal);
+
+    &.align-right {
+        margin-right: 0;
+        margin-left: to-rem($nav-link-icon-margin-horizontal);
+    }
+
+    &.pull-right {
+        $floated-icon-margin-horizontal: $nav-link-icon-margin-horizontal + 2px; // make up for whitespace difference
+        margin-right: 0;
+        margin-left: to-rem($floated-icon-margin-horizontal);
+        // floating the icon takes it out of the existing box-model
+        // so a vertical alignment adjustment is necessary
+        margin-top: .2rem;
+    }
+}
+
+
+///
+/// Helper mixin that produces reusable styling for `.nav .hitarea` links in a given `$state`.
+/// ---
+/// @see {variable} nav-link-config
+/// @see {variable} nav-secondary-link-config
+/// ---
+/// @param {Map}    $config - Nav link config, e.g. `$nav-link-config` or `$nav-secondary-link-config`
+/// @param {String} $state  - State of nav link, e.g. `hover`, `focus`, `press`, `selected`, `active` or `disabled`
+///
+@mixin nav-link-state($config, $state) {
+    @if not is($state, 'hover' 'focus' 'press' 'selected' 'active' 'disabled') {
+        @error "Mixin `nav-link-state` expecting `$state` to be one of the following strings: `hover`, `focus`, `press`, `selected`, `active` or `disabled`. Received `#{$state}`."
+    }
+
+    $bg: get-deep($config, 'bg-#{$state}');
+    $text-color: get-deep($config, 'text-color-#{$state}');
+    // If its a disabled state - it's an "end game" style, meaning nothing should be able to over-rule it... so we use !important to enforce that.
+    $important: if(unquote($state) == disabled, '!important', '');
+
+    color: $text-color #{$important};
+    background-color: $bg #{$important};
+}
+
+///
+/// Base styling for hovered `.hitarea` within a `.nav` component.
+/// ---
+/// @since 0.3.0
+///
+@mixin nav-link-hover {
+    @include nav-link-state($nav-link-config, 'hover');
+
+    text-decoration: none;
+}
+
+///
+/// Base styling for pressed `.hitarea` within a `.nav` component.
+/// ---
+/// @since 0.3.0
+///
+@mixin nav-link-press {
+    @include nav-link-state($nav-link-config, 'press');
+
+    //
+    // Prevent "pressed" links from flickering a blue outline
+    // before an activated state occurs
+    //
+    @include remove-focus-outline();
+}
+
+///
+/// Base styling for hovered `.hitarea` within a secondary `.nav` or `.dropdown-menu` component.
+/// ---
+/// @since 0.3.0
+/// @group core.components.navs
+///
+@mixin secondary-nav-link-hover {
+    @include nav-link-state($nav-secondary-link-config, 'hover');
+
+    text-decoration: none;
+}
+
+///
+/// Base styling for focused `.hitarea` within a secondary `.nav` or `.dropdown-menu` component.
+/// ---
+/// @since 1.5.0
+/// @group core.components.navs
+///
+@mixin secondary-nav-link-focus {
+    @include nav-link-state($nav-secondary-link-config, 'focus');
+}
+
+///
+/// Base styling for pressed `.hitarea` within a secondary `.nav` or `.dropdown-menu` component
+/// ---
+/// @since 0.3.0
+/// @group core.components.navs
+///
+@mixin secondary-nav-link-press {
+    @include nav-link-state($nav-secondary-link-config, 'press');
+}
+
+///
+/// Base styling for active `.hitarea` within a secondary `.nav` or `.dropdown-menu` component
+/// ---
+/// @since 1.0.0
+/// @group core.components.navs
+///
+@mixin secondary-nav-link-active {
+    @include nav-link-state($nav-secondary-link-config, 'active');
+
+    font-weight: bold;
+}
+
+///
+/// Base styling for selected `.hitarea` within a secondary `.nav` or `.dropdown-menu` component.
+///
+/// Similar to "active" state, but used in situations where more than one item can be selected in the same parent.
+/// ---
+/// @since 1.5.0
+/// @group core.components.navs
+///
+@mixin secondary-nav-link-selected {
+    @include nav-link-state($nav-secondary-link-config, 'selected');
+}
+
+///
+/// Base styling for disabled `.hitarea` within a secondary `.nav` or `.dropdown-menu` component
+/// ---
+/// @since 1.0.0
+/// @group core.components.navs
+///
+@mixin secondary-nav-link-disabled {
+    @include nav-link-state($nav-secondary-link-config, 'disabled');
+
+    text-decoration: none !important;
+}
+
+//
+// @todo document params
+//
+@mixin nav-blocks-link-default($width: get($nav-link-config, 'height'),
+                               $height: get($nav-link-config, 'height'),
+                               $global: true
+                              )
+{
+    min-width: to-rem($width);
+    height: to-rem($height);
+    line-height: to-rem($height);
+    cursor: pointer;
+
+    @if $global {
+        padding: 0;
+        margin: 0;
+        text-align: center;
+        border: 0 none;
+
+        .icon {
+            // Should act like a glyph within a "no-text" button
+            margin-right: 0;
+            margin-left: 0;
+        }
+
+        // Adjust base24 / medium base16 icon vertical alignment within menu items
+        .icon-md,
+        .icon[class*="icon-twfr-"] {
+            vertical-align: middle;
+        }
+    }
+}
+
+//
+// @todo document params
+//
+@mixin nav-pills-pill($set-border-radius: true) {
+    text-align: center; // only left align when stacked
+    width: auto; // so that float / margin between pills works
+    padding: to-rem(get($nav-pills-pill-config, 'padding'));
+    color: get($nav-pills-pill-config, 'text-color');
+    background-color: get($nav-pills-pill-config, 'bg');
+    border: to-rem(get($nav-pills-pill-config, 'bd-width')) solid get($nav-pills-pill-config, 'bg');
+    @if $set-border-radius {
+        border-radius: to-rem(get($nav-pills-pill-config, 'bd-radius'));
+    }
+}
+
+//
+// @todo document params
+//
+@mixin nav-pills-pill-hover($set-border-color: true) {
+    color: get($nav-pills-pill-config, 'text-color-hover');
+    background-color: get($nav-pills-pill-config, 'bg-hover');
+    @if $set-border-color {
+        border-color: get($nav-pills-pill-config, 'bg-hover');
+    }
+}
+
+//
+// @todo document params
+//
+@mixin nav-pills-pill-press {
+    color: get($nav-pills-pill-config, 'text-color-press');
+    background-color: get($nav-pills-pill-config, 'bg-press');
+    border-color: get($nav-pills-pill-config, 'bg-press');
+}
+
+//
+// @todo document params
+//
+@mixin nav-pills-pill-active {
+    color: get($nav-pills-pill-config, 'text-color-active');
+    background-color: get($nav-pills-pill-config, 'bg-active');
+    border-color: get($nav-pills-pill-config, 'bg-active');
+}
+
+//
+// @todo document params
+//
+@mixin nav-pills-pill-disabled {
+    color: get($nav-pills-pill-config, 'text-color-disabled') !important;
+    background-color: get($nav-pills-pill-config, 'bg-disabled') !important;
+    border-color: get($nav-pills-pill-config, 'bg-disabled') !important;
+}
+
+//
+// @todo document params
+//
+@mixin nav-pills-base {
+    > .nav-item {
+        float: left;
+
+        // Add space between adjacent pills
+        + .nav-item > .hitarea {
+            margin-left: to-rem(get($nav-pills-pill-config, 'spacing') * 2);
+        }
+
+
+        // ----- ACTUAL CLICKABLE PILLS ----- //
+        > .hitarea {
+            @include nav-pills-pill();
+
+
+            // ----- PILL HOVER / FOCUS STATES ----- //
+            #{$link-hover-focus} {
+                @include nav-pills-pill-hover();
+            }
+
+
+            // ----- PILL PRESSED STATE ----- //
+            #{$link-pressed} {
+                @include nav-pills-pill-press();
+            }
+
+
+            // ----- FOCUS-ONLY STATE FOR ACCESSIBILITY ----- //
+            #{$focus} {
+                //
+                // Use a border instead of outline since these have rounded corners
+                // `!important` is necessary to override the active state border color
+                //
+                @include focus-border($important: true);
+            }
+
+
+            // ----- PILL DISABLED STATE ----- //
+            #{$nav-disabled-selectors} {
+                @include nav-pills-pill-disabled();
+            }
+        }
+
+
+        // ----- PILL ACTIVE STATE ----- //
+        &.active,
+        &.open {
+            > .hitarea {
+                @include nav-pills-pill-active();
+            }
+        }
+    }
+}
+
+
+//
+// @todo document params
+//
+@mixin pill-skin($state-name, $hover-only: false, $reset-icon-color: false) {
+    // ----- LOCAL VARIABLES ----- //
+    $state-name: unquote($state-name);
+    $state-class-name: 'pill-#{$state-name}';
+    @if $hover-only {
+        $state-class-name: '#{$state-class-name}-hover';
+    }
+
+    $is-link-variation: is-true(str-index($state-name, 'link'));
+    $skin: get($btn-colors, $state-name);
+
+    @if $state-name == 'link' {
+        $skin: $nav-pills-pill-link-skin-colors;
+    }
+
+    @if $state-name == 'link-help' {
+        $skin: $nav-pills-pill-link-global-help-skin-colors;
+    }
+
+
+    > .#{$state-class-name} {
+        // ----- HOVER STATE ----- //
+        #{$hover} {
+            color: get($skin, 'text-hover') !important;
+            background-color: get($skin, 'bg-hover') !important;
+            border-color: get($skin, 'bg-hover') !important; // pill bd colors match bg colors unlike .btn
+
+            @if $reset-icon-color {
+                .icon {
+                    @include reset-icon-colors();
+                }
+            }
+        }
+
+
+        // ----- FOCUS STATE ----- //
+        #{$btn-focus-only-selectors} {
+            color: get($skin, 'text-hover') !important;
+            background-color: get($skin, 'bg-hover') !important;
+
+            @if $state-name == 'alt' {
+                // Adjust focus indicator color for blue pills
+                @include focus-border($color: $zc-blue-120, $global: false, $important: true);
+            } @else {
+                // Override bd color from `$link-hover-focus` styles
+                @include focus-border($global: false, $important: true);
+            }
+
+            @if $reset-icon-color {
+                .icon {
+                    @include reset-icon-colors();
+                }
+            }
+        }
+
+
+        // ----- PRESSED STATE ----- //
+        #{$link-pressed} {
+            color: get($skin, 'text-press') !important;
+            background-color: get($skin, 'bg-press') !important;
+            border-color: get($skin, 'bg-press') !important; // pill bd colors match bg colors unlike .btn
+
+            @if $reset-icon-color {
+                .icon {
+                    @include reset-icon-colors();
+                }
+            }
+        }
+    }
+
+    // ----- ACTIVE STATE ----- //
+    // TODO: Update this logic to add all the open / active
+    //       selector variations for ALL skins, not just the
+    //       link variations once we get the CSS selector count
+    //       under control
+    $active-selectors: '&.active > .#{$state-class-name}, &.open > .#{$state-class-name}';
+    @if $is-link-variation {
+        $active-selectors: '&.active > .#{$state-class-name}, &.open > .#{$state-class-name}, & > .#{$state-class-name}.active, & > .#{$state-class-name}.open'
+    }
+
+    #{$active-selectors} {
+        @if $is-link-variation {
+            &,
+            #{$link-hover-focus},
+            #{$link-pressed} {
+                color: get($skin, 'text-active') !important;
+                background-color: get($skin, 'bg-active') !important;
+                border-color: get($skin, 'bg-active') !important;
+            }
+        } @else {
+            color: get($skin, 'text-press') !important;
+            background-color: get($skin, 'bg-press') !important;
+            border-color: get($skin, 'bg-press') !important; // pill bd colors match bg colors unlike .btn
+        }
+
+        @if $reset-icon-color {
+            .icon {
+                @include reset-icon-colors();
+            }
+        }
+    }
+
+    // ----- DEFAULT STATE (only if $hover-only is `false`) ----- //
+    @if not $hover-only {
+        > .#{$state-class-name} {
+            // ----- DEFAULT STATE ----- //
+            color: get($skin, 'text-base') !important;
+            background-color: get($skin, 'bg-base') !important;
+            border-color: get($skin, 'bg-base') !important; // pill bd colors match bg colors unlike .btn
+
+
+            // ----- DISABLED STATE ----- //
+            #{$nav-disabled-selectors} {
+                @include btn-disabled($bg: get($skin, 'bg-base'),
+                                      $bd-color: get($skin, 'bd-base'),
+                                      $text-color: get($skin, 'text-base')
+                                     );
+            }
+
+            @if $reset-icon-color {
+                .icon {
+                    @include reset-icon-colors();
+                }
+            }
+        }
+    }
+}
+
+
+//
+// @todo document params
+//
+@mixin nav-item-justified ($global: true) {
+    // applies to both Tabs and Pills
+    > .nav-item {
+        display: table-cell;
+        float: none;
+        width: 1%;
+        text-align: center;
+
+        > .hitarea {
+            width: 100%;
+            margin-bottom: 0;
+            margin-left: 0 !important;
+            text-align: center; // for specificity in case they use <button> instead of <a>
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}
+
+//
+// @todo document params
+//
+@mixin nav-tabs-tab-justified {
+    // we don't multiply the nav-tab-bd-width * 2 here
+    // because we want the bottom border to overlap on active tabs
+    max-height: to-rem(get($nav-link-config, 'height') + get($nav-tabs-tab-config, 'bd-width'));
+    // Give the tabs something to sit on
+    border-bottom: to-rem(get($nav-tabs-config, 'bd-width')) solid get($nav-tabs-config, 'bd-color');
+
+    > .nav-item {
+        // negative bottom margin doesn't work since these are display: table-cell now
+        // so we'll use relative positioning on the child .hitarea instead
+        margin-bottom: 0;
+
+        > .hitarea {
+            position: relative;
+            bottom: -.1rem;
+            @include border-bottom-radius(0);
+        }
+
+        // ----- ACTIVE STATE ----- //
+        &.active,
+        &.open {
+            > .hitarea {
+                &,
+                #{$link-hover-focus} {
+                    border-bottom: to-rem(get($nav-tabs-tab-config, 'bd-width')) solid get($nav-tabs-tab-config, 'bg-active');
+                }
+            }
+        }
+    }
+
+    // dropdown menus
+    .dropdown .dropdown-menu {
+        @include border-top-radius(0);
+
+        // negative top margin not for the menu because
+        // we are adding relative positioning to the .hitarea
+        // along with bottom: -1px
+        margin-top: 0;
+    }
+
+    // right aligned dropdown menus
+    &.pull-right .dropdown > .dropdown-menu,
+    .dropdown.pull-right > .dropdown-menu,
+    .dropdown > .dropdown-menu-right {
+        // justified navs don't have the spacing between tabs
+        right: 0;
+    }
+}
+
+// @private
+@mixin _nav-tabs-tab-platform-base() {
+    content: "";
+    position: absolute;
+    border-radius: get($nav-tabs-tab-config, 'selected-platform-bd-radius');
+}
+
+// Platform size to be used in tabs that display stacked vertically
+@mixin nav-tabs-tab-platform-size-vertical($size: get($nav-tabs-tab-config, 'selected-platform-size')) {
+    width: $size;
+    height: auto;
+}
+
+// Platform size to be used in tabs that display adjacent horizontally
+@mixin nav-tabs-tab-platform-size-horizontal($size: get($nav-tabs-tab-config, 'selected-platform-size')) {
+    width: auto;
+    height: $size;
+}
+
+// Default platform position
+@mixin nav-tabs-tab-platform-bottom($size: get($nav-tabs-tab-config, 'selected-platform-size')) {
+    @include _nav-tabs-tab-platform-base();
+    @include nav-tabs-tab-platform-size-horizontal($size);
+
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+// Used in .tabs-below
+@mixin nav-tabs-tab-platform-top($size: get($nav-tabs-tab-config, 'selected-platform-size')) {
+    @include _nav-tabs-tab-platform-base();
+    @include nav-tabs-tab-platform-size-horizontal($size);
+
+    top: 0;
+    right: 0;
+    bottom: auto;
+    left: 0;
+}
+
+// Used in .tabs-left
+@mixin nav-tabs-tab-platform-right(
+    $size: get($nav-tabs-tab-config, 'selected-platform-size'),
+    $nav-bd-width: to-rem(get($nav-tabs-config, 'bd-width'))
+) {
+    @include _nav-tabs-tab-platform-base();
+    @include nav-tabs-tab-platform-size-vertical($size);
+
+    top: 0;
+    right: $nav-bd-width * -1;
+    bottom: 0;
+    left: auto;
+}
+
+// Used in .tabs-right
+@mixin nav-tabs-tab-platform-left(
+    $size: get($nav-tabs-tab-config, 'selected-platform-size'),
+    $nav-bd-width: to-rem(get($nav-tabs-config, 'bd-width'))
+) {
+    @include _nav-tabs-tab-platform-base();
+    @include nav-tabs-tab-platform-size-vertical($size);
+
+    top: 0;
+    right: auto;
+    bottom: 0;
+    left: $nav-bd-width * -1;
+}
+
+// Re-usable styling for `.tabs-below` variation.
+//
+// Assumes base element is a `.nav`
+@mixin nav-tabs-below() {
+    margin-top: $nav-tabs-content-spacing-rem;
+    margin-bottom: 0; // Override default
+    border-bottom: none; // Override default
+    border-top: $nav-tabs-bd-width-rem solid get($nav-tabs-config, 'bd-color');
+
+    > .nav-item {
+        margin-bottom: 0; // Override default
+        margin-top: $nav-tabs-bd-width-rem * -1; // Make the list-items overlay the top border
+
+        > .hitarea {
+            // Reverse the vertical padding
+            padding-top: to-rem(get($nav-tabs-tab-config, 'padding-bottom'));
+            padding-bottom: to-rem(get($nav-tabs-tab-config, 'padding-top'));
+
+            @if $nav-tabs-tab-bd-radius-rem != 0 {
+                border-radius: 0;
+                @include border-bottom-radius($nav-tabs-tab-bd-radius-rem);
+            }
+        }
+
+        // ----- ACTIVE "PLATFORM" INDICATOR ----- //
+        &:after {
+            @include nav-tabs-tab-platform-top();
+        }
+    }
+
+    // ------------------------------------------------
+    //   CONVERT DROPDOWNS TO DROPUP VARIATION
+    //   -> Automatically, even if the consumer did
+    //      not specify `.dropdown.dropup`
+    // ------------------------------------------------
+    .dropdown {
+        > .dropdown-menu {
+            margin-bottom: $nav-tabs-bd-width-rem * -1;
+            border-color: get($nav-tabs-tab-config, 'bd-color');
+            border-bottom-color: transparent; // Allow the "platform" color to show-through.
+            @include border-bottom-radius(0);
+        }
+    }
+}
+
+// Re-usable styling for `.tabs-left` variation.
+//
+// Assumes base element is a `.nav`
+@mixin nav-tabs-left() {
+    width: auto;
+    float: left;
+    margin-right: $nav-tabs-content-spacing-rem;
+    margin-bottom: 0; // Override default
+    border-bottom: none; // Override default
+
+    > .nav-item {
+        float: none; // Vertically stacked tabs
+        margin-bottom: 0; // Override default
+        border-right: $nav-tabs-bd-width-rem solid get($nav-tabs-config, 'bd-color');
+
+        > .hitarea {
+            padding-top: to-rem(get($nav-tabs-tab-config, 'stacked-padding-vertical'));
+            padding-bottom: to-rem(get($nav-tabs-tab-config, 'stacked-padding-vertical'));
+            // Use the vertical padding from horizontal tabs as the horizontal spacing for vertically stacked tabs
+            padding-right: to-rem(get($nav-tabs-tab-config, 'padding-top'));
+            padding-left: to-rem(get($nav-tabs-tab-config, 'padding-bottom'));
+            min-width: get($nav-tabs-tab-config, 'stacked-min-width');
+            margin-right: $nav-tabs-tab-bd-width-rem * -1;
+            margin-bottom: $nav-tabs-tab-spacing-rem;
+            text-align: right;
+
+            @if $nav-tabs-tab-bd-radius-rem != 0 {
+                border-radius: 0;
+                @include border-left-radius($nav-tabs-tab-bd-radius-rem);
+            }
+        }
+
+        // ----- ACTIVE "PLATFORM" INDICATOR ----- //
+        &:after {
+            @include nav-tabs-tab-platform-right();
+        }
+    }
+}
+
+// Re-usable styling for `.tabs-right` variation.
+//
+// Assumes base element is a `.nav`
+@mixin nav-tabs-right() {
+    @include order(2); // Tabs should appear to the right of the content
+
+    width: auto;
+    float: right;
+    margin-left: $nav-tabs-content-spacing-rem;
+    margin-bottom: 0; // Override default
+    border-bottom: none; // Override default
+
+    > .nav-item {
+        float: none; // Vertically stacked tabs
+        margin-bottom: 0; // Override default
+        border-left: $nav-tabs-bd-width-rem solid get($nav-tabs-config, 'bd-color');
+
+        > .hitarea {
+            padding-top: to-rem(get($nav-tabs-tab-config, 'stacked-padding-vertical'));
+            padding-bottom: to-rem(get($nav-tabs-tab-config, 'stacked-padding-vertical'));
+            // Use the vertical padding from horizontal tabs as the horizontal spacing for vertically stacked tabs
+            padding-right: to-rem(get($nav-tabs-tab-config, 'padding-bottom'));
+            padding-left: to-rem(get($nav-tabs-tab-config, 'padding-top'));
+            min-width: get($nav-tabs-tab-config, 'stacked-min-width');
+            margin-right: 0;
+            margin-bottom: $nav-tabs-tab-spacing-rem;
+            margin-left: $nav-tabs-tab-bd-width-rem * -1;
+
+            @if $nav-tabs-tab-bd-radius-rem != 0 {
+                border-radius: 0;
+                @include border-right-radius($nav-tabs-tab-bd-radius-rem);
+            }
+        }
+
+        // ----- ACTIVE "PLATFORM" INDICATOR ----- //
+        &:after {
+            @include nav-tabs-tab-platform-left();
+        }
+    }
+}
+
+//
+// @todo document params
+//
+@mixin nav-pills-pill-justified($li-bg: false) {
+    max-height: to-rem(get($nav-link-config, 'height') + (get($nav-pills-pill-config, 'bd-width') * 2));
+
+    > .nav-item {
+        @if $li-bg and type-of($li-bg == color) {
+            background-color: $li-bg;
+        }
+        > .hitarea {
+            overflow: hidden;
+            margin-left: 0;
+            border-radius: 0;
+        }
+
+        $bd-radius-rem: to-rem(get($nav-pills-pill-config, 'bd-radius'));
+
+        // round the left and right edge of the series of pills only
+        &:first-child {
+            @include border-left-radius($bd-radius-rem);
+
+            > .hitarea {
+                @include border-left-radius($bd-radius-rem);
+            }
+        }
+        &:last-child {
+            @include border-right-radius($bd-radius-rem);
+
+            > .hitarea {
+                @include border-right-radius($bd-radius-rem);
+            }
+        }
+
+        // create the spacing using borders instead of margin so we don't break the box model with 100% width button.hitarea
+        + .nav-item { border-left: to-rem(get($nav-pills-pill-config, 'spacing')) solid transparent; }
+    }
+}
+
+//
+// @todo document params
+//
+@mixin nav-tab-content-visibility-control {
+    display: none;
+    visibility: hidden;
+
+    &.active {
+        display: block;
+        visibility: visible;
+    }
+}

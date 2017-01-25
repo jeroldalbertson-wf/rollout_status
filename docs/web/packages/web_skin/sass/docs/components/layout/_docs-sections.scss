@@ -1,0 +1,172 @@
+// ********************************************************
+//
+//   DECLARE MODULE:
+//
+    $module: 'docs/components/layout/sections';
+    $module: add-component-module($module);
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   Space out adjacent nested sections
+// ----------------------------------------------------
+.ws-section > .ws-section + .ws-section {
+    padding-top: to-rem($container-gutter-default + 10);
+}
+
+// ----------------------------------------------------
+//   Panels used for documentation purposes
+// ----------------------------------------------------
+.ws-panel .panel-body {
+    font-size: to-rem($font-size-base);
+    line-height: $line-height-base;
+}
+
+//
+// adjust spacing between permalink-able headers
+// that immediately follow a .ws-callout
+//
+.ws-callout {
+    + h2[id],
+    + h3[id],
+    + h4[id] {
+        margin-top: to-rem(get($callout-config, 'margin') * -1);
+        z-index: 0; // keep below predecessor
+    }
+}
+
+
+// ----------------------------------------------------
+//   Adobe Illustrator Links to Google Drive
+//   Dart logo links to WSD docs
+//
+//   -> Nest within documentation headings (via `_common/docs-heading.html`)
+// ----------------------------------------------------
+$component-asset-size: to-rem(icon-size-base-16() * 2); // 3.2rem
+$component-asset-link-transition: all .2s ease;
+$component-asset-link-box-bd-color: $zc-gray-70;
+$component-asset-link-svg-initial-alpha: .6;
+$ai-brand-color: #ffaa2a;
+$dart-brand-color: #0081c6;
+$dart-bird-logo-colors: (
+    st0: #4EDECB,
+    st1: #045B7F,
+    st2: #00CCB9,
+    st3: #00A5E9,
+    st4: #018BD1,
+    st5: #87D9F9 // egg in "hatching" logo (for wip components)
+);
+
+@mixin colorize-ux-asset-link() {
+    &.component-asset-link--ux {
+        border-color: rgba($ai-brand-color, $component-asset-link-svg-initial-alpha);
+    }
+
+    .ai-logo-text {
+        fill: $ai-brand-color;
+    }
+}
+
+@mixin colorize-wsd-asset-link() {
+    &.component-asset-link--wsd {
+        border-color: rgba($dart-brand-color, $component-asset-link-svg-initial-alpha);
+    }
+
+    .dart-bird-logo {
+        // Full color on hover / focus
+        @each $classname-key, $color in $dart-bird-logo-colors {
+            .#{$classname-key} {
+                fill: $color;
+            }
+        }
+    }
+}
+
+.component-asset-links {
+    @include align-items(center);
+
+    padding-top: $flex-grid-gutter-width / 2; // mobile-first
+}
+
+.component-asset-link {
+    @include transition($component-asset-link-transition);
+
+    display: block;
+    border: .2rem solid rgba($component-asset-link-box-bd-color, 1);
+    width: $component-asset-size;
+    height: $component-asset-size;
+
+    + .component-asset-link {
+        margin-left: .8rem;
+    }
+
+    svg {
+        opacity: $component-asset-link-svg-initial-alpha;
+        position: relative;
+        vertical-align: top;
+
+        &,
+        * {
+            @include transition($component-asset-link-transition);
+        }
+    }
+
+    #{$link-hover-focus} {
+        svg {
+            opacity: 1;
+        }
+    }
+
+    // When the asset's parent `.ws-section` element is hovered - or when the link is hovered / focused, colorize the link svg.
+    #{$link-hover-focus},
+    .ws-section:hover & {
+        @include colorize-ux-asset-link();
+        @include colorize-wsd-asset-link();
+    }
+}
+
+@include respond-to('screen-sm and up') {
+    .component-asset-links {
+        padding-top: 0;
+    }
+
+    .component-asset-heading {
+        @include truncate-text();
+    }
+}
+
+.component-asset-link--ux {
+    #{$link-hover-focus} {
+        border-color: rgba($ai-brand-color, 1) !important;
+    }
+
+    .ai-logo-text {
+        fill: darken($component-asset-link-box-bd-color, (percentage(1 - $component-asset-link-svg-initial-alpha) - darkness($docs-body-bg)));
+    }
+}
+
+.component-asset-link--wsd {
+    #{$link-hover-focus} {
+        border-color: rgba($dart-brand-color, 1) !important;
+    }
+
+    .dart-bird-logo {
+        // Convert to grayscale rgba for non-hovered state.
+        @each $classname-key, $color in $dart-bird-logo-colors {
+            .#{$classname-key} {
+                fill: if($color == $white, $docs-body-bg, rgba($black, to-decimal(darkness(grayscale($color)))));
+            }
+        }
+    }
+
+    // Components that are still a work in progress
+    .dart-bird-logo--hatching {
+        top: .2rem;
+        opacity: $component-asset-link-svg-initial-alpha - .2; // Make it look not as "available"
+    }
+
+    @at-root .component-asset-link--wsd--wip {
+        border-color: rgba($component-asset-link-box-bd-color, .667); // make it look not as "available"
+    }
+}

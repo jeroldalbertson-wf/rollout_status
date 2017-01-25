@@ -1,0 +1,695 @@
+// ********************************************************
+
+////
+/// Form click to edit component helpers
+/// ---
+/// @group peripherals.components.form-controls
+/// @todo add a link to the component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/form-click-to-edit/atoms/form-click-to-edit-helpers';
+    $module: add-api-module($module);
+//
+//   DEPENDENCIES:
+//
+    @import 'form-click-to-edit-config';
+//
+// ********************************************************
+
+
+// ----------------------------------------------------
+//   HIDE / SHOW CLICKABLE ELEMS WITHIN CTE COMPONENT
+//
+//   -> The button fns must be disabled in JS logic
+//      to prevent click behavior when hidden.
+// ----------------------------------------------------
+@mixin hide-cte-clickable-child-elem() {
+    cursor: default;
+    pointer-events: none; // future-proof disabling
+    opacity: 0 !important; // override .btn[disabled]
+}
+
+@mixin show-cte-clickable-child-elem() {
+    cursor: pointer;
+    pointer-events: auto;
+    opacity: 1 !important;
+}
+
+
+// ----------------------------------------------------
+//   CTE-GROUP ELEMS WITHIN HORIZONTAL FORMS
+//   -> If it's within a `.form-horizontal` container,
+//      we only want the `.grid-block` behavior above
+//      the responsive breakpoint used by the horizontal
+//      forms to align the `.control-label` alongside
+//      the `.form-control`.
+// ----------------------------------------------------
+@mixin cte-form-horizontal() {
+    //
+    // Reset v1 grid-row behavior applied to
+    // form groups in horizontal forms
+    //
+    .cte-group {
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    //
+    // Match the mobile-first padding of any
+    // adjacent grid v1 `.col-*` styles for the
+    // control label
+    //
+    .cte-group .control-label {
+        @include grid-content($size: false, $gutter: 0);
+        @include grid-gutter($vertical: false);
+    }
+
+    //
+    // Match the mobile-first padding of any
+    // adjacent grid v1 `.col-*` styles for the
+    // elem wrapped around the form control
+    //
+    .cte-block-controls {
+        //
+        // No padding on the right so that
+        // the cte button is in the far right corner of the group
+        //
+        @include grid-gutter($vertical: false, $horizontal: left);
+    }
+
+    //
+    // Past this breakpoint, labels sit adjacent to the controls
+    // along the horizontal axis.
+    //
+    @include respond-to('screen-#{$grid-float-breakpoint} and up') {
+        .cte-group-wrapper,
+        .cte-group {
+            @include grid-block($allow-nested-vblocks: false); // mimics `.grid-block-sm`
+        }
+
+        .cte-group-wrapper {
+            @include grid-wrap(true); // mimics `.grid-wrap-sm`
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   CORE FORM COMPONENT NORMALIZE
+//   -> When existing form control components are used
+//      in the context of a click-to-edit pattern,
+//      some adjustments are necessary.
+// ----------------------------------------------------
+@mixin normalize-core-cte-form-components() {
+    // TODO: 2.0.0: Remove this entire block
+    .form-horizontal:not(.form-horizontal--flexbox) {
+        &[class*="grid-block"],
+        [class*="grid-block"] {
+            .form-group {
+                //
+                // Reset v1 grid-row behavior applied to
+                // form groups in horizontal forms
+                //
+                margin-right: 0;
+                margin-left: 0;
+
+                //
+                // Make it behave like a grid block only above
+                // the breakpoint that causes control labels
+                // to sit side-by-side with form controls so
+                // that the labels behave as stacked "blocks"
+                // below that.
+                //
+                // This will only work if the consumer does not
+                // manually apply the base `grid-block` CSS class
+                // to the `.form-group` elem.
+                //
+                @include respond-to('screen-#{$grid-float-breakpoint} and up') {
+                    // Simulates the presence of `grid-block-sm` CSS class
+                    @include grid-block($allow-nested-vblocks: false);
+                }
+            }
+        }
+
+        @include cte-form-horizontal();
+    }
+
+    //
+    // [1] TODO: 2.0.0: Remove `.cte-group-wrapper .form-group` selector
+    //
+    // [2] The group should appear clickable
+    //
+    // [3] Make sure cursor isn't flickering around as different
+    //     children of the `.cte-group` elem are being hovered
+    //
+    .cte-group {
+        &, // [2]
+        .form-control-static, // [3]
+        .control-label // [3]
+        {
+            cursor: default;
+            cursor: not-allowed;
+        }
+    }
+
+    .cte-group-wrapper .form-group,
+    .cte-group--can-be-edited { // [1]
+        &, // [2]
+        .form-control-static, // [3]
+        .control-label // [3]
+        {
+            cursor: pointer;
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   STRUCTURAL STYLES USED TO REDUCE THE REQUIRED
+//   GRID V2 CSS CLASSES NEEDED IN THE MARKUP
+// ----------------------------------------------------
+@mixin cte-block-allow-overflow() {
+    //
+    // Ensure any box-shadow used for focus
+    // of `.input-group .btn` or `.cte-edit-btn`
+    // is not clipped by the default hidden overflow
+    // of a `.grid-block` element, and ensure
+    // that any dropdown menus appearing within it
+    // are visible to the user.
+    //
+    @include force-overflow(visible !important);
+}
+
+@mixin cte-block-controls-structure() {
+    @include cte-block-allow-overflow();
+}
+
+@mixin cte-block-input-control-structure() {
+    @include grid-content(); // mimics `.grid-content`
+    @include grid-content-collapse(); // mimics `.grid-collapse`
+    @include cte-block-allow-overflow();
+}
+
+// ----------------------------------------------------
+//  CTE "EDIT BUTTON" STRUCTURE / PLACEMENT
+//
+//  [1] Horizontally & Vertically center the icon.
+//
+//  [2] Nest in the top right corner of the
+//      `.form-control-inner-wrapper` element.
+//
+//      [2.1] Must remain above any `.form-control-icon`
+//            elements that come after it so that the
+//            `cte-group--single-click-enabled` CSS
+//            class can be added to the group when the
+//            edit button is hovered.
+//
+//  [3] Make the edit button a 2rem x 2rem square to
+//      house the 1.6rem icon glyph with a little room
+//      to breathe.
+//
+//      !important is added to override the width / height
+//      and padding of the `.btn.no-text` selector.
+//
+//      [3.1] min-height used to override the min-height
+//            applied to the base `.btn` selector.
+//
+//  [4] There is no need to add a blue outline around
+//      the edit button when focused - since the
+//      `cte-group--single-click-enabled` class will
+//      be appended to the entire group on hover OR focus,
+//      which will alter the skin of not only the button,
+//      but also the label and the border color of the
+//      `.form-control-static` element. This is
+//      obviously plenty of visual indication that
+//      the element is focused.
+// ----------------------------------------------------
+@mixin cte-block-btn-control-structure() {
+    @include flex-center-children(); // [1]
+    @include border-top-left-radius(0);
+    @include border-bottom-right-radius(0);
+    @include border-bottom-left-radius(.2rem);
+    // ----- [2] ----- //
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: get($form-control-config, 'icon-z-index') + 1; // [2.1]
+    // ----- [3] ----- //
+    padding: 0 !important;
+    width: get($cte-group-config, 'edit-btn-width') !important;
+    height: get($cte-group-config, 'edit-btn-height') !important;
+    min-height: get($cte-group-config, 'edit-btn-height'); // [3.1]
+
+    // ----- [4] ----- //
+    #{$focus},
+    &#{$focus-class} {
+        @include remove-focus-outline();
+    }
+}
+
+// ----------------------------------------------------
+//  CTE "TWO STAGE" BUTTON STRUCTURE / SKINNING
+//
+//  [1] Make the cancel / confirm buttons a 2rem x 2rem
+//      square to house the 1.6rem icon glyphs with a
+//      little room to breathe.
+//
+//      !important is added to override the width / height
+//      and padding of the `.btn.no-text` selector.
+//
+//      [1.1] min-height used to override the min-height
+//            applied to the base `.btn` selector.
+//
+//      [1.2] override the text color of .btn-default
+//
+//      [1.3] override the border color of any btn skin
+//            used within this toolbar.
+// ----------------------------------------------------
+@mixin cte-cancel-confirm-btns() {
+    // Shared by both buttons.
+    .form-control-inset-toolbar__btn {
+        @include flex-center-children();
+
+        padding: 0 !important; // [1]
+        width: get($cte-group-config, 'inset-toolbar-btn-width') !important; // [1]
+        height: get($cte-group-config, 'inset-toolbar-btn-height') !important; // [1]
+        min-height: get($cte-group-config, 'inset-toolbar-btn-height'); // [1.1]
+        border-radius: .2rem !important;
+        color: $white !important; // [1.2]
+        border-color: transparent !important; // [1.3]
+
+        #{$btn-disabled-selectors} {
+            color: $white !important; // [1.2]
+            border-color: transparent !important; // [1.3]
+        }
+    }
+
+    .form-control-inset-toolbar__btn--gray {
+        $bg: get($cte-group-config, 'inset-toolbar-btn-gray-bg');
+
+        background-color: $bg;
+
+        #{$link-hover-focus} {
+            background-color: darken($bg, $elem-hover-bg-darken-amount-default);
+        }
+
+        #{$link-pressed} {
+            background-color: darken($bg, $elem-pressed-bg-darken-amount-default);
+        }
+    }
+}
+
+// ----------------------------------------------------
+//  FORM CONTROL "INSET" TOOLBAR POSITIONING / PADDING
+//
+//  -> Since The CTE edit button, and the "inset" toolbar (available for all controls, not just CTEs) are
+//     displayed as though they were children of the `.form-control` element, we have to use absolute
+//     positioning - and therefore right side padding to ensure that the actual contents of the control do
+//     not overlap the right-side "inset" contents.
+//
+//  TODO: In Web Skin 2.0.0, we should really render the skinning of a form-control via the inner wrapper.
+//        This would allow us to "inset" using a simple flexbox layout within that wrapper where the
+//        editable text input itself had no border, and all the inset addons were just blocks to its
+//        left and right.
+//
+//  [1] In the uneditable state, room should be made on the right side for the cte edit button.
+//
+//      [1.1] In the uneditable state, the validation / form control icon should not be visible
+//            when the edit button is visible.
+//
+//  [2] In the editable state, room should be made on the right side for a cancel, confirm (or both)
+//      buttons to support the WSD cte component "two-stage" cte commit behavior pattern.
+//
+//      [2.1] Edge case: only a single button inset within the form control.
+//
+//      [2.2] Primary case: both a confirm and cancel buttons are inset
+//            within the form control.
+//
+//      [2.3] Vertically and horizontally center the button toolbar within
+//            the field, and adjust the amount of space between adjacent buttons.
+// ----------------------------------------------------
+@mixin cte-control-right-side-insets() {
+    // ----- SHARED VARS ----- //
+    $default-control-horizontal-padding: to-rem(get-deep($form-control-config, 'padding.base.horizontal'));
+    $default-control-height: to-rem(get-deep($form-control-config, 'height.base'));
+
+    // ----- VARS FOR [1] ----- //
+    $uneditable-group-selector: '.cte-group:not(.is-editable)';
+    $inset-icon-width: get($form-control-icon-addon-config, 'width');
+    $cte-edit-btn-width: get($cte-group-config, 'edit-btn-width');
+    $group-with-visible-edit-btn-control-padding-right: $default-control-horizontal-padding + $cte-edit-btn-width;
+    $group-with-visible-edit-btn-and-icon-control-padding-right: $cte-edit-btn-width + $inset-icon-width;
+
+    // ----- VARS FOR [2] ----- //
+    $wrapper-with-single-inset-toolbar-btn-selector: '.form-control-wrapper--has-single-inset-toolbar-btn';
+    $wrapper-with-two-inset-toolbar-btns-selector: '.form-control-wrapper--has-two-inset-toolbar-btns';
+    $inset-toolbar-btn-width: get($cte-group-config, 'inset-toolbar-btn-width');
+    $inset-toolbar-btn-height: get($cte-group-config, 'inset-toolbar-btn-height');
+    $inset-toolbar-btn-spacing-horizontal: get($cte-group-config, 'inset-toolbar-btn-spacing-horizontal');
+    $control-with-single-inset-toolbar-btn-padding-right: $inset-toolbar-btn-width
+                                                          + ($inset-toolbar-btn-spacing-horizontal * 2);
+    $control-with-two-inset-toolbar-btns-padding-right: ($inset-toolbar-btn-width * 2)
+                                                        + ($inset-toolbar-btn-spacing-horizontal * 3);
+
+    // ----- DEFAULT SIZE ----- //
+    .form-control-static {
+        #{$uneditable-group-selector} & { // [1]
+            padding-right: $group-with-visible-edit-btn-control-padding-right;
+        }
+    }
+
+    .form-control-icon--after {
+        .cte-group.is-selected &,
+        #{$uneditable-group-selector}:hover & {
+            display: none; // [1.1]
+        }
+    }
+
+    #{$wrapper-with-single-inset-toolbar-btn-selector} { // [2.1]
+        .form-control:not(.dd-typeahead__search__input) {
+            padding-right: $control-with-single-inset-toolbar-btn-padding-right;
+        }
+    }
+
+    #{$wrapper-with-two-inset-toolbar-btns-selector} { // [2.2]
+        .form-control:not(.dd-typeahead__search__input) {
+            padding-right: $control-with-two-inset-toolbar-btns-padding-right;
+        }
+    }
+
+    .form-control-inset-toolbar { // [2.3]
+        @include display-flex();
+
+        position: absolute;
+        z-index: get($form-control-config, 'icon-z-index') + 1;
+        bottom: ($default-control-height - $inset-toolbar-btn-height) / 2;
+        right: $inset-toolbar-btn-spacing-horizontal + to-rem(get($form-control-config, 'bd-width'));
+
+        > .btn {
+            margin-left: $inset-toolbar-btn-spacing-horizontal;
+
+            &:first-of-type {
+                margin-left: 0;
+            }
+        }
+    }
+
+    // ----- SIZE VARIATIONS ----- //
+    @each $size-name in $form-control-size-variation-names {
+        // ----- SHARED VARS ----- //
+        $default-control-horizontal-padding: to-rem(get-deep($form-control-config, 'padding.#{$size-name}.horizontal'));
+        $default-control-height: to-rem(get-deep($form-control-config, 'height.#{$size-name}'));
+        $inset-icon-width: get($form-control-icon-addon-config, 'width-#{$size-name}');
+
+        // ----- VARS FOR [1] ----- //
+        $uneditable-group-selector: '#{$uneditable-group-selector}.form-group-#{$size-name}';
+        $cte-edit-btn-width: get($cte-group-config, 'edit-btn-width');
+        $group-with-visible-edit-btn-control-padding-right: $default-control-horizontal-padding
+                                                            + $cte-edit-btn-width;
+        $group-with-visible-edit-btn-and-icon-control-padding-right: $group-with-visible-edit-btn-control-padding-right
+                                                                     + $inset-icon-width;
+
+        .form-control-static {
+            #{$uneditable-group-selector} & { // [1]
+                padding-right: $group-with-visible-edit-btn-control-padding-right;
+            }
+        }
+
+        .form-group-#{$size-name} {
+            #{$wrapper-with-single-inset-toolbar-btn-selector} { // [2.1]
+                .form-control:not(.dd-typeahead__search__input) {
+                    padding-right: $control-with-single-inset-toolbar-btn-padding-right;
+                }
+            }
+
+            #{$wrapper-with-two-inset-toolbar-btns-selector} { // [2.2]
+                .form-control:not(.dd-typeahead__search__input) {
+                    padding-right: $control-with-two-inset-toolbar-btns-padding-right;
+                }
+            }
+
+            .form-control-inset-toolbar { // [2.3]
+                bottom: ($default-control-height - $inset-toolbar-btn-height) / 2;
+            }
+        }
+    }
+}
+
+@mixin make-cte-grid-flex() {
+    // ------------------------------------------------
+    //   CTE FLEXBOX GRID STRUCTURE
+    //
+    //   This "cte-block" elem is always a `.grid-block`
+    //   since we always want the cte "pencil" button to
+    //   be to the side of the form control that is editable.
+    //
+    //   NOTE: This remains in 2.0.0 - should be added
+    //         to the `form-control-wrapper` element.
+    //
+    //   [1] Only set `overflow: visible` if the cte
+    //       is in an editable state.
+    //
+    //       See: UIP-1491
+    //
+    //   [2] Override WSD component `overflow-visible`
+    //       classes when the CTE is not editable.
+    //
+    //       See: UIP-1491
+    // ------------------------------------------------
+    .cte-block-controls {
+        &,
+        .input-group {
+            @include display-flex();
+            @include grid-size(grow);
+
+            // [1]
+            .cte-group.is-editable & {
+                @include cte-block-allow-overflow();
+            }
+        }
+
+        .form-control {
+            @include grid-size(grow);
+        }
+    }
+
+    // ----- [2] ----- //
+    .cte-group:not(.is-editable) {
+        .form-control-wrapper,
+        .form-control-inner-wrapper {
+            @include force-overflow(hidden);
+        }
+    }
+
+    .cte-edit-btn {
+        @include cte-block-btn-control-structure();
+    }
+
+    // TODO: 2.0.0: Remove (old cte markup)
+    .form-horizontal:not(.form-horizontal--flexbox) {
+        .cte-block-input-control,
+        .cte-block-btn-control {
+            @include grid-block($allow-nested-vblocks: false); // mimics `.grid-block`
+        }
+
+        .cte-block-controls {
+            @include cte-block-controls-structure();
+        }
+
+        .cte-block-input-control {
+            @include cte-block-input-control-structure();
+        }
+
+        .cte-block-btn-control {
+            @include cte-block-btn-control-structure();
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+//   CLICK-TO-EDIT COMPONENT STATES
+// ----------------------------------------------------
+@mixin cte-state-default() {
+    $child-transition-duration: get($cte-group-config, 'transition-duration');
+    $child-transition-fn: get($cte-group-config, 'transition-fn');
+
+    .control-label {
+        @include transition(color $child-transition-duration $child-transition-fn);
+        // Make the label look "disabled" (according to UX spec) when the
+        // field is "always read only" (UIP-1710)
+        color: mix($zc-gray, $white, percentage($disabled-alpha-default))
+    }
+
+    @at-root .cte-group--can-be-edited {
+        .control-label {
+            color: $zc-gray;
+        }
+    }
+
+    .form-control-static {
+        @include transition(border $child-transition-duration $child-transition-fn);
+
+        //
+        // Since WSD AbstractClickToEditComponent instances get a `height: auto`
+        // applied to the form control when in an uneditable state, we must ensure
+        // that the control has the same height as unditable controls that do have
+        // content.
+        //
+        // This only applies to uneditable CTE controls that do not have
+        // a value, and also do not have a "placeholder" value - which is inserted
+        // as an actual text node via the WSD component.
+        //
+        &:empty:before,
+        > *:empty:before {
+            //
+            // Use a unicode zero width space character to force "layout"
+            // as though there was a text node in the field.
+            //
+            // See: http://bit.ly/2jeizzf
+            //
+            content: "\200b";
+        }
+
+        @at-root {
+            // Don't make the border color transparent if the form control
+            // has a form validation CSS class applied.
+            .cte-group#{$form-group-without-validation-selector} & {
+                //
+                // Make the border transition smooth by tweening between
+                // two `rgba()` values instead of between `transparent` and
+                // an `rgba()` value.
+                //
+                border-color: rgba($cte-hover-control-bd-rgba-color, 0) !important;
+            }
+        }
+    }
+
+    .cte-edit-btn {
+        //
+        // These colors won't show up until the group is hovered
+        // or selected, but we need to declare the colors here
+        // so that the CSS transition doesn't show a flash
+        // of a dark gray (default) icon color / white btn bg.
+        //
+        background-color: get-deep($cte-state-colors, 'hover.edit-btn-bg');
+        // !important used to override `disabled` state of button default
+        color: get-deep($cte-state-colors, 'hover.edit-btn-icon') !important;
+    }
+
+    //
+    // Both `.cte-edit-btn`s and input-group addons / btns
+    // should be hidden by default.
+    //
+    .cte-edit-btn,
+    .input-group-btn > .btn,
+    .input-group-addon {
+        @include transition((opacity background) $child-transition-duration $child-transition-fn);
+        @include hide-cte-clickable-child-elem();
+    }
+}
+
+//
+// [1] !important used to override the `.form-control.form-control-static` selector
+//     TODO: Fix this specificity in 2.0.0
+//
+@mixin cte-state-hover() {
+    &:not(.is-editable) .control-label {
+        color: get-deep($cte-state-colors, 'hover.label');
+    }
+
+    &#{$form-group-without-validation-selector} .form-control-static {
+        border-color: get-deep($cte-state-colors, 'hover.control-bd') !important; // [1]
+        border-color: get-deep($cte-state-colors, 'hover.control-bd-rgba') !important; // [1]
+    }
+
+    //
+    // `.cte-edit-btn`s should be visible when
+    // `.cte-group` is hovered (assuming its not editable)
+    //
+    .cte-edit-btn {
+        @include show-cte-clickable-child-elem();
+    }
+}
+
+//
+// This state is in place when the entire group is selected, or when the
+// pencil icon is hovered on a group that has an editable value.
+//
+// [1] !important used to override the `.form-control.form-control-static` selector
+//     TODO: Fix this specificity in 2.0.0
+//
+@mixin cte-state-single-click-enabled() {
+    &:not(.is-editable) .control-label {
+        color: get-deep($cte-state-colors, 'selected.label');
+    }
+
+    &#{$form-group-without-validation-selector} .form-control-static {
+        border-color: get-deep($cte-state-colors, 'selected.control-bd') !important; // [1]
+    }
+
+    //
+    // `.cte-edit-btn`s should be visible when
+    // `.cte-group` is selected (assuming its not editable)
+    //
+    .cte-edit-btn {
+        @include show-cte-clickable-child-elem();
+
+        background-color: get-deep($cte-state-colors, 'selected.edit-btn-bg');
+        color: get-deep($cte-state-colors, 'selected.edit-btn-icon');
+
+        #{$link-hover-focus} {
+            background-color: get-deep($cte-state-colors, 'selected.edit-btn-bg-hover');
+        }
+
+        #{$link-pressed} {
+            background-color: get-deep($cte-state-colors, 'selected.edit-btn-bg-press');
+        }
+    }
+}
+
+@mixin cte-state-selected() {
+    @include cte-state-single-click-enabled();
+}
+
+@mixin cte-state-editable() {
+    &,
+    .control-label {
+        cursor: default;
+    }
+
+    //
+    // Show any input-group addons / buttons
+    // now that the input is editable
+    //
+    .input-group-btn > .btn,
+    .input-group-addon {
+        @include show-cte-clickable-child-elem();
+    }
+
+    //
+    // Do not show the edit icon...
+    // even if the cte group is hovered.
+    //
+    .cte-edit-btn {
+        @include hide-cte-clickable-child-elem();
+        //
+        // Completely hide it so that the adjacent form field
+        // can take up the full width while being edited
+        //
+        display: none;
+    }
+}
+
+@mixin cte-state-disabled() {
+    // Only make the button appear disabled in states where it should be visible _at all_ to the user.
+    &.is-editable {
+        .cte-edit-btn {
+            @include disabled-cursor(!important);
+            opacity: $disabled-alpha-default !important;
+        }
+    }
+}

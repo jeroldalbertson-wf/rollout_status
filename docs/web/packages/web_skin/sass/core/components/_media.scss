@@ -1,0 +1,99 @@
+// ********************************************************
+//
+//   MEDIA OBJECT COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-media-object
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/media';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $media-module-config:  'core/components/atoms/media/media-config';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $media-module-config);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE MEDIA CLASS
+//
+// ********************************************************
+    .media {
+        // Ensure media object takes up full width
+        zoom: 1;
+        overflow: hidden;
+
+        // Space out adjacent / nested instances of `.media`
+        + .media,
+        .media {
+            margin-top: to-rem(get($media-config, 'spacing-vertical'));
+        }
+    }
+
+
+// ********************************************************
+//
+//   MEDIA CONTENT
+//
+// ********************************************************
+    .media-body {
+        display: table-cell;
+        width: 1000rem; // Ensure that full width form control elements work within media object
+        overflow: hidden;
+        zoom: 1;
+        vertical-align: top;
+    }
+
+    // For images and videos, set to block
+    .media-object {
+        display: block;
+    }
+
+    // Reset margins on headings for tighter default spacing
+    .media-heading {
+        margin-top: 0;
+        margin-bottom: to-rem(get($media-config, 'heading-margin-bottom'));
+    }
+
+
+// ********************************************************
+//
+//   MEDIA OBJECT ALIGNMENT
+//
+// ********************************************************
+    .media-right {
+        display: table-cell;
+        vertical-align: top;
+        padding-left: to-rem(get($media-config, 'float-spacing-horizontal'));
+    }
+
+    .media-left {
+        display: table-cell;
+        vertical-align: top;
+        padding-right: to-rem(get($media-config, 'float-spacing-horizontal'));
+    }
+
+    .media-middle {
+        vertical-align: middle;
+    }
+
+    .media-bottom {
+        vertical-align: bottom;
+    }
+
+
+// ********************************************************
+//
+//   MEDIA LIST VARIATION
+//   -> Undo default ul/ol styles
+//
+// ********************************************************
+    .media-list {
+        margin-left: 0;
+        list-style: none;
+    }

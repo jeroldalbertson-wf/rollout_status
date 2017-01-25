@@ -1,0 +1,39 @@
+/*!
+ * -------------------------------------
+ * Web Skin Peripheral CSS for horizontally
+ * centering glyphs that are off-center
+ * on purpose so that they left-align with
+ * their "add" sister glyphs
+ * (e.g. file-generic, file-generic-add)
+ *
+ * These glyphs remain left-aligned,
+ * unless they are nested within a
+ * `.text-center` or `.btn.no-text`
+ * parent selector.
+ * ---
+ * MSIE Support: 10+
+ * Touch UI Support: false
+ * ---
+ * Requires
+ *   web-skin v{{ws_css_version}} Core CSS
+ * ---
+ * Copyright © {{ws_css_copyright}} Workiva
+ * -------------------------------------
+ */
+
+$module-root: '../';
+
+// override default found in `../core/foundation/icons/atoms/icons-helpers`
+$output-icon-halign-adjustment-selectors: true;
+
+// ----------------------------------------------------
+//   Web Skin Core API
+// ----------------------------------------------------
+    @import "../core/api";
+
+
+// ----------------------------------------------------
+//   Icon PUAs
+// ----------------------------------------------------
+    @include ws-icon-glyphs-main($include-anomalies: false);
+    @include ws-icon-glyphs-doctype($include-anomalies: false);

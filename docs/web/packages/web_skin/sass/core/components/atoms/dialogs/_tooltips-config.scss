@@ -1,0 +1,178 @@
+// ********************************************************
+
+////
+/// Tooltip dialog component configuration
+/// ---
+/// @access public
+/// @group core.components.tooltips
+/// @link http://bit.ly/webskin-tooltips Tooltip dialog component spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/atoms/dialogs/tooltips-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function get,
+                                                function get-deep,
+                                                function extend,
+                                                function shade-of);
+//
+// ********************************************************
+
+
+///
+/// Global configuration for `.tooltip` components.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {function} get-deep
+/// @requires {function} extend
+/// @requires {function} shade-of
+/// @requires {variable} $dialog-config
+/// @requires {variable} $dialog-size-sm-config
+/// @requires {variable} $triangle-config
+/// @requires {variable} $font-size-sm
+/// @requires {variable} $border-radius-sm
+/// @requires {variable} $zc-gray-120
+/// @requires {variable} $zc-green-120
+/// @requires {variable} $zc-orange-120
+/// @requires {variable} $zc-red-120
+/// @requires {variable} $white
+/// @requires {variable} $alert-toast-bg-alpha
+/// ---
+/// @prop {Number} font-size        [12px]      - Default font size
+/// @prop {Number} line-height      [1.2]       - Default line height
+/// @prop {Number} bd-width         [1px]       - Default border width
+/// @prop {Number} bd-radius        [3px]       - Default border radius
+/// @prop {Number} padding          [0]         - Default padding
+/// @prop {List}   content-padding  [4px 8px]   - Default padding of `.tooltip .inner` content elem
+/// @prop {Number} max-width        [300px]     - Default maximum width
+///
+/// @prop {Color} bg            [#444444] - Default background color
+/// @prop {Color} text-color    [#ffffff] - Default text color
+/// @prop {Color} bd-color      [#444444] - Default border color
+///
+/// @prop {Color} bg-success [#52a826] - Background color of a `.tooltip-success` skin variation
+/// @prop {Color} bg-warning [#f48242] - Background color of a `.tooltip-warning` skin variation
+/// @prop {Color} bg-danger  [#b43d3c] - Background color of a `.tooltip-danger` skin variation
+///
+/// @prop {Number} arrow-width          [10px]      - Default width of a `.tooltip .arrow` elem
+/// @prop {Number} arrow-outer-width    [12px]      - Calculated width of the `::after` pseudo elem of a `.tooltip .arrow`. _Added via `@extend`_
+/// @prop {Color}  arrow-color          [#444444]   - Default color of a `.tooltip .arrow` elem
+/// @prop {Color}  arrow-outer-color    [#444444]   - Default color of the `::after` pseudo elem of a `.tooltip .arrow`
+///
+$tooltip-config: (
+    // structure
+    'font-size': $font-size-sm,
+    'line-height': 1.2,
+    'bd-width': get($dialog-config, 'bd-width'),
+    'bd-radius': $border-radius-sm,
+    'padding': get($dialog-config, 'padding'),
+    'content-padding': (get($dialog-size-sm-config, 'content-padding') / 2) get($dialog-size-sm-config, 'content-padding'),
+    'max-width': 300px,
+    // skin
+    'bg': $zc-gray-120,
+    'text-color': $white,
+    'bd-color': $zc-gray-120,
+    // skin variations
+    'bg-success': shade-of($zc-green-120, $alert-toast-bg-alpha),
+    'bg-warning': shade-of($zc-orange-120, $alert-toast-bg-alpha),
+    'bg-danger': shade-of($zc-red-120, $alert-toast-bg-alpha),
+    // arrows
+    'arrow-width': get-deep($triangle-config, 'base.width'),
+    'arrow-outer-width': null, // actual calculated value inserted via @extend
+    'arrow-color': $zc-gray-120,
+    'arrow-outer-color': $zc-gray-120
+) !default;
+
+
+///
+/// Configuration for tooltip dialogs that have a discrete heading / content area (`.tooltip--has-header`)
+/// ---
+/// @type Map
+/// @since 1.7.0
+/// @link https://github.com/Workiva/web-skin/issues/1418 web-skin/#1418
+/// ---
+/// @requires {function} get
+/// @requires {variable} $tooltip-config
+/// @requires {variable} $dialog-size-sm-config
+/// @requires {variable} $line-height-base
+/// ---
+/// @prop {Color} bg        [#595959] - Background of the tooltip
+/// @prop {Color} header-bg [#444444] - Background of the header
+///
+/// @prop {Number} content-padding      [.8rem]
+/// @prop {Number} content-font-size    [1.2rem]
+/// @prop {Number} content-line-height  [1.428571429]
+/// @prop {Number} content-max-height   [22rem]
+///
+/// @prop {Number} header-padding       [.8rem]
+/// @prop {Number} header-font-size     [1.4rem]
+/// @prop {String} header-font-weight   [bold]
+///
+$tooltip-with-header-config: (
+    'bg': $zc-gray,
+    'header-bg': get($tooltip-config, 'bg'),
+    //
+    'content-padding': to-rem(get($dialog-size-sm-config, 'content-padding')),
+    'content-font-size': to-rem(get($tooltip-config, 'font-size')),
+    'content-line-height': $line-height-base,
+    'content-max-height': 22rem,
+    //
+    'header-padding': to-rem(get($dialog-size-sm-config, 'content-padding')),
+    'header-font-size': to-rem($font-size-base),
+    'header-font-weight': bold
+) !default;
+
+
+// ----------------------------------------------------
+//   CALCULATED VALUES
+//   -> based on $tooltip-config
+//
+//   -> cannot be included in initial map declaration
+//      because the calculations depend on values
+//      within the map, and Sass has no ability to
+//      reference a key in a map from within that map.
+//
+//   -> documented as props of $tooltip-config
+//      because they are added via extend() below.
+// ----------------------------------------------------
+    $tooltip-arrow-outer-width: get($tooltip-config, 'arrow-width') + (get($tooltip-config, 'bd-width') * 2);
+
+    // ----- EXTEND tooltip config with calc'd values ----- //
+    $tooltip-config: extend($tooltip-config,
+        (
+            'arrow-outer-width': $tooltip-arrow-outer-width
+        )
+    );
+
+
+
+// ********************************************************
+//
+//   UNDOCUMENTED CONFIG ALIAS / SHORTHAND
+//
+//   -> DO NOT MODIFY THESE (modify the map config)
+//
+// ********************************************************
+    $tooltip-padding: get($tooltip-config, 'padding');
+    $tooltip-content-padding: get($tooltip-config, 'content-padding');
+    $tooltip-max-width: get($tooltip-config, 'max-width');
+    $tooltip-font-size: get($tooltip-config, 'font-size');
+    $tooltip-line-height: get($tooltip-config, 'line-height');
+
+    $tooltip-bg: get($tooltip-config, 'bg');
+    $tooltip-text-color: get($tooltip-config, 'text-color');
+    $tooltip-bd-color: get($tooltip-config, 'bd-color');
+    $tooltip-bd-radius: get($tooltip-config, 'bd-radius');
+    $tooltip-bd-width: get($tooltip-config, 'bd-width');
+
+    $tooltip-arrow-width: get($tooltip-config, 'arrow-width');
+    $tooltip-arrow-color: get($tooltip-config, 'arrow-color');
+    $tooltip-arrow-outer-color: get($tooltip-config, 'arrow-outer-color');

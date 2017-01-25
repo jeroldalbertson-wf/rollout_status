@@ -1,0 +1,119 @@
+// ********************************************************
+//
+//   TOOLTIP COMPONENT STYLE MODULE
+//   http://bit.ly/webskin-tooltips
+//
+//   DECLARE MODULE:
+//
+    $module: 'core/components/dialogs/tooltips';
+    $module: add-component-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $dialogs-tooltips-module-config:  'core/components/atoms/dialogs/tooltips-config';
+    $dialogs-tooltips-module-helpers: 'core/components/atoms/dialogs/dialogs-shared-helpers';
+
+    $module-deps: module-dependencies-met(for $module, in api,
+                                          $dialogs-tooltips-module-config,
+                                          $dialogs-tooltips-module-helpers);
+//
+// ********************************************************
+
+
+// ********************************************************
+//
+//   BASE TOOLTIP CLASS / INNER CONTENT ELEMENT
+//
+// ********************************************************
+.tooltip {
+    @include tooltip-base();
+}
+
+
+
+// ********************************************************
+//
+//   OPTIONAL TOOLTIP WITHIN DISCRETE HEADING / CONTENT
+//
+//   -> Using the `title` / `content` classes for now to
+//      match the  markup used within `.popover`s.
+//
+//      TODO: Change to a namespaced BEM class in `2.0.0`
+//
+// ********************************************************
+.tooltip--has-header {
+    .inner {
+        padding: 0; // Override default so we can apply discrete padding to title / content
+        background-color: get($tooltip-with-header-config, 'bg'); // Override default
+        text-align: left; // Override default
+
+        * {
+            color: get($tooltip-config, 'text-color');
+        }
+    }
+
+    .title {
+        margin: 0;
+        padding: get($tooltip-with-header-config, 'header-padding');
+        background-color: get($tooltip-with-header-config, 'header-bg');
+        font-size: get($tooltip-with-header-config, 'header-font-size');
+        font-weight: get($tooltip-with-header-config, 'header-font-weight');
+        font-family: $font-family-base; // Too small for lato
+    }
+
+    .content {
+        @include scroll-inertia();
+
+        overflow: none;
+        overflow-y: auto;
+        max-height: get($tooltip-with-header-config, 'content-max-height');
+        padding: get($tooltip-with-header-config, 'content-padding');
+        font-size: get($tooltip-with-header-config, 'content-font-size');
+        line-height: get($tooltip-with-header-config, 'content-line-height');
+
+        :last-child {
+            margin-bottom: 0; // Prevent dupe white-space at the bottom of the tip
+        }
+    }
+}
+
+
+// ********************************************************
+//
+//   TOOLTIP ARROWS IN ALL DIRECTIONS
+//
+//   [1] Use non-negative margins for v2 overlays to enable
+//       proper margin measuring.
+// ********************************************************
+.tooltip {
+    @include triangles($triangle-width: $tooltip-arrow-width,
+                       $triangle-bg: $tooltip-bg,
+                       $outer-bd-width: $tooltip-bd-width,
+                       $outer-bd-color: $tooltip-bd-color,
+                       $align-center: true);
+
+    .overlay-target--v2 & {
+        @include triangle-margin($triangle-width: $tooltip-arrow-width, $use-negative-margins: false); // [1]
+    }
+}
+
+
+// ********************************************************
+//
+//   TOOLTIP BACKDROP
+//
+// ********************************************************
+.tooltip-backdrop {
+    @include dialog-backdrop-default();
+    z-index: z('tooltip') - 1;
+}
+
+
+// ********************************************************
+//
+//   TOOLTIP SKIN VARIATIONS
+//
+// ********************************************************
+.tooltip-warning { @include popover-tooltip-skin(get($tooltip-config, 'bg-warning')); }
+.tooltip-danger  { @include popover-tooltip-skin(get($tooltip-config, 'bg-danger'));  }
+.tooltip-success { @include popover-tooltip-skin(get($tooltip-config, 'bg-success')); }

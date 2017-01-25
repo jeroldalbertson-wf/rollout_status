@@ -1,0 +1,453 @@
+// ********************************************************
+
+////
+/// Tree list nav (`.list-group-tree`) component configuration
+/// ---
+/// @since 0.3.0
+/// @group peripherals.components.trees
+/// @link http://bit.ly/webskin-list-group-tree List tree navigation spec
+////
+
+//
+//   DECLARE MODULE:
+//
+    $module: 'peripherals/list-group-tree/atoms/list-group-tree-config';
+    $module: add-api-module($module);
+//
+//   DEPENDENCY CHECK:
+//
+    $module-deps: dependencies-met(for $module, function extend,
+                                                function get-deep,
+                                                function component-height,
+                                                function to-decimal);
+//
+// ********************************************************
+
+
+///
+/// Base configuration for `.list-group-tree` components. Extends `$list-group-base-config`.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} extend
+/// @requires {variable} $list-group-base-config
+/// ---
+/// @prop {Number} margin-bottom [20px]     - Default amount of negative space to preserve beneath a `.list-group-tree`
+/// @prop {Color}  bg        [transparent]  - Default background color. _Added via `@extend`_
+/// @prop {Color}  bd-color  [transparent]  - Default border color
+/// @prop {Number} bd-width  [1px]          - Default border width. _Added via `@extend`_
+///
+$list-group-tree-config: extend(map-remove($list-group-base-config, 'bd-radius'),
+    (
+        'bd-color': transparent,
+    )
+) !default;
+
+
+///
+/// Configuration that maps list group size variations to caret size variations.
+///
+/// The map key names correlate to list group sizes, and the value of each key is the corresponding caret size.
+/// ---
+/// @type Map
+/// @since 1.5.0
+/// ---
+/// @prop {String} base [base]
+/// @prop {String} xs   [xs]
+/// @prop {String} sm   [sm]
+/// @prop {String} lg   [base]
+///
+$list-group-tree-link-caret-size-map: (
+    // '{list-group-size}': '{caret-size}'
+    'base': 'base',
+    'xs':   'xs',
+    'sm':   'base',
+    'lg':   'base'
+) !default;
+
+///
+/// Size configuration for `.hitarea` elems within `.list-group-tree` components. Extends `$list-group-item-config`.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// @see {variable} list-group-item-config
+/// ---
+/// @requires {function} get
+/// @requires {function} get-deep
+/// @requires {function} extend
+/// @requires {function} component-height
+/// @requires {variable} $list-group-item-config
+/// @requires {variable} $list-group-tree-config
+/// @requires {variable} $list-group-tree-link-caret-config
+/// @requires {variable} $list-group-tree-link-caret-size-map
+/// @requires {variable} $caret-size-config
+/// ---
+/// @prop {Number} margin-bottom [.1rem] - Add a single pixel of spacing between items so that adjacent active / active parent background colors do not overlap / touch.
+/// @prop {Map} padding
+/// @prop {Number} padding.base.right        [6px]                  - Default right padding. Reduced from default `.list-group-item` right padding because in hierarchical navigation structures, horizontal space is at a premium
+/// @prop {Number} padding.base.left         [23px]                 - Default left padding. Determines the amount of negative space between `.caret` elems and the link text
+/// @prop {List}   padding.base.all          [6px 6px 7px 23px]     - Combination of vertical and horizontal link padding. _Added via `@extend`_
+/// @prop {Number} padding.base.left-with-group-icons [3px]         - Amount of left padding when nested within a `.has-group-icons` variation.
+///
+/// @prop {Number} padding.xs.right          [6px]                  - `.list-group-tree.list-group-xs` right padding. Reduced from default `.list-group-item` right padding because in hierarchical navigation structures, horizontal space is at a premium
+/// @prop {Number} padding.xs.left           [15px]                 - `.list-group-tree.list-group-xs` left padding. Determines the amount of negative space between `.caret` elems and the link text
+/// @prop {List}   padding.xs.all            [3px 6px 4px 15px]     - Combination of vertical and horizontal link padding for the `.list-group-tree.list-group-xs` variation. _Added via `@extend`_
+/// @prop {Number} padding.xs.left-with-group-icons [3px]           - Amount of left padding for the `.list-group-tree.list-group-xs` variation when nested within a `.has-group-icons` variation.
+///
+/// @prop {Number} padding.sm.right          [6px]                  - `.list-group-tree.list-group-sm` right padding. Reduced from default `.list-group-item` right padding because in hierarchical navigation structures, horizontal space is at a premium
+/// @prop {Number} padding.sm.left           [23px]                 - `.list-group-tree.list-group-sm` left padding. Determines the amount of negative space between `.caret` elems and the link text
+/// @prop {List}   padding.sm.all            [4px 6px 5px 23px]     - Combination of vertical and horizontal link padding for the `.list-group-tree.list-group-sm` variation. _Added via `@extend`_
+/// @prop {Number} padding.sm.left-with-group-icons [3px]           - Amount of left padding for the `.list-group-tree.list-group-sm` variation when nested within a `.has-group-icons` variation.
+///
+/// @prop {Number} padding.lg.right          [8px]                  - `.list-group-tree.list-group-lg` right padding. Reduced from default `.list-group-item` right padding because in hierarchical navigation structures, horizontal space is at a premium
+/// @prop {Number} padding.lg.left           [23px]                 - `.list-group-tree.list-group-lg` left padding. Determines the amount of negative space between `.caret` elems and the link text
+/// @prop {List}   padding.lg.all            [10px 8px 11px 23px]   - Combination of vertical and horizontal link padding for the `.list-group-tree.list-group-lg` variation. _Added via `@extend`_
+/// @prop {Number} padding.lg.left-with-group-icons [3px]           - Amount of left padding for the `.list-group-tree.list-group-lg` variation when nested within a `.has-group-icons` variation.
+///
+$list-group-tree-link-sizes: extend($list-group-item-config,
+    (
+        'margin-bottom': .1rem,
+        'padding': (
+            'base': (
+                'right': round(get-deep($list-group-item-config, 'padding.base.horizontal') / 2),
+                'left': (get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'base')}.width') * 2) + 3px,
+                'horizontal': null, // no longer a valid prop since left / right padding differ
+                'all': null, // actual calclated value inserted via @extend,
+                'left-with-group-icons': 3px
+            ),
+            'xs': (
+                'right': round(get-deep($list-group-item-config, 'padding.xs.horizontal') / 2),
+                'left': (get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'xs')}.width') * 2) + 3px,
+                'horizontal': null, // no longer a valid prop since left / right padding differ
+                'all': null, // actual calclated value inserted via @extend,
+                'left-with-group-icons': 3px
+            ),
+            'sm': (
+                'right': round(get-deep($list-group-item-config, 'padding.sm.horizontal') / 2),
+                'left': (get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'sm')}.width') * 2) + 3px,
+                'horizontal': null, // no longer a valid prop since left / right padding differ
+                'all': null, // actual calclated value inserted via @extend,
+                'left-with-group-icons': 3px
+            ),
+            'lg': (
+                'right': round(get-deep($list-group-item-config, 'padding.lg.horizontal') / 2),
+                'left': (get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'lg')}.width') * 2) + 3px,
+                'horizontal': null, // no longer a valid prop since left / right padding differ
+                'all': null, // actual calclated value inserted via @extend,
+                'left-with-group-icons': 3px
+            )
+        )
+    )
+) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $list-group-tree-link-sizes
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $list-group-tree-link-sizes
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+
+        // ----- EXTEND list group link size config with calc'd values ----- //
+        $list-group-tree-link-sizes: extend($list-group-tree-link-sizes,
+            (
+                'padding': (
+                    'base': (
+                        'all': get-deep($list-group-tree-link-sizes, 'padding.base.top')
+                               get-deep($list-group-tree-link-sizes, 'padding.base.right')
+                               get-deep($list-group-tree-link-sizes, 'padding.base.bottom')
+                               get-deep($list-group-tree-link-sizes, 'padding.base.left')
+                    ),
+                    'xs': (
+                        'all': get-deep($list-group-tree-link-sizes, 'padding.xs.top')
+                               get-deep($list-group-tree-link-sizes, 'padding.xs.right')
+                               get-deep($list-group-tree-link-sizes, 'padding.xs.bottom')
+                               get-deep($list-group-tree-link-sizes, 'padding.xs.left')
+                    ),
+                    'sm': (
+                        'all': get-deep($list-group-tree-link-sizes, 'padding.sm.top')
+                               get-deep($list-group-tree-link-sizes, 'padding.sm.right')
+                               get-deep($list-group-tree-link-sizes, 'padding.sm.bottom')
+                               get-deep($list-group-tree-link-sizes, 'padding.sm.left')
+                    ),
+                    'lg': (
+                        'all': get-deep($list-group-tree-link-sizes, 'padding.lg.top')
+                               get-deep($list-group-tree-link-sizes, 'padding.lg.right')
+                               get-deep($list-group-tree-link-sizes, 'padding.lg.bottom')
+                               get-deep($list-group-tree-link-sizes, 'padding.lg.left')
+                    )
+                )
+            )
+        );
+
+
+
+///
+/// Color configuration for `.hitarea` elems within `.list-group-tree` components. Extends `$list-group-link-config`.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// @alias list-group-link-config
+///
+$list-group-tree-link-colors: $list-group-link-config !default;
+
+
+///
+/// Configuration for `.caret` elems within `.list-group-tree` component `.list-group-item` elems that have child lists.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {function} get-deep
+/// @requires {function} extend
+/// @requires {function} darkness
+/// @requires {function} to-decimal
+/// @requires {variable} $list-group-tree-link-sizes
+/// @requires {variable} $list-group-tree-link-colors
+/// @requires {variable} $caret-size-config
+/// @requires {variable} $list-group-tree-link-caret-size-map
+/// @requires {variable} $black
+/// ---
+/// @prop {Number} alpha            [.3]        - Alpha value used in-combination with the `color` key value to produce an `rgba()` color
+/// @prop {Color}  color            [#000000]   - Color used in-combination with the `alpha` key value to produce an `rgba()` color
+/// @prop {Color}  fallback-color   [#b2b2b2]   - Color used for browsers that do not support `rgba()`
+///
+/// @prop {Color}  color-open       [#595959]   - Color used for `.caret` when it is pointing down (open state)
+/// @prop {Color}  color-hover      [#0094ff]   - Color used for `.caret` when it is hovered
+/// @prop {Color}  color-press      [#0085e6]   - Color used for `.caret` when it is pressed
+/// @prop {Color}  color-active     [#ffffff]   - Color used for `.caret` when it's parent link is active
+///
+/// @prop {Number} width                [10px]  - Width of a `.caret` in a default list group tree size
+/// @prop {Number} height               [5px]   - Height of a `.caret` in a default list group tree size
+/// @prop {Number} size-differential    [5px]   - Calculated difference between the width and height of a `.caret` in a default list group tree size
+/// @prop {Number} width-xs             [6px]   - Width of a `.caret` in an xs list group tree size variation
+/// @prop {Number} height-xs            [3px]   - Height of a `.caret` in an xs list group tree size variation
+/// @prop {Number} size-differential-xs [3px]   - Calculated difference between the width and height of a `.caret` in an xs list group tree size variation
+/// @prop {Number} width-sm             [8px]   - Width of a `.caret` in an sm list group tree size variation
+/// @prop {Number} height-sm            [4px]   - Height of a `.caret` in an sm list group tree size variation
+/// @prop {Number} size-differential-sm [4px]   - Calculated difference between the width and height of a `.caret` in an sm list group tree size variation
+/// @prop {Number} width-lg             [10px]  - Width of a `.caret` in an lg list group tree size variation
+/// @prop {Number} height-lg            [5px]   - Height of a `.caret` in an lg list group tree size variation
+/// @prop {Number} size-differential-lg [5px]   - Calculated difference between the width and height of a `.caret` in an lg list group tree size variation
+///
+/// @prop {Number} container-width      [22px]  - Width of `.caret` container
+/// @prop {Number} container-height     [34px]  - Height of `.caret` container
+/// @prop {Number} container-width-xs   [22px]  - Width of `.caret` container within a `.list-group-tree.list-group-xs` variation
+/// @prop {Number} container-height-xs  [28px]  - Height of `.caret` container within a `.list-group-tree.list-group-xs` variation
+/// @prop {Number} container-width-sm   [22px]  - Width of `.caret` container within a `.list-group-tree.list-group-sm` variation
+/// @prop {Number} container-height-sm  [30px]  - Height of `.caret` container within a `.list-group-tree.list-group-sm` variation
+/// @prop {Number} container-width-lg   [22px]  - Width of `.caret` container within a `.list-group-tree.list-group-lg` variation
+/// @prop {Number} container-height-lg  [44px]  - Height of `.caret` container within a `.list-group-tree.list-group-lg` variation
+///
+/// @prop {Number} valign-base              [10px]  - Calculated base offset used to calculate the top margin for the `.caret::after` within `.caret`. _Added via `@extend`_
+/// @prop {Number} halign-base              [6px]   - Calculated base offset used to calculate the left margin for the `.caret::after` within `.caret`. _Added via `@extend`_
+/// @prop {Number} margin-top               [14px]  - Top margin used to vertically center the `.caret::after` within `.caret` representing an expanded group. _Added via `@extend`_
+/// @prop {Number} margin-top-collapsed     [11px]  - Top margin used to vertically center the `.caret::after` within `.caret` representing a collapsed group. _Added via `@extend`_
+/// @prop {Number} margin-left              [5px]   - Left margin used to horizontally center the `.caret::after` within `.caret` representing an expanded group. _Added via `@extend`_
+/// @prop {Number} margin-left-collapsed    [8px]   - Left margin used to horizontally center the `.caret::after` within `.caret` representing a collapsed group. _Added via `@extend`_
+///
+/// @prop {Number} valign-xs                [8px]   - Calculated xs offset used to calculate the top margin for the `.caret::after` within `.caret`. _Added via `@extend`_
+/// @prop {Number} halign-xs                [4px]   - Calculated xs offset used to calculate the left margin for the `.caret::after` within `.caret`. _Added via `@extend`_
+/// @prop {Number} margin-top-xs            [9px]   - Top margin used to vertically center the `.caret::after` within `.caret` representing an expanded group within a `.list-group-tree.list-group-xs` variation. _Added via `@extend`_
+/// @prop {Number} margin-top-collapsed-xs  [8px]   - Top margin used to vertically center the `.caret::after` within `.caret` representing a collapsed group within a `.list-group-tree.list-group-xs` variation. _Added via `@extend`_
+/// @prop {Number} margin-left-xs           [3px]   - Left margin used to horizontally center the `.caret::after` within `.caret` representing an expanded group within a `.list-group-tree.list-group-xs` variation. _Added via `@extend`_
+/// @prop {Number} margin-left-collapsed-xs [5px]   - Left margin used to horizontally center the `.caret::after` within `.caret` representing a collapsed group within a `.list-group-tree.list-group-xs` variation. _Added via `@extend`_
+///
+/// @prop {Number} valign-sm                [8px]   - Calculated sm offset used to calculate the top margin for the `.caret::after` within `.caret`. _Added via `@extend`_
+/// @prop {Number} halign-sm                [6px]   - Calculated sm offset used to calculate the left margin for the `.caret::after` within `.caret`. _Added via `@extend`_
+/// @prop {Number} margin-top-sm            [11px]  - Top margin used to vertically center the `.caret::after` within `.caret` representing an expanded group within a `.list-group-tree.list-group-sm` variation. _Added via `@extend`_
+/// @prop {Number} margin-top-collapsed-sm  [8px]   - Top margin used to vertically center the `.caret::after` within `.caret` representing a collapsed group within a `.list-group-tree.list-group-sm` variation. _Added via `@extend`_
+/// @prop {Number} margin-left-sm           [5px]   - Left margin used to horizontally center the `.caret::after` within `.caret` representing an expanded group within a `.list-group-tree.list-group-sm` variation. _Added via `@extend`_
+/// @prop {Number} margin-left-collapsed-sm [8px]   - Left margin used to horizontally center the `.caret::after` within `.caret` representing a collapsed group within a `.list-group-tree.list-group-sm` variation. _Added via `@extend`_
+///
+/// @prop {Number} valign-lg                [15px]  - Calculated lg offset used to calculate the top margin for the `.caret::after` within `.caret`. _Added via `@extend`_
+/// @prop {Number} halign-lg                [6px]   - Calculated lg offset used to calculate the left margin for the `.caret::after` within `.caret`. _Added via `@extend`_
+/// @prop {Number} margin-top-lg            [19px]  - Top margin used to vertically center the `.caret::after` within `.caret` representing an expanded group within a `.list-group-tree.list-group-lg` variation. _Added via `@extend`_
+/// @prop {Number} margin-top-collapsed-lg  [16px]  - Top margin used to vertically center the `.caret::after` within `.caret` representing a collapsed group within a `.list-group-tree.list-group-lg` variation. _Added via `@extend`_
+/// @prop {Number} margin-left-lg           [5px]   - Left margin used to horizontally center the `.caret::after` within `.caret` representing an expanded group within a `.list-group-tree.list-group-lg` variation. _Added via `@extend`_
+/// @prop {Number} margin-left-collapsed-lg [8px]   - Left margin used to horizontally center the `.caret::after` within `.caret` representing a collapsed group within a `.list-group-tree.list-group-lg` variation. _Added via `@extend`_
+///
+$list-group-tree-link-caret-config: (
+    'alpha': to-decimal(darkness(get($caret-config, 'color'))),
+    'color': $black,
+    'fallback-color': get($caret-config, 'color'),
+    'color-open': get($list-group-tree-link-colors, 'text-color'),
+    'color-hover': get($list-group-tree-link-colors, 'text-color-hover'),
+    'color-press': get($list-group-tree-link-colors, 'text-color-press'),
+    'color-active': get($list-group-tree-link-colors, 'text-color-active'),
+    //
+    'width': get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'base')}.width'),
+    'height': get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'base')}.height'),
+    'size-differential': get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'base')}.size-differential'),
+    'width-xs': get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'xs')}.width'),
+    'height-xs': get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'xs')}.height'),
+    'size-differential-xs': get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'xs')}.size-differential'),
+    'width-sm': get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'sm')}.width'),
+    'height-sm': get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'sm')}.height'),
+    'size-differential-sm': get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'sm')}.size-differential'),
+    'width-lg': get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'lg')}.width'),
+    'height-lg': get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'lg')}.height'),
+    'size-differential-lg': get-deep($caret-size-config, '#{get($list-group-tree-link-caret-size-map, 'lg')}.size-differential'),
+    //
+    'container-width': get-deep($list-group-tree-link-sizes, 'padding.base.left'),
+    'container-height': get-deep($list-group-tree-link-sizes, 'min-height.base'),
+    'container-width-xs': get-deep($list-group-tree-link-sizes, 'padding.xs.left'),
+    'container-height-xs': get-deep($list-group-tree-link-sizes, 'min-height.xs'),
+    'container-width-sm': get-deep($list-group-tree-link-sizes, 'padding.sm.left'),
+    'container-height-sm': get-deep($list-group-tree-link-sizes, 'min-height.sm'),
+    'container-width-lg': get-deep($list-group-tree-link-sizes, 'padding.lg.left'),
+    'container-height-lg': get-deep($list-group-tree-link-sizes, 'min-height.lg'),
+    //
+    'valign-base': null, // actual calculated value inserted via @extend
+    'halign-base': null, // actual calculated value inserted via @extend
+    'margin-top': null, // actual calculated value inserted via @extend
+    'margin-top-collapsed': null, // actual calculated value inserted via @extend
+    'margin-left': null, // actual calculated value inserted via @extend
+    'margin-left-collapsed': null, // actual calculated value inserted via @extend
+    'valign-xs': null, // actual calculated value inserted via @extend
+    'halign-xs': null, // actual calculated value inserted via @extend
+    'margin-top-xs': null, // actual calculated value inserted via @extend
+    'margin-top-collapsed-xs': null, // actual calculated value inserted via @extend
+    'margin-left-xs': null, // actual calculated value inserted via @extend
+    'margin-left-collapsed-xs': null, // actual calculated value inserted via @extend
+    'valign-sm': null, // actual calculated value inserted via @extend
+    'halign-sm': null, // actual calculated value inserted via @extend
+    'margin-top-sm': null, // actual calculated value inserted via @extend
+    'margin-top-collapsed-sm': null, // actual calculated value inserted via @extend
+    'margin-left-sm': null, // actual calculated value inserted via @extend
+    'margin-left-collapsed-sm': null, // actual calculated value inserted via @extend
+    'valign-lg': null, // actual calculated value inserted via @extend
+    'halign-lg': null, // actual calculated value inserted via @extend
+    'margin-top-lg': null, // actual calculated value inserted via @extend
+    'margin-top-collapsed-lg': null, // actual calculated value inserted via @extend
+    'margin-left-lg': null, // actual calculated value inserted via @extend
+    'margin-left-collapsed-lg': null // actual calculated value inserted via @extend
+) !default;
+
+
+    // ----------------------------------------------------
+    //   CALCULATED VALUES
+    //   -> based on $list-group-tree-link-caret-config
+    //
+    //   -> cannot be included in initial map declaration
+    //      because the calculations depend on values
+    //      within the map, and Sass has no ability to
+    //      reference a key in a map from within that map.
+    //
+    //   -> documented as props of $list-group-tree-link-caret-config
+    //      because they are added via extend() below.
+    // ----------------------------------------------------
+        @function _list-group-tree-caret-valign($size) {
+            $container-height-key: if(unquote($size) == base, 'container-height', 'container-height-#{$size}');
+            $height-key: if(unquote($size) == base, 'height', 'height-#{$size}');
+
+            @return floor((get($list-group-tree-link-caret-config, $container-height-key) - get($list-group-tree-link-caret-config, $height-key)) / 2) - 4;
+        }
+
+        @function _list-group-tree-caret-halign($size) {
+            $container-width-key: if(unquote($size) == base, 'container-width', 'container-width-#{$size}');
+            $width-key: if(unquote($size) == base, 'width', 'width-#{$size}');
+
+            @return floor((get($list-group-tree-link-caret-config, $container-width-key) - get($list-group-tree-link-caret-config, $width-key)) / 2);
+        }
+
+        @function _list-group-tree-caret-margin-top($size, $is-collapsed: false) {
+            $size-differential-key: if(unquote($size) == base, 'size-differential', 'size-differential-#{$size}');
+            $margin-top: _list-group-tree-caret-valign($size) + get-deep($list-group-tree-link-sizes, 'padding.#{$size}.top') - 2;
+            $margin-top-collapsed: $margin-top - get($list-group-tree-link-caret-config, $size-differential-key) + 2;
+
+            @return if($is-collapsed, $margin-top-collapsed, $margin-top);
+        }
+
+        @function _list-group-tree-caret-margin-left($size, $is-collapsed: false) {
+            $size-differential-key: if(unquote($size) == base, 'size-differential', 'size-differential-#{$size}');
+            $margin-left: _list-group-tree-caret-halign($size) - 1;
+            $margin-left-collapsed: $margin-left + round(get($list-group-tree-link-caret-config, $size-differential-key) / 2);
+
+            @return if($is-collapsed, $margin-left-collapsed, $margin-left);
+        }
+
+        // ----- EXTEND caret config with calc'd values ----- //
+        $list-group-tree-link-caret-config: extend($list-group-tree-link-caret-config,
+            (
+                'valign-base': _list-group-tree-caret-valign(base),
+                'halign-base': _list-group-tree-caret-halign(base),
+                'margin-top': _list-group-tree-caret-margin-top(base),
+                'margin-top-collapsed': _list-group-tree-caret-margin-top(base, $is-collapsed: true),
+                'margin-left': _list-group-tree-caret-margin-left(base),
+                'margin-left-collapsed': _list-group-tree-caret-margin-left(base, $is-collapsed: true),
+                'valign-xs': _list-group-tree-caret-valign(xs),
+                'halign-xs': _list-group-tree-caret-halign(xs),
+                'margin-top-xs': _list-group-tree-caret-margin-top(xs),
+                'margin-top-collapsed-xs': _list-group-tree-caret-margin-top(xs, $is-collapsed: true),
+                'margin-left-xs': _list-group-tree-caret-margin-left(xs),
+                'margin-left-collapsed-xs': _list-group-tree-caret-margin-left(xs, $is-collapsed: true),
+                'valign-sm': _list-group-tree-caret-valign(sm),
+                'halign-sm': _list-group-tree-caret-halign(sm),
+                'margin-top-sm': _list-group-tree-caret-margin-top(sm) + 1,
+                'margin-top-collapsed-sm': _list-group-tree-caret-margin-top(sm, $is-collapsed: true) + 1,
+                'margin-left-sm': _list-group-tree-caret-margin-left(sm),
+                'margin-left-collapsed-sm': _list-group-tree-caret-margin-left(sm, $is-collapsed: true),
+                'valign-lg': _list-group-tree-caret-valign(lg),
+                'halign-lg': _list-group-tree-caret-halign(lg),
+                'margin-top-lg': _list-group-tree-caret-margin-top(lg) - 5,
+                'margin-top-collapsed-lg': _list-group-tree-caret-margin-top(lg, $is-collapsed: true) - 5,
+                'margin-left-lg': _list-group-tree-caret-margin-left(lg),
+                'margin-left-collapsed-lg': _list-group-tree-caret-margin-left(lg, $is-collapsed: true)
+            )
+        );
+
+
+
+///
+/// Configuration for `.list-group-parent .hitarea` elems within `.list-group-tree` components. These are the "top level" collapsible elements within the hierarchical structure.
+/// ---
+/// @type Map
+/// @since 1.0.0
+/// ---
+/// @requires {function} get
+/// @requires {function} get-deep
+/// @requires {function} shade-of
+/// @requires {variable} $nav-link-config
+/// @requires {variable} $list-group-tree-link-colors
+/// @requires {variable} $list-group-tree-link-sizes
+/// @requires {variable} $icon-size-config
+/// @requires {variable} $zc-gray-90
+/// ---
+/// @prop {Color}  bg-hover          [transparent]  - Hovered background color
+/// @prop {Color}  bg-active-child   [transparent]  - Background color when a child node is active
+/// @prop {Color}  text-color-hover  [#0094ff]      - Hovered text color
+/// @prop {Color}  text-color-active [#0085e6]      - Active text color
+///
+/// @prop {Number} platform-bd-width [4px]          - Border width of "platform" indicator which are used to indicate active state for the group
+/// @prop {Color}  platform-bd-color [transparent]  - Color of "platform" indicator which are used to indicate active state for the group
+///
+/// @prop {Number} icon-size            [16px]      - Default size of the `.group-icon` element within the group `.hitarea` elem. Only shown if the `.list-group-tree` element contains the `has-group-icons` variation CSS class.
+/// @prop {Color}  icon-color           [#707070]   - Default color of the `.group-icon` element
+/// @prop {Number} text-indent          [0]         - Calculated amount of text indent. Only used if the `.list-group-tree` element contains the `has-group-icons` variation CSS class.
+/// @prop {Number} bd-spacing-vertical  [9px]       - Default amount of vertical spacing between `.list-group-parent-border` elems.
+/// @prop {Number} bd-inset-horizontal  [8px]       - Default amount of inset to add around `.list-group-parent-border` elems.
+///
+$list-group-tree-group-config: (
+    'bg-hover': transparent,
+    'bg-active-child': get($list-group-tree-link-colors, 'bg-active'),
+    'text-color-hover': get($list-group-tree-link-colors, 'text-color-hover'),
+    'text-color-active': get($list-group-tree-link-colors, 'text-color-active'),
+    //
+    'platform-bd-width': get($nav-link-config, 'platform-bd-width'),
+    'platform-bd-color': transparent,
+    //
+    'icon-size': get-deep($icon-size-config, 'base16.base'),
+    'icon-color': $zc-gray-90,
+    'text-indent': 0,
+    'bd-spacing-vertical': round(get-deep($list-group-tree-link-sizes, 'padding.base.top') * 1.5),
+    'bd-inset-horizontal': get($nav-link-config, 'platform-bd-width') * 2
+) !default;
