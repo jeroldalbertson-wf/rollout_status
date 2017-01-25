@@ -115,6 +115,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.15"
+  dart_to_js_script_rewriter:
+    description:
+      name: dart_to_js_script_rewriter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
   dartdoc:
     description:
       name: dartdoc
