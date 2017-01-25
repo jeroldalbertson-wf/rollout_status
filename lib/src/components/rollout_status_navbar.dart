@@ -22,7 +22,7 @@ class RolloutStatusNavbarComponent
         ..isInNavbar = true
         ..pullRight = true)(
         (NavItem()
-          ..href = 'https://github.com/maxwellpeterson-wf'
+          ..href = 'https://github.com/maxwellpeterson-wf/rollout_status'
           ..target = '_github')('Contribute on Github'),
       ),
     );
