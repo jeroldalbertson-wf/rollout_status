@@ -1,0 +1,22 @@
+name: rollout_status
+version: 0.0.0
+
+dependencies:
+  react: ^3.0.0
+  semver: ^0.2.1
+  w_flux: ^2.6.0
+  w_module: ^1.0.0
+  w_transport: ^3.0.0
+  web_skin_dart:
+    hosted:
+      name: web_skin_dart
+      url: https://pub.workiva.org
+    version: ^1.14.0
+
+dev_dependencies:
+  browser: any
+  dart_dev: ^1.6.0
+  dart_style: any
+
+transformers:
+  - web_skin_dart
