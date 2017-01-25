@@ -12563,7 +12563,7 @@ v.t4()}return P.K(null,0,y)
 case 1:return P.K(w,1,y)}})
 return P.K(null,$async$mP,y)},
 B5:function(a,b){var z=L.EC(null)
-z.b=P.aw("http://localhost:3000",0,null)
+z.b=P.aw("https://rollout-status.appspot-preview.com",0,null)
 this.d=z
 this.kL()
 z=this.c
