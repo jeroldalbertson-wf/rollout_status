@@ -30,6 +30,7 @@ class MainViewComponent extends FluxUiComponent<MainViewProps> {
               (Block()..shrink = true)(
                 BlockContent()(
                   (QueryInput()
+                    ..initialQuery = props.store.currentQuery
                     ..onClearResults = props.actions.clearResults
                     ..onQuery = props.actions.query)(),
                 ),

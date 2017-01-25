@@ -6,6 +6,7 @@ UiFactory<QueryInputProps> QueryInput;
 
 @Props()
 class QueryInputProps extends UiProps {
+  String initialQuery;
   Callback onClearResults;
   Callback1Arg<String> onQuery;
 }
@@ -22,9 +23,12 @@ class QueryInputComponent
   final RegExp _queryRegex = new RegExp(r'\w+ (\d+\.\d+\.\d+)');
 
   @override
+  getDefaultProps() => (newProps()..initialQuery = '');
+
+  @override
   getInitialState() => (newState()
-    ..submitted = false
-    ..queryValue = '');
+    ..submitted = props.initialQuery != '' ? true : false
+    ..queryValue = props.initialQuery);
 
   @override
   render() {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:html' show window;
 
 import 'package:semver/semver.dart';
 import 'package:w_flux/w_flux.dart';
@@ -25,6 +26,12 @@ class RolloutStore extends Store {
     manageActionSubscription(_actions.clearResults.listen(_onClearResults));
     manageActionSubscription(_actions.query.listen(_onQuery));
     manageActionSubscription(_actions.refresh.listen(_onRefresh));
+
+    // Setup potential initial query from URL.
+    final windowUri = Uri.parse(window.location.toString());
+    if (windowUri.queryParameters.containsKey('q')) {
+      _onQuery(windowUri.queryParameters['q']);
+    }
   }
 
   /// The search query entered by the user.
@@ -45,7 +52,8 @@ class RolloutStore extends Store {
     for (DeployLocation location in _deployLocations) {
       final queryResult =
           new QueryResult(location, packageName, interestingVersion);
-      if (_dependenciesByDeployLocation.isNotEmpty) {
+      if (_dependenciesByDeployLocation.isNotEmpty &&
+          _dependenciesByDeployLocation.containsKey(location)) {
         final versions = _dependenciesByDeployLocation[location];
         final actualVersion = versions[packageName];
         if (actualVersion == null) {
@@ -91,10 +99,14 @@ class RolloutStore extends Store {
     }
     _currentQuery = query;
 
+    // Update URL with new query.
+    window.history.pushState(query, 'Rollout Status: $query', '?q=$query');
+
+    // Check to see when the last data was fetched; fetch fresh data if
+    // it has been more than 10 minutes since it was last fetched.
     final now = new DateTime.now();
-    if (_previousFetchTime.difference(now) > new Duration(minutes: 10)) {
-      // Fetch fresh data if it has been more than 10 minutes since it was
-      // last fetched.
+    if (_previousFetchTime != null &&
+        _previousFetchTime.difference(now) > new Duration(minutes: 10)) {
       _onRefresh();
     }
 
