@@ -8,6 +8,8 @@ import 'package:w_transport/w_transport.dart';
 import 'package:rollout_status/src/actions.dart';
 import 'package:rollout_status/src/models.dart';
 
+const String failureKey = 'request_for_dependencies_failed';
+
 class RolloutStore extends Store {
   RolloutActions _actions;
   HttpClient _client;
@@ -55,16 +57,22 @@ class RolloutStore extends Store {
       if (_dependenciesByDeployLocation.isNotEmpty &&
           _dependenciesByDeployLocation.containsKey(location)) {
         final versions = _dependenciesByDeployLocation[location];
+        if (versions.containsKey(failureKey)) {
+          queryResult.status = QueryResultStatus.queryRequestFailed;
+          _queryResults.add(queryResult);
+          continue;
+        }
+
         final actualVersion = versions[packageName];
         if (actualVersion == null) {
           queryResult.status = QueryResultStatus.noDependency;
           _queryResults.add(queryResult);
           continue;
         }
+
         final actualVersionSV = new SemanticVersion.fromString(actualVersion);
         final interestingVersionSV =
             new SemanticVersion.fromString(interestingVersion);
-
         if (actualVersionSV == interestingVersionSV ||
             actualVersionSV > interestingVersionSV) {
           queryResult.status = QueryResultStatus.included;
@@ -126,8 +134,15 @@ class RolloutStore extends Store {
     final request = _client.newJsonRequest()
       ..path = '/get_deps'
       ..queryParameters = {'deploy': location.url.toString()};
-    final response = await request.get();
-    _dependenciesByDeployLocation[location] = response.body.asJson();
+
+    try {
+      final response = await request.get();
+      _dependenciesByDeployLocation[location] = response.body.asJson();
+    } on RequestException {
+      print('handled failed request');
+      _dependenciesByDeployLocation[location] = {failureKey: 'true'};
+    }
+
     // Rebuild queries
     if (_currentQuery != null) {
       _buildQueryResults(_currentQuery);

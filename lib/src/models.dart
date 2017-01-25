@@ -22,6 +22,9 @@ enum QueryResultStatus {
 
   /// The queried package is not depended on in this deploy.
   noDependency,
+
+  /// Failed to query for information from this deploy.
+  queryRequestFailed,
 }
 
 /// Object representing the result of the query for a given [DeployLocation].

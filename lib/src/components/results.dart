@@ -37,22 +37,17 @@ class ResultsComponents extends UiComponent<ResultsProps> {
       ));
     }
 
-    return VBlock()(
-      (BlockContent()..shrink = true)(
-        Dom.h3()('Results for "${props.query}":'),
-      ),
-      BlockContent()(
-        Table()(
-          Dom.thead()(
-            Dom.tr()(
-              (Dom.th()..scope = 'col')(),
-              (Dom.th()..scope = 'col')('Application Name'),
-              (Dom.th()..scope = 'col')('Deploy Location'),
-              (Dom.th()..scope = 'col')('Actual Version'),
-            ),
+    return BlockContent()(
+      Table()(
+        Dom.thead()(
+          Dom.tr()(
+            (Dom.th()..scope = 'col')(),
+            (Dom.th()..scope = 'col')('Application Name'),
+            (Dom.th()..scope = 'col')('Deploy Location'),
+            (Dom.th()..scope = 'col')('Actual Version'),
           ),
-          Dom.tbody()(rows),
         ),
+        Dom.tbody()(rows),
       ),
     );
   }
@@ -71,6 +66,8 @@ class ResultsComponents extends UiComponent<ResultsProps> {
         ..glyph = IconGlyph.TWFR_MINUS_SIGN_OUTLINE)());
     } else if (result.status == QueryResultStatus.noDependency) {
       icon = (Icon()..glyph = IconGlyph.TWFR_MINUS_SIGN_OUTLINE)();
+    } else if (result.status == QueryResultStatus.queryRequestFailed) {
+      icon = (Icon()..glyph = IconGlyph.TWFR_WARNING_SIGN_OUTLINE)();
     }
     return icon;
   }
@@ -85,6 +82,8 @@ class ResultsComponents extends UiComponent<ResultsProps> {
       version = (Dom.strong()..className = 'text-danger')(result.actualVersion);
     } else if (result.status == QueryResultStatus.noDependency) {
       version = 'No dependency on package';
+    } else if (result.status == QueryResultStatus.queryRequestFailed) {
+      version = (Dom.span()..className = 'text-gray text-muted')('Request for dependencies failed.');
     }
     return version;
   }

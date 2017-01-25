@@ -47,8 +47,8 @@ class QueryInputComponent
   _getHelpLabel() {
     if (state.queryValue == null || state.queryValue == '') return '';
     if (_isValidInput()) return '';
-    return 'Must input the dependency\'s package name and version separated '
-        'by a space, e.g. wdesk_sdk 1.0.1';
+    return 'Input a package name and version separated by a space,'
+        ' e.g. wdesk_sdk 1.0.1';
   }
 
   _getInputSkin() {
