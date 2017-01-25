@@ -19,7 +19,8 @@ class RolloutStore extends Store {
   RolloutStore(RolloutActions actions, Iterable<DeployLocation> deployLocations)
       : _actions = actions,
         _deployLocations = deployLocations {
-    _client = new HttpClient()..baseUri = Uri.parse('http://localhost:3000');
+    _client = new HttpClient()
+      ..baseUri = Uri.parse('https://rollout-status.appspot-preview.com');
     _initializeData();
     manageActionSubscription(_actions.clearResults.listen(_onClearResults));
     manageActionSubscription(_actions.query.listen(_onQuery));
