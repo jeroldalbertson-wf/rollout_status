@@ -33,3 +33,14 @@ $ cd server/
 $ npm install
 $ npm start
 ```
+
+## Using the Chrome Extension
+
+First build it with `pub build extension`. Then, navigate to
+`chrome://extensions` in Chrome. Check "Developer Mode", click
+"Load unpacked extension..." and select the `build/extension`
+folder.
+
+Click the button to display the app.
+
+![extension](https://s3.amazonaws.com/uploads.hipchat.com/12595/935918/M2QybPK4DAQ3nQu/upload.png)

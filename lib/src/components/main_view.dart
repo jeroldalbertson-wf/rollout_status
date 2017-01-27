@@ -11,12 +11,20 @@ import 'package:rollout_status/src/store.dart';
 UiFactory<MainViewProps> MainView;
 
 @Props()
-class MainViewProps extends FluxUiProps<RolloutActions, RolloutStore> {}
+class MainViewProps extends FluxUiProps<RolloutActions, RolloutStore> {
+  bool useWideViewport;
+}
 
 @Component()
 class MainViewComponent extends FluxUiComponent<MainViewProps> {
   @override
+  Map getDefaultProps() {
+    return newProps()..useWideViewport = false;
+  }
+
+  @override
   render() {
+    int gridWidth = props.useWideViewport ? 12 : 8;
     return GridFrame()(
       (VBlock()
         ..isNested = false
@@ -24,8 +32,7 @@ class MainViewComponent extends FluxUiComponent<MainViewProps> {
         RolloutStatusNavbar()(),
         Block()(
           Block()(),
-          // Feels better not to fill entire width of page, consider tweaking.
-          (Block()..size = 8)(
+          (Block()..size = gridWidth)(
             VBlock()(
               (Block()..shrink = true)(
                 BlockContent()(
