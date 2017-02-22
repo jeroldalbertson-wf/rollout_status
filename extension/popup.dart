@@ -21,6 +21,10 @@ void main() {
     new DeployLocation('Spreadsheets', 'production', 'https://datatables.app.wdesk.com'),
     new DeployLocation('Unified Wdesk', 'wk-dev', 'https://wdesk.wk-dev.wdesk.org'),
     new DeployLocation('Unified Wdesk', 'sandbox', 'https://wdesk.sandbox.wdesk.com'),
+    new DeployLocation('wComments', 'wk-dev', 'https://comments-experience.wk-dev.wdesk.org'),
+    new DeployLocation('wComments', 'sandbox', 'https://comments-experience.sandbox.wdesk.com'),
+    new DeployLocation('wOutline', 'wk-dev', 'https://outline.wk-dev.wdesk.org'),
+    new DeployLocation('wOutline', 'sandbox', 'https://outline.sandbox.wdesk.com/'),
   ];
   RolloutModule rolloutModule = new RolloutModule(deployments, useWideViewport: true);
 
